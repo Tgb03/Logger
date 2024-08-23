@@ -1,4 +1,4 @@
-use crate::time::Time;
+use crate::{time::Time, log_handler::LogHandler};
 
 /// Time Manager is a struct that allows u to manage
 /// times. It allows adding to it and calculates several
@@ -16,6 +16,14 @@ impl TimeManager {
   /// creates a new Time Manager struct.
   pub fn new() -> TimeManager {
     TimeManager { started: false, start_time: Time::new(), times: Vec::new() }
+  }
+
+  pub fn new_with_time(time: Time) -> TimeManager {
+    let mut tm: TimeManager = TimeManager::new();
+
+    tm.add_time(time);
+
+    return tm;
   }
 
   /// add time to Time Manager.
@@ -46,6 +54,14 @@ impl TimeManager {
     }
 
     return splits;
+  }
+
+}
+
+impl LogHandler for TimeManager {
+    
+  fn parse_line(&mut self, line: &str) {
+    todo!();  
   }
 
 }

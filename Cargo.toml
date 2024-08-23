@@ -4,3 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+eframe = "0.28.1"
+egui = "0.28.1"
+egui_extras = "0.28.1"
