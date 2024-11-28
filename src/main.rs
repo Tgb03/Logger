@@ -2,31 +2,42 @@
 
 use eframe::egui;
 
-pub mod app;
+pub mod logs;
+
+pub mod splitter_app;
+pub mod base_app;
 pub mod time;
-pub mod time_manager;
-pub mod log_handler;
+pub mod timed_run;
+pub mod objective_data;
+pub mod parse_files;
+pub mod save_run;
+pub mod objective_data_req;
 
 fn main() -> eframe::Result {
+
+  // for (id, val) in std::env::vars() {
+  //   println!("{}: {}", id, val);
+  // }
   
-  let options = eframe::NativeOptions {
+  let options_base_app = eframe::NativeOptions {
     viewport: egui::ViewportBuilder {
-      decorations: Some(false),
+      decorations: Some(true),
       resizable: Some(true),
-      position: Some([0.0, 128.0].into()),
-      inner_size: Some([196.0, 256.0].into()),
-      window_level: Some(egui::WindowLevel::AlwaysOnTop),
-      transparent: Some(true),
+      //position: Some([0.0, 128.0].into()),
+      inner_size: Some([862.0, 512.0].into()),
+      //window_level: Some(egui::WindowLevel::AlwaysOnTop),
+      //transparent: Some(true),
       ..Default::default()
     },
+    hardware_acceleration: eframe::HardwareAcceleration::Preferred,
     ..Default::default()
   };
 
   eframe::run_native(
-    "My egui App",
-    options,
-    Box::new(|cc| {
-      Ok(Box::<app::MyApp>::default())
+    "GTFO Logger",
+    options_base_app,
+    Box::new(|_| {
+      Ok(Box::<base_app::BaseApp>::default())
     }),
   )
 
