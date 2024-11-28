@@ -41,6 +41,13 @@ impl TimedRun {
     result
   }
 
+  pub fn get_time(&self) -> Time {
+    match self.objective_data.early_drop {
+      false => self.times[self.times.len() - 1],
+      true => self.times[self.times.len() - 1].sub(&self.last_drop)
+    }
+  }
+
   pub fn get_best_splits(&self, other: &TimedRun) -> Vec<Time> {
     let splits_self = self.get_splits();
     let mut splits_other = other.get_splits();
@@ -73,6 +80,7 @@ pub struct TimedRunParser {
   last_drop: Time,
   secondary_done: bool,
   overload_done: bool,
+  early_drop: bool,
   
   times: Vec<Time>,
   results: Vec<TimedRun>,
@@ -91,6 +99,7 @@ impl TimedRunParser {
       game_start_time: None,
       secondary_done: false,
       overload_done: false,
+      early_drop: false,
       times: Vec::new(),
       results: Vec::new(),
       is_done: false,
@@ -103,13 +112,11 @@ impl TimedRunParser {
     for (time, token) in tokens {
       match token {
         Token::SelectExpedition(name) => { self.level_name = name; },
-        Token::GameStarted => { self.in_game = true; },
+        Token::GameStarted => { 
+          self.in_game = true;
+          self.game_start_time = Some(time); 
+        },
         Token::PlayerDroppedInLevel(id) => { 
-          if self.in_game && self.game_start_time == None {
-            self.game_start_time = Some(time);
-            //println!("Time restarted : {:?}.", self.game_start_time);
-          }
-
           if self.in_game {
             if !self.players.contains(&id) {
               self.players.push(id);
@@ -120,7 +127,10 @@ impl TimedRunParser {
           }
         },
         Token::DoorOpen => { 
-          self.times.push(time.sub(&self.game_start_time.unwrap())); 
+          if self.game_start_time != None {
+            //self.early_drop = true;
+            self.times.push(time.sub(&self.game_start_time.unwrap()));
+          } 
           //println!("{} Added stamp: {:?} - {:?} = {:?}", self.times.len(), time, self.game_start_time, self.times[self.times.len() - 1]);
         },
         Token::BulkheadScanDone => { 
@@ -142,28 +152,18 @@ impl TimedRunParser {
 
           self.results.push(TimedRun {
             level_name: self.level_name.clone(),
-            objective_data: ObjectiveData::from(self.secondary_done, self.overload_done, false, false, player_count),
+            objective_data: ObjectiveData::from(self.secondary_done, self.overload_done, self.early_drop, self.early_drop, player_count),
             times: self.times.clone(),
             win: true,
             last_drop: self.last_drop.sub(&self.game_start_time.unwrap()),
           });
 
-          self.in_game = false;
-          self.players.clear();
-          self.game_start_time = None;
-          self.times.clear();
-          self.last_drop = Time::new();
-          self.secondary_done = false;
-          self.overload_done = false;
+          self.reset_state();
           
         },
         Token::GameEndLost | Token::GameEndAbort => {
           if self.times.len() == 0 { 
-            self.in_game = false;
-            self.players.clear();
-            self.game_start_time = None;
-            self.last_drop = Time::new();
-            self.times.clear();
+            self.reset_state();
 
             continue 
           }
@@ -181,13 +181,7 @@ impl TimedRunParser {
             last_drop: self.last_drop.sub(&self.game_start_time.unwrap()),
           });
 
-          self.in_game = false;
-          self.players.clear();
-          self.game_start_time = None;
-          self.times.clear();
-          self.last_drop = Time::new();
-          self.secondary_done = false;
-          self.overload_done = false;
+          self.reset_state();
         },
         Token::LogFileEnd => {
           self.is_done = true;
@@ -198,6 +192,17 @@ impl TimedRunParser {
 
   pub fn get_results(self) -> Vec<TimedRun> {
     self.results
+  }
+
+  fn reset_state(&mut self) {
+    self.in_game = false;
+    self.players.clear();
+    self.game_start_time = None;
+    self.times.clear();
+    self.last_drop = Time::new();
+    self.secondary_done = false;
+    self.overload_done = false;
+    self.early_drop = false;
   }
 
 }
@@ -211,7 +216,7 @@ mod tests {
   pub fn test_base_game() {
     let tokens = vec![
       (Time::from("00:00:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("00:00:00.010"), Token::GameStarted),
+      (Time::from("00:00:10.000"), Token::GameStarted),
       (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -247,7 +252,7 @@ mod tests {
   pub fn test_splits() {
     let tokens = vec![
       (Time::from("00:00:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("00:00:00.010"), Token::GameStarted),
+      (Time::from("00:00:10.000"), Token::GameStarted),
       (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -279,7 +284,7 @@ mod tests {
   pub fn test_multiple_games() {
     let tokens = vec![
       (Time::from("00:00:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("00:00:00.010"), Token::GameStarted),
+      (Time::from("00:00:10.000"), Token::GameStarted),
       (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -288,7 +293,7 @@ mod tests {
       (Time::from("00:03:12.198"), Token::DoorOpen),
       (Time::from("00:04:06.000"), Token::DoorOpen),
       (Time::from("00:17:59.343"), Token::GameEndAbort),
-      (Time::from("01:00:00.010"), Token::GameStarted),
+      (Time::from("01:00:10.000"), Token::GameStarted),
       (Time::from("01:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("01:00:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("01:00:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -299,7 +304,7 @@ mod tests {
       (Time::from("01:14:12.135"), Token::DoorOpen),
       (Time::from("01:16:11.890"), Token::BulkheadScanDone),
       (Time::from("01:17:59.343"), Token::GameEndWin),
-      (Time::from("02:00:00.010"), Token::GameStarted),
+      (Time::from("02:00:10.000"), Token::GameStarted),
       (Time::from("02:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("02:00:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("02:01:12.135"), Token::DoorOpen),
@@ -341,7 +346,7 @@ mod tests {
 
     let tokens = vec![
       (Time::from("23:59:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("23:59:00.010"), Token::GameStarted),
+      (Time::from("23:59:10.000"), Token::GameStarted),
       (Time::from("23:59:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("23:59:10.100"), Token::PlayerDroppedInLevel(2)),
       (Time::from("23:59:10.110"), Token::PlayerDroppedInLevel(3)),

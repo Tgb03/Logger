@@ -69,13 +69,13 @@ impl Token {
   pub fn tokenize_str(line: &str) -> Option<Token> {
     
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
-    if line.contains("DropServerManager: Making 'new session (sessionId:") { return Some(Token::GameStarted); }
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
     if line.contains("exits PLOC_InElevator") { return Some(Self::create_player(line)); }
     if line.contains("OnDoorIsOpened, LinkedToZoneData.EventsOnEnter") { return Some(Token::DoorOpen); }
     if line.contains("BulkheadDoorController_Core.OnScanDone") { return Some(Token::BulkheadScanDone); }
     if line.contains("WardenObjectiveManager.CheckWardenObjectiveStatus, layer: SecondaryLayer, status is diff! newStatus: WardenObjectiveItemSolved") { return Some(Token::SecondaryDone) }
     if line.contains("WardenObjectiveManager.CheckWardenObjectiveStatus, layer: ThirdLayer, status is diff! newStatus: WardenObjectiveItemSolved") { return Some(Token::OverloadDone) }
-    if line.contains("RundownManager.OnExpeditionEnded(endState: Success") { return Some(Token::GameEndWin); }
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess") { return Some(Token::GameEndWin); }
     if line.contains("RundownManager.OnExpeditionEnded(endState: Abort") { return Some(Token::GameEndAbort); }
     if line.contains("RundownManager.EndGameSession") { return Some(Token::GameEndAbort); }
     if line.contains("RundownManager.OnExpeditionEnded(endState: Fail") { return Some(Token::GameEndLost); }
@@ -117,7 +117,7 @@ mod tests {
   pub fn test_basic_game() {
     let token_arr = Tokenizer::tokenize(
       "00:00:00.000 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierC 0 433572712 1571494152  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,3,0 ActiveExpeditionUniqueKey: Local_32_TierC_0</color>
-      00:00:00.010 - DropServerManager: Making 'new session (sessionId: 14134081)
+      00:00:10.000 - GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel
       00:00:10.000 - Player1 exits PLOC_InElevator 1</color>
       00:00:10:055 - Useless line
       00:00:10.100 - Player2 exits PLOC_InElevator 23423</color>
@@ -128,12 +128,12 @@ mod tests {
       00:04:06.000 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
       00:14:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
       00:16:11.890 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:17:59.343 - RundownManager.OnExpeditionEnded(endState: Success"
+      00:17:59.343 - GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess"
     );
 
     assert_eq!(token_arr, vec![
       (Time::from("00:00:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("00:00:00.010"), Token::GameStarted),
+      (Time::from("00:00:10.000"), Token::GameStarted),
       (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(23423)),
       (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),

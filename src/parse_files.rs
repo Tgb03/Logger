@@ -59,7 +59,7 @@ mod tests {
     let dir = dir.unwrap();
     
     let text = "00:00:00.000 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierC 0 433572712 1571494152  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,3,0 ActiveExpeditionUniqueKey: Local_32_TierC_0</color>
-      00:00:00.010 - DropServerManager: Making 'new session (sessionId: 14134081)
+      00:00:10.000 - GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel
       00:00:10.000 - Player1 exits PLOC_InElevator 1</color>
       00:00:10:055 - Useless line
       00:00:10.100 - Player2 exits PLOC_InElevator 2</color>
@@ -70,7 +70,7 @@ mod tests {
       00:04:06.000 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
       00:14:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
       00:16:11.890 - BulkheadDoorController_Core.OnScanDone
-      00:17:59.343 - RundownManager.OnExpeditionEnded(endState: Success";
+      00:17:59.343 - GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess";
     let (file1, path1) = init_file(&dir, "file1.txt", text);
     let (file2, path2) = init_file(&dir, "file2.txt", text);
 

@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{cmp::Ordering, fs::File};
 
 use egui::{Color32, Vec2};
 
@@ -19,6 +19,20 @@ pub struct BaseApp {
   set_all_overload: bool,
   set_all_glitched: bool,
   set_all_early_drop: bool,
+
+}
+
+impl BaseApp {
+
+  fn get_total_times(&self) -> Time {
+    let mut total: Time = Time::new();
+    
+    for timed_run in &self.timed_runs {
+      total = total.add(&timed_run.get_time());
+    }
+
+    total
+  }
 
 }
 
@@ -67,7 +81,6 @@ impl eframe::App for BaseApp {
               .collect();
 
             self.timed_runs = parse_all_files(files);
-            //println!("Size OF VEC: {}", self.timed_runs.len())
           }
         }
       })
@@ -96,6 +109,18 @@ impl eframe::App for BaseApp {
     egui::CentralPanel::default().show(ctx, |ui| {
 
       // handles all the set all buttons.
+      ui.horizontal(|ui| {
+        ui.label(format!("Total times added: {}", self.get_total_times().to_string()));
+        
+        if ui.button("Sort by name").clicked() {
+            self.timed_runs.sort_by(|d, e| d.level_name.cmp(&e.level_name));
+        }
+        
+        if ui.button("Sort by time").clicked() {
+          self.timed_runs.sort_by(|d, e| d.get_time().get_stamp().cmp(&e.get_time().get_stamp()));
+        }
+      });
+
       ui.horizontal(|ui| {
         let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, "Set ALL secondary");
         let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
@@ -161,6 +186,10 @@ impl eframe::App for BaseApp {
               let deserialized: TimedRun = bincode::deserialize(&serialized).unwrap();
               println!("Deserialized: {:?}", deserialized);
             };
+
+            if ui.button("Remove Run").clicked() {
+              for_removal.push(id);
+            }
             
           });
         }
