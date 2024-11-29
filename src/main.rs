@@ -12,6 +12,7 @@ pub mod objective_data;
 pub mod parse_files;
 pub mod save_run;
 pub mod objective_data_req;
+pub mod sorter_window;
 
 pub mod log_parser_window;
 pub mod run_manager_window;

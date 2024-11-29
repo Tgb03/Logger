@@ -1,8 +1,8 @@
-use std::fs::File;
+use std::{fs::File, time::Duration};
 
 use egui::{Color32, Ui, Vec2};
 
-use crate::{log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, run_manager_window::RunManagerWindow, time::Time, timed_run::TimedRun};
+use crate::{log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, run_manager_window::RunManagerWindow, save_run::SaveManager};
 
 enum AppState {
 
@@ -24,6 +24,7 @@ pub struct BaseApp {
 
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
+  save_manager: SaveManager,
 
 }
 
@@ -41,12 +42,15 @@ impl Default for BaseApp {
 
       log_parser_window: LogParserWindow::new(),
       run_manager_window: RunManagerWindow::new(),
+      save_manager: SaveManager::new()
     }
   }
 }
 
 impl eframe::App for BaseApp {
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    ctx.request_repaint_after(Duration::from_millis(25));
+    
     let frame = egui::containers::Frame {
       inner_margin: egui::Margin { left: 1., right: 1., top: 1., bottom: 1.},
       outer_margin: egui::Margin { left: 5., right: 1., top: 1., bottom: 1.},
@@ -104,8 +108,8 @@ impl eframe::App for BaseApp {
 
       match self.app_state {
         AppState::None => {},
-        AppState::LogParserWindow => self.log_parser_window.show(ui),
-        AppState::ManagingRuns => self.run_manager_window.show(ui),
+        AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
+        AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
       }
       
     });
@@ -115,11 +119,5 @@ impl eframe::App for BaseApp {
     //   println!("Selected file: {:?}", path);
     // }
   }
-}
-
-pub trait ShowUI {
-
-  fn show(&mut self, ui: &mut Ui);
-
 }
 

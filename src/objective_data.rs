@@ -1,7 +1,7 @@
 
 use serde::{Serialize, Deserialize};
 
-#[derive(PartialEq, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct ObjectiveData {
 
   pub level_name: String,
@@ -9,7 +9,7 @@ pub struct ObjectiveData {
   pub overload: bool,
   pub glitched: bool,
   pub early_drop: bool,
-  player_count: u8,
+  pub player_count: u8,
 
 }
 

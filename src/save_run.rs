@@ -40,6 +40,7 @@ impl SaveManager {
       false => ""
     };
 
+    //println!("Saved: {}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count());
     format!("{}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count())
   }
 
@@ -62,18 +63,31 @@ impl SaveManager {
 
   }
 
-  pub fn get_best_splits(&mut self, objective_data: ObjectiveData) -> Vec<Time> {
+  fn get_largest_stamp_count(runs: &Vec<TimedRun>) -> usize {
+    let mut max = 0;
+    for run in runs {
+      max = max.max(run.get_splits().len()); 
+    }
+    
+    max
+  }
+
+  pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<TimedRun>> {
+    self.loaded_runs.get_mut(&Self::get_name(objective_data))
+  }
+
+  pub fn get_best_splits(&mut self, objective_data: &ObjectiveData) -> Vec<Time> {
 
     let id = Self::get_name(&objective_data);
 
     if !self.loaded_runs.contains_key(&id){
-      self.load(objective_data);
+      //self.load(objective_data);
     }
 
     let empty = Vec::new();
     let runs = self.loaded_runs.get(&id).unwrap_or(&empty);
 
-    let mut result = vec![Time::max(), ];
+    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
     for run in runs {
       for (id, time) in run.get_splits().iter().enumerate() {
         result[id] = result[id].min(time);
@@ -83,9 +97,9 @@ impl SaveManager {
     result
   }
 
-  pub fn load(&mut self, objective_data: ObjectiveData) {
+  pub fn load(&mut self, objective_data: &ObjectiveData) {
 
-    let id = Self::get_name(&objective_data);
+    let id = Self::get_name(objective_data);
     todo!()
     
   }

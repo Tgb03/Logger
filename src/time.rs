@@ -53,6 +53,23 @@ impl Time {
     return format!("{:02}:{:02}:{:02}.{:03}", hours, minutes, seconds, milliseconds);
   }
 
+  /// 
+  /// Returns a string showing the time of the object
+  /// without the hours mark if the hours is 0
+  /// 
+  pub fn to_string_no_hours(&self) -> String {
+    let milliseconds: u64 = self.stamp % 1000;
+    let seconds: u64 = self.stamp / 1000 % 60; 
+    let minutes: u64 = self.stamp / 60000 % 60;
+    let hours: u64 = self.stamp / 3600000;
+    
+    if hours > 0 {
+      return format!("{:02}:{:02}:{:02}.{:03}", hours, minutes, seconds, milliseconds);
+    }
+
+    format!("{:02}:{:02}.{:03}", minutes, seconds, milliseconds)
+  }
+
   //// Create a new time stamp with the sum of these 2 times.
   pub fn add(&self, other: &Time) -> Time {
     Time {stamp: self.stamp + other.stamp}

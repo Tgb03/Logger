@@ -1,6 +1,6 @@
 use egui::{Color32, Ui};
 
-use crate::{base_app::ShowUI, time::Time, timed_run::TimedRun};
+use crate::{run_manager_window::RunManagerWindow, save_run::SaveManager, sorter_window::add_sorter_buttons, time::Time, timed_run::TimedRun};
 
 
 pub struct LogParserWindow {
@@ -26,48 +26,13 @@ impl LogParserWindow {
     }
   }
 
-  fn get_total_times(&self) -> Time {
-    let mut total: Time = Time::new();
-    
-    for timed_run in &self.timed_runs {
-      total = total.add(&timed_run.get_time());
-    }
-
-    total
-  }
-
   pub fn set_times(&mut self, times: Vec<TimedRun>) {
     self.timed_runs = times;
   }
 
-}
-
-impl ShowUI for LogParserWindow {
-  fn show(&mut self, ui: &mut Ui) {
+  pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager) {
     // handles all sorters
-    ui.horizontal(|ui| {
-      ui.label(format!("Total times added: {}", self.get_total_times().to_string()));
-      
-      if ui.button("Sort by Win").clicked() {
-        self.timed_runs.sort_by(|d, e| d.win.cmp(&e.win).reverse());
-      }
-
-      if ui.button("Sort by name").clicked() {
-          self.timed_runs.sort_by(|d, e| d.objective_data.level_name.cmp(&e.objective_data.level_name));
-      }
-      
-      if ui.button("Sort by time").clicked() {
-        self.timed_runs.sort_by(|d, e| d.get_time().get_stamp().cmp(&e.get_time().get_stamp()));
-      }
-
-      if ui.button("Sort by Players").clicked() {
-        self.timed_runs.sort_by(|d, e| d.objective_data.get_player_count().cmp(&e.objective_data.get_player_count()));
-      }
-
-      if ui.button("Sort by Stamps").clicked() {
-        self.timed_runs.sort_by(|d, e| d.get_times().len().cmp(&e.get_times().len()).reverse());
-      }
-    });
+    add_sorter_buttons(ui, &mut self.timed_runs);
 
     // handles all the set all buttons.
     ui.horizontal(|ui| {
@@ -75,6 +40,10 @@ impl ShowUI for LogParserWindow {
       let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
       let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, "Set ALL glitched");
       let early_drop_checkbox = ui.checkbox(&mut self.set_all_early_drop, "Set ALL early drop");
+      if ui.button("Save ALL runs").clicked() {
+        save_manager.save_multiple(self.timed_runs.clone());
+        self.timed_runs = Vec::new();
+      }
     
       if secondary_checkbox.clicked() {
         for timed_run in &mut self.timed_runs {
@@ -101,7 +70,7 @@ impl ShowUI for LogParserWindow {
       }
     });
     
-    ui.vertical(|ui| {
+    egui::ScrollArea::vertical().show(ui, |ui| {
       let mut for_removal = Vec::new();
 
       for (id, timed_run) in self.timed_runs.iter_mut().enumerate() {
@@ -127,6 +96,7 @@ impl ShowUI for LogParserWindow {
 
           
           if ui.button("Save Run").clicked() {
+            save_manager.save(timed_run.clone());
             for_removal.push(id);
           };
 
@@ -142,4 +112,5 @@ impl ShowUI for LogParserWindow {
       }
     });
   }
+
 }
