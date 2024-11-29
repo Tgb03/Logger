@@ -6,7 +6,6 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TimedRun {
 
-  pub level_name: String,
   pub objective_data: ObjectiveData,
   pub win: bool,
   pub last_drop: Time,
@@ -42,23 +41,10 @@ impl TimedRun {
   }
 
   pub fn get_time(&self) -> Time {
-    match self.objective_data.early_drop {
-      false => self.times[self.times.len() - 1],
-      true => self.times[self.times.len() - 1].sub(&self.last_drop)
-    }
-  }
-
-  pub fn get_best_splits(&self, other: &TimedRun) -> Vec<Time> {
-    let splits_self = self.get_splits();
-    let mut splits_other = other.get_splits();
-
-    for i in 0..splits_self.len() {
-      if splits_self[i].is_greater_than(&splits_other[i]) {
-        splits_other[i] = splits_other[i];
-      }
-    }
-
-    splits_other
+    let time = self.times[self.times.len() - 1];
+    if self.objective_data.early_drop { return time.sub(&self.last_drop) }
+    
+    time
   }
 
 }
@@ -151,8 +137,7 @@ impl TimedRunParser {
           };
 
           self.results.push(TimedRun {
-            level_name: self.level_name.clone(),
-            objective_data: ObjectiveData::from(self.secondary_done, self.overload_done, self.early_drop, self.early_drop, player_count),
+            objective_data: ObjectiveData::from(self.level_name.clone(), self.secondary_done, self.overload_done, self.early_drop, self.early_drop, player_count),
             times: self.times.clone(),
             win: true,
             last_drop: self.last_drop.sub(&self.game_start_time.unwrap()),
@@ -174,8 +159,7 @@ impl TimedRunParser {
           };
 
           self.results.push(TimedRun {
-            level_name: self.level_name.clone(),
-            objective_data: ObjectiveData::from(self.secondary_done, self.overload_done, false, false, player_count),
+            objective_data: ObjectiveData::from(self.level_name.clone(), self.secondary_done, self.overload_done, false, false, player_count),
             times: self.times.clone(),
             win: false,
             last_drop: self.last_drop.sub(&self.game_start_time.unwrap()),
@@ -234,8 +218,7 @@ mod tests {
     let result = timed_run_parser.get_results();
 
     assert_eq!(result.len(), 1);
-    assert_eq!(result[0].level_name, "R1C1");
-    assert_eq!(result[0].objective_data, ObjectiveData::from(false, false, false, false, 4));
+    assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
     assert_eq!(result[0].last_drop, Time::from("00:00:00.250"));
     assert_eq!(result[0].times, vec![
       Time::from("00:01:02.135"),
@@ -320,16 +303,14 @@ mod tests {
     let result = timed_run_parser.get_results();
 
     assert_eq!(result.len(), 3);
-    assert_eq!(result[0].level_name, "R1C1");
-    assert_eq!(result[0].objective_data, ObjectiveData::from(false, false, false, false, 4));
+    assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
     assert_eq!(result[0].times, vec![
       Time::from("00:01:02.135"),
       Time::from("00:03:02.198"),
       Time::from("00:03:56.000"),
     ]);
     assert_eq!(result[0].win, false);
-    assert_eq!(result[1].level_name, "R1C1");
-    assert_eq!(result[1].objective_data, ObjectiveData::from(false, false, false, false, 4));
+    assert_eq!(result[1].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
     assert_eq!(result[1].times, vec![
       Time::from("00:01:02.135"),
       Time::from("00:03:02.198"),

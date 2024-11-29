@@ -4,6 +4,7 @@ use serde::{Serialize, Deserialize};
 #[derive(PartialEq, Debug, Serialize, Deserialize)]
 pub struct ObjectiveData {
 
+  pub level_name: String,
   pub secondary: bool,
   pub overload: bool,
   pub glitched: bool,
@@ -16,6 +17,7 @@ impl ObjectiveData {
 
   pub fn new() -> ObjectiveData {
     ObjectiveData {
+      level_name: String::new(),
       secondary: false,
       overload: false,
       glitched: false,
@@ -28,8 +30,8 @@ impl ObjectiveData {
     self.player_count
   }
 
-  pub fn from(secondary: bool, overload: bool, glitched: bool, early_drop: bool, player_count: u8) -> ObjectiveData {
-    ObjectiveData { secondary, overload, glitched, early_drop, player_count }
+  pub fn from(level_name: String, secondary: bool, overload: bool, glitched: bool, early_drop: bool, player_count: u8) -> ObjectiveData {
+    ObjectiveData { level_name, secondary, overload, glitched, early_drop, player_count }
   }
 
   pub fn add_player(&mut self) {

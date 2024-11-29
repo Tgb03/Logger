@@ -13,6 +13,9 @@ pub mod parse_files;
 pub mod save_run;
 pub mod objective_data_req;
 
+pub mod log_parser_window;
+pub mod run_manager_window;
+
 fn main() -> eframe::Result {
 
   // for (id, val) in std::env::vars() {

@@ -1,9 +1,16 @@
-use std::{cmp::Ordering, fs::File};
+use std::fs::File;
 
-use egui::{Color32, Vec2};
+use egui::{Color32, Ui, Vec2};
 
-use crate::{parse_files::file_parse::parse_all_files, time::Time, timed_run::TimedRun};
+use crate::{log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, run_manager_window::RunManagerWindow, time::Time, timed_run::TimedRun};
 
+enum AppState {
+
+  None,
+  LogParserWindow,
+  ManagingRuns,
+
+}
 
 pub struct BaseApp {
   
@@ -13,26 +20,10 @@ pub struct BaseApp {
   glitched: bool,
   early_drop: bool,
 
-  timed_runs: Vec<TimedRun>,
+  app_state: AppState,
 
-  set_all_secondary: bool,
-  set_all_overload: bool,
-  set_all_glitched: bool,
-  set_all_early_drop: bool,
-
-}
-
-impl BaseApp {
-
-  fn get_total_times(&self) -> Time {
-    let mut total: Time = Time::new();
-    
-    for timed_run in &self.timed_runs {
-      total = total.add(&timed_run.get_time());
-    }
-
-    total
-  }
+  log_parser_window: LogParserWindow,
+  run_manager_window: RunManagerWindow,
 
 }
 
@@ -46,18 +37,16 @@ impl Default for BaseApp {
       glitched: false,
       early_drop: false,
 
-      timed_runs: Vec::new(),
-      set_all_secondary: false,
-      set_all_overload: false,
-      set_all_glitched: false,
-      set_all_early_drop: false,
+      app_state: AppState::None,
+
+      log_parser_window: LogParserWindow::new(),
+      run_manager_window: RunManagerWindow::new(),
     }
   }
 }
 
 impl eframe::App for BaseApp {
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-
     let frame = egui::containers::Frame {
       inner_margin: egui::Margin { left: 1., right: 1., top: 1., bottom: 1.},
       outer_margin: egui::Margin { left: 5., right: 1., top: 1., bottom: 1.},
@@ -80,8 +69,13 @@ impl eframe::App for BaseApp {
               })
               .collect();
 
-            self.timed_runs = parse_all_files(files);
+            self.log_parser_window.set_times(parse_all_files(files));
+            self.app_state = AppState::LogParserWindow;
           }
+        }
+
+        if ui.button("Check Saved Runs").clicked() {
+          self.app_state = AppState::ManagingRuns;
         }
       })
     });
@@ -108,96 +102,11 @@ impl eframe::App for BaseApp {
     
     egui::CentralPanel::default().show(ctx, |ui| {
 
-      // handles all the set all buttons.
-      ui.horizontal(|ui| {
-        ui.label(format!("Total times added: {}", self.get_total_times().to_string()));
-        
-        if ui.button("Sort by name").clicked() {
-            self.timed_runs.sort_by(|d, e| d.level_name.cmp(&e.level_name));
-        }
-        
-        if ui.button("Sort by time").clicked() {
-          self.timed_runs.sort_by(|d, e| d.get_time().get_stamp().cmp(&e.get_time().get_stamp()));
-        }
-      });
-
-      ui.horizontal(|ui| {
-        let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, "Set ALL secondary");
-        let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
-        let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, "Set ALL glitched");
-        let early_drop_checkbox = ui.checkbox(&mut self.set_all_early_drop, "Set ALL early drop");
-      
-        if secondary_checkbox.clicked() {
-          for timed_run in &mut self.timed_runs {
-            timed_run.objective_data.secondary = self.set_all_secondary;
-          }
-        }
-        
-        if overload_checkbox.clicked() {
-          for timed_run in &mut self.timed_runs {
-            timed_run.objective_data.overload = self.set_all_overload;
-          }
-        }
-
-        if glitched_checkbox.clicked() {
-          for timed_run in &mut self.timed_runs {
-            timed_run.objective_data.glitched = self.set_all_glitched;
-          }
-        }
-
-        if early_drop_checkbox.clicked() {
-          for timed_run in &mut self.timed_runs {
-            timed_run.objective_data.early_drop = self.set_all_early_drop;
-          }
-        }
-      });
-      
-      ui.vertical(|ui| {
-        let mut for_removal = Vec::new();
-
-        for (id, timed_run) in self.timed_runs.iter_mut().enumerate() {
-          ui.horizontal(|ui|{
-            ui.colored_label(Color32::WHITE, &timed_run.level_name);
-
-            let time_color = match timed_run.win {
-              true => Color32::GREEN,
-              false => Color32::RED,
-            };
-            let times = timed_run.get_times();
-
-            ui.colored_label(time_color, times.last().unwrap_or(&Time::new()).to_string());
-            ui.label(format!("{:03} stamps", times.len()));
-            ui.label(format!("{} players", timed_run.objective_data.get_player_count()));
-
-            ui.checkbox(&mut timed_run.objective_data.secondary, "Secondary");
-            ui.checkbox(&mut timed_run.objective_data.overload, "Overload");
-            ui.checkbox(&mut timed_run.objective_data.glitched, "Glitched");
-            ui.checkbox(&mut timed_run.objective_data.early_drop, "Early Drop");
-
-            if timed_run.objective_data.early_drop { timed_run.objective_data.glitched = true; }
-
-            
-            if ui.button("Save Run").clicked() {
-              for_removal.push(id);
-
-              let serialized = bincode::serialize(&timed_run).unwrap();
-              println!("Serialized: {:?}", serialized);
-
-              let deserialized: TimedRun = bincode::deserialize(&serialized).unwrap();
-              println!("Deserialized: {:?}", deserialized);
-            };
-
-            if ui.button("Remove Run").clicked() {
-              for_removal.push(id);
-            }
-            
-          });
-        }
-
-        for id in for_removal.iter().rev() {
-          self.timed_runs.remove(*id);
-        }
-      });
+      match self.app_state {
+        AppState::None => {},
+        AppState::LogParserWindow => self.log_parser_window.show(ui),
+        AppState::ManagingRuns => self.run_manager_window.show(ui),
+      }
       
     });
     
@@ -206,5 +115,11 @@ impl eframe::App for BaseApp {
     //   println!("Selected file: {:?}", path);
     // }
   }
+}
+
+pub trait ShowUI {
+
+  fn show(&mut self, ui: &mut Ui);
+
 }
 

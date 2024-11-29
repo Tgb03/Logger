@@ -31,6 +31,12 @@ impl Time {
     };
   }
 
+  pub fn max() -> Time {
+    Time {
+      stamp: 24 * 60 * 60 * 1000
+    }
+  }
+
   pub fn get_stamp(&self) -> u64 {
     return self.stamp
   }
@@ -84,6 +90,14 @@ impl Time {
   /// Check if this time is smaller or equal than another time.
   pub fn is_smaller_or_equal_than(&self, other: &Time) -> bool {
     return self.stamp <= other.stamp;
+  }
+
+  pub fn min(&self, other: &Time) -> Time {
+    if self.is_smaller_than(other) {
+      return *self
+    }
+
+    *other
   }
 }
 
