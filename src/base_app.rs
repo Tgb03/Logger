@@ -30,7 +30,6 @@ pub struct BaseApp {
 
 impl Default for BaseApp {
   fn default() -> Self {
-
     Self { 
       level_name: String::new(),
       secondary_included: false,
