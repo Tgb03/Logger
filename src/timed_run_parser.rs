@@ -27,6 +27,13 @@ impl TimedRunParser {
     self.start_time = time;
   }
 
+  fn end_parse(&mut self, result: TimedRun) -> TimedRun {
+    self.players.clear();
+    self.start_time = Time::new();
+
+    result
+  }
+
   pub fn get_run<I: Iterator<Item=(Time, Token)>>(&mut self, tokens: &mut I) -> TimedRun {
 
     let mut result = TimedRun::new(self.level_name.clone());
@@ -49,12 +56,12 @@ impl TimedRunParser {
 
           result.objective_data.player_count = self.players.len() as u8;
 
-          return result
+          return self.end_parse(result);
         },
         Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => {
           result.objective_data.player_count = self.players.len() as u8;
 
-          return result;
+          return self.end_parse(result);
         },
         _ => panic!("{:?} token cannot be matched by TimedRunParser.", token),
       }
@@ -62,7 +69,7 @@ impl TimedRunParser {
 
     result.objective_data.player_count = self.players.len() as u8;
 
-    result
+    self.end_parse(result)
   }
 
 }
@@ -79,8 +86,6 @@ mod tests {
     let tokens = vec![
       (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
       (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
-      (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
-      (Time::from("00:00:10.250"), Token::PlayerDroppedInLevel(4)),
       (Time::from("00:01:12.135"), Token::DoorOpen),
       (Time::from("00:03:12.198"), Token::DoorOpen),
       (Time::from("00:04:06.000"), Token::DoorOpen),
@@ -92,8 +97,8 @@ mod tests {
     let mut timed_run_parser = TimedRunParser::new("R1C1".to_string(), Time::from("00:00:10.000"));
     let result = timed_run_parser.get_run(&mut tokens.into_iter());
 
-    assert_eq!(result.objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
-    assert_eq!(result.last_drop, Time::from("00:00:00.250"));
+    assert_eq!(result.objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 2));
+    assert_eq!(result.last_drop, Time::from("00:00:00.100"));
     assert_eq!(result.times, vec![
       Time::from("00:01:02.135"),
       Time::from("00:03:02.198"),

@@ -2,8 +2,6 @@ use crate::{logs::tokenizer::Token, parse_files::file_parse::TokenParserResult, 
 
 pub struct TokenParser {
 
-  results: TokenParserResult,
-
   timed_run_parser: TimedRunParser,
 
 }
@@ -12,7 +10,6 @@ impl TokenParser {
 
   fn new() -> TokenParser {
     TokenParser {
-      results: Default::default(),
       timed_run_parser: TimedRunParser::new("".to_string(), Time::new())
     }
   }

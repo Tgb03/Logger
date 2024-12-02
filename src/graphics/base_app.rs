@@ -2,7 +2,7 @@ use std::{fs::File, time::Duration};
 
 use egui::{Color32, Vec2};
 
-use crate::{log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, run_manager_window::RunManagerWindow, save_run::SaveManager};
+use crate::{graphics::log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, graphics::run_manager_window::RunManagerWindow, save_run::SaveManager};
 
 enum AppState {
 

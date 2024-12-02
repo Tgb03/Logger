@@ -1,6 +1,8 @@
 use egui::Color32;
 
-use crate::{objective_data::ObjectiveData, save_run::SaveManager, sorter_window::add_sorter_buttons, time::Time};
+use crate::{objective_data::ObjectiveData, save_run::SaveManager, time::Time};
+
+use super::sorter_window::add_sorter_buttons;
 
 
 
