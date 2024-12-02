@@ -1,14 +1,43 @@
 
 pub mod file_parse {
   use std::{fs::File, io::Read, path::PathBuf};
-  use crate::{logs::tokenizer::Tokenizer, timed_run::{TimedRun, TimedRunParser}};
+  use crate::time::Time;
+use crate::token_parser::TokenParser;
+  use crate::{logs::tokenizer::Tokenizer, timed_run::TimedRun};
+  
+  #[derive(Default)]
+  pub struct TokenParserResult {
 
-  pub async fn parse_all_files_async(_paths: Vec<PathBuf>) -> Vec<TimedRun> {
+    timed_runs: Vec<TimedRun>,
+
+  }
+
+  impl TokenParserResult {
+    pub fn get_timed_runs(self) -> Vec<TimedRun> {
+      self.timed_runs
+    }
+
+    pub fn extend(&mut self, other: TokenParserResult) {
+      self.timed_runs.extend(other.timed_runs);
+    }
+
+    pub fn extend_run(&mut self, run: TimedRun) {
+      if run.get_time().is_equal(&Time::new()) { return }
+      
+      self.timed_runs.push(run);
+    }
+
+    pub fn empty() -> TokenParserResult {
+      TokenParserResult { timed_runs: Vec::new() }
+    }
+  }
+
+  pub async fn parse_all_files_async(_paths: Vec<PathBuf>) -> TokenParserResult {
     todo!()
   }
 
-  pub fn parse_all_files(paths: Vec<File>) -> Vec<TimedRun> {
-    let mut result: Vec<TimedRun> = Vec::new();
+  pub fn parse_all_files(paths: Vec<File>) -> TokenParserResult {
+    let mut result: TokenParserResult = Default::default();
 
     for path in paths {
       result.extend(parse_file(path));
@@ -17,17 +46,14 @@ pub mod file_parse {
     result
   }
 
-  fn parse_file(mut path: File) -> Vec<TimedRun> {
+  fn parse_file(mut path: File) -> TokenParserResult {
     let mut data = String::new();
     let res = path.read_to_string(&mut data);
-    if res.is_err() { return Vec::new(); }
+    if res.is_err() { return Default::default(); }
     
     let tokens = Tokenizer::tokenize(&data);
 
-    let mut run_parser = TimedRunParser::new();
-    run_parser.parse_times(tokens);
-
-    run_parser.get_results()
+    TokenParser::parse_tokens(tokens)
   }
 }
 
@@ -77,6 +103,7 @@ mod tests {
       let file1_reader = File::open(path1).unwrap();
       let file2_reader = File::open(path2).unwrap();
       let result = file_parse::parse_all_files(vec![file1_reader, file2_reader]);
+      let result = result.get_timed_runs();
 
       assert_eq!(result.len(), 2);
       assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));

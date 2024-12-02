@@ -1,7 +1,7 @@
 
 use serde::{Serialize, Deserialize};
 
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct ObjectiveData {
 
   pub level_name: String,

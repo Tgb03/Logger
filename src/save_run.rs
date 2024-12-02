@@ -1,8 +1,7 @@
 
 use std::{collections::HashMap, env, path::{Path, PathBuf}};
 
-use crate::{objective_data::{self, ObjectiveData}, time::Time, timed_run::TimedRun};
-use bincode;
+use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
 pub struct SaveManager {
 

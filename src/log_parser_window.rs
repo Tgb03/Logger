@@ -1,6 +1,6 @@
 use egui::{Color32, Ui};
 
-use crate::{run_manager_window::RunManagerWindow, save_run::SaveManager, sorter_window::add_sorter_buttons, time::Time, timed_run::TimedRun};
+use crate::{save_run::SaveManager, sorter_window::add_sorter_buttons, time::Time, timed_run::TimedRun};
 
 
 pub struct LogParserWindow {

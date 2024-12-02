@@ -1,6 +1,6 @@
 use std::{fs::File, time::Duration};
 
-use egui::{Color32, Ui, Vec2};
+use egui::{Color32, Vec2};
 
 use crate::{log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, run_manager_window::RunManagerWindow, save_run::SaveManager};
 
@@ -41,7 +41,7 @@ impl Default for BaseApp {
 
       log_parser_window: LogParserWindow::new(),
       run_manager_window: RunManagerWindow::new(),
-      save_manager: SaveManager::new()
+      save_manager: SaveManager::new(),
     }
   }
 }
@@ -72,7 +72,8 @@ impl eframe::App for BaseApp {
               })
               .collect();
 
-            self.log_parser_window.set_times(parse_all_files(files));
+            let parse_result = parse_all_files(files);
+            self.log_parser_window.set_times(parse_result.get_timed_runs());
             self.app_state = AppState::LogParserWindow;
           }
         }

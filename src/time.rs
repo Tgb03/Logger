@@ -7,6 +7,14 @@ pub struct Time {
   stamp: u64
 }
 
+impl Default for Time {
+  fn default() -> Self {
+    Self { 
+      stamp: Default::default() 
+    }
+  }
+}
+
 impl Time {
 
   ///
