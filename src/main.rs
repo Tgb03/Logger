@@ -5,7 +5,6 @@ use graphics::base_app;
 
 pub mod logs;
 
-pub mod splitter_app;
 pub mod time;
 pub mod timed_run;
 pub mod timed_run_parser;
