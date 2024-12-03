@@ -14,6 +14,7 @@ pub mod save_run;
 pub mod objective_data_req;
 pub mod token_parser;
 pub mod graphics;
+pub mod run_rule;
 
 fn main() -> eframe::Result {
 

@@ -83,7 +83,7 @@ impl LogParserWindow {
           };
           let times = timed_run.get_times();
 
-          ui.colored_label(time_color, times.last().unwrap_or(&Time::new()).to_string());
+          ui.colored_label(time_color, timed_run.get_time().to_string());
           ui.label(format!("{:03} stamps", times.len()));
           ui.label(format!("{} players", timed_run.objective_data.get_player_count()));
 

@@ -59,6 +59,7 @@ impl TimedRunParser {
           return self.end_parse(result);
         },
         Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => {
+          result.times.push(time.sub(&self.start_time));
           result.objective_data.player_count = self.players.len() as u8;
 
           return self.end_parse(result);

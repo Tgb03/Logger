@@ -24,12 +24,21 @@ impl TimedRun {
     }
   }
 
+  pub fn get_split(&self, id: usize) -> Time {
+    if id == 0 {
+      return self.times[0];
+    }
+
+    return self.times[id].sub(&self.times[id - 1])
+  }
+
   pub fn get_splits(&self) -> Vec<Time> {
     let mut result = Vec::new();
     let times = self.get_times();
 
     if times.len() > 0 { result.push(times[0]); }
-    for i in 0..times.len() - 1 {
+    let times_end_id = if self.win { times.len() - 1 } else { times.len() - 2 };
+    for i in 0..times_end_id {
       result.push(times[i + 1].sub(&times[i]));
     }
 
@@ -39,10 +48,11 @@ impl TimedRun {
   pub fn get_times(&self) -> Vec<Time> {
     let mut result = Vec::new();
 
-    for time in &self.times {
+    let times_end_id = if self.win { self.times.len() - 1 } else { self.times.len() - 2 };
+    for i in 0..times_end_id {
       result.push(match self.objective_data.early_drop {
-        true => {time.sub(&self.last_drop)},
-        false => *time,
+        true => {self.times[i].sub(&self.last_drop)},
+        false => self.times[i],
       })
     }
 

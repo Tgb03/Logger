@@ -85,7 +85,7 @@ impl RunManagerWindow {
             };
             let times = timed_run.get_times();
   
-            ui.colored_label(time_color, times.last().unwrap_or(&Time::new()).to_string());
+            ui.colored_label(time_color, timed_run.get_time().to_string());
             ui.label(format!("{:03}", times.len()));
 
             if ui.button("Delete Run").clicked() {

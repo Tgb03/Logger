@@ -78,7 +78,7 @@ impl Token {
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess") { return Some(Token::GameEndWin); }
     if line.contains("RundownManager.OnExpeditionEnded(endState: Abort") { return Some(Token::GameEndAbort); }
     if line.contains("RundownManager.EndGameSession") { return Some(Token::GameEndAbort); }
-    if line.contains("RundownManager.OnExpeditionEnded(endState: Fail") { return Some(Token::GameEndLost); }
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionFail") { return Some(Token::GameEndLost); }
     if line.contains("OnApplicationQuit") { return Some(Token::LogFileEnd); }
 
     None
