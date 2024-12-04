@@ -1,5 +1,28 @@
-use crate::{objective_data::ObjectiveData, parse_files::file_parse::TokenParserResult, time::Time, timed_run::{self, TimedRun}};
+use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
+pub struct ObjectiveFilter {
+
+  level_name: Option<String>,
+  secondary: Option<bool>,
+  overload: Option<bool>,
+  glitched: Option<bool>,
+  early_drop: Option<bool>,
+  player_count: Option<u8>,
+
+}
+
+impl ObjectiveFilter {
+  pub fn check_match(&self, timed_run: &TimedRun) -> bool {
+    if self.level_name.as_ref().is_some_and(|v| v == &timed_run.objective_data.level_name) { return true }
+    if self.secondary.as_ref().is_some_and(|v| v == &timed_run.objective_data.secondary) { return true }
+    if self.overload.as_ref().is_some_and(|v| v == &timed_run.objective_data.overload) { return true }
+    if self.glitched.as_ref().is_some_and(|v| v == &timed_run.objective_data.glitched) { return true }
+    if self.early_drop.as_ref().is_some_and(|v| v == &timed_run.objective_data.early_drop) { return true }
+    if self.player_count.as_ref().is_some_and(|v| v == &timed_run.objective_data.player_count) { return true }
+
+    false
+  }
+}
 
 pub struct RunRule {
 
@@ -11,15 +34,8 @@ pub struct RunRule {
 pub enum RuleOrder {
 
   MergeSplitIntoNext(usize),
-  MustBeBiggerThan(usize, Time),
+  AllBeBiggerThan(Time),
 
-}
-
-pub trait ApplyRulesOrder {
-  fn apply_rules<I>(iter: I, timed_run: &mut TimedRun) 
-  where I: Iterator<Item=Self> {
-
-  }
 }
 
 impl RuleOrder {
@@ -31,12 +47,8 @@ impl RuleOrder {
 
         timed_run.times.remove(*id);
       },
-      RuleOrder::MustBeBiggerThan(id, time) => {
-        if *id >= timed_run.times.len() { return }
-
-        if timed_run.get_split(*id).is_smaller_or_equal_than(time) {
-          timed_run.times.remove(*id);
-        }
+      RuleOrder::AllBeBiggerThan(time) => {
+        
       },
     }
   }

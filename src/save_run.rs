@@ -45,6 +45,8 @@ impl SaveManager {
 
   pub fn save(&mut self, timed_run: TimedRun) {
 
+    if timed_run.times.len() == 1 { return }
+
     let name = Self::get_name(&timed_run.objective_data);
 
     match self.loaded_runs.get_mut(&name) {

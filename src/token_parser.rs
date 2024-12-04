@@ -28,10 +28,10 @@ impl TokenParser {
           token_parser.timed_run_parser.set_start_time(time);
           result.extend_run(token_parser.timed_run_parser.get_run(&mut token_iter));
         },
-        Token::GameEndAbort | Token::PlayerDroppedInLevel(_) => { /* Ignored in case instant reset. */}
         Token::LogFileEnd => {
           return result;
         },
+        Token::GameEndAbort | Token::DoorOpen | Token::BulkheadScanDone | Token::GameEndLost | Token::PlayerDroppedInLevel(_) => { /* Ignored in case instant reset. */}
         _ => panic!("{:?} token is not handled properly by Token Parser.", token)
       }
     }
