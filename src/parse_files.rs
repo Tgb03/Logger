@@ -107,6 +107,7 @@ mod tests {
 
       assert_eq!(result.len(), 2);
       assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
+      assert_eq!(result[0].win, true);
       assert_eq!(result[0].get_times(), vec![
         Time::from("00:01:02.135"),
         Time::from("00:03:02.198"),
@@ -115,7 +116,6 @@ mod tests {
         Time::from("00:16:01.890"),
         Time::from("00:17:49.343"),
       ]);
-      assert_eq!(result[0].win, true);
 
       drop(file1);
       drop(file2);
