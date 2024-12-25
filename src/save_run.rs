@@ -13,7 +13,7 @@ impl SaveManager {
 
   pub fn new() -> SaveManager {
     SaveManager {
-      loaded_runs: HashMap::new()
+      loaded_runs: HashMap::new(),
     }
   }
 
@@ -45,12 +45,15 @@ impl SaveManager {
 
   pub fn save(&mut self, timed_run: TimedRun) {
 
-    if timed_run.times.len() == 1 { return }
+    if timed_run.len() == 1 { return }
 
     let name = Self::get_name(&timed_run.objective_data);
+    let splits = timed_run.get_splits();
 
     match self.loaded_runs.get_mut(&name) {
-      Some(v) => v.push(timed_run),
+      Some(vec) => { 
+        vec.push(timed_run); 
+      },
       None => { self.loaded_runs.insert(name, vec![timed_run]); },
     };
 

@@ -70,14 +70,16 @@ impl LogParserWindow {
       }
     });
     
-    egui::ScrollArea::vertical().show(ui, |ui| {
+    egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), self.timed_runs.len(), |ui, row_range| {
       let mut for_removal = Vec::new();
 
-      for (id, timed_run) in self.timed_runs.iter_mut().enumerate() {
+      for row in row_range {
+        let timed_run = &mut self.timed_runs[row];
+
         ui.horizontal(|ui|{
           ui.colored_label(Color32::WHITE, &timed_run.objective_data.level_name);
 
-          let time_color = match timed_run.win {
+          let time_color = match timed_run.is_win() {
             true => Color32::GREEN,
             false => Color32::RED,
           };
@@ -93,15 +95,14 @@ impl LogParserWindow {
           ui.checkbox(&mut timed_run.objective_data.early_drop, "Early Drop");
 
           if timed_run.objective_data.early_drop { timed_run.objective_data.glitched = true; }
-
           
           if ui.button("Save Run").clicked() {
             save_manager.save(timed_run.clone());
-            for_removal.push(id);
+            for_removal.push(row);
           };
 
           if ui.button("Remove Run").clicked() {
-            for_removal.push(id);
+            for_removal.push(row);
           }
           
         });

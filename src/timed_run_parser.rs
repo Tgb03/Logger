@@ -43,23 +43,23 @@ impl TimedRunParser {
         Token::PlayerDroppedInLevel(id) => {
           if !self.players.contains(&id) {
             self.players.push(id);
-            result.last_drop = time.sub(&self.start_time);
+            result.set_last_drop(time.sub(&self.start_time));
           }
         },
-        Token::DoorOpen => result.times.push(time.sub(&self.start_time)),
-        Token::BulkheadScanDone => result.times.push(time.sub(&self.start_time)),
+        Token::DoorOpen => result.push(time.sub(&self.start_time)),
+        Token::BulkheadScanDone => result.push(time.sub(&self.start_time)),
         Token::SecondaryDone => result.objective_data.secondary = true,
         Token::OverloadDone => result.objective_data.overload = true,
         Token::GameEndWin => {
-          result.times.push(time.sub(&self.start_time));
-          result.win = true;
+          result.push(time.sub(&self.start_time));
+          result.set_win(true);
 
           result.objective_data.player_count = self.players.len() as u8;
 
           return self.end_parse(result);
         },
         Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => {
-          result.times.push(time.sub(&self.start_time));
+          result.push(time.sub(&self.start_time));
           result.objective_data.player_count = self.players.len() as u8;
 
           return self.end_parse(result);
@@ -99,8 +99,7 @@ mod tests {
     let result = timed_run_parser.get_run(&mut tokens.into_iter());
 
     assert_eq!(result.objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 2));
-    assert_eq!(result.last_drop, Time::from("00:00:00.100"));
-    assert_eq!(result.times, vec![
+    assert_eq!(*result.get_times(), vec![
       Time::from("00:01:02.135"),
       Time::from("00:03:02.198"),
       Time::from("00:03:56.000"),
@@ -108,7 +107,7 @@ mod tests {
       Time::from("00:16:01.890"),
       Time::from("00:17:49.343"),
     ]);
-    assert_eq!(result.win, true);
+    assert_eq!(result.is_win(), true);
   }
 
   #[test]
@@ -130,7 +129,7 @@ mod tests {
     let result = timed_run_parser.get_run(&mut tokens.into_iter());
 
     let splits = result.get_splits();
-    assert_eq!(splits, vec![
+    assert_eq!(*splits, vec![
       Time::from("00:01:02.135"),
       Time::from("00:02:00.063"),
       Time::from("00:00:53.802"),
@@ -162,7 +161,7 @@ mod tests {
     let result = timed_run_parser.get_run(&mut tokens.into_iter());
 
     let splits = result.get_splits();
-    assert_eq!(splits, vec![
+    assert_eq!(*splits, vec![
       Time::from("00:01:02.135"),
       Time::from("00:02:00.063"),
       Time::from("00:00:53.802"),

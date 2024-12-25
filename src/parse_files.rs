@@ -37,7 +37,7 @@ pub mod file_parse {
   pub fn parse_all_files_async<'a>(paths: Vec<File>) -> TokenParserResult {
     let paths: Vec<Arc<File>> = paths.into_iter().map(Arc::new).collect();
     let mut result = TokenParserResult::default();
-    let thread_count = 8.min(paths.len() / 16 + 1);
+    let thread_count = 8.min(paths.len() / 12 + 1);
     let files_per_thread = (paths.len() + thread_count - 1) / thread_count;
     let mut files_for_thread = Vec::new();
 
@@ -139,8 +139,8 @@ mod tests {
 
       assert_eq!(result.len(), 2);
       assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
-      assert_eq!(result[0].win, true);
-      assert_eq!(result[0].get_times(), vec![
+      assert_eq!(result[0].is_win(), true);
+      assert_eq!(*result[0].get_times(), vec![
         Time::from("00:01:02.135"),
         Time::from("00:03:02.198"),
         Time::from("00:03:56.000"),

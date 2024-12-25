@@ -18,7 +18,7 @@ pub fn add_sorter_buttons(ui: &mut Ui, timed_runs: &mut Vec<TimedRun>) {
     ui.label(format!("Total times added: {}", get_total_times(timed_runs).to_string()));
     
     if ui.button("Sort by Win").clicked() {
-      timed_runs.sort_by(|d, e| d.win.cmp(&e.win).reverse());
+      timed_runs.sort_by(|d, e| d.is_win().cmp(&e.is_win()).reverse());
     }
 
     if ui.button("Sort by name").clicked() {

@@ -69,42 +69,45 @@ impl RunManagerWindow {
       }
     });
 
-    egui::ScrollArea::vertical().show(ui, |ui| {
-      if let Some(runs) = save_manager.get_runs(&self.objective) {
-        
-        let mut for_deletion = Vec::new();
+    let timed_runs = match save_manager.get_runs(&self.objective) {
+      Some(run) => run,
+      None => return,
+    };
 
-        for (id, timed_run) in runs.iter().enumerate() {
-          ui.horizontal(|ui| {
+    egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), timed_runs.len(), |ui, row_range| {
+      let mut for_deletion = Vec::new();
 
-            ui.colored_label(Color32::WHITE, &timed_run.objective_data.level_name);
+      for row in row_range {
+        let timed_run = &mut timed_runs[row];
+        ui.horizontal(|ui| {
+
+          ui.colored_label(Color32::WHITE, &timed_run.objective_data.level_name);
   
-            let time_color = match timed_run.win {
+          let time_color = match timed_run.is_win() {
+            true => Color32::GREEN,
+            false => Color32::RED,
+          };
+          let times = timed_run.get_times();
+  
+          ui.colored_label(time_color, timed_run.get_time().to_string());
+          ui.label(format!("{:03}", times.len()));
+
+          if ui.button("Delete Run").clicked() {
+            for_deletion.push(row);
+          }
+
+          for (id, stamp) in timed_run.get_splits().iter().enumerate() {
+            let time_color = match best_splits.len() > id && stamp.is_equal(&best_splits[id]) {
               true => Color32::GREEN,
               false => Color32::RED,
             };
-            let times = timed_run.get_times();
-  
-            ui.colored_label(time_color, timed_run.get_time().to_string());
-            ui.label(format!("{:03}", times.len()));
+            ui.colored_label(time_color, stamp.to_string_no_hours());
+          }
+        });
+      }
 
-            if ui.button("Delete Run").clicked() {
-              for_deletion.push(id);
-            }
-
-            for (id, stamp) in timed_run.get_splits().iter().enumerate() {
-              let time_color = match best_splits.len() > id && stamp.is_equal(&best_splits[id]) {
-                true => Color32::GREEN,
-                false => Color32::RED,
-              };
-              ui.colored_label(time_color, stamp.to_string_no_hours());
-            }
-          });
-        }
-
-        for it in for_deletion.iter().rev() {
-          runs.remove(*it);
-        }
+      for it in for_deletion.iter().rev() {
+        timed_runs.remove(*it);
       }
     });
   }
