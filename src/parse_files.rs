@@ -1,8 +1,10 @@
 
 pub mod file_parse {
-  use std::{fs::File, io::Read, path::PathBuf};
+  use std::sync::Arc;
+  use std::thread;
+  use std::{fs::File, io::Read};
   use crate::time::Time;
-use crate::token_parser::TokenParser;
+  use crate::token_parser::TokenParser;
   use crate::{logs::tokenizer::Tokenizer, timed_run::TimedRun};
   
   #[derive(Default)]
@@ -32,11 +34,41 @@ use crate::token_parser::TokenParser;
     }
   }
 
-  pub async fn parse_all_files_async(_paths: Vec<PathBuf>) -> TokenParserResult {
-    todo!()
+  pub fn parse_all_files_async<'a>(paths: Vec<File>) -> TokenParserResult {
+    let paths: Vec<Arc<File>> = paths.into_iter().map(Arc::new).collect();
+    let mut result = TokenParserResult::default();
+    let thread_count = 8.min(paths.len() / 16 + 1);
+    let files_per_thread = (paths.len() + thread_count - 1) / thread_count;
+    let mut files_for_thread = Vec::new();
+
+    for i in 0..thread_count {
+      let start = i * files_per_thread;
+      let end = ((i + 1) * files_per_thread).min(paths.len());
+      files_for_thread.push(paths[start..end].to_vec());
+    }
+
+    let mut threads = Vec::new();
+
+    for file_vec in files_for_thread {
+      threads.push(thread::spawn(move || {
+        let file_refs: Vec<&File> = file_vec.iter().map(|arc| arc.as_ref()).collect();
+        parse_all_files(file_refs)
+      }));
+    }
+
+    for thread in threads {
+      match thread.join() {
+        Ok(res) => result.extend(res),
+        Err(_) => {},
+      }
+    }
+
+    result
   }
 
-  pub fn parse_all_files(paths: Vec<File>) -> TokenParserResult {
+  pub fn parse_all_files<'a, I>(paths: I) -> TokenParserResult
+  where 
+    I: IntoIterator<Item = &'a File> {
     let mut result: TokenParserResult = Default::default();
 
     for path in paths {
@@ -46,7 +78,7 @@ use crate::token_parser::TokenParser;
     result
   }
 
-  fn parse_file(mut path: File) -> TokenParserResult {
+  fn parse_file(mut path: &File) -> TokenParserResult {
     let mut data = String::new();
     let res = path.read_to_string(&mut data);
     if res.is_err() { return Default::default(); }
@@ -102,7 +134,7 @@ mod tests {
 
       let file1_reader = File::open(path1).unwrap();
       let file2_reader = File::open(path2).unwrap();
-      let result = file_parse::parse_all_files(vec![file1_reader, file2_reader]);
+      let result = file_parse::parse_all_files(&vec![file1_reader, file2_reader]);
       let result = result.get_timed_runs();
 
       assert_eq!(result.len(), 2);

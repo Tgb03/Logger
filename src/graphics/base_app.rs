@@ -2,7 +2,7 @@ use std::{fs::File, time::Duration};
 
 use egui::{Color32, Vec2};
 
-use crate::{graphics::log_parser_window::LogParserWindow, parse_files::file_parse::parse_all_files, graphics::run_manager_window::RunManagerWindow, save_run::SaveManager};
+use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
 
 enum AppState {
 
@@ -72,7 +72,7 @@ impl eframe::App for BaseApp {
               })
               .collect();
 
-            let parse_result = parse_all_files(files);
+            let parse_result = parse_all_files_async(files);
             self.log_parser_window.set_times(parse_result.get_timed_runs());
             self.app_state = AppState::LogParserWindow;
           }
