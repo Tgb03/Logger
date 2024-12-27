@@ -1,5 +1,5 @@
 
-use std::{collections::HashMap, env, path::{Path, PathBuf}};
+use std::{collections::{HashMap, HashSet}, env, path::{Path, PathBuf}};
 
 use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
@@ -45,26 +45,52 @@ impl SaveManager {
 
   pub fn save(&mut self, timed_run: TimedRun) {
 
-    if timed_run.len() == 1 { return }
+    if let Some(name) = self.save_no_remove_duplicates(timed_run) {
+      self.remove_duplicates(name);
+    }
+
+  }
+
+  fn save_no_remove_duplicates(&mut self, timed_run: TimedRun) -> Option<String> {
+    if timed_run.len() == 1 { return None }
 
     let name = Self::get_name(&timed_run.objective_data);
-    let splits = timed_run.get_splits();
 
     match self.loaded_runs.get_mut(&name) {
       Some(vec) => { 
-        vec.push(timed_run); 
+        vec.push(timed_run);
       },
-      None => { self.loaded_runs.insert(name, vec![timed_run]); },
+      None => { self.loaded_runs.insert(name.clone(), vec![timed_run]); },
     };
 
+    return Some(name);
   }
 
   pub fn save_multiple(&mut self, timed_runs: Vec<TimedRun>) {
     
+    let mut set = HashSet::new();
+
     for run in timed_runs {
-      self.save(run);
+      if let Some(name) = self.save_no_remove_duplicates(run) {
+        set.insert(name);
+      }
     }
 
+    for name in set {
+      self.remove_duplicates(name);
+    }
+
+  }
+
+  fn remove_duplicates(&mut self, name: String) {
+    if let Some(vec) = self.loaded_runs.remove(&name) {
+      let set: HashSet<TimedRun> = HashSet::from_iter(vec);
+      
+      self.loaded_runs.insert(name, 
+        set
+        .into_iter()
+        .collect());
+    }
   }
 
   fn get_largest_stamp_count(runs: &Vec<TimedRun>) -> usize {
@@ -103,7 +129,7 @@ impl SaveManager {
 
   pub fn load(&mut self, objective_data: &ObjectiveData) {
 
-    let id = Self::get_name(objective_data);
+    let _id = Self::get_name(objective_data);
     todo!()
     
   }

@@ -39,25 +39,5 @@ impl eframe::App for SplitterApp {
         fill: Color32::BLACK,
         stroke: egui::Stroke::new(1.0, Color32::TRANSPARENT),
     };
-    egui::TopBottomPanel::top("TopPanel").frame(frame).show(ctx, |ui| {
-      ui.horizontal( |ui| {
-        ui.label("Level Name: ");
-        ui.text_edit_singleline(&mut self.level_name)
-      });
-      ui.horizontal( |ui| {
-        ui.checkbox(&mut self.secondary_included, "secondary");
-        ui.checkbox(&mut self.overload_included, "overload");
-      });
-      ui.horizontal( |ui| {
-        ui.checkbox(&mut self.glitched, "glitch");
-        ui.checkbox(&mut self.early_drop, "early_drop");
-      });
-      let mut level_id: String = self.level_name.to_string().to_uppercase();
-      if self.secondary_included { level_id += "_sec"; }
-      if self.overload_included { level_id += "_ovrl"; }
-      if self.glitched { level_id += "_glitch"; }
-      if self.early_drop { level_id += "_edrop"; }
-      ui.label(format!("ID: {}", level_id));
-    });
   }
 }

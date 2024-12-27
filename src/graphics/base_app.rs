@@ -13,12 +13,6 @@ enum AppState {
 }
 
 pub struct BaseApp {
-  
-  level_name: String,
-  secondary_included: bool,
-  overload_included: bool,
-  glitched: bool,
-  early_drop: bool,
 
   app_state: AppState,
 
@@ -30,13 +24,7 @@ pub struct BaseApp {
 
 impl Default for BaseApp {
   fn default() -> Self {
-    Self { 
-      level_name: String::new(),
-      secondary_included: false,
-      overload_included: false,
-      glitched: false,
-      early_drop: false,
-
+    Self {
       app_state: AppState::None,
 
       log_parser_window: LogParserWindow::new(),
@@ -82,26 +70,6 @@ impl eframe::App for BaseApp {
           self.app_state = AppState::ManagingRuns;
         }
       })
-    });
-    egui::SidePanel::left("LeftPanel").frame(frame).show(ctx, |ui| {
-      ui.horizontal( |ui| {
-        ui.label("Level Name: ");
-        ui.text_edit_singleline(&mut self.level_name)
-      });
-      ui.horizontal( |ui| {
-        ui.checkbox(&mut self.secondary_included, "secondary");
-        ui.checkbox(&mut self.overload_included, "overload");
-      });
-      ui.horizontal( |ui| {
-        ui.checkbox(&mut self.glitched, "glitch");
-        ui.checkbox(&mut self.early_drop, "early_drop");
-      });
-      let mut level_id: String = self.level_name.to_string().to_uppercase();
-      if self.secondary_included { level_id += "_sec"; }
-      if self.overload_included { level_id += "_ovrl"; }
-      if self.glitched { level_id += "_glitch"; }
-      if self.early_drop { level_id += "_edrop"; }
-      ui.label(format!("ID: {}", level_id));
     });
     
     egui::CentralPanel::default().show(ctx, |ui| {

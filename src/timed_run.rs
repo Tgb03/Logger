@@ -3,7 +3,7 @@ use crate::{objective_data::ObjectiveData, time::Time};
 use serde::{Serialize, Deserialize};
 
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct TimedRun {
 
   pub objective_data: ObjectiveData,
@@ -102,12 +102,4 @@ impl TimedRun {
   }
 
 }
-
-/*
-impl PartialEq for TimedRun {
-  fn eq(&self, other: &Self) -> bool {
-    self.level_name == other.level_name && self.objective_data == other.objective_data 
-  }
-}
-*/
 
