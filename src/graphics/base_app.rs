@@ -2,13 +2,16 @@ use std::{fs::File, time::Duration};
 
 use egui::{Color32, Vec2};
 
-use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
+use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::{parse_all_files, parse_all_files_async}, save_run::SaveManager};
+
+use super::live_window::LiveWindow;
 
 enum AppState {
 
   None,
   LogParserWindow,
   ManagingRuns,
+  LiveWindow,
 
 }
 
@@ -18,6 +21,8 @@ pub struct BaseApp {
 
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
+  live_window: LiveWindow,
+
   save_manager: SaveManager,
 
 }
@@ -29,7 +34,8 @@ impl Default for BaseApp {
 
       log_parser_window: LogParserWindow::new(),
       run_manager_window: RunManagerWindow::new(),
-      save_manager: SaveManager::new(),
+      live_window: LiveWindow::default(),
+      save_manager: SaveManager::default(),
     }
   }
 }
@@ -48,6 +54,11 @@ impl eframe::App for BaseApp {
     };
     egui::TopBottomPanel::top("TopPanel").frame(frame).show(ctx, |ui| {
       ui.horizontal_top(|ui| {
+        if ui.button("Live Splitter").clicked() {
+          self.app_state = AppState::LiveWindow;
+          self.live_window.load_file();
+        }
+
         //ui.button("Start AutoSplitter");
         if ui.button("Input Speedrun Logs...").clicked() {
           if let Some(paths) = rfd::FileDialog::new().pick_files() {
@@ -60,8 +71,9 @@ impl eframe::App for BaseApp {
               })
               .collect();
 
+            // let parse_result = parse_all_files(&files);
             let parse_result = parse_all_files_async(files);
-            self.log_parser_window.set_times(parse_result.get_timed_runs());
+            self.log_parser_window.set_times(parse_result.into());
             self.app_state = AppState::LogParserWindow;
           }
         }
@@ -78,6 +90,7 @@ impl eframe::App for BaseApp {
         AppState::None => {},
         AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
         AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
+        AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager),
       }
       
     });

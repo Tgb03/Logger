@@ -29,7 +29,7 @@ impl Token {
     //println!("LINE: {}", line);
 
     let words: Vec<&str> = line.split(" ").collect();
-
+    
     let rundown_id = &words[6][6..];
     let tier = &words[7][4..5];
     let level = words[8].parse::<i32>().unwrap() + 1;

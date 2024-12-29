@@ -18,6 +18,7 @@ impl TimedRunParser {
       level_name
     }
   }
+  
 
   pub fn set_name(&mut self, level_name: String) {
     self.level_name = level_name;

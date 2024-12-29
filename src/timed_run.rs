@@ -47,7 +47,6 @@ impl TimedRun {
   }
 
   fn calculate_vecs(&mut self) {
-
     // calculate the times
     self.buffered_times_result.clear();
     let times_end_id = if self.win { self.times.len() } else { self.times.len().saturating_sub(1) };

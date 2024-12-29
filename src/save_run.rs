@@ -3,6 +3,10 @@ use std::{collections::{HashMap, HashSet}, env, path::{Path, PathBuf}};
 
 use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
+/// Save manager struct
+/// 
+/// This handles loading runs into memory and then ultimately saving them
+#[derive(Default)]
 pub struct SaveManager {
 
   loaded_runs: HashMap<String, Vec<TimedRun>>,
@@ -11,38 +15,13 @@ pub struct SaveManager {
 
 impl SaveManager {
 
-  pub fn new() -> SaveManager {
-    SaveManager {
-      loaded_runs: HashMap::new(),
-    }
-  }
-
   fn get_directory() -> PathBuf {
     Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger")
   }
 
-  fn get_name(objective_data: &ObjectiveData) -> String {
-    let secondary = match objective_data.secondary {
-      true => "_sec",
-      false => ""
-    };
-    let overload = match objective_data.overload {
-      true => "_ovrl",
-      false => ""
-    };
-    let glitched = match objective_data.glitched {
-      true => "_glitch",
-      false => ""
-    };
-    let early_drop = match objective_data.early_drop {
-      true => "_edrop",
-      false => ""
-    };
-
-    //println!("Saved: {}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count());
-    format!("{}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count())
-  }
-
+  /// save a single timed run into RAM
+  /// 
+  /// duplicates are automatically removed.
   pub fn save(&mut self, timed_run: TimedRun) {
 
     if let Some(name) = self.save_no_remove_duplicates(timed_run) {
@@ -54,7 +33,7 @@ impl SaveManager {
   fn save_no_remove_duplicates(&mut self, timed_run: TimedRun) -> Option<String> {
     if timed_run.len() == 1 { return None }
 
-    let name = Self::get_name(&timed_run.objective_data);
+    let name = timed_run.objective_data.get_id();
 
     match self.loaded_runs.get_mut(&name) {
       Some(vec) => { 
@@ -66,6 +45,9 @@ impl SaveManager {
     return Some(name);
   }
 
+  /// save multiple runs into the RAM memory.
+  /// 
+  /// duplicates are automatically removed.
   pub fn save_multiple(&mut self, timed_runs: Vec<TimedRun>) {
     
     let mut set = HashSet::new();
@@ -102,13 +84,21 @@ impl SaveManager {
     max
   }
 
+  /// returns all runs for the objective.
   pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<TimedRun>> {
-    self.loaded_runs.get_mut(&Self::get_name(objective_data))
+    let id = objective_data.get_id();
+
+    if !self.loaded_runs.contains_key(&id){
+      //self.load(objective_data);
+    }
+
+    self.loaded_runs.get_mut(&id)
   }
 
+  /// returns all best splits for the objective.
   pub fn get_best_splits(&mut self, objective_data: &ObjectiveData) -> Vec<Time> {
 
-    let id = Self::get_name(&objective_data);
+    let id = objective_data.get_id();
 
     if !self.loaded_runs.contains_key(&id){
       //self.load(objective_data);
@@ -127,9 +117,10 @@ impl SaveManager {
     result
   }
 
+  /// load from file the objective data.
   pub fn load(&mut self, objective_data: &ObjectiveData) {
 
-    let _id = Self::get_name(objective_data);
+    let _id = objective_data.get_id();
     todo!()
     
   }

@@ -1,0 +1,190 @@
+use egui::ahash::HashSet;
+
+use crate::{time::Time, timed_run::TimedRun};
+
+use super::{token_parser::TokenParserT, tokenizer::Token};
+
+/// struct for parsing a single run
+pub struct RunParser {
+
+  start_time: Time,
+  players: HashSet<u32>,
+
+  is_done: bool,
+  timed_run: TimedRun
+
+}
+
+impl RunParser {
+
+  pub fn new(level_name: String, start_time: Time) -> RunParser {
+    RunParser {
+      start_time,
+      players: Default::default(),
+      is_done: false,
+      timed_run: TimedRun::new(level_name)
+    }
+  }
+
+  /// check whether or not the run parser finished.
+  pub fn is_done(&self) -> bool {
+    self.is_done
+  }
+
+}
+
+impl Into<TimedRun> for RunParser {
+  
+  fn into(self) -> TimedRun {
+    self.timed_run
+  }
+
+}
+
+
+impl TokenParserT<TimedRun> for RunParser {
+
+  fn into_result(&self) -> &TimedRun {
+    &self.timed_run
+  }
+  
+  fn parse_one_token(&mut self, (time, token): (Time, Token)) -> bool {
+
+    if self.is_done { return true }
+    
+    match token {
+      Token::PlayerDroppedInLevel(id) => {
+        self.players.insert(id);
+      },
+      Token::DoorOpen | Token::BulkheadScanDone => {
+        self.timed_run.push(time.sub(&self.start_time));
+      },
+      Token::SecondaryDone => self.timed_run.objective_data.secondary = true,
+      Token::OverloadDone => self.timed_run.objective_data.overload = true,
+      Token::GameEndWin => {
+        self.timed_run.set_win(true);
+        self.timed_run.objective_data.player_count = self.players.len() as u8;
+        self.is_done = true;
+        self.timed_run.push(time.sub(&self.start_time));
+
+        return true;
+      },
+      Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => { 
+        self.is_done = true; 
+        self.timed_run.objective_data.player_count = self.players.len() as u8; 
+        self.timed_run.push(time.sub(&self.start_time));
+        return true; 
+      },
+      _ => panic!("Failed to parse token {:?} in RunParser", token)
+    }
+    
+    return false;
+  }
+
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{logs::{token_parser::TokenParserT, tokenizer::Token}, objective_data::ObjectiveData, time::Time};
+
+    use super::RunParser;
+
+
+    #[test]
+    pub fn test_base_game() {
+      let tokens = vec![
+        (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
+        (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
+        (Time::from("00:01:12.135"), Token::DoorOpen),
+        (Time::from("00:03:12.198"), Token::DoorOpen),
+        (Time::from("00:04:06.000"), Token::DoorOpen),
+        (Time::from("00:14:12.135"), Token::DoorOpen),
+        (Time::from("00:16:11.890"), Token::BulkheadScanDone),
+        (Time::from("00:17:59.343"), Token::GameEndWin),
+      ];
+      
+      let result = RunParser::parse_all_tokens(
+        tokens.into_iter(), 
+        RunParser::new("R1C1".to_string(), Time::from("00:00:10.000"))
+      );
+      
+      assert_eq!(result.objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 2));
+      assert_eq!(*result.get_times(), vec![
+        Time::from("00:01:02.135"),
+        Time::from("00:03:02.198"),
+        Time::from("00:03:56.000"),
+        Time::from("00:14:02.135"),
+        Time::from("00:16:01.890"),
+        Time::from("00:17:49.343"),
+      ]);
+      assert_eq!(result.is_win(), true);
+    }
+  
+    #[test]
+    pub fn test_splits() {
+      let tokens = vec![
+        (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
+        (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
+        (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
+        (Time::from("00:00:10.250"), Token::PlayerDroppedInLevel(4)),
+        (Time::from("00:01:12.135"), Token::DoorOpen),
+        (Time::from("00:03:12.198"), Token::DoorOpen),
+        (Time::from("00:04:06.000"), Token::DoorOpen),
+        (Time::from("00:14:12.135"), Token::DoorOpen),
+        (Time::from("00:16:11.890"), Token::BulkheadScanDone),
+        (Time::from("00:17:59.343"), Token::GameEndWin),
+      ];
+      
+      let result = RunParser::parse_all_tokens(
+        tokens.into_iter(), 
+        RunParser::new("R1C1".to_string(), Time::from("00:00:10.000"))
+      );
+  
+      let splits = result.get_splits();
+      assert_eq!(*splits, vec![
+        Time::from("00:01:02.135"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
+      ])
+    }
+  
+    #[test]
+    pub fn test_overflow() {
+  
+      let tokens = vec![
+        (Time::from("23:59:10.000"), Token::PlayerDroppedInLevel(1)),
+        (Time::from("23:59:10.100"), Token::PlayerDroppedInLevel(2)),
+        (Time::from("23:59:10.110"), Token::PlayerDroppedInLevel(3)),
+        (Time::from("23:59:10.250"), Token::PlayerDroppedInLevel(4)),
+        (Time::from("00:00:12.135"), Token::DoorOpen),
+        (Time::from("00:00:12.197"), Token::PlayerDroppedInLevel(4)),
+        (Time::from("00:02:12.198"), Token::DoorOpen),
+        (Time::from("00:03:06.000"), Token::DoorOpen),
+        (Time::from("00:13:12.135"), Token::DoorOpen),
+        (Time::from("00:13:15.135"), Token::SecondaryDone),
+        (Time::from("00:15:11.890"), Token::BulkheadScanDone),
+        (Time::from("00:16:59.343"), Token::GameEndWin),
+      ];
+      
+      let result = RunParser::parse_all_tokens(
+        tokens.into_iter(), 
+        RunParser::new("R1C1".to_string(), Time::from("23:59:10.000"))
+      );
+  
+      let splits = result.get_splits();
+      assert_eq!(*splits, vec![
+        Time::from("00:01:02.135"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
+      ]);
+      assert_eq!(result.objective_data.secondary, true);
+  
+    }
+
+}

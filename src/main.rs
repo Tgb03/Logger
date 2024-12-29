@@ -12,7 +12,6 @@ pub mod objective_data;
 pub mod parse_files;
 pub mod save_run;
 pub mod objective_data_req;
-pub mod token_parser;
 pub mod graphics;
 
 fn main() -> eframe::Result {
@@ -27,7 +26,7 @@ fn main() -> eframe::Result {
       resizable: Some(true),
       //position: Some([0.0, 128.0].into()),
       inner_size: Some([932.0, 512.0].into()),
-      //window_level: Some(egui::WindowLevel::AlwaysOnTop),
+      window_level: Some(egui::WindowLevel::AlwaysOnTop),
       //transparent: Some(true),
       ..Default::default()
     },
