@@ -2,8 +2,8 @@
 pub mod file_parse {
   use std::sync::Arc;
   use std::thread;
-  use std::time::Instant;
-use std::{fs::File, io::Read};
+  //use std::time::Instant;
+  use std::{fs::File, io::Read};
   use crate::logs::parser::{Parser, ParserResult};
   use crate::logs::token_parser::TokenParserT;
   use crate::logs::tokenizer::Tokenizer;
@@ -19,7 +19,7 @@ use std::{fs::File, io::Read};
 
     let mut threads = Vec::new();
 
-    let start = Instant::now();
+   // let start = Instant::now();
     for file_vec in files_for_thread {
       threads.push(thread::spawn(move || {
         let file_refs: Vec<&File> = file_vec.iter().map(|arc| arc.as_ref()).collect();
@@ -34,8 +34,8 @@ use std::{fs::File, io::Read};
         Err(_) => {},
       }
     }
-    let duration = start.elapsed();
-    println!("Time elapsed with threads is: {:?}", duration);
+    // let duration = start.elapsed();
+    // println!("Time elapsed with threads is: {:?}", duration);
 
     result
   }
@@ -45,12 +45,12 @@ use std::{fs::File, io::Read};
     I: IntoIterator<Item = &'a File> {
     let mut result: ParserResult = Default::default();
 
-    let start = Instant::now();
+    // let start = Instant::now();
     for path in paths {
       result.merge_result(parse_file(path));
     }
-    let duration = start.elapsed();
-    println!("Time elapsed without threads is: {:?}", duration); 
+    // let duration = start.elapsed();
+    // println!("Time elapsed without threads is: {:?}", duration); 
 
     result
   }

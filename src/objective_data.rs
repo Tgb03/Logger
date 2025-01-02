@@ -61,6 +61,19 @@ impl ObjectiveData {
     };
 
     //println!("Saved: {}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count());
-    format!("{}{}{}{}{}_{}.save", self.level_name, secondary, overload, glitched, early_drop, self.get_player_count())
+    format!("{}_{}{}{}{}{}.save", self.level_name.to_uppercase(), self.get_player_count(), secondary, overload, glitched, early_drop)
+  }
+
+  pub fn from_id(id: &String) -> Self {
+    let id_arr: Vec<&str> = id.trim_end_matches(".save").split('_').collect();
+
+    Self {
+      level_name: id_arr[0].to_owned(),
+      secondary: id.contains("sec"),
+      overload: id.contains("ovrl"),
+      glitched: id.contains("glitch"),
+      early_drop: id.contains("edrop"),
+      player_count: id_arr[1].to_owned().parse::<u8>().unwrap(),
+    }
   }
 }

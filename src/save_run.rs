@@ -1,5 +1,5 @@
 
-use std::{collections::{HashMap, HashSet}, env, path::{Path, PathBuf}};
+use std::{collections::{HashMap, HashSet}, fs, path::{Path, PathBuf}};
 
 use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
@@ -84,6 +84,28 @@ impl SaveManager {
     max
   }
 
+  // returns the world record run for a level
+  pub fn get_best_run(&mut self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
+    let id = objective_data.get_id();
+
+    match self.loaded_runs.get(&id) {
+      Some(runs) => {
+        let mut best_run = None;
+        let mut best_time = Time::max();
+
+        for timed_run in runs {
+          if timed_run.get_time().is_smaller_than(&best_time) && timed_run.is_win() {
+            best_run = Some(timed_run);
+            best_time = timed_run.get_time();
+          }
+        }
+
+        best_run
+      },
+      None => None,
+    }
+  }
+
   /// returns all runs for the objective.
   pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<TimedRun>> {
     let id = objective_data.get_id();
@@ -117,12 +139,116 @@ impl SaveManager {
     result
   }
 
+  /// load all runs that were saved to folder
+  pub fn load_all_runs(&mut self) {
+
+    let file_path = Self::get_directory();
+    let paths = fs::read_dir(file_path).unwrap();
+    
+    for path in paths {
+      if let Ok(entry) = path {
+
+        self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+
+      }
+    }
+
+  }
+
+  /// optimize these runs by removing all that do not hold
+  /// important information
+  /// 
+  /// if the run is not world record or has a best split it is removed
+  pub fn optimize_obj(&mut self, objective_data: &ObjectiveData) {
+    let best_splits = self.get_best_splits(objective_data).clone();
+    let best_time = match self.get_best_run(objective_data) {
+        Some(run) => Some(run.get_time()),
+        None => None,
+    };
+    let mut for_deletions = Vec::new();
+
+    if let Some(runs) = self.get_runs(objective_data) {
+
+      for (r_id, run) in runs.into_iter().enumerate() {
+        let mut is_valid = false;
+        if best_time.is_some_and(|t| { run.get_time() == t }) {
+          continue;
+        }
+        
+        for (id, time) in run.get_splits().into_iter().enumerate() {
+          if *time == best_splits[id] {
+            is_valid = true;
+            break;
+          }
+        }
+
+        if !is_valid {
+          for_deletions.push(r_id);
+        }
+      }
+      
+      for elem in for_deletions.iter().rev() {
+        runs.remove(*elem);
+      }
+      
+    }
+  }
+
   /// load from file the objective data.
   pub fn load(&mut self, objective_data: &ObjectiveData) {
 
-    let _id = objective_data.get_id();
-    todo!()
-    
+    let id = objective_data.get_id();
+    let file_path = Self::get_directory()
+      .join(id.clone());
+
+    match std::fs::read(file_path) {
+      Ok(binary_data) => {
+
+        let vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
+            Ok(vec) => vec,
+            Err(_) => Vec::new(),
+        };
+
+        //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
+        self.loaded_runs.insert(id, vec);
+      },
+      Err(e) => {
+        eprintln!("{:?}", e);
+      },
+    }
+  }
+
+  /// save one objective data to pc folder
+  pub fn save_to_file(&self, objective_data: &ObjectiveData) {
+    let id = objective_data.get_id();
+    let file_path = Self::get_directory()
+        .join(id.clone());
+
+    let empty = Vec::new();
+    if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(&id).unwrap_or(&empty)) {
+      //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
+      let _ = std::fs::write(file_path, &bin_data);
+    }
+  }
+
+  /// save all loaded runs to files
+  pub fn save_to_files(&self) {
+    for (key, vec) in &self.loaded_runs {
+      let file_path = Self::get_directory()
+        .join(key);
+
+      
+      if let Ok(bin_data) = bincode::serialize(&vec) {
+        //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
+        let _ = std::fs::write(file_path, &bin_data);
+      }
+    }
+  }
+
+  pub fn get_all_objectives(&self) -> Vec<String> {
+    let mut v = self.loaded_runs.keys().cloned().collect::<Vec<String>>();
+    v.sort();
+    v
   }
 
 }

@@ -2,7 +2,7 @@ use crate::time::Time;
 
 use super::tokenizer::Token;
 
-
+/// generic trait for a parser
 pub trait TokenParserT<R> : Into<R> {
 
   /// get the current result from the parser
@@ -11,6 +11,7 @@ pub trait TokenParserT<R> : Into<R> {
   /// parse on token and return whether or not the parser finished
   fn parse_one_token(&mut self, token_pair: (Time, Token)) -> bool;
 
+  /// parse tokens without consuming the self
   fn parse_continously<I>(&mut self, tokens: I)
   where 
     I: Iterator<Item = (Time, Token)> {
@@ -20,6 +21,7 @@ pub trait TokenParserT<R> : Into<R> {
     }
   }
 
+  /// parse all tokens in one go and get the result
   fn parse_all_tokens<I, T>(tokens: I, constructor: T) -> R
   where
     I: Iterator<Item = (Time, Token)>,
@@ -33,6 +35,9 @@ pub trait TokenParserT<R> : Into<R> {
     parser.into()
   }
 
+  /// parse all tokens in one go and get the result
+  /// 
+  /// uses a default constructor for the parser.
   fn parse_all_tokens_default<I>(tokens: I) -> R
   where
     I: Iterator<Item = (Time, Token)>,

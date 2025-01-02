@@ -5,7 +5,7 @@ use crate::{objective_data::ObjectiveData, save_run::SaveManager, time::Time};
 use super::sorter_window::add_sorter_buttons;
 
 
-
+#[derive(Default)]
 pub struct RunManagerWindow {
 
   objective: ObjectiveData,
@@ -15,12 +15,6 @@ pub struct RunManagerWindow {
 }
 
 impl RunManagerWindow {
-  pub fn new() -> RunManagerWindow {
-    RunManagerWindow {
-      objective: ObjectiveData::new(),
-      player_input_string: String::new(),
-    }
-  }
 
   fn sum_run_splits(run: &Vec<Time>) -> Time {
     let mut result = Time::new();
@@ -39,7 +33,7 @@ impl RunManagerWindow {
       ui.label("Level name: ");
       ui.add(egui::TextEdit::singleline(&mut self.objective.level_name)
           .desired_width(60.0));
-        ui.label("Player count: ");
+      ui.label("Player count: ");
       ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
           .desired_width(30.0));
       ui.checkbox(&mut self.objective.secondary, "Secondary");
@@ -55,6 +49,41 @@ impl RunManagerWindow {
       ui.colored_label(Color32::GOLD, "  Theoretical:");
       ui.colored_label(Color32::GOLD, Self::sum_run_splits(&best_splits).to_string());
 
+    });
+
+    ui.horizontal(|ui| {
+       egui::ComboBox::from_label("Select loaded objective")
+        .selected_text(format!("{}", &self.objective.get_id()))
+        .height(500.0)
+        .show_ui(ui, |ui| {
+          
+          for key in save_manager.get_all_objectives() {
+            if ui.selectable_value(&mut self.objective, ObjectiveData::from_id(&key), key).clicked() {
+              self.player_input_string = self.objective.player_count.to_string();
+            };
+          }
+        }
+      );
+
+      if ui.button("Save run to PC").clicked() {
+        save_manager.save_to_file(&self.objective);
+      }
+      
+      if ui.button("Save ALL runs to PC").clicked() {
+        save_manager.save_to_files();
+      }
+
+      if ui.button("Load runs for this objective").clicked() {
+        save_manager.load(&self.objective);
+      }
+
+      if ui.button("Load ALL runs").clicked() {
+        save_manager.load_all_runs();
+      }
+
+      if ui.button("Optimize runs").clicked() {
+        save_manager.optimize_obj(&self.objective);
+      }
     });
       
     // handles all sorters

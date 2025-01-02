@@ -55,6 +55,13 @@ pub struct Parser {
 
 }
 
+impl Parser {
+
+  pub fn get_run_parser(&self) -> Option<&RunParser> {
+    self.run_parser.as_ref()
+  }
+
+}
 
 impl Into<ParserResult> for Parser {
   fn into(self) -> ParserResult {
@@ -78,7 +85,20 @@ impl TokenParserT<ParserResult> for Parser {
             self.state = ParserState::InGame;
             self.run_parser = Some(RunParser::new(self.name_of_level.clone(), time))
           },
-          Token::PlayerDroppedInLevel(_) | Token::GameEndAbort => return self.state == ParserState::Finished,
+          // logs have so many edge cases like this bs one
+          // at some point some shit like this might be useful
+          // however it is so cursed I will ignore it until
+          // someone finds a bug with the current implementation
+          // that doesn't use or screw around with the PLOC
+          /*
+          Token::PlayerDroppedInLevel(id) => {
+            self.state = ParserState::InGame;
+            let mut parser = RunParser::new(self.name_of_level.clone(), time);
+            parser.parse_one_token((time, Token::PlayerDroppedInLevel(id)));
+            self.run_parser = Some(parser);
+          },
+          */
+          Token::GameEndAbort => return self.state == ParserState::Finished,
           Token::LogFileEnd => {
             self.state = ParserState::Finished;
             

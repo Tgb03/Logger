@@ -68,6 +68,7 @@ impl Token {
 
   pub fn tokenize_str(line: &str) -> Option<Token> {
     
+    if line.contains("SNET : OnMasterCommand : ReceivingSync_Dropin") { return Some(Token::GameStarted); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
     if line.contains("exits PLOC_InElevator") { return Some(Self::create_player(line)); }
@@ -97,6 +98,7 @@ impl Tokenizer {
 
     for line in log_string.split('\n') {
       if let Some(token) = Token::tokenize_str(line) {
+        // println!("{:?} tokenized", token);
         result.push((Time::from(line.trim()), token));
       }
     }

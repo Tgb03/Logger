@@ -2,7 +2,7 @@ use egui::{Color32, Ui};
 
 use crate::{save_run::SaveManager, graphics::sorter_window::add_sorter_buttons, timed_run::TimedRun};
 
-
+#[derive(Default)]
 pub struct LogParserWindow {
 
   timed_runs: Vec<TimedRun>,
@@ -15,16 +15,6 @@ pub struct LogParserWindow {
 }
 
 impl LogParserWindow {
-
-  pub fn new() -> LogParserWindow {
-    LogParserWindow { 
-      timed_runs: Vec::new(), 
-      set_all_secondary: false, 
-      set_all_early_drop: false, 
-      set_all_glitched: false, 
-      set_all_overload: false 
-    }
-  }
 
   pub fn set_times(&mut self, times: Vec<TimedRun>) {
     self.timed_runs = times;

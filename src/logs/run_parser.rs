@@ -51,10 +51,13 @@ impl TokenParserT<TimedRun> for RunParser {
   fn parse_one_token(&mut self, (time, token): (Time, Token)) -> bool {
 
     if self.is_done { return true }
+
+    println!("parsed: {:?}", token);
     
     match token {
       Token::PlayerDroppedInLevel(id) => {
         self.players.insert(id);
+        self.timed_run.objective_data.player_count = self.players.len() as u8;
       },
       Token::DoorOpen | Token::BulkheadScanDone => {
         self.timed_run.push(time.sub(&self.start_time));
@@ -75,6 +78,7 @@ impl TokenParserT<TimedRun> for RunParser {
         self.timed_run.push(time.sub(&self.start_time));
         return true; 
       },
+      Token::SelectExpedition(_) => { /* IGNORE TOKEN FOR EARLY DROP */ }
       _ => panic!("Failed to parse token {:?} in RunParser", token)
     }
     
