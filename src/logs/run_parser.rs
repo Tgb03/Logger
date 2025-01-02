@@ -52,7 +52,7 @@ impl TokenParserT<TimedRun> for RunParser {
 
     if self.is_done { return true }
 
-    println!("parsed: {:?}", token);
+    // println!("parsed: {:?}", token);
     
     match token {
       Token::PlayerDroppedInLevel(id) => {

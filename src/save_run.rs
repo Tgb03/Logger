@@ -174,7 +174,7 @@ impl SaveManager {
         if best_time.is_some_and(|t| { run.get_time() == t }) {
           continue;
         }
-        
+
         for (id, time) in run.get_splits().into_iter().enumerate() {
           if *time == best_splits[id] {
             is_valid = true;
@@ -210,7 +210,7 @@ impl SaveManager {
         };
 
         //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
-        self.loaded_runs.insert(id, vec);
+        self.save_multiple(vec);
       },
       Err(e) => {
         eprintln!("{:?}", e);
