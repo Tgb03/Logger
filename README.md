@@ -5,11 +5,11 @@ This app aims to streamline using logs to get all the data from them automatical
 # Features
 
 ## AutoSplitter: 
-- [ ] Real time splitter
+- [x] Real time splitter
 - [x] Automatically read and show end times of runs
 - [x] Calculate total time of runs and theoretical best
 - [ ] Remove broken splits or splits that are supposed to be ignored
-- [ ] Saving runs
+- [x] Saving runs
 
 ## WardenMapper:
 - [ ] Automatically find keys.
