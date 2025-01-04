@@ -7,7 +7,6 @@ pub mod logs;
 
 pub mod time;
 pub mod timed_run;
-pub mod timed_run_parser;
 pub mod objective_data;
 pub mod parse_files;
 pub mod save_run;
