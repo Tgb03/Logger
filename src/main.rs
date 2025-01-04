@@ -21,13 +21,9 @@ fn main() -> eframe::Result {
   
   
   let options_base_app = eframe::NativeOptions {
-    viewport: egui::ViewportBuilder {
-      //position: Some([0.0, 128.0].into()),
-      inner_size: Some([932.0, 512.0].into()),
-      //window_level: Some(egui::WindowLevel::AlwaysOnTop),
-      transparent: Some(true),
-      ..Default::default()
-    },
+    viewport: egui::ViewportBuilder::default()
+      .with_inner_size([932.0, 512.0])
+      .with_transparent(true),
     hardware_acceleration: eframe::HardwareAcceleration::Preferred,
     persist_window: true,
     ..Default::default()

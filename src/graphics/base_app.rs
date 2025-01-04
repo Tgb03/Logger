@@ -43,18 +43,16 @@ impl Default for BaseApp {
 }
 
 impl eframe::App for BaseApp {
+  
+  fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
+    egui::Rgba::TRANSPARENT.to_array()
+  }
 
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
     ctx.request_repaint_after(Duration::from_millis(25));
 
-    let frame = egui::containers::Frame {
-      inner_margin: egui::Margin { left: 1., right: 1., top: 1., bottom: 1.},
-      outer_margin: egui::Margin { left: 5., right: 1., top: 1., bottom: 1.},
-      rounding: egui::Rounding { nw: 1.0, ne: 1.0, sw: 1.0, se: 1.0},
-      shadow: egui::Shadow { offset: Vec2::ZERO, blur: 0.0, spread: 0.0, color: Color32::TRANSPARENT },
-      fill: egui::Color32::from_rgba_premultiplied(0, 0, 0, 50),
-      stroke: egui::Stroke::new(1.0, Color32::TRANSPARENT),
-    };
+    let frame = Frame::none()
+      .fill(Color32::TRANSPARENT);
 
     egui::TopBottomPanel::top("TopPanel").frame(frame).show(ctx, |ui| {
       
@@ -103,7 +101,7 @@ impl eframe::App for BaseApp {
     });
     
     egui::CentralPanel::default()
-      .frame(Frame::default().fill(Color32::TRANSPARENT))
+      .frame(frame)
       .show(ctx, |ui| {
 
       match self.app_state {
