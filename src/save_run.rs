@@ -204,10 +204,12 @@ impl SaveManager {
     match std::fs::read(file_path) {
       Ok(binary_data) => {
 
-        let vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
+        let mut vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
             Ok(vec) => vec,
             Err(_) => Vec::new(),
         };
+
+        vec.iter_mut().for_each(|r| r.objective_data = objective_data.clone());
 
         //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
         self.save_multiple(vec);

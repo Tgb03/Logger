@@ -6,7 +6,8 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct TimedRun {
 
-  pub objective_data: ObjectiveData,
+  #[serde(skip)] pub objective_data: ObjectiveData,
+  
   win: bool,
   last_drop: Time,
   times: Vec<Time>,
