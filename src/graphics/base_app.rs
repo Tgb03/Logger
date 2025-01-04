@@ -45,7 +45,10 @@ impl Default for BaseApp {
 impl eframe::App for BaseApp {
   
   fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
-    egui::Rgba::TRANSPARENT.to_array()
+    match self.app_state {
+      AppState::LiveWindow => [0.0, 0.0, 0.0, 0.5],
+      _ => [0.0, 0.0, 0.0, 1.0]
+    }
   }
 
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
