@@ -47,7 +47,7 @@ impl LiveWindow {
 
     if end_len != self.run_length {
       self.run_length = end_len;
-      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: 200.0, y: 82.0 + 22.0 * self.run_length as f32 }));
+      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: 180.0, y: 82.0 + 22.0 * self.run_length as f32 }));
     }
   }
 
@@ -65,7 +65,7 @@ impl LiveWindow {
     ui.vertical(|ui| {
       for (id, time) in times.iter().enumerate() {
         ui.horizontal(|ui| {
-          ui.label(time.to_string());
+          ui.label(super::create_text(time.to_string()));
 
           if compared_times.is_some_and(|r| r.len() > id) {
             let compared_times = compared_times.unwrap();
@@ -75,7 +75,7 @@ impl LiveWindow {
               false => (compared_times[id].sub(&time), Color32::GREEN),
             };
             
-            ui.colored_label(color, time_diff.to_string_no_hours());
+            ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
           }
         });
       }
@@ -83,7 +83,7 @@ impl LiveWindow {
       ui.horizontal(|ui| {
         let final_time = timed_run.get_time();
         if final_time != Time::default() && !timed_run.is_win() {
-          ui.label(final_time.to_string());
+          ui.label(super::create_text(final_time.to_string()));
 
           if compared_run.is_some() {
             let compared_run = compared_run.unwrap();
@@ -97,7 +97,7 @@ impl LiveWindow {
               false => (compared_time.sub(&final_time), Color32::GREEN),
             };
             
-            ui.colored_label(color, time_diff.to_string_no_hours());
+            ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
           }
         }
       });
@@ -127,13 +127,13 @@ impl LiveWindow {
     // }
 
     ui.horizontal(|ui| {
-      ui.checkbox(&mut self.objective.secondary, "Sec");
-      ui.checkbox(&mut self.objective.overload, "Ovrld");
+      ui.checkbox(&mut self.objective.secondary, super::create_text("Sec   "));
+      ui.checkbox(&mut self.objective.overload, super::create_text("Ovrld"));
     });
       
     ui.horizontal(|ui| {
-      ui.checkbox(&mut self.objective.glitched, "Glitch");
-      ui.checkbox(&mut self.objective.early_drop, "E-Drop");
+      ui.checkbox(&mut self.objective.glitched, super::create_text("Glitch"));
+      ui.checkbox(&mut self.objective.early_drop, super::create_text("E-Drop"));
     });
 
     self.objective.level_name = self.objective.level_name.to_uppercase();
@@ -141,13 +141,15 @@ impl LiveWindow {
       self.objective.player_count = count;
     }
 
+    ui.separator();
+
     if let Some(parser) = self.parser.get_run_parser() {
       let timed_run = parser.into_result();
 
       self.objective.level_name = timed_run.objective_data.level_name.clone();
       self.objective.player_count = timed_run.objective_data.player_count;
 
-      ui.label(format!("In run: {}", timed_run.objective_data.get_id()));
+      ui.label(super::create_text(format!("In run: {}", timed_run.objective_data.get_id())));
     
       // ui.label(self.objective.get_id());
       self.render_timed_run(ui, timed_run, save_manager.get_best_run(&self.objective));
@@ -165,7 +167,7 @@ impl LiveWindow {
       // TODO: DELETE .clone()
       self.resize_gui(ctx, &timed_run.clone()); // try to find a way to remove this clone
 
-      ui.label("Not currently in run");
+      ui.label(super::create_text("Not currently in run"));
 
       return;
     }

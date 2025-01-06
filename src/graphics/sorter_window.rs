@@ -15,25 +15,25 @@ fn get_total_times(timed_runs: &Vec<TimedRun>) -> Time {
 
 pub fn add_sorter_buttons(ui: &mut Ui, timed_runs: &mut Vec<TimedRun>) {
   ui.horizontal(|ui| {
-    ui.label(format!("Total times added: {}", get_total_times(timed_runs).to_string()));
+    ui.label(super::create_text(format!("Total times added: {}", get_total_times(timed_runs).to_string())));
     
-    if ui.button("Sort by Win").clicked() {
+    if ui.button(super::create_text("Sort by Win")).clicked() {
       timed_runs.sort_by(|d, e| d.is_win().cmp(&e.is_win()).reverse());
     }
 
-    if ui.button("Sort by name").clicked() {
+    if ui.button(super::create_text("Sort by name")).clicked() {
       timed_runs.sort_by(|d, e| d.objective_data.level_name.cmp(&e.objective_data.level_name));
     }
     
-    if ui.button("Sort by time").clicked() {
+    if ui.button(super::create_text("Sort by time")).clicked() {
       timed_runs.sort_by(|d, e| d.get_time().get_stamp().cmp(&e.get_time().get_stamp()));
     }
 
-    if ui.button("Sort by Players").clicked() {
+    if ui.button(super::create_text("Sort by Players")).clicked() {
       timed_runs.sort_by(|d, e| d.objective_data.get_player_count().cmp(&e.objective_data.get_player_count()));
     }
 
-    if ui.button("Sort by Stamps").clicked() {
+    if ui.button(super::create_text("Sort by Stamps")).clicked() {
       timed_runs.sort_by(|d, e| d.get_times().len().cmp(&e.get_times().len()).reverse());
     }
   });

@@ -148,7 +148,9 @@ impl SaveManager {
     for path in paths {
       if let Ok(entry) = path {
 
-        self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+        if entry.file_name().into_string().unwrap().contains(".save") {
+          self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+        }
 
       }
     }

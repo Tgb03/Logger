@@ -1,10 +1,11 @@
-use std::{fs::File, time::Duration};
+use std::{collections::BTreeMap, fs::File, time::Duration};
 
-use egui::{Color32, Frame, Vec2};
+use eframe::CreationContext;
+use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
 
 use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
 
-use super::live_window::LiveWindow;
+use super::{live_window::LiveWindow, settings_window::SettingsWindow};
 
 #[derive(PartialEq, serde::Serialize, serde::Deserialize)]
 enum AppState {
@@ -13,6 +14,7 @@ enum AppState {
   LogParserWindow,
   ManagingRuns,
   LiveWindow,
+  SettingsWindow,
 
 }
 
@@ -23,6 +25,7 @@ pub struct BaseApp {
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
   live_window: LiveWindow,
+  settings_window: SettingsWindow,
 
   save_manager: SaveManager,
 
@@ -30,6 +33,12 @@ pub struct BaseApp {
 
 impl Default for BaseApp {
   fn default() -> Self {
+    let settings_window = SettingsWindow::default();
+    let mut save_manager = SaveManager::default();
+
+    if settings_window.get_automatic_loading() {
+      save_manager.load_all_runs();
+    }
 
     Self {
       app_state: AppState::None,
@@ -37,9 +46,48 @@ impl Default for BaseApp {
       log_parser_window: LogParserWindow::default(),
       run_manager_window: RunManagerWindow::default(),
       live_window: LiveWindow::default(),
-      save_manager: SaveManager::default(),
+      save_manager,
+      settings_window,
     }
   }
+}
+
+impl BaseApp {
+
+  pub fn new(cc: &CreationContext) -> Self {
+    let mut fonts = FontDefinitions::default();
+    
+    fonts.font_data.insert("jetbrains_mono".to_owned(), 
+      std::sync::Arc::new(
+        FontData::from_static(include_bytes!("../../JetBrainsMono-Regular.ttf"))
+      )
+    );
+
+    let mut newfam = BTreeMap::new();
+    newfam.insert(
+      FontFamily::Name("jetbrains_mono".into()), 
+      vec!["jetbrains_mono".to_owned()]
+    );
+    fonts.families.append(&mut newfam);
+    
+    fonts.font_data.insert("ocr_b".to_owned(), 
+      std::sync::Arc::new(
+        FontData::from_static(include_bytes!("../../ocr-b-regular.ttf"))
+      )
+    );
+
+    let mut newfam = BTreeMap::new();
+    newfam.insert(
+      FontFamily::Name("ocr_b".into()), 
+      vec!["ocr_b".to_owned()]
+    );
+    fonts.families.append(&mut newfam);
+
+    cc.egui_ctx.set_fonts(fonts);
+
+    Self::default()
+  } 
+
 }
 
 impl eframe::App for BaseApp {
@@ -61,7 +109,7 @@ impl eframe::App for BaseApp {
       
       ui.horizontal_top(|ui| {
         if self.app_state == AppState::LiveWindow {
-          if ui.button("Stop Splitter").clicked() {
+          if ui.button(super::create_text("Stop Splitter")).clicked() {
             self.app_state = AppState::None;
 
             ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::Normal));
@@ -72,14 +120,25 @@ impl eframe::App for BaseApp {
           return;
         }
 
-        if ui.button("Live Splitter").clicked() {
+        if self.app_state == AppState::SettingsWindow {
+          if ui.button(super::create_text("Save Settings")).clicked() {
+            self.app_state = AppState::None;
+
+            self.settings_window.save_settings();
+          }
+
+          return;
+        }
+
+        if ui.button(super::create_text("Live Splitter")).clicked() {
           self.app_state = AppState::LiveWindow;
           self.live_window.load_file();
           ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::AlwaysOnTop));
-          ctx.send_viewport_cmd(egui::ViewportCommand::Decorations(false));
+          ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(self.settings_window.get_live_rectangle().min));
+          ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.settings_window.get_live_rectangle().size()));
         }
         
-        if ui.button("Input Speedrun Logs...").clicked() {
+        if ui.button(super::create_text("Input Speedrun Logs...")).clicked() {
           if let Some(paths) = rfd::FileDialog::new().pick_files() {
             let files: Vec<File> = paths.iter()
               .filter_map(|p| {
@@ -97,8 +156,12 @@ impl eframe::App for BaseApp {
           }
         }
 
-        if ui.button("Check Saved Runs").clicked() {
+        if ui.button(super::create_text("Check Saved Runs")).clicked() {
           self.app_state = AppState::ManagingRuns;
+        }
+
+        if ui.button(super::create_text("Settings")).clicked() {
+          self.app_state = AppState::SettingsWindow;
         }
       })
     });
@@ -112,11 +175,11 @@ impl eframe::App for BaseApp {
         AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
         AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
         AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, ctx),
+        AppState::SettingsWindow => self.settings_window.show(ui),
       }
       
     });
     
-
     // if let Some(path) = self.file_dialog.update(ctx).selected() {
     //   println!("Selected file: {:?}", path);
     // }

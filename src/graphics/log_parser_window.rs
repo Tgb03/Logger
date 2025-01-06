@@ -26,11 +26,11 @@ impl LogParserWindow {
 
     // handles all the set all buttons.
     ui.horizontal(|ui| {
-      let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, "Set ALL secondary");
-      let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
-      let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, "Set ALL glitched");
-      let early_drop_checkbox = ui.checkbox(&mut self.set_all_early_drop, "Set ALL early drop");
-      if ui.button("Save ALL runs").clicked() {
+      let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, super::create_text("Set ALL secondary"));
+      let overload_checkbox = ui.checkbox(&mut self.set_all_overload, super::create_text("Set ALL overload"));
+      let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, super::create_text("Set ALL glitched"));
+      let early_drop_checkbox = ui.checkbox(&mut self.set_all_early_drop, super::create_text("Set ALL early drop"));
+      if ui.button(super::create_text("Save ALL runs")).clicked() {
         save_manager.save_multiple(self.timed_runs.clone());
         self.timed_runs = Vec::new();
       }
@@ -67,7 +67,7 @@ impl LogParserWindow {
         let timed_run = &mut self.timed_runs[row];
 
         ui.horizontal(|ui|{
-          ui.colored_label(Color32::WHITE, &timed_run.objective_data.level_name);
+          ui.colored_label(Color32::WHITE, super::create_text(&timed_run.objective_data.level_name));
 
           let time_color = match timed_run.is_win() {
             true => Color32::GREEN,
@@ -75,23 +75,23 @@ impl LogParserWindow {
           };
           let times = timed_run.get_times();
 
-          ui.colored_label(time_color, timed_run.get_time().to_string());
-          ui.label(format!("{:03} stamps", times.len()));
-          ui.label(format!("{} players", timed_run.objective_data.get_player_count()));
+          ui.colored_label(time_color, super::create_text(timed_run.get_time().to_string()));
+          ui.label(super::create_text(format!("{:03} stamps", times.len())));
+          ui.label(super::create_text(format!("{} players", timed_run.objective_data.get_player_count())));
 
-          ui.checkbox(&mut timed_run.objective_data.secondary, "Secondary");
-          ui.checkbox(&mut timed_run.objective_data.overload, "Overload");
-          ui.checkbox(&mut timed_run.objective_data.glitched, "Glitched");
-          ui.checkbox(&mut timed_run.objective_data.early_drop, "Early Drop");
+          ui.checkbox(&mut timed_run.objective_data.secondary, super::create_text("Secondary"));
+          ui.checkbox(&mut timed_run.objective_data.overload, super::create_text("Overload"));
+          ui.checkbox(&mut timed_run.objective_data.glitched, super::create_text("Glitched"));
+          ui.checkbox(&mut timed_run.objective_data.early_drop, super::create_text("Early Drop"));
 
           if timed_run.objective_data.early_drop { timed_run.objective_data.glitched = true; }
           
-          if ui.button("Save Run").clicked() {
+          if ui.button(super::create_text("Save Run")).clicked() {
             save_manager.save(timed_run.clone());
             for_removal.push(row);
           };
 
-          if ui.button("Remove Run").clicked() {
+          if ui.button(super::create_text("Remove Run")).clicked() {
             for_removal.push(row);
           }
           

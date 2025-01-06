@@ -30,60 +30,71 @@ impl RunManagerWindow {
     let best_splits = save_manager.get_best_splits(&self.objective);
 
     ui.horizontal(|ui| {
-      ui.label("Level name: ");
+      ui.label(super::create_text("Level name: "));
       ui.add(egui::TextEdit::singleline(&mut self.objective.level_name)
-          .desired_width(60.0));
-      ui.label("Player count: ");
+          .desired_width(60.0)
+          .background_color(Color32::from_rgb(16, 16, 16))
+          .text_color(Color32::WHITE));
+      ui.label(super::create_text("Player count: "));
       ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
-          .desired_width(30.0));
-      ui.checkbox(&mut self.objective.secondary, "Secondary");
-      ui.checkbox(&mut self.objective.overload, "Overload");
-      ui.checkbox(&mut self.objective.glitched, "Glitched");
-      ui.checkbox(&mut self.objective.early_drop, "Early Drop Bug");
+          .desired_width(15.0)
+          .background_color(Color32::from_rgb(16, 16, 16))
+          .text_color(Color32::WHITE));
+      ui.checkbox(&mut self.objective.secondary, super::create_text("Secondary"));
+      ui.checkbox(&mut self.objective.overload, super::create_text("Overload"));
+      ui.checkbox(&mut self.objective.glitched, super::create_text("Glitched"));
+      ui.checkbox(&mut self.objective.early_drop, super::create_text("Early Drop Bug"));
 
       self.objective.level_name = self.objective.level_name.to_uppercase();
       if let Some(count) = self.player_input_string.parse::<u8>().ok() {
         self.objective.player_count = count;
       }
       
-      ui.colored_label(Color32::GOLD, "  Theoretical:");
-      ui.colored_label(Color32::GOLD, Self::sum_run_splits(&best_splits).to_string());
-
     });
 
     ui.horizontal(|ui| {
-       egui::ComboBox::from_label("Select loaded objective")
-        .selected_text(format!("{}", &self.objective.get_id()))
+       egui::ComboBox::from_label(super::create_text("Select loaded objective"))
+        .selected_text(super::create_text(format!("{}", &self.objective.get_id())))
         .height(500.0)
         .show_ui(ui, |ui| {
           
           for key in save_manager.get_all_objectives() {
-            if ui.selectable_value(&mut self.objective, ObjectiveData::from_id(&key), key).clicked() {
+            if ui.selectable_value(&mut self.objective, ObjectiveData::from_id(&key), super::create_text(key)).clicked() {
               self.player_input_string = self.objective.player_count.to_string();
             };
           }
         }
       );
 
-      if ui.button("Save run to PC").clicked() {
+      if ui.button(super::create_text("Remove useless runs")).clicked() {
+        save_manager.optimize_obj(&self.objective);
+      }
+      
+      ui.colored_label(Color32::GOLD, super::create_text("Theoretical:"));
+      ui.colored_label(Color32::GOLD, super::create_text(Self::sum_run_splits(&best_splits).to_string()));
+
+    });
+
+    ui.separator();
+
+    ui.horizontal(|ui| {
+      
+      if ui.button(super::create_text("Save run to PC")).clicked() {
         save_manager.save_to_file(&self.objective);
       }
       
-      if ui.button("Save ALL runs to PC").clicked() {
+      if ui.button(super::create_text("Save ALL runs to PC")).clicked() {
         save_manager.save_to_files();
       }
 
-      if ui.button("Load runs for this objective").clicked() {
+      if ui.button(super::create_text("Load runs for this objective")).clicked() {
         save_manager.load(&self.objective);
       }
 
-      if ui.button("Load ALL runs").clicked() {
+      if ui.button(super::create_text("Load ALL runs")).clicked() {
         save_manager.load_all_runs();
       }
 
-      if ui.button("Optimize runs").clicked() {
-        save_manager.optimize_obj(&self.objective);
-      }
     });
       
     // handles all sorters
@@ -92,9 +103,9 @@ impl RunManagerWindow {
     }
 
     ui.horizontal(|ui| {
-      ui.label("Best split for each part:                              ");
+      ui.label(super::create_text("Best split for each part:         "));
       for stamp in &best_splits {
-        ui.label(stamp.to_string_no_hours());
+        ui.label(super::create_text(stamp.to_string_no_hours()));
       }
     });
 
@@ -110,7 +121,7 @@ impl RunManagerWindow {
         let timed_run = &mut timed_runs[row];
         ui.horizontal(|ui| {
 
-          ui.colored_label(Color32::WHITE, &timed_run.objective_data.level_name);
+          ui.label(super::create_text(&timed_run.objective_data.level_name));
   
           let time_color = match timed_run.is_win() {
             true => Color32::GREEN,
@@ -118,19 +129,19 @@ impl RunManagerWindow {
           };
           let times = timed_run.get_times();
   
-          ui.colored_label(time_color, timed_run.get_time().to_string());
-          ui.label(format!("{:03}", times.len()));
+          ui.colored_label(time_color, super::create_text(timed_run.get_time().to_string()));
+          ui.label(super::create_text(format!("{:03}", times.len())));
 
-          if ui.button("Delete Run").clicked() {
+          if ui.button(super::create_text("Delete Run")).clicked() {
             for_deletion.push(row);
           }
 
           for (id, stamp) in timed_run.get_splits().iter().enumerate() {
             let time_color = match best_splits.len() > id && stamp.is_equal(&best_splits[id]) {
               true => Color32::GREEN,
-              false => Color32::RED,
+              false => Color32::from_rgb(127, 127, 127),
             };
-            ui.colored_label(time_color, stamp.to_string_no_hours());
+            ui.colored_label(time_color, super::create_text(stamp.to_string_no_hours()));
           }
         });
       }

@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
 use eframe::egui;
-use graphics::base_app;
+use graphics::base_app::BaseApp;
 
 pub mod logs;
 
@@ -32,8 +32,8 @@ fn main() -> eframe::Result {
   eframe::run_native(
     "GTFO Logger",
     options_base_app,
-    Box::new(|_| {
-      Ok(Box::<base_app::BaseApp>::default())
+    Box::new(|cc| {
+      Ok(Box::new(BaseApp::new(cc)))
     }),
   )
 
