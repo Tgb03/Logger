@@ -4,6 +4,8 @@ use egui::{Color32, Ui, Vec2};
 
 use crate::{logs::{parser::Parser, token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
 
+use super::settings_window::SettingsWindow;
+
 pub struct LiveWindow {
   
   file: Option<File>,
@@ -38,7 +40,7 @@ impl Default for LiveWindow {
 
 impl LiveWindow {
 
-  fn resize_gui(&mut self, ctx: &egui::Context, timed_run: &TimedRun) {
+  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun) {
     let times = timed_run.get_times();
     let end_len = times.len() + match timed_run.get_time() != Time::default() {
       true => 1,
@@ -47,11 +49,11 @@ impl LiveWindow {
 
     if end_len != self.run_length {
       self.run_length = end_len;
-      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: 180.0, y: 82.0 + 22.0 * self.run_length as f32 }));
+      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 92.0 + 22.0 * self.run_length as f32 }));
     }
   }
 
-  fn render_timed_run(&self, ui: &mut Ui, timed_run: &TimedRun, compared_run: Option<&TimedRun>) {
+  fn render_timed_run(&self, ui: &mut Ui, timed_run: &TimedRun, compared_run: Option<&TimedRun>, compared_splits: Option<&Vec<Time>>) {
     let times = timed_run.get_times();
     let compared_times = match compared_run {
       Some(run) => Some(run.get_times()),
@@ -75,6 +77,21 @@ impl LiveWindow {
               false => (compared_times[id].sub(&time), Color32::GREEN),
             };
             
+            ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
+          }
+
+          if compared_splits.is_some() {
+            let compared_splits = compared_splits.unwrap();
+            let split = match id > 0 {
+              true => times[id].sub(&times[id - 1]),
+              false => *time,
+            };
+
+            let (time_diff, color) = match split.is_greater_than(&compared_splits[id]) {
+              true => (split.sub(&compared_splits[id]), Color32::RED),
+              false => (compared_splits[id].sub(&split), Color32::GREEN),
+            };
+
             ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
           }
         });
@@ -104,7 +121,7 @@ impl LiveWindow {
     }); 
   }
 
-  pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, ctx: &egui::Context) {
+  pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
 
     self.frame_counter += 1;
     if self.frame_counter == 32 {
@@ -127,10 +144,14 @@ impl LiveWindow {
     // }
 
     ui.horizontal(|ui| {
-      ui.checkbox(&mut self.objective.secondary, super::create_text("Sec   "));
+      ui.checkbox(&mut self.objective.secondary, super::create_text("Sec"));
       ui.checkbox(&mut self.objective.overload, super::create_text("Ovrld"));
+      ui.label(super::create_text("Ps:"));
+      ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
+        .char_limit(2)
+        .background_color(Color32::from_rgba_unmultiplied(32, 32, 32, 32)));
     });
-      
+    
     ui.horizontal(|ui| {
       ui.checkbox(&mut self.objective.glitched, super::create_text("Glitch"));
       ui.checkbox(&mut self.objective.early_drop, super::create_text("E-Drop"));
@@ -151,10 +172,18 @@ impl LiveWindow {
 
       ui.label(super::create_text(format!("In run: {}", timed_run.objective_data.get_id())));
     
-      // ui.label(self.objective.get_id());
-      self.render_timed_run(ui, timed_run, save_manager.get_best_run(&self.objective));
+      ui.label(self.objective.get_id());
+      let compared_run = match settings.get_compare_to_record() { 
+        true => save_manager.get_best_run(&self.objective), 
+        false => None,
+      };
+      let best_splits = match settings.get_compare_to_theoretical() {
+        true => save_manager.get_best_splits(&self.objective),
+        false => None,
+      };
+      self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(ctx, &timed_run.clone()); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone()); // try to find a way to remove this clone
 
       return;
     }
@@ -163,10 +192,19 @@ impl LiveWindow {
     if let Some(timed_run) = result.get_runs().last() {
       
       self.objective.level_name = timed_run.objective_data.level_name.clone();
-      self.render_timed_run(ui, timed_run, save_manager.get_best_run(&timed_run.objective_data));
+      let compared_run = match settings.get_compare_to_record() { 
+        true => save_manager.get_best_run(&self.objective), 
+        false => None,
+      };
+      let best_splits = match settings.get_compare_to_theoretical() {
+        true => save_manager.get_best_splits(&self.objective),
+        false => None,
+      };
+      self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(ctx, &timed_run.clone()); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone()); // try to find a way to remove this clone
 
+      ui.label(self.objective.get_id());
       ui.label(super::create_text("Not currently in run"));
 
       return;

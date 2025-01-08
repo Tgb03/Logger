@@ -1,12 +1,14 @@
 
 use std::{collections::HashMap, fs::File, io::Read, path::Path};
 
-use egui::{Color32, Rect, RichText, Ui, WidgetText};
+use egui::{Color32, Rect, Ui};
 
 pub struct SettingsWindow {
 
   live_rectangle: Rect,
   automatic_loading: bool,
+  compare_to_record: bool,
+  compare_to_theoretical: bool,
 
   text_inputs: [String; 4],
 
@@ -50,6 +52,14 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
     };
+    let compare_to_record = match props.get("compare_to_record") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => true,
+    };
+    let compare_to_theoretical = match props.get("compare_to_theoretical") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -59,6 +69,8 @@ impl Default for SettingsWindow {
     Self { 
       live_rectangle,
       automatic_loading,
+      compare_to_record,
+      compare_to_theoretical,
       
       text_inputs: [
         x_pos.to_string(),
@@ -80,13 +92,24 @@ impl SettingsWindow {
     self.automatic_loading
   }
 
+  pub fn get_compare_to_record(&self) -> bool {
+    self.compare_to_record
+  }
+
+  pub fn get_compare_to_theoretical(&self) -> bool {
+    self.compare_to_theoretical
+  }
+
   pub fn show(&mut self, ui: &mut Ui) {
+
+    ui.add(egui::Label::new(super::create_text("LiveSplitter settings: ")
+      .size(14.0)));
 
     ui.add_space(10.0);
 
     ui.horizontal(|ui| {
       ui.add_space(5.0);
-      ui.monospace(RichText::from("X position").color(Color32::WHITE));
+      ui.monospace(super::create_text("X position"));
       if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[0])
         .desired_width(100.0)
         .background_color(Color32::from_rgb(32, 32, 32))
@@ -100,7 +123,7 @@ impl SettingsWindow {
     
     ui.horizontal(|ui| {
       ui.add_space(5.0);
-      ui.monospace(RichText::from("Y position").color(Color32::WHITE));
+      ui.monospace(super::create_text("Y position"));
       if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[1])
         .desired_width(100.0)
         .background_color(Color32::from_rgb(32, 32, 32))
@@ -114,7 +137,7 @@ impl SettingsWindow {
     
     ui.horizontal(|ui| {
       ui.add_space(5.0);
-      ui.monospace(RichText::from("X size    ").color(Color32::WHITE));
+      ui.monospace(super::create_text("X size    "));
       if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[2])
         .desired_width(100.0)
         .background_color(Color32::from_rgb(32, 32, 32))
@@ -128,9 +151,20 @@ impl SettingsWindow {
 
     ui.horizontal(|ui| { 
       ui.add_space(5.0);
-      ui.checkbox(&mut self.automatic_loading, WidgetText::from("Automatic Loading of Runs")
-        .color(Color32::WHITE)
-      );
+      ui.checkbox(&mut self.compare_to_record, super::create_text("Compare to saved record."));
+    });
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.compare_to_theoretical, super::create_text("Compare to best splits"));
+    });
+
+    ui.separator();
+    ui.add_space(10.0);
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.automatic_loading, super::create_text("Automatic Loading of Runs"));
     });
   
   }
@@ -144,6 +178,8 @@ impl SettingsWindow {
     s.push_str(&format!("x_size: {}\n", self.live_rectangle.right() - self.live_rectangle.left()));
     s.push_str(&format!("y_size: {}\n", self.live_rectangle.top() - self.live_rectangle.bottom()));
     s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
+    s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
+    s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
 
     let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
     

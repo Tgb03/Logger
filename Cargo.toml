@@ -21,7 +21,7 @@ serde_yaml = "0.9.34"
 
 [dev-dependencies]
 tempdir = "0.3.7"
-tempfile = "3.14.0"
+tempfile = "3.15.0"
 
 [profile.release]
 codegen-units = 1

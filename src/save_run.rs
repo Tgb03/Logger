@@ -10,6 +10,7 @@ use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 pub struct SaveManager {
 
   loaded_runs: HashMap<String, Vec<TimedRun>>,
+  best_splits: HashMap<String, Vec<Time>>,
 
 }
 
@@ -41,6 +42,17 @@ impl SaveManager {
       },
       None => { self.loaded_runs.insert(name.clone(), vec![timed_run]); },
     };
+
+    let empty = Vec::new();
+    let runs = self.loaded_runs.get(&name).unwrap_or(&empty);
+
+    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
+    for run in runs {
+      for (id, time) in run.get_splits().iter().enumerate() {
+        result[id] = result[id].min(time);
+      }
+    }
+    self.best_splits.insert(name.clone(), result);
 
     return Some(name);
   }
@@ -85,7 +97,7 @@ impl SaveManager {
   }
 
   // returns the world record run for a level
-  pub fn get_best_run(&mut self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
+  pub fn get_best_run(&self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
     let id = objective_data.get_id();
 
     match self.loaded_runs.get(&id) {
@@ -118,25 +130,10 @@ impl SaveManager {
   }
 
   /// returns all best splits for the objective.
-  pub fn get_best_splits(&mut self, objective_data: &ObjectiveData) -> Vec<Time> {
+  pub fn get_best_splits(&self, objective_data: &ObjectiveData) -> Option<&Vec<Time>> {
+    
+    self.best_splits.get(&objective_data.get_id())
 
-    let id = objective_data.get_id();
-
-    if !self.loaded_runs.contains_key(&id){
-      //self.load(objective_data);
-    }
-
-    let empty = Vec::new();
-    let runs = self.loaded_runs.get(&id).unwrap_or(&empty);
-
-    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
-    for run in runs {
-      for (id, time) in run.get_splits().iter().enumerate() {
-        result[id] = result[id].min(time);
-      }
-    }
-
-    result
   }
 
   /// load all runs that were saved to folder
@@ -162,7 +159,10 @@ impl SaveManager {
   /// 
   /// if the run is not world record or has a best split it is removed
   pub fn optimize_obj(&mut self, objective_data: &ObjectiveData) {
-    let best_splits = self.get_best_splits(objective_data).clone();
+    let best_splits = match self.get_best_splits(objective_data).clone() {
+      Some(v) => v.clone(),
+      None => Vec::new(),
+    };
     let best_time = match self.get_best_run(objective_data) {
         Some(run) => Some(run.get_time()),
         None => None,

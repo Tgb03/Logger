@@ -47,7 +47,7 @@ impl Token {
       _ => "$R_"
     };
 
-    if rundown_name == "training" { return Token::SelectExpedition("Training".to_string()); }
+    if rundown_name == "training" { return Token::SelectExpedition("TRAINING".to_string()); }
     let result = format!("{}{}{}", rundown_name, tier, level);
 
     Token::SelectExpedition(result)

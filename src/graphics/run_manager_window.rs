@@ -27,7 +27,10 @@ impl RunManagerWindow {
   }
 
   pub fn show(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager) {
-    let best_splits = save_manager.get_best_splits(&self.objective);
+    let best_splits = match save_manager.get_best_splits(&self.objective) {
+      Some(v) => v.clone(),
+      None => Vec::new(),
+    };
 
     ui.horizontal(|ui| {
       ui.label(super::create_text("Level name: "));
@@ -69,7 +72,7 @@ impl RunManagerWindow {
       if ui.button(super::create_text("Remove useless runs")).clicked() {
         save_manager.optimize_obj(&self.objective);
       }
-      
+        
       ui.colored_label(Color32::GOLD, super::create_text("Theoretical:"));
       ui.colored_label(Color32::GOLD, super::create_text(Self::sum_run_splits(&best_splits).to_string()));
 
@@ -113,7 +116,7 @@ impl RunManagerWindow {
       Some(run) => run,
       None => return,
     };
-
+    
     egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), timed_runs.len(), |ui, row_range| {
       let mut for_deletion = Vec::new();
 
@@ -135,7 +138,7 @@ impl RunManagerWindow {
           if ui.button(super::create_text("Delete Run")).clicked() {
             for_deletion.push(row);
           }
-
+          
           for (id, stamp) in timed_run.get_splits().iter().enumerate() {
             let time_color = match best_splits.len() > id && stamp.is_equal(&best_splits[id]) {
               true => Color32::GREEN,

@@ -69,19 +69,6 @@ impl BaseApp {
       vec!["jetbrains_mono".to_owned()]
     );
     fonts.families.append(&mut newfam);
-    
-    fonts.font_data.insert("ocr_b".to_owned(), 
-      std::sync::Arc::new(
-        FontData::from_static(include_bytes!("../../ocr-b-regular.ttf"))
-      )
-    );
-
-    let mut newfam = BTreeMap::new();
-    newfam.insert(
-      FontFamily::Name("ocr_b".into()), 
-      vec!["ocr_b".to_owned()]
-    );
-    fonts.families.append(&mut newfam);
 
     cc.egui_ctx.set_fonts(fonts);
 
@@ -174,7 +161,7 @@ impl eframe::App for BaseApp {
         AppState::None => {},
         AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
         AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
-        AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, ctx),
+        AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, &self.settings_window, ctx),
         AppState::SettingsWindow => self.settings_window.show(ui),
       }
       

@@ -68,7 +68,7 @@ impl ObjectiveData {
     let id_arr: Vec<&str> = id.trim_end_matches(".save").split('_').collect();
 
     Self {
-      level_name: id_arr[0].to_owned(),
+      level_name: id_arr[0].to_owned().to_uppercase(),
       secondary: id.contains("sec"),
       overload: id.contains("ovrl"),
       glitched: id.contains("glitch"),
