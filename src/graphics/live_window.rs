@@ -6,6 +6,7 @@ use crate::{logs::{parser::Parser, token_parser::TokenParserT, tokenizer::Tokeni
 
 use super::settings_window::SettingsWindow;
 
+#[derive(Default)]
 pub struct LiveWindow {
   
   file: Option<File>,
@@ -22,21 +23,6 @@ pub struct LiveWindow {
 
 }
 
-impl Default for LiveWindow {
-  fn default() -> Self {
-    Self { 
-      file: Default::default(), 
-      frame_counter: Default::default(), 
-      last_position: Default::default(), 
-      file_name: Default::default(), 
-      objective: Default::default(), 
-      player_input_string: Default::default(), 
-      runs_count: Default::default(), 
-      run_length: Default::default(), 
-      parser: Default::default(),
-    }
-  }
-}
 
 impl LiveWindow {
 
@@ -49,7 +35,7 @@ impl LiveWindow {
 
     if end_len != self.run_length {
       self.run_length = end_len;
-      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 92.0 + 22.0 * self.run_length as f32 }));
+      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 102.0 + 22.0 * self.run_length as f32 }));
     }
   }
 
@@ -99,11 +85,11 @@ impl LiveWindow {
 
       ui.horizontal(|ui| {
         let final_time = timed_run.get_time();
-        if final_time != Time::default() && !timed_run.is_win() {
+
+        if final_time != Time::default() && !timed_run.is_win() && self.parser.get_run_parser().is_some_and(|p| !p.is_done()) {
           ui.label(super::create_text(final_time.to_string()));
 
-          if compared_run.is_some() {
-            let compared_run = compared_run.unwrap();
+          if let Some(compared_run) = compared_run {
             let compared_time = match timed_run.is_win() {
               true => compared_run.get_time(),
               false => compared_run.get_times()[times.len()],
@@ -114,6 +100,21 @@ impl LiveWindow {
               false => (compared_time.sub(&final_time), Color32::GREEN),
             };
             
+            ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
+          }
+
+          if let Some(compared_splits) = compared_splits {
+            let id = times.len();
+            let split = match id {
+              0 => final_time,
+              _ => final_time.sub(&times[id - 1]),
+            };
+
+            let (time_diff, color) = match split.is_greater_than(&compared_splits[id]) {
+              true => (split.sub(&compared_splits[id]), Color32::RED),
+              false => (compared_splits[id].sub(&split), Color32::GREEN),
+            };
+
             ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
           }
         }
@@ -134,7 +135,15 @@ impl LiveWindow {
       
       let vecs = self.parser.into_result();
       while self.runs_count < vecs.get_runs().len() {
-        save_manager.save(vecs.get_runs().get(self.runs_count).unwrap().clone());
+        let mut run = vecs.get_runs().get(self.runs_count).unwrap().clone();
+        run.objective_data.early_drop = self.objective.early_drop;
+        run.objective_data.glitched = self.objective.glitched;
+        run.objective_data.secondary = self.objective.secondary.max(run.objective_data.secondary);
+        run.objective_data.overload = self.objective.overload.max(run.objective_data.overload);
+        if let Ok(id) = self.player_input_string.parse::<u8>() {
+          run.objective_data.player_count = id;
+        } 
+        save_manager.save(run);
         self.runs_count += 1;
       }
     }
@@ -170,7 +179,7 @@ impl LiveWindow {
       self.objective.level_name = timed_run.objective_data.level_name.clone();
       self.objective.player_count = timed_run.objective_data.player_count;
 
-      ui.label(super::create_text(format!("In run: {}", timed_run.objective_data.get_id())));
+      ui.label(super::create_text(format!("In run: {}", self.objective.get_id())));
     
       ui.label(self.objective.get_id());
       let compared_run = match settings.get_compare_to_record() { 

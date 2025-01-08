@@ -117,9 +117,11 @@ impl RunManagerWindow {
       None => return,
     };
     
-    egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), timed_runs.len(), |ui, row_range| {
-      let mut for_deletion = Vec::new();
+    let mut has_deleted = false;
+    let mut for_deletion = Vec::new();
 
+    egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), timed_runs.len(), |ui, row_range| {
+      
       for row in row_range {
         let timed_run = &mut timed_runs[row];
         ui.horizontal(|ui| {
@@ -137,6 +139,7 @@ impl RunManagerWindow {
 
           if ui.button(super::create_text("Delete Run")).clicked() {
             for_deletion.push(row);
+            has_deleted = true;
           }
           
           for (id, stamp) in timed_run.get_splits().iter().enumerate() {
@@ -153,5 +156,9 @@ impl RunManagerWindow {
         timed_runs.remove(*it);
       }
     });
+    
+    if has_deleted {
+      save_manager.calculate_best_splits(self.objective.get_id());
+    }
   }
 }

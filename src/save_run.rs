@@ -31,6 +31,19 @@ impl SaveManager {
 
   }
 
+  pub fn calculate_best_splits(&mut self, objective_id: String) {
+    let empty = Vec::new();
+    let runs = self.loaded_runs.get(&objective_id).unwrap_or(&empty);
+
+    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
+    for run in runs {
+      for (id, time) in run.get_splits().iter().enumerate() {
+        result[id] = result[id].min(time);
+      }
+    }
+    self.best_splits.insert(objective_id, result);
+  }
+
   fn save_no_remove_duplicates(&mut self, timed_run: TimedRun) -> Option<String> {
     if timed_run.len() == 1 { return None }
 
@@ -43,16 +56,7 @@ impl SaveManager {
       None => { self.loaded_runs.insert(name.clone(), vec![timed_run]); },
     };
 
-    let empty = Vec::new();
-    let runs = self.loaded_runs.get(&name).unwrap_or(&empty);
-
-    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
-    for run in runs {
-      for (id, time) in run.get_splits().iter().enumerate() {
-        result[id] = result[id].min(time);
-      }
-    }
-    self.best_splits.insert(name.clone(), result);
+    self.calculate_best_splits(name.clone());
 
     return Some(name);
   }
