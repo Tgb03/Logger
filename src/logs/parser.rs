@@ -1,11 +1,12 @@
 use crate::{time::Time, timed_run::TimedRun};
 
-use super::{run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
+use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
 
 #[derive(Default)]
 pub struct ParserResult {
 
   runs: Vec<TimedRun>,
+  locations: Vec<Location>,
 
 }
 
@@ -29,6 +30,10 @@ impl ParserResult {
     &mut self.runs
   }
 
+  pub fn get_locations(&self) -> &Vec<Location> {
+    &self.locations
+  }
+
 }
 
 #[derive(Default, PartialEq)]
@@ -36,6 +41,7 @@ enum ParserState {
   
   #[default] 
   OutOfGame,
+  GeneratingLevel,
   InGame,
   Finished,
 
@@ -52,6 +58,7 @@ pub struct Parser {
 
   //parsers:
   run_parser: Option<RunParser>,
+  generation_parser: Option<GenerationParser>,
 
 }
 
@@ -59,6 +66,10 @@ impl Parser {
 
   pub fn get_run_parser(&self) -> Option<&RunParser> {
     self.run_parser.as_ref()
+  }
+
+  pub fn get_generation_parser(&self) -> Option<&GenerationParser> {
+    self.generation_parser.as_ref()
   }
 
 }
@@ -80,8 +91,15 @@ impl TokenParserT<ParserResult> for Parser {
     match &self.state {
       ParserState::OutOfGame => {
         match token {
+          Token::GeneratingLevel => {
+            //eprintln!("Started generating.");
+            self.state = ParserState::GeneratingLevel;
+            self.result.locations.clear();
+            self.generation_parser = Some(GenerationParser::default());
+          }
           Token::SelectExpedition(name) => self.name_of_level = name,
           Token::GameStarted => {
+            //eprintln!("Started game.");
             self.state = ParserState::InGame;
             self.run_parser = Some(RunParser::new(self.name_of_level.clone(), time))
           },
@@ -104,15 +122,27 @@ impl TokenParserT<ParserResult> for Parser {
             
             return true;
           },
-          _ => {},//eprintln!("{:?} failed to parse in parser.rs", token)
+          _ => { /* eprintln!("{:?} failed to parse in parser.rs", token) */ },
         }
       },
+      ParserState::GeneratingLevel => {
+        if self.generation_parser.as_mut().unwrap().parse_one_token((time, token)) {
+
+          let locations: Vec<Location> = self.generation_parser.take().unwrap().into();
+          self.result.locations.extend(locations);
+          self.state = ParserState::OutOfGame;
+
+          //eprintln!("Finished generating");
+        }
+      }
       ParserState::InGame => {
         if self.run_parser.as_mut().unwrap().parse_one_token((time, token)) {
           
           let run: TimedRun = self.run_parser.take().unwrap().into();
           self.result.runs.push(run);
           self.state = ParserState::OutOfGame;
+        
+          //eprintln!("Finished game");
         }
       },
       ParserState::Finished => return true,

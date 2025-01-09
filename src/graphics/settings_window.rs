@@ -10,6 +10,8 @@ pub struct SettingsWindow {
   compare_to_record: bool,
   compare_to_theoretical: bool,
 
+  show_warden_mapper: bool,
+
   text_inputs: [String; 4],
 
 }
@@ -44,10 +46,6 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<f32>().unwrap_or(180.0),
       None => 180.0,
     };
-    let y_size: f32 = match props.get("y_size") {
-      Some(s) => s.parse::<f32>().unwrap_or(100.0),
-      None => 100.0,
-    };
     let automatic_loading = match props.get("automatic_loading") {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
@@ -60,10 +58,14 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
     };
+    let show_warden_mapper = match props.get("show_warden_mapper") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
-      max: [x_pos + x_size, y_pos + y_size].into() 
+      max: [x_pos + x_size, y_pos + 80.0].into() 
     };
 
     Self { 
@@ -71,12 +73,13 @@ impl Default for SettingsWindow {
       automatic_loading,
       compare_to_record,
       compare_to_theoretical,
+      show_warden_mapper,
       
       text_inputs: [
         x_pos.to_string(),
         y_pos.to_string(),
         x_size.to_string(),
-        y_size.to_string(),
+        80.to_string(),
       ],
     }
   }
@@ -98,6 +101,10 @@ impl SettingsWindow {
 
   pub fn get_compare_to_theoretical(&self) -> bool {
     self.compare_to_theoretical
+  }
+
+  pub fn get_show_warden_mapper(&self) -> bool {
+    self.show_warden_mapper
   }
 
   pub fn show(&mut self, ui: &mut Ui) {
@@ -160,6 +167,17 @@ impl SettingsWindow {
     });
 
     ui.separator();
+
+    ui.add(egui::Label::new(super::create_text("Mapper settings: ")
+      .size(14.0)));
+    ui.add_space(10.0);
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_warden_mapper, super::create_text("Show Mapper in live splitter"));
+    });
+
+    ui.separator();
     ui.add_space(10.0);
 
     ui.horizontal(|ui| { 
@@ -176,10 +194,10 @@ impl SettingsWindow {
     s.push_str(&format!("x_pos: {}\n", self.live_rectangle.left()));
     s.push_str(&format!("y_pos: {}\n", self.live_rectangle.bottom()));
     s.push_str(&format!("x_size: {}\n", self.live_rectangle.right() - self.live_rectangle.left()));
-    s.push_str(&format!("y_size: {}\n", self.live_rectangle.top() - self.live_rectangle.bottom()));
     s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
     s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
     s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
+    s.push_str(&format!("show_warden_mapper: {}\n", self.show_warden_mapper));
 
     let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
     

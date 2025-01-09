@@ -8,7 +8,11 @@ use crate::time::Time;
 /// so the data can be treated far easier.
 #[derive(Debug, PartialEq)]
 pub enum Token {
-
+ 
+  GeneratingLevel,
+  GeneratingFinished,
+  ItemAllocated(String),
+  ItemSpawn(String, u64),
   SelectExpedition(String),
   GameStarted,
   PlayerDroppedInLevel(u32),
@@ -24,6 +28,25 @@ pub enum Token {
 }
 
 impl Token {
+
+  fn create_item_alloc(line: &str) -> Token {
+    
+    let words: Vec<&str> = line.split(" ").collect();
+
+    let name = words[5];
+
+    Token::ItemAllocated(name.to_owned())
+  }
+
+  fn create_item_spawn(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect(); 
+
+    let zone = words[6];
+    let id = words[14].parse::<u64>().unwrap_or_default();
+
+    Token::ItemSpawn(zone.to_owned(), id)
+  }
 
   fn create_expedition(line: &str) -> Token {
     //println!("LINE: {}", line);
@@ -68,6 +91,10 @@ impl Token {
 
   pub fn tokenize_str(line: &str) -> Option<Token> {
     
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating") { return Some(Token::GeneratingLevel); }
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
+    if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
+    if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
     if line.contains("SNET : OnMasterCommand : ReceivingSync_Dropin") { return Some(Token::GameStarted); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }

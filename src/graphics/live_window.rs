@@ -17,7 +17,7 @@ pub struct LiveWindow {
   player_input_string: String,
 
   runs_count: usize,
-  run_length: usize,
+  ui_y_size: usize,
   
   parser: Parser,
 
@@ -28,15 +28,38 @@ impl LiveWindow {
 
   fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun) {
     let times = timed_run.get_times();
-    let end_len = times.len() + match timed_run.get_time() != Time::default() {
-      true => 1,
-      false => 0,
+    let mapper_size = match self.parser.get_generation_parser() {
+      Some(parser) => parser.into_result().len(),
+      None => self.parser.into_result().get_locations().len(),
+    };
+    let end_len = 
+      times.len() 
+      + match timed_run.get_time() != Time::default() {
+        true => 1,
+        false => 0,
+      }
+      + mapper_size;
+
+    if end_len != self.ui_y_size {
+
+      eprintln!("Resized to {}", end_len);
+
+      self.ui_y_size = end_len;
+      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 122.0 + 22.0 * end_len as f32 }));
+    }
+  }
+
+  fn render_mapper(&self, ui: &mut Ui) {
+    let locations = match self.parser.get_generation_parser() {
+      Some(parser) => parser.into_result(),
+      None => self.parser.into_result().get_locations(),
     };
 
-    if end_len != self.run_length {
-      self.run_length = end_len;
-      ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 102.0 + 22.0 * self.run_length as f32 }));
-    }
+    ui.vertical(|ui| {
+      for location in locations {
+        ui.label(super::create_text::<String>(location.into()));
+      }    
+    });
   }
 
   fn render_timed_run(&self, ui: &mut Ui, timed_run: &TimedRun, compared_run: Option<&TimedRun>, compared_splits: Option<&Vec<Time>>) {
@@ -171,6 +194,19 @@ impl LiveWindow {
       self.objective.player_count = count;
     }
 
+    if settings.get_show_warden_mapper() {
+      ui.separator();
+      self.render_mapper(ui);
+      
+      if self.parser.get_run_parser().is_none() {
+        self.resize_gui(
+          settings.get_live_rectangle().width(), 
+          ctx, 
+          &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone()
+        ); // try to find a way to remove this clone
+      }
+    }
+
     ui.separator();
 
     if let Some(parser) = self.parser.get_run_parser() {
@@ -246,7 +282,7 @@ impl LiveWindow {
 
       self.parser = Parser::default();
       self.last_position = 0;
-      self.run_length = 0;
+      self.ui_y_size = 0;
     }
 
   }
