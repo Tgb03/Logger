@@ -11,6 +11,7 @@ pub mod objective_data;
 pub mod parse_files;
 pub mod save_run;
 pub mod graphics;
+pub mod key_guess;
 
 fn main() -> eframe::Result {
 
@@ -18,7 +19,6 @@ fn main() -> eframe::Result {
   //   println!("{}: {}", id, val);
   // }
 
-  
   
   let options_base_app = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()

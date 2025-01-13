@@ -11,6 +11,7 @@ pub struct SettingsWindow {
   compare_to_theoretical: bool,
 
   show_warden_mapper: bool,
+  show_code_guess: bool,
 
   text_inputs: [String; 4],
 
@@ -62,6 +63,10 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
     };
+    let show_code_guess = match props.get("show_code_guess") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -74,6 +79,7 @@ impl Default for SettingsWindow {
       compare_to_record,
       compare_to_theoretical,
       show_warden_mapper,
+      show_code_guess,
       
       text_inputs: [
         x_pos.to_string(),
@@ -105,6 +111,10 @@ impl SettingsWindow {
 
   pub fn get_show_warden_mapper(&self) -> bool {
     self.show_warden_mapper
+  }
+
+  pub fn get_show_code_guess(&self) -> bool {
+    self.show_code_guess
   }
 
   pub fn show(&mut self, ui: &mut Ui) {
@@ -177,6 +187,11 @@ impl SettingsWindow {
       ui.checkbox(&mut self.show_warden_mapper, super::create_text("Show Mapper in live splitter"));
     });
 
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_code_guess, super::create_text("Show code guess"));
+    });
+
     ui.separator();
     ui.add_space(10.0);
 
@@ -198,6 +213,7 @@ impl SettingsWindow {
     s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
     s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
     s.push_str(&format!("show_warden_mapper: {}\n", self.show_warden_mapper));
+    s.push_str(&format!("show_code_guess: {}\n", self.show_code_guess));
 
     let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
     
