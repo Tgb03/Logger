@@ -5,7 +5,9 @@ use super::{location::Location, token_parser::TokenParserT, tokenizer::Token};
 #[derive(Default)]
 pub struct GenerationParser {
 
-  buffer: Vec<String>,
+  buffer_keys: Vec<String>,
+  buffer_objective: Vec<Location>,
+
   result: Vec<Location>,
 
   done: bool,
@@ -28,9 +30,9 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
     if self.done { return true }
 
     match token {
-      Token::ItemAllocated(name) => self.buffer.push(name),
+      Token::ItemAllocated(name) => self.buffer_keys.push(name),
       Token::ItemSpawn(zone, id) => {
-        let name = self.buffer.pop();
+        let name = self.buffer_keys.pop();
 
         let location = Location::default()
           .with_id(id)
@@ -41,10 +43,30 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
           None => location,
         };
 
-        println!("Added: {}", Into::<String>::into(&location));
         self.result.push(location);
         self.result.sort();
       },
+      Token::ObjectiveAllocated(zone, id) => {
+        let location = Location::default().with_zone(zone);
+
+        let location = match id {
+          Some(id) => location.with_id(id),
+          None => location
+        };
+
+        self.buffer_objective.push(location)
+      },
+      Token::ObjectiveSpawned(name) => {
+        let known = self.buffer_objective.pop();
+
+        let location = match known {
+          Some(known) => known.with_name(name),
+          None => Location::default().with_name(name)
+        };
+
+        self.result.push(location);
+        self.result.sort();
+      }
       Token::GeneratingFinished | Token::GameEndAbort => {
         self.done = true;
         return true;
