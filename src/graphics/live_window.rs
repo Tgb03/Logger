@@ -41,9 +41,6 @@ impl LiveWindow {
       + mapper_size;
 
     if end_len != self.ui_y_size {
-
-      eprintln!("Resized to {}", end_len);
-
       self.ui_y_size = end_len;
       ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 122.0 + 22.0 * end_len as f32 }));
     }

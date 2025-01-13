@@ -11,8 +11,10 @@ pub enum Token {
  
   GeneratingLevel,
   GeneratingFinished,
-  ItemAllocated(String),
-  ItemSpawn(String, u64),
+  ItemAllocated(String), // name
+  ItemSpawn(String, u64), // zone, id
+  ObjectiveAllocated(String, Option<u64>), // zone, id
+  ObjectiveSpawned(String), // name
   SelectExpedition(String),
   GameStarted,
   PlayerDroppedInLevel(u32),
@@ -28,6 +30,31 @@ pub enum Token {
 }
 
 impl Token {
+
+  fn create_basic_objective_alloc(line: &str) -> Token {
+    let words: Vec<&str> = line.split(" ").collect();
+
+    let zone = words[7];
+
+    Token::ObjectiveAllocated(zone.to_owned(), None)
+  }
+
+  fn create_hsu_objective_alloc(line: &str) -> Token {
+    let words: Vec<&str> = line.split(" ").collect();
+
+    let zone = words[16];
+    let id = words[18].split('_').collect::<Vec<&str>>()[0].parse::<u64>().ok();
+
+    Token::ObjectiveAllocated(format!("ZONE{}", zone).trim_end_matches(',').to_string(), id)
+  }
+
+  fn create_object_spawn(line: &str) -> Token {
+    let words: Vec<&str> = line.split(" ").collect();
+
+    let name = words[5];
+
+    Token::ObjectiveSpawned(name.to_owned())
+  }
 
   fn create_item_alloc(line: &str) -> Token {
     
@@ -95,6 +122,9 @@ impl Token {
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
     if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
     if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
+    if line.contains("LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_basic_objective_alloc(line)); }
+    if line.contains("LG_Distribute_WardenObjective, placing warden objective item with function HydroStatisUnit for wardenObjectiveType: HSU_FindTakeSample") { return Some(Token::create_hsu_objective_alloc(line)); }
+    if line.contains("WardenObjectiveManager.RegisterObjectiveItemForCollection") { return Some(Token::create_object_spawn(line)); }
     if line.contains("SNET : OnMasterCommand : ReceivingSync_Dropin") { return Some(Token::GameStarted); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
