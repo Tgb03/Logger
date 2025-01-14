@@ -1,13 +1,12 @@
 use std::{fs::{self, File}, io::{BufRead, BufReader, Seek}, path::Path};
 
-use egui::{Color32, Ui, Vec2};
+use egui::{Color32, FontId, Ui, Vec2};
 
-use crate::{logs::{parser::Parser, token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
+use crate::{key_guess::KeyGuess, logs::{parser::Parser, token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
 
 use super::settings_window::SettingsWindow;
 
-#[derive(Default)]
-pub struct LiveWindow {
+pub struct LiveWindow<'a> {
   
   file: Option<File>,
   frame_counter: u8,
@@ -15,18 +14,37 @@ pub struct LiveWindow {
   file_name: Option<String>,
   objective: ObjectiveData,
   player_input_string: String,
+  key_guess_input_string: String, 
 
   runs_count: usize,
   ui_y_size: usize,
   
   parser: Parser,
+  key_guesser: KeyGuess<'a>,
 
 }
 
+impl<'a> Default for LiveWindow<'a> {
+  fn default() -> Self {
+    Self { 
+      file: Default::default(), 
+      frame_counter: Default::default(), 
+      last_position: Default::default(), 
+      file_name: Default::default(), 
+      objective: Default::default(), 
+      player_input_string: Default::default(), 
+      key_guess_input_string: "----".to_owned(), 
+      runs_count: Default::default(), 
+      ui_y_size: Default::default(), 
+      parser: Default::default(), 
+      key_guesser: Default::default() }
+  }
+}
 
-impl LiveWindow {
 
-  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun) {
+impl<'a> LiveWindow<'a> {
+
+  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun, key_guesser_lines: usize) {
     let times = timed_run.get_times();
     let mapper_size = match self.parser.get_generation_parser() {
       Some(parser) => parser.into_result().len(),
@@ -38,12 +56,64 @@ impl LiveWindow {
         true => 1,
         false => 0,
       }
-      + mapper_size;
+      + mapper_size
+      + key_guesser_lines;
 
     if end_len != self.ui_y_size {
       self.ui_y_size = end_len;
       ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 122.0 + 22.0 * end_len as f32 }));
     }
+  }
+
+  fn render_key_guesser(&mut self, ui: &mut Ui, line_count: usize) -> usize {
+
+    ui.horizontal(|ui| {
+      
+      ui.label(super::create_text("Code: "));
+      if ui.add(egui::TextEdit::singleline(&mut self.key_guess_input_string)
+        .desired_width(32.0)
+        .font(FontId::new(12.0, egui::FontFamily::Name("jetbrains_mono".into())))
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE))
+        .changed() {
+          self.key_guesser = KeyGuess::default();
+
+          for (id, key) in self.key_guess_input_string.bytes().enumerate() {
+            if 97 <= key && key <= 122 {
+              self.key_guesser.add_key(id as u8, key);
+            } 
+
+            if 65 <= key && key <= 90 {
+              self.key_guesser.add_key(id as u8, key + 32);
+            }
+          }
+        };
+      ui.label(super::create_text(format!("Count: {}", self.key_guesser.len())));
+
+    });
+
+    let list = self.key_guesser.get_list();
+    let len = self.key_guesser.len();
+
+    for line in 0..line_count {
+      if len <= line * 6 {
+        return line + 1
+      }
+
+      ui.horizontal(|ui| {
+
+        for i in 0..6 {
+          if len == i + line * 6 {
+            break
+          }
+
+          ui.label(super::create_text(format!("{}", std::str::from_utf8(&list[i + line * 6][0..4]).unwrap().to_ascii_uppercase())));
+        }
+
+      });
+    }
+
+    1 + line_count
   }
 
   fn render_mapper(&self, ui: &mut Ui) {
@@ -191,6 +261,43 @@ impl LiveWindow {
       self.objective.player_count = count;
     }
 
+    let mut key_guesser_lines = 0;
+    if settings.get_show_code_guess() {
+      /*
+      // basically this doesn't work cause egui and keyboard input is mentally challenged.
+      if ctx.input(|i| {
+        i.modifiers.shift
+      }) {
+        if let (Some(id), Some(value)) = ctx.input(|i| {
+          let mut id: Option<u8> = None;
+
+          if i.key_down(egui::Key::Backtick) { self.key_guesser = KeyGuess::default(); }
+          if i.key_down(egui::Key::Num1) { id = Some(0) }
+          if i.key_down(egui::Key::Num2) { id = Some(1) }
+          if i.key_down(egui::Key::Num3) { id = Some(2) }
+          if i.key_down(egui::Key::Num4) { id = Some(3) }
+
+          let mut value: Option<u8> = None;
+
+          for key_id in 97u8..122u8 {
+            if i.key_pressed(egui::Key::from_name(std::str::from_utf8(&[key_id]).unwrap()).unwrap()) {
+              value = Some(key_id);
+            }
+          }
+
+          return (id, value)
+        }) {
+
+          self.key_guesser.add_key(id, value);
+        
+        }
+      }
+      */
+
+      ui.separator();
+      key_guesser_lines = self.render_key_guesser(ui, settings.get_code_guess_line_count());
+    }
+
     if settings.get_show_warden_mapper() {
       ui.separator();
       self.render_mapper(ui);
@@ -199,7 +306,8 @@ impl LiveWindow {
         self.resize_gui(
           settings.get_live_rectangle().width(), 
           ctx, 
-          &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone()
+          &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone(),
+          key_guesser_lines
         ); // try to find a way to remove this clone
       }
     }
@@ -225,7 +333,7 @@ impl LiveWindow {
       };
       self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone()); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), key_guesser_lines); // try to find a way to remove this clone
 
       return;
     }
@@ -244,7 +352,7 @@ impl LiveWindow {
       };
       self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone()); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), key_guesser_lines); // try to find a way to remove this clone
 
       ui.label(self.objective.get_id());
       ui.label(super::create_text("Not currently in run"));

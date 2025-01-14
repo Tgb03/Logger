@@ -12,8 +12,9 @@ pub struct SettingsWindow {
 
   show_warden_mapper: bool,
   show_code_guess: bool,
+  code_guess_line_count: usize,
 
-  text_inputs: [String; 4],
+  text_inputs: [String; 5],
 
 }
 
@@ -67,6 +68,10 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
     };
+    let code_guess_line_count = match props.get("code_guess_line_count") {
+      Some(s) => s.parse::<usize>().unwrap_or(1),
+      None => 1,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -80,12 +85,14 @@ impl Default for SettingsWindow {
       compare_to_theoretical,
       show_warden_mapper,
       show_code_guess,
+      code_guess_line_count,
       
       text_inputs: [
         x_pos.to_string(),
         y_pos.to_string(),
         x_size.to_string(),
         80.to_string(),
+        code_guess_line_count.to_string(),
       ],
     }
   }
@@ -115,6 +122,10 @@ impl SettingsWindow {
 
   pub fn get_show_code_guess(&self) -> bool {
     self.show_code_guess
+  }
+
+  pub fn get_code_guess_line_count(&self) -> usize {
+    self.code_guess_line_count
   }
 
   pub fn show(&mut self, ui: &mut Ui) {
@@ -191,6 +202,20 @@ impl SettingsWindow {
       ui.add_space(5.0);
       ui.checkbox(&mut self.show_code_guess, super::create_text("Show code guess"));
     });
+    
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.monospace(super::create_text("Code guess number of lines: "));
+      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[4])
+        .desired_width(100.0)
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE))
+        .changed() {
+          if let Ok(x) = self.text_inputs[4].parse::<usize>() {
+            self.code_guess_line_count = x;
+          }
+        };
+    });
 
     ui.separator();
     ui.add_space(10.0);
@@ -207,13 +232,14 @@ impl SettingsWindow {
     let mut s = String::new();
 
     s.push_str(&format!("x_pos: {}\n", self.live_rectangle.left()));
-    s.push_str(&format!("y_pos: {}\n", self.live_rectangle.bottom()));
+    s.push_str(&format!("y_pos: {}\n", self.live_rectangle.top()));
     s.push_str(&format!("x_size: {}\n", self.live_rectangle.right() - self.live_rectangle.left()));
     s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
     s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
     s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
     s.push_str(&format!("show_warden_mapper: {}\n", self.show_warden_mapper));
     s.push_str(&format!("show_code_guess: {}\n", self.show_code_guess));
+    s.push_str(&format!("code_guess_line_count: {}\n", self.code_guess_line_count));
 
     let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
     

@@ -18,20 +18,20 @@ enum AppState {
 
 }
 
-pub struct BaseApp {
+pub struct BaseApp<'a> {
 
   app_state: AppState,
 
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
-  live_window: LiveWindow,
+  live_window: LiveWindow<'a>,
   settings_window: SettingsWindow,
 
   save_manager: SaveManager,
 
 }
 
-impl Default for BaseApp {
+impl<'a> Default for BaseApp<'a> {
   fn default() -> Self {
     let settings_window = SettingsWindow::default();
     let mut save_manager = SaveManager::default();
@@ -52,7 +52,7 @@ impl Default for BaseApp {
   }
 }
 
-impl BaseApp {
+impl<'a> BaseApp<'a> {
 
   pub fn new(cc: &CreationContext) -> Self {
     let mut fonts = FontDefinitions::default();
@@ -77,7 +77,7 @@ impl BaseApp {
 
 }
 
-impl eframe::App for BaseApp {
+impl<'a> eframe::App for BaseApp<'a> {
   
   fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
     match self.app_state {
