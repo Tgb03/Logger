@@ -1,4 +1,21 @@
 
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+pub enum LocationType {
+  
+  Unknown,
+  Key,
+  Objective,
+
+}
+
+
+impl Default for LocationType {
+  fn default() -> Self {
+    LocationType::Unknown
+  }
+}
+
+
 #[derive(Default, PartialEq, Eq, Ord)]
 pub struct Location {
 
@@ -6,6 +23,8 @@ pub struct Location {
   
   zone: Option<String>,
   id: Option<u64>,
+
+  location_type: LocationType, 
 
 }
 
@@ -41,18 +60,35 @@ impl Location {
     self
   }
 
+  pub fn with_type(mut self, location_type: LocationType) -> Self {
+    self.location_type = location_type;
+
+    self
+  }
+
+  pub fn has_type(&self, location_type: LocationType) -> bool {
+    self.location_type == location_type
+  }
+
 }
 
 impl PartialOrd for Location {
   fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-    match self.zone.partial_cmp(&other.zone) {
-        Some(core::cmp::Ordering::Equal) => {}
-        ord => return ord,
+    match self.location_type.partial_cmp(&other.location_type) {
+      Some(core::cmp::Ordering::Equal) => {}
+      ord => return  ord,
     }
+
+    match self.zone.partial_cmp(&other.zone) {
+      Some(core::cmp::Ordering::Equal) => {}
+      ord => return ord,
+    }
+
     match self.id.partial_cmp(&other.id) {
       Some(core::cmp::Ordering::Equal) => {},
       ord => return ord,
     } 
+    
     self.item_name.partial_cmp(&other.item_name)
   }
 }

@@ -11,10 +11,13 @@ pub struct SettingsWindow {
   compare_to_theoretical: bool,
 
   show_warden_mapper: bool,
+  show_objective_items: bool,
+
   show_code_guess: bool,
   code_guess_line_count: usize,
+  code_guess_line_width: usize,
 
-  text_inputs: [String; 5],
+  text_inputs: [String; 6],
 
 }
 
@@ -64,6 +67,10 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
     };
+    let show_objective_items = match props.get("show_objective_items") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
     let show_code_guess = match props.get("show_code_guess") {
       Some(s) => s.parse::<bool>().unwrap_or(false),
       None => false,
@@ -71,6 +78,10 @@ impl Default for SettingsWindow {
     let code_guess_line_count = match props.get("code_guess_line_count") {
       Some(s) => s.parse::<usize>().unwrap_or(1),
       None => 1,
+    };
+    let code_guess_line_width = match props.get("code_guess_line_width") {
+      Some(s) => s.parse::<usize>().unwrap_or(6),
+      None => 6,
     };
     
     let live_rectangle = Rect { 
@@ -84,15 +95,18 @@ impl Default for SettingsWindow {
       compare_to_record,
       compare_to_theoretical,
       show_warden_mapper,
+      show_objective_items,
       show_code_guess,
       code_guess_line_count,
-      
+      code_guess_line_width,
+
       text_inputs: [
         x_pos.to_string(),
         y_pos.to_string(),
         x_size.to_string(),
         80.to_string(),
         code_guess_line_count.to_string(),
+        code_guess_line_width.to_string(),
       ],
     }
   }
@@ -126,6 +140,14 @@ impl SettingsWindow {
 
   pub fn get_code_guess_line_count(&self) -> usize {
     self.code_guess_line_count
+  }
+
+  pub fn get_show_objective_items(&self) -> bool {
+    self.show_objective_items
+  }
+
+  pub fn get_code_guess_line_width(&self) -> usize {
+    self.code_guess_line_width
   }
 
   pub fn show(&mut self, ui: &mut Ui) {
@@ -198,6 +220,11 @@ impl SettingsWindow {
       ui.checkbox(&mut self.show_warden_mapper, super::create_text("Show Mapper in live splitter"));
     });
 
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_objective_items, super::create_text("Show objective items in live splitter"));
+    });
+
     ui.horizontal(|ui| {
       ui.add_space(5.0);
       ui.checkbox(&mut self.show_code_guess, super::create_text("Show code guess"));
@@ -213,6 +240,20 @@ impl SettingsWindow {
         .changed() {
           if let Ok(x) = self.text_inputs[4].parse::<usize>() {
             self.code_guess_line_count = x;
+          }
+        };
+    });
+    
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.monospace(super::create_text("Code guess number of words per line: "));
+      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[5])
+        .desired_width(100.0)
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE))
+        .changed() {
+          if let Ok(x) = self.text_inputs[5].parse::<usize>() {
+            self.code_guess_line_width = x;
           }
         };
     });
@@ -238,8 +279,10 @@ impl SettingsWindow {
     s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
     s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
     s.push_str(&format!("show_warden_mapper: {}\n", self.show_warden_mapper));
+    s.push_str(&format!("show_objective_items: {}\n", self.show_objective_items));
     s.push_str(&format!("show_code_guess: {}\n", self.show_code_guess));
     s.push_str(&format!("code_guess_line_count: {}\n", self.code_guess_line_count));
+    s.push_str(&format!("code_guess_line_width: {}\n", self.code_guess_line_width));
 
     let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
     

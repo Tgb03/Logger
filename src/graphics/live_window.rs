@@ -44,12 +44,8 @@ impl<'a> Default for LiveWindow<'a> {
 
 impl<'a> LiveWindow<'a> {
 
-  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun, key_guesser_lines: usize) {
+  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun, mapper_size: usize, key_guesser_lines: usize) {
     let times = timed_run.get_times();
-    let mapper_size = match self.parser.get_generation_parser() {
-      Some(parser) => parser.into_result().len(),
-      None => self.parser.into_result().get_locations().len(),
-    };
     let end_len = 
       times.len() 
       + match timed_run.get_time() != Time::default() {
@@ -65,7 +61,7 @@ impl<'a> LiveWindow<'a> {
     }
   }
 
-  fn render_key_guesser(&mut self, ui: &mut Ui, line_count: usize) -> usize {
+  fn render_key_guesser(&mut self, ui: &mut Ui, line_count: usize, line_width: usize) -> usize {
 
     ui.horizontal(|ui| {
       
@@ -96,18 +92,18 @@ impl<'a> LiveWindow<'a> {
     let len = self.key_guesser.len();
 
     for line in 0..line_count {
-      if len <= line * 6 {
+      if len <= line * line_width {
         return line + 1
       }
 
       ui.horizontal(|ui| {
 
-        for i in 0..6 {
-          if len == i + line * 6 {
+        for i in 0..line_width {
+          if len == i + line * line_width {
             break
           }
 
-          ui.label(super::create_text(format!("{}", std::str::from_utf8(&list[i + line * 6][0..4]).unwrap().to_ascii_uppercase())));
+          ui.label(super::create_text(format!("{}", std::str::from_utf8(&list[i + line * line_width][0..4]).unwrap().to_ascii_uppercase())));
         }
 
       });
@@ -116,17 +112,23 @@ impl<'a> LiveWindow<'a> {
     1 + line_count
   }
 
-  fn render_mapper(&self, ui: &mut Ui) {
+  fn render_mapper(&self, ui: &mut Ui, settings: &SettingsWindow) -> usize {
     let locations = match self.parser.get_generation_parser() {
       Some(parser) => parser.into_result(),
       None => self.parser.into_result().get_locations(),
     };
 
+    let mut len = 0;
     ui.vertical(|ui| {
       for location in locations {
-        ui.label(super::create_text::<String>(location.into()));
+        if settings.get_show_objective_items() || !location.has_type(crate::logs::location::LocationType::Objective) {
+          ui.label(super::create_text::<String>(location.into()));
+          len += 1;
+        }
       }    
     });
+
+    len
   }
 
   fn render_timed_run(&self, ui: &mut Ui, timed_run: &TimedRun, compared_run: Option<&TimedRun>, compared_splits: Option<&Vec<Time>>) {
@@ -295,18 +297,20 @@ impl<'a> LiveWindow<'a> {
       */
 
       ui.separator();
-      key_guesser_lines = self.render_key_guesser(ui, settings.get_code_guess_line_count());
+      key_guesser_lines = self.render_key_guesser(ui, settings.get_code_guess_line_count(), settings.get_code_guess_line_width());
     }
 
+    let mut mapper_size = 0;
     if settings.get_show_warden_mapper() {
       ui.separator();
-      self.render_mapper(ui);
+      mapper_size = self.render_mapper(ui, settings);
       
       if self.parser.get_run_parser().is_none() {
         self.resize_gui(
           settings.get_live_rectangle().width(), 
           ctx, 
           &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone(),
+          mapper_size,
           key_guesser_lines
         ); // try to find a way to remove this clone
       }
@@ -333,7 +337,7 @@ impl<'a> LiveWindow<'a> {
       };
       self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), key_guesser_lines); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
 
       return;
     }
@@ -352,7 +356,7 @@ impl<'a> LiveWindow<'a> {
       };
       self.render_timed_run(ui, timed_run, compared_run, best_splits);
       // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), key_guesser_lines); // try to find a way to remove this clone
+      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
 
       ui.label(self.objective.get_id());
       ui.label(super::create_text("Not currently in run"));
@@ -368,11 +372,19 @@ impl<'a> LiveWindow<'a> {
       .expect("Couldn't access local directory")
       .flatten()
       .filter(|f| {
-        let metadata = f.metadata().unwrap();
+        let metadata = match f.metadata() {
+          Ok(metadata) => metadata,
+          Err(_) => { return false; },
+        };
 
         metadata.is_file() && f.file_name().to_str().unwrap_or_default().contains("NICKNAME_NETSTATUS")
       })
-      .max_by_key(|x| x.metadata().unwrap().modified().unwrap());
+      .max_by_key(|x| {
+        match x.metadata() {
+          Ok(metadata) => metadata.modified().ok(),
+          Err(_) => Default::default(),
+        }
+      });
 
     if let Some(path) = path {
       let path = path.path();

@@ -1,6 +1,6 @@
 use crate::time::Time;
 
-use super::{location::Location, token_parser::TokenParserT, tokenizer::Token};
+use super::{location::{Location, LocationType}, token_parser::TokenParserT, tokenizer::Token};
 
 #[derive(Default)]
 pub struct GenerationParser {
@@ -36,7 +36,8 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
 
         let location = Location::default()
           .with_id(id)
-          .with_zone(zone);
+          .with_zone(zone)
+          .with_type(LocationType::Key);
 
         let location = match name {
           Some(name) => location.with_name(name),
@@ -47,7 +48,9 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         self.result.sort();
       },
       Token::ObjectiveAllocated(zone, id) => {
-        let location = Location::default().with_zone(zone);
+        let location = Location::default()
+          .with_zone(zone)
+          .with_type(LocationType::Objective);
 
         let location = match id {
           Some(id) => location.with_id(id),
@@ -64,7 +67,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
           None => Location::default().with_name(name)
         };
 
-        self.result.push(location);
+        self.result.push(location.with_type(LocationType::Objective));
         self.result.sort();
       }
       Token::GeneratingFinished | Token::GameEndAbort => {
