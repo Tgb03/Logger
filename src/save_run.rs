@@ -1,5 +1,7 @@
 
-use std::{collections::{HashMap, HashSet}, fs, path::{Path, PathBuf}};
+use std::{collections::{HashMap, HashSet}, fs, path::PathBuf};
+
+use directories::ProjectDirs;
 
 use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
@@ -16,8 +18,13 @@ pub struct SaveManager {
 
 impl SaveManager {
 
-  fn get_directory() -> PathBuf {
-    Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger")
+  fn get_directory() -> Option<PathBuf> {
+    
+    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
+      return Some(proj_dirs.data_dir().to_path_buf())
+    }
+
+    None
   }
 
   /// save a single timed run into RAM
@@ -144,15 +151,26 @@ impl SaveManager {
   pub fn load_all_runs(&mut self) {
 
     let file_path = Self::get_directory();
-    let paths = fs::read_dir(file_path).unwrap();
-    
-    for path in paths {
-      if let Ok(entry) = path {
-
-        if entry.file_name().into_string().unwrap().contains(".save") {
-          self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+    let paths = match file_path {
+      Some(file_path) => {
+        if !file_path.exists() {
+          let _ = fs::create_dir_all(&file_path);
         }
+        
+        Some(fs::read_dir(file_path).unwrap())
+      },
+      None => None,
+    };
+    
+    if let Some(paths) = paths {
+      for path in paths {
+        if let Ok(entry) = path {
 
+          if entry.file_name().into_string().unwrap().contains(".save") {
+            self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+          }
+
+        }
       }
     }
 
@@ -205,37 +223,49 @@ impl SaveManager {
 
     let id = objective_data.get_id();
     let file_path = Self::get_directory()
-      .join(id.clone());
+      .map(|path| { path.join(id.clone()) });
 
-    match std::fs::read(file_path) {
-      Ok(binary_data) => {
+    if let Some(file_path) = file_path {
+      match std::fs::read(file_path) {
+        Ok(binary_data) => {
 
-        let mut vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
-            Ok(vec) => vec,
-            Err(_) => Vec::new(),
-        };
+          let mut vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
+              Ok(vec) => vec,
+              Err(_) => Vec::new(),
+          };
 
-        vec.iter_mut().for_each(|r| r.objective_data = objective_data.clone());
+          vec.iter_mut().for_each(|r| r.objective_data = objective_data.clone());
 
-        //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
-        self.save_multiple(vec);
-      },
-      Err(e) => {
-        eprintln!("{:?}", e);
-      },
+          //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
+          self.save_multiple(vec);
+        },
+        Err(e) => {
+          eprintln!("{:?}", e);
+        },
+      }
     }
   }
 
   /// save one objective data to pc folder
   pub fn save_to_file(&self, objective_data: &ObjectiveData) {
     let id = objective_data.get_id();
-    let file_path = Self::get_directory()
-        .join(id.clone());
+    let file_path = Self::get_directory();
+    
+    if let Some(file_path) = file_path.clone() {
+      if !file_path.exists() {
+        let _ = std::fs::create_dir_all(&file_path);
+      }
+    }
+
+    let file_path = file_path
+      .map(|path| { path.join(id.clone()) });
 
     let empty = Vec::new();
     if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(&id).unwrap_or(&empty)) {
       //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
-      let _ = std::fs::write(file_path, &bin_data);
+      if let Some(file_path) = file_path {
+        let _ = std::fs::write(file_path, &bin_data);
+      }
     }
   }
 
@@ -243,12 +273,13 @@ impl SaveManager {
   pub fn save_to_files(&self) {
     for (key, vec) in &self.loaded_runs {
       let file_path = Self::get_directory()
-        .join(key);
-
+      .map(|path| { path.join(key) });
       
       if let Ok(bin_data) = bincode::serialize(&vec) {
         //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
-        let _ = std::fs::write(file_path, &bin_data);
+        if let Some(file_path) = file_path {
+          let _ = std::fs::write(file_path, &bin_data);
+        }
       }
     }
   }

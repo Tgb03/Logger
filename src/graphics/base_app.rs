@@ -119,7 +119,7 @@ impl<'a> eframe::App for BaseApp<'a> {
 
         if ui.button(super::create_text("Live Splitter")).clicked() {
           self.app_state = AppState::LiveWindow;
-          self.live_window.load_file();
+          self.live_window.load_file(&self.settings_window);
           ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::AlwaysOnTop));
           ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(self.settings_window.get_live_rectangle().min));
           ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.settings_window.get_live_rectangle().size()));

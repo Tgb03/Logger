@@ -1,6 +1,7 @@
 
-use std::{collections::HashMap, fs::File, io::Read, path::Path};
+use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
+use directories::ProjectDirs;
 use egui::{Color32, Rect, Ui};
 
 pub struct SettingsWindow {
@@ -16,28 +17,33 @@ pub struct SettingsWindow {
   show_code_guess: bool,
   code_guess_line_count: usize,
   code_guess_line_width: usize,
+  logs_folder: PathBuf,
 
-  text_inputs: [String; 6],
+  text_inputs: [String; 7],
 
 }
 
 impl Default for SettingsWindow {
+
   fn default() -> Self {
+    let path = Self::config_path();
+    let file_str: Option<String> = path.map(|path| {
+      match File::open(path.join("app.properties")) {
+        Ok(mut file) => {
+          let mut buffer = String::new();
+          let _ = file.read_to_string(&mut buffer);
+          buffer
+        },
+        Err(_) => String::new(),
+      }
+    });
 
-    let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
-    let file_str: String = match File::open(path) {
-      Ok(mut file) => {
-        let mut buffer = String::new();
-        let _ = file.read_to_string(&mut buffer);
-        buffer
-      },
-      Err(_) => String::new(),
-    };
-
-    let props: HashMap<String, String> = match serde_yaml::from_str(&file_str) {
-      Ok(map) => map,
-      Err(_) => HashMap::new(),
-    };
+    let props: HashMap<String, String> = file_str.map_or(HashMap::default(), |file_str| {
+      match serde_yaml::from_str(&file_str) {
+        Ok(map) => map,
+        Err(_) => HashMap::new(),
+      }
+    });
 
     let x_pos: f32 = match props.get("x_pos") {
       Some(s) => s.parse::<f32>().unwrap_or(0.0),
@@ -83,6 +89,15 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<usize>().unwrap_or(6),
       None => 6,
     };
+    let logs_folder = match props.get("logs_folder") {
+      Some(s) => PathBuf::from(s),
+      None => {
+        match Self::logs_path() {
+          Some(path) => path,
+          None => panic!("There is no home folder."),
+        }
+      }
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -99,6 +114,7 @@ impl Default for SettingsWindow {
       show_code_guess,
       code_guess_line_count,
       code_guess_line_width,
+      logs_folder: logs_folder.clone(),
 
       text_inputs: [
         x_pos.to_string(),
@@ -107,12 +123,30 @@ impl Default for SettingsWindow {
         80.to_string(),
         code_guess_line_count.to_string(),
         code_guess_line_width.to_string(),
+        logs_folder.to_str().map_or(String::new(), |s| s.to_owned()),
       ],
     }
   }
 }
 
 impl SettingsWindow {
+
+  fn config_path() -> Option<PathBuf> {
+    
+    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
+      return Some(proj_dirs.config_dir().to_path_buf());
+    }
+
+    None
+  }
+
+  fn logs_path() -> Option<PathBuf> {
+    if let Some(dirs) = directories::UserDirs::new() {
+      return Some(dirs.home_dir().to_path_buf().join("AppData\\LocalLow\\10 Chambers Collective\\GTFO"));
+    }
+
+    None
+  }
 
   pub fn get_live_rectangle(&self) -> Rect {
     self.live_rectangle
@@ -150,12 +184,25 @@ impl SettingsWindow {
     self.code_guess_line_width
   }
 
+  pub fn get_logs_folder(&self) -> &PathBuf {
+    &self.logs_folder
+  }
+
   pub fn show(&mut self, ui: &mut Ui) {
 
     ui.add(egui::Label::new(super::create_text("LiveSplitter settings: ")
       .size(14.0)));
 
     ui.add_space(10.0);
+    
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.monospace(super::create_text("Path to logs folder: "));
+      ui.add(egui::TextEdit::singleline(&mut self.text_inputs[6])
+        .desired_width(512.0)
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE));
+    });
 
     ui.horizontal(|ui| {
       ui.add_space(5.0);
@@ -274,7 +321,7 @@ impl SettingsWindow {
 
     s.push_str(&format!("x_pos: {}\n", self.live_rectangle.left()));
     s.push_str(&format!("y_pos: {}\n", self.live_rectangle.top()));
-    s.push_str(&format!("x_size: {}\n", self.live_rectangle.right() - self.live_rectangle.left()));
+    s.push_str(&format!("x_size: {}\n", self.live_rectangle.width()));
     s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
     s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
     s.push_str(&format!("compare_to_theoretical: {}\n", self.compare_to_theoretical));
@@ -283,10 +330,23 @@ impl SettingsWindow {
     s.push_str(&format!("show_code_guess: {}\n", self.show_code_guess));
     s.push_str(&format!("code_guess_line_count: {}\n", self.code_guess_line_count));
     s.push_str(&format!("code_guess_line_width: {}\n", self.code_guess_line_width));
+    s.push_str(&format!("logs_folder: {}\n", self.logs_folder.to_str().unwrap_or_default()));
 
-    let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\Tgb03\\GTFO Logger\\app.properties");
+    if let Some(path) = Self::config_path() {
+      
+      if !path.exists() {
+        let _ = std::fs::create_dir_all(&path);
+      }
+
+      if let Err(e) = std::fs::write(path.join("app.properties"), s) {
+        eprintln!("{}", e);
+      }
     
-    let _ = std::fs::write(path, s);
+    } else {
+
+      eprintln!("Failed to save file since config path is not set.")
+
+    }
 
   }
 

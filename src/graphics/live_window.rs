@@ -1,4 +1,4 @@
-use std::{fs::{self, File}, io::{BufRead, BufReader, Seek}, path::Path};
+use std::{fs::{self, File}, io::{BufRead, BufReader, Seek}};
 
 use egui::{Color32, FontId, Ui, Vec2};
 
@@ -365,8 +365,8 @@ impl<'a> LiveWindow<'a> {
     }
   }
 
-  pub fn load_file(&mut self) {
-    let path = Path::new(env!("HOME")).join("Appdata\\Locallow\\10 Chambers Collective\\GTFO\\");
+  pub fn load_file(&mut self, settings: &SettingsWindow) {
+    let path = settings.get_logs_folder();
 
     let path = fs::read_dir(path)
       .expect("Couldn't access local directory")
