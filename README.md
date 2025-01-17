@@ -12,7 +12,7 @@ This app aims to streamline using logs to get all the data from them automatical
 - [x] Saving runs
 
 ## WardenMapper:
-- [ ] Automatically find keys.
+- [x] Automatically find keys.
 - [ ] Automatically find objective items.
 
 
