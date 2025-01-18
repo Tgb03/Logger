@@ -306,10 +306,15 @@ impl<'a> LiveWindow<'a> {
       mapper_size = self.render_mapper(ui, settings);
       
       if self.parser.get_run_parser().is_none() {
+        let run = match settings.get_show_splitter() {
+          true => &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone(),
+          false => &TimedRun::new("".to_owned()),
+        };
+
         self.resize_gui(
           settings.get_live_rectangle().width(), 
           ctx, 
-          &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone(),
+          run,
           mapper_size,
           key_guesser_lines
         ); // try to find a way to remove this clone
@@ -325,19 +330,21 @@ impl<'a> LiveWindow<'a> {
       self.objective.player_count = timed_run.objective_data.player_count;
 
       ui.label(super::create_text(format!("In run: {}", self.objective.get_id())));
-    
-      ui.label(self.objective.get_id());
-      let compared_run = match settings.get_compare_to_record() { 
-        true => save_manager.get_best_run(&self.objective), 
-        false => None,
-      };
-      let best_splits = match settings.get_compare_to_theoretical() {
-        true => save_manager.get_best_splits(&self.objective),
-        false => None,
-      };
-      self.render_timed_run(ui, timed_run, compared_run, best_splits);
-      // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
+
+      if settings.get_show_splitter() {
+        ui.label(self.objective.get_id());
+        let compared_run = match settings.get_compare_to_record() { 
+          true => save_manager.get_best_run(&self.objective), 
+          false => None,
+        };
+        let best_splits = match settings.get_compare_to_theoretical() {
+          true => save_manager.get_best_splits(&self.objective),
+          false => None,
+        };
+        self.render_timed_run(ui, timed_run, compared_run, best_splits);
+        // TODO: DELETE .clone()
+        self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
+      }
 
       return;
     }
@@ -346,17 +353,20 @@ impl<'a> LiveWindow<'a> {
     if let Some(timed_run) = result.get_runs().last() {
       
       self.objective.level_name = timed_run.objective_data.level_name.clone();
-      let compared_run = match settings.get_compare_to_record() { 
-        true => save_manager.get_best_run(&self.objective), 
-        false => None,
-      };
-      let best_splits = match settings.get_compare_to_theoretical() {
-        true => save_manager.get_best_splits(&self.objective),
-        false => None,
-      };
-      self.render_timed_run(ui, timed_run, compared_run, best_splits);
-      // TODO: DELETE .clone()
-      self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
+
+      if settings.get_show_splitter() {
+        let compared_run = match settings.get_compare_to_record() { 
+          true => save_manager.get_best_run(&self.objective), 
+          false => None,
+        };
+        let best_splits = match settings.get_compare_to_theoretical() {
+          true => save_manager.get_best_splits(&self.objective),
+          false => None,
+        };
+        self.render_timed_run(ui, timed_run, compared_run, best_splits);
+        // TODO: DELETE .clone()
+        self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
+      }
 
       ui.label(self.objective.get_id());
       ui.label(super::create_text("Not currently in run"));

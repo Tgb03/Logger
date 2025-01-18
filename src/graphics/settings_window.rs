@@ -6,6 +6,7 @@ use egui::{Color32, Rect, Ui};
 
 pub struct SettingsWindow {
 
+  show_splitter: bool,
   live_rectangle: Rect,
   automatic_loading: bool,
   compare_to_record: bool,
@@ -98,6 +99,10 @@ impl Default for SettingsWindow {
         }
       }
     };
+    let show_splitter = match props.get("show_splitter") {
+      Some(s) => s.parse::<bool>().unwrap_or(true),
+      None => true,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -105,6 +110,7 @@ impl Default for SettingsWindow {
     };
 
     Self { 
+      show_splitter,
       live_rectangle,
       automatic_loading,
       compare_to_record,
@@ -146,6 +152,10 @@ impl SettingsWindow {
     }
 
     None
+  }
+
+  pub fn get_show_splitter(&self) -> bool {
+    self.show_splitter
   }
 
   pub fn get_live_rectangle(&self) -> Rect {
@@ -194,6 +204,13 @@ impl SettingsWindow {
       .size(14.0)));
 
     ui.add_space(10.0);
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_splitter, super::create_text("Show Actual Splits"));
+      ui.add_space(5.0);
+      ui.label(super::create_text("Warning: this disables completely the splits part."));
+    });
     
     ui.horizontal(|ui| {
       ui.add_space(5.0);
@@ -331,6 +348,7 @@ impl SettingsWindow {
     s.push_str(&format!("code_guess_line_count: {}\n", self.code_guess_line_count));
     s.push_str(&format!("code_guess_line_width: {}\n", self.code_guess_line_width));
     s.push_str(&format!("logs_folder: {}\n", self.logs_folder.to_str().unwrap_or_default()));
+    s.push_str(&format!("show_splitter: {}\n", self.show_splitter));
 
     if let Some(path) = Self::config_path() {
       
