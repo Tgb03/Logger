@@ -70,7 +70,11 @@ impl Token {
 
     let zone = words[16];
     let id = words[18].split('_').collect::<Vec<&str>>()[0].parse::<u64>().ok();
-    let zone = zone.trim_end_matches(',')[4..].parse().ok();
+    let zone = zone.trim_end_matches(',');
+    let zone = match zone.len() > 3 {
+      true => &zone[4..],
+      false => ""
+    }.parse().ok();
 
     Token::ObjectiveAllocated(zone.unwrap_or_default(), id)
   }

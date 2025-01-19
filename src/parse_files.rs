@@ -1,41 +1,44 @@
 
 pub mod file_parse {
-  use std::sync::Arc;
   use std::thread;
-  //use std::time::Instant;
+  use std::time::Instant;
+//use std::time::Instant;
   use std::{fs::File, io::Read};
   use crate::logs::parser::{Parser, ParserResult};
   use crate::logs::token_parser::TokenParserT;
   use crate::logs::tokenizer::Tokenizer;
 
-  pub fn parse_all_files_async<'a>(paths: Vec<File>) -> ParserResult {
-    let paths: Vec<Arc<File>> = paths.into_iter().map(Arc::new).collect();
+  pub fn parse_all_files_async<'a>(mut paths: Vec<File>) -> ParserResult {
+    let start = Instant::now();
+
     let thread_count = 8.min(paths.len() / 12 + 1);
-    let mut files_for_thread = vec![Vec::<Arc<File>>::new(); thread_count];
+    let mut split_paths: Vec<Vec<File>> = Vec::new();
+    split_paths.resize_with(thread_count, || Vec::new());
 
     for i in 0..paths.len() {
-      files_for_thread[i % thread_count].push(paths[i].clone());
+      split_paths[i % thread_count].push(paths.swap_remove(0));
     }
 
     let mut threads = Vec::new();
 
-   // let start = Instant::now();
-    for file_vec in files_for_thread {
+    for ps in split_paths {
       threads.push(thread::spawn(move || {
-        let file_refs: Vec<&File> = file_vec.iter().map(|arc| arc.as_ref()).collect();
+        let file_refs = &ps;
+
         parse_all_files(file_refs)
       }));
     }
-    
-    let mut result: ParserResult = Default::default();
+
+    let mut result = ParserResult::default();
     for thread in threads {
       match thread.join() {
         Ok(res) => result.merge_result(res),
         Err(_) => {},
       }
     }
-    // let duration = start.elapsed();
-    // println!("Time elapsed with threads is: {:?}", duration);
+
+    let duration = start.elapsed();
+    println!("Time elapsed with threads is: {:?}", duration);
 
     result
   }
@@ -45,12 +48,14 @@ pub mod file_parse {
     I: IntoIterator<Item = &'a File> {
     let mut result: ParserResult = Default::default();
 
-    // let start = Instant::now();
+    let start = Instant::now();
+    let mut counter = 0;
     for path in paths {
+      counter += 1;
       result.merge_result(parse_file(path));
     }
-    // let duration = start.elapsed();
-    // println!("Time elapsed without threads is: {:?}", duration); 
+    let duration = start.elapsed();
+    println!("Parsed without threads {} files in: {:?}", counter, duration); 
 
     result
   }
