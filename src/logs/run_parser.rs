@@ -79,7 +79,7 @@ impl TokenParserT<TimedRun> for RunParser {
         return true; 
       },
       Token::SelectExpedition(_) => { /* IGNORE TOKEN FOR EARLY DROP */ }
-      _ => panic!("Failed to parse token {:?} in RunParser", token)
+      _ => eprintln!("Failed to parse token {:?} in RunParser", token)
     }
     
     return false;

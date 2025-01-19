@@ -12,8 +12,9 @@ pub enum Token {
   GeneratingLevel,
   GeneratingFinished,
   ItemAllocated(String), // name
-  ItemSpawn(String, u64), // zone, id
-  ObjectiveAllocated(String, Option<u64>), // zone, id
+  ItemSpawn(u64, u64), // zone, id
+  ObjectiveGather(u64, u64), // item id, item count
+  ObjectiveAllocated(u64, Option<u64>), // zone, id
   ObjectiveSpawned(String), // name
   SelectExpedition(String),
   GameStarted,
@@ -31,12 +32,37 @@ pub enum Token {
 
 impl Token {
 
+  fn create_gather_objective_spawn(line: &str) -> Token {
+    let words: Vec<&str> = line.split(" ").collect();
+
+    let zone_count = words[10]
+      .strip_suffix(']')
+      .unwrap_or(words[10])
+      .parse::<u64>()
+      .unwrap_or_default();
+
+    let id = words[14 + zone_count as usize]
+      .strip_suffix(',')
+      .unwrap_or(words[14 + zone_count as usize])
+      .parse::<u64>()
+      .unwrap_or_default();
+
+    let count = words[13 + zone_count as usize]
+      .strip_suffix(']')
+      .unwrap_or(words[13 + zone_count as usize])
+      .parse::<u64>()
+      .unwrap_or_default();
+
+    Token::ObjectiveGather(id, count)
+  }
+
   fn create_basic_objective_alloc(line: &str) -> Token {
     let words: Vec<&str> = line.split(" ").collect();
 
     let zone = words[7];
+    let zone = zone.to_owned()[4..].parse::<u64>().ok();
 
-    Token::ObjectiveAllocated(zone.to_owned(), None)
+    Token::ObjectiveAllocated(zone.unwrap_or_default(), None)
   }
 
   fn create_hsu_objective_alloc(line: &str) -> Token {
@@ -44,8 +70,9 @@ impl Token {
 
     let zone = words[16];
     let id = words[18].split('_').collect::<Vec<&str>>()[0].parse::<u64>().ok();
+    let zone = zone.trim_end_matches(',')[4..].parse().ok();
 
-    Token::ObjectiveAllocated(format!("ZONE{}", zone).trim_end_matches(',').to_string(), id)
+    Token::ObjectiveAllocated(zone.unwrap_or_default(), id)
   }
 
   fn create_object_spawn(line: &str) -> Token {
@@ -69,10 +96,10 @@ impl Token {
 
     let words: Vec<&str> = line.split(" ").collect(); 
 
-    let zone = words[6];
+    let zone = words[6][4..].parse().ok();
     let id = words[14].parse::<u64>().unwrap_or_default();
 
-    Token::ItemSpawn(zone.to_owned(), id)
+    Token::ItemSpawn(zone.unwrap_or_default(), id)
   }
 
   fn create_expedition(line: &str) -> Token {
@@ -124,6 +151,7 @@ impl Token {
     if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
     if line.contains("LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_basic_objective_alloc(line)); }
     if line.contains("LG_Distribute_WardenObjective, placing warden objective item with function HydroStatisUnit for wardenObjectiveType: HSU_FindTakeSample") { return Some(Token::create_hsu_objective_alloc(line)); }
+    if line.contains("LG_Distribute_WardenObjective, PLACE GATHER ITEMS") { return Some(Token::create_gather_objective_spawn(line)); }
     if line.contains("WardenObjectiveManager.RegisterObjectiveItemForCollection") { return Some(Token::create_object_spawn(line)); }
     if line.contains("SNET : OnMasterCommand : ReceivingSync_Dropin") { return Some(Token::GameStarted); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }

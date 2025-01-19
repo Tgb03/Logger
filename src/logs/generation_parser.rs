@@ -7,6 +7,7 @@ pub struct GenerationParser {
 
   buffer_keys: Vec<String>,
   buffer_objective: Vec<Location>,
+  buffer_obj_alloc: Vec<Location>,
 
   result: Vec<Location>,
 
@@ -57,6 +58,23 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
           None => location
         };
 
+        if self.buffer_obj_alloc.len() > 0 {
+          let obj = self.buffer_obj_alloc.remove(0);
+
+          self.result.push(
+            
+            location.with_name(
+              obj.get_name()
+                .unwrap_or(&"".to_owned())
+                .clone()
+            )
+
+          );
+          self.result.sort();
+
+          return false;
+        }
+
         self.buffer_objective.push(location)
       },
       Token::ObjectiveSpawned(name) => {
@@ -69,7 +87,21 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
 
         self.result.push(location.with_type(LocationType::Objective));
         self.result.sort();
-      }
+      },
+      Token::ObjectiveGather(id, count) => {
+        let name = match id {
+          149 => "GLP",
+          150 => "OSIP",
+          _ => "Unknown",
+        };
+        
+        for _ in 0..count {
+          self.buffer_obj_alloc.push(
+            Location::default()
+              .with_name(name.to_owned())
+          );
+        }
+      },
       Token::GeneratingFinished | Token::GameEndAbort => {
         self.done = true;
         return true;
