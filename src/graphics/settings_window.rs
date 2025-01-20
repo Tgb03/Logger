@@ -329,7 +329,12 @@ impl SettingsWindow {
       ui.add_space(5.0);
       ui.checkbox(&mut self.automatic_loading, super::create_text("Automatic Loading of Runs"));
     });
-  
+
+    ui.separator();
+    ui.add_space(10.0);
+    
+    ui.label(super::create_text(format!("App version: {}", env!("CARGO_PKG_VERSION"))));
+
   }
 
   pub fn save_settings(&self) {
