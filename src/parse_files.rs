@@ -29,19 +29,17 @@ pub mod file_parse {
 
         loop {
           
-          match paths_clone.lock() {
-              Ok(mut p_id) => {
-                match p_id.next() {
-                  Some(f) => {
-                    drop(p_id);
-                    
-                    result.merge_result(parse_file(&f));
-                  },
-                  None => return result,
-                }
-              },
-              Err(_) => return result,
+          let file = match paths_clone.lock() {
+            Ok(mut p_id) => {
+              p_id.next()
+            },
+            Err(_) => return result,
           };
+
+          match file {
+            Some(file) => result.merge_result(parse_file(&file)),
+            None => return result,
+          }
 
         }
 
