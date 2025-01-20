@@ -1,7 +1,7 @@
 
 pub mod file_parse {
 
-  const MAX_THREAD: usize = 32;
+  const MAX_THREAD: usize = 16;
   
   use std::thread;
   use std::sync::{Arc, Mutex};
@@ -17,12 +17,10 @@ pub mod file_parse {
 
     let thread_count = MAX_THREAD.min(paths.len() / 12 + 1);
     
-    let paths_id = Arc::new(Mutex::<usize>::new(0));
-    let paths = Arc::new(paths);
+    let paths = Arc::new(Mutex::new(paths.into_iter()));
 
     let mut threads = Vec::new();
     for _ in 0..thread_count {
-      let paths_id_clone = paths_id.clone();
       let paths_clone = paths.clone();
 
       threads.push(thread::spawn(move || {
@@ -31,14 +29,15 @@ pub mod file_parse {
 
         loop {
           
-          match paths_id_clone.lock() {
-              Ok(mut p_id) => { 
-                if let Some(f) = paths_clone.get(*p_id) {
-                  *p_id += 1;
-                  drop(p_id);
-                  result.merge_result(parse_file(f));
-                } else {
-                  return result;
+          match paths_clone.lock() {
+              Ok(mut p_id) => {
+                match p_id.next() {
+                  Some(f) => {
+                    drop(p_id);
+                    
+                    result.merge_result(parse_file(&f));
+                  },
+                  None => return result,
                 }
               },
               Err(_) => return result,
