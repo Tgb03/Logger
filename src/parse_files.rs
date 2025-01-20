@@ -1,31 +1,51 @@
 
 pub mod file_parse {
+
+  const MAX_THREAD: usize = 32;
+  
   use std::thread;
+  use std::sync::{Arc, Mutex};
   use std::time::Instant;
-//use std::time::Instant;
   use std::{fs::File, io::Read};
+
   use crate::logs::parser::{Parser, ParserResult};
   use crate::logs::token_parser::TokenParserT;
   use crate::logs::tokenizer::Tokenizer;
 
-  pub fn parse_all_files_async<'a>(mut paths: Vec<File>) -> ParserResult {
+  pub fn parse_all_files_async<'a>(paths: Vec<File>) -> ParserResult {
     let start = Instant::now();
 
-    let thread_count = 8.min(paths.len() / 12 + 1);
-    let mut split_paths: Vec<Vec<File>> = Vec::new();
-    split_paths.resize_with(thread_count, || Vec::new());
-
-    for i in 0..paths.len() {
-      split_paths[i % thread_count].push(paths.swap_remove(0));
-    }
+    let thread_count = MAX_THREAD.min(paths.len() / 12 + 1);
+    
+    let paths_id = Arc::new(Mutex::<usize>::new(0));
+    let paths = Arc::new(paths);
 
     let mut threads = Vec::new();
+    for _ in 0..thread_count {
+      let paths_id_clone = paths_id.clone();
+      let paths_clone = paths.clone();
 
-    for ps in split_paths {
       threads.push(thread::spawn(move || {
-        let file_refs = &ps;
+        
+        let mut result = ParserResult::default();
 
-        parse_all_files(file_refs)
+        loop {
+          
+          match paths_id_clone.lock() {
+              Ok(mut p_id) => { 
+                if let Some(f) = paths_clone.get(*p_id) {
+                  *p_id += 1;
+                  drop(p_id);
+                  result.merge_result(parse_file(f));
+                } else {
+                  return result;
+                }
+              },
+              Err(_) => return result,
+          };
+
+        }
+
       }));
     }
 
@@ -48,14 +68,14 @@ pub mod file_parse {
     I: IntoIterator<Item = &'a File> {
     let mut result: ParserResult = Default::default();
 
-    let start = Instant::now();
-    let mut counter = 0;
+    // let start = Instant::now();
+    // let mut counter = 0;
     for path in paths {
-      counter += 1;
+      // counter += 1;
       result.merge_result(parse_file(path));
     }
-    let duration = start.elapsed();
-    println!("Parsed without threads {} files in: {:?}", counter, duration); 
+    // let duration = start.elapsed();
+    //println!("Parsed without threads {} files in: {:?}", counter, duration); 
 
     result
   }
