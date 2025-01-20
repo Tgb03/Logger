@@ -1,10 +1,11 @@
 
 pub mod file_parse {
 
-  const MAX_THREAD: usize = 16;
+  const MAX_THREAD: usize = 8;
   
   use std::thread;
   use std::sync::{Arc, Mutex};
+  #[cfg(debug_assertions)]
   use std::time::Instant;
   use std::{fs::File, io::Read};
 
@@ -13,6 +14,7 @@ pub mod file_parse {
   use crate::logs::tokenizer::Tokenizer;
 
   pub fn parse_all_files_async<'a>(paths: Vec<File>) -> ParserResult {
+    #[cfg(debug_assertions)]
     let start = Instant::now();
 
     let thread_count = MAX_THREAD.min(paths.len() / 12 + 1);
@@ -54,9 +56,11 @@ pub mod file_parse {
       }
     }
 
-    let duration = start.elapsed();
-    println!("Time elapsed with threads is: {:?}", duration);
-
+    #[cfg(debug_assertions)] {
+      let duration = start.elapsed();
+      println!("Time elapsed with threads is: {:?}", duration);
+    }
+    
     result
   }
 
