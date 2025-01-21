@@ -4,6 +4,7 @@ use eframe::egui;
 use graphics::base_app::BaseApp;
 
 pub mod logs;
+pub mod game_runs;
 
 pub mod time;
 pub mod timed_run;

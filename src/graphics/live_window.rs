@@ -165,12 +165,14 @@ impl<'a> LiveWindow<'a> {
               false => *time,
             };
 
-            let (time_diff, color) = match split.is_greater_than(&compared_splits[id]) {
-              true => (split.sub(&compared_splits[id]), Color32::RED),
-              false => (compared_splits[id].sub(&split), Color32::GREEN),
-            };
+            if let Some(compared_time) = compared_splits.get(id) {
+              let (time_diff, color) = match split.is_greater_than(compared_time) {
+                true => (split.sub(&compared_splits[id]), Color32::RED),
+                false => (compared_splits[id].sub(&split), Color32::GREEN),
+              };
 
-            ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
+              ui.colored_label(color, super::create_text(time_diff.to_string_no_hours()));
+            }
           }
         });
       }
