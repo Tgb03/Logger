@@ -31,12 +31,13 @@ impl RunManager {
     let obj = &run.objective_data;
 
     match self.levels_required.iter().position(|o| o == obj) {
-      Some(id) => { self.levels_required.remove(id); },
+      Some(id) => { 
+        self.levels_required.remove(id);
+        self.runs_done.push(run);
+      },
       None => {},
     }
 
-    self.runs_done.push(run);
-  
   }
 
   pub fn new(objective: GameRunObjective, rundown: GameRunRundown, player_count: u8) -> RunManager {
@@ -67,7 +68,7 @@ impl RunManager {
     let size = size.min(self.runs_done.len());
     let left = self.runs_done.len() - size;
 
-    &self.runs_done[left..size]
+    &self.runs_done[left..self.runs_done.len()]
   }
 
   pub fn get_game_rundown(&self) -> &GameRunRundown {

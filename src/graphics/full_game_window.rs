@@ -65,6 +65,9 @@ impl FullGameWindow {
                 self.player_count = player_count.to_string();
 
                 *run_manager = RunManager::new(game_objective, game_rundown, player_count);
+                for run in self.parser.into_result().get_runs() {
+                  run_manager.finished_level(run.clone());
+                }
               }
             }
 
@@ -83,6 +86,9 @@ impl FullGameWindow {
               self.player_count = player_count.to_string();
 
               *run_manager = RunManager::new(game_objective, game_rundown, player_count);
+              for run in self.parser.into_result().get_runs() {
+                run_manager.finished_level(run.clone());
+              }
             }
           }
 
@@ -96,6 +102,9 @@ impl FullGameWindow {
 
           if let Some(player_count) = player_count {
             *run_manager = RunManager::new(game_objective, game_rundown, player_count);
+            for run in self.parser.into_result().get_runs() {
+              run_manager.finished_level(run.clone());
+            }
           }
         }
 
@@ -111,7 +120,7 @@ impl FullGameWindow {
       ui.separator();
 
       ui.horizontal(|ui| {
-        ui.label(super::create_text("LEVEL       "));
+        ui.label(super::create_text("LEVEL "));
         ui.label(super::create_text("YOUR TIME   "));
         ui.label(super::create_text("DIFFERENCE  "));
       });
@@ -119,7 +128,7 @@ impl FullGameWindow {
       for run in run_manager.get_last_n_runs(5) {
         ui.horizontal(|ui| {
           
-          ui.label(super::create_text(&run.objective_data.level_name));
+          ui.label(super::create_text(format!("{} ", &run.objective_data.level_name)));
           ui.label(super::create_text(run.get_time().to_string()));
           if let Some(compared_run) = compared_run.map(|cr| cr.0.get_by_objective(&run.objective_data)).flatten() {
             let (color, time) = match run.get_time().is_smaller_than(&compared_run.get_time()) {
