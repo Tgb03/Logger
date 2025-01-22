@@ -3,7 +3,7 @@ use std::{collections::{HashMap, HashSet}, fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
-use crate::{objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
+use crate::{game_runs::run_manager::RunManager, objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
 /// Save manager struct
 /// 
@@ -14,42 +14,11 @@ pub struct SaveManager {
   loaded_runs: HashMap<String, Vec<TimedRun>>,
   best_splits: HashMap<String, Vec<Time>>,
 
+  rundown_percent: HashMap<String, Vec<(Vec<TimedRun>, Time, bool)>>,
+
 }
 
 impl SaveManager {
-
-  fn get_directory() -> Option<PathBuf> {
-    
-    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
-      return Some(proj_dirs.data_dir().to_path_buf())
-    }
-
-    None
-  }
-
-  /// save a single timed run into RAM
-  /// 
-  /// duplicates are automatically removed.
-  pub fn save(&mut self, timed_run: TimedRun) {
-
-    if let Some(name) = self.save_no_remove_duplicates(timed_run) {
-      self.remove_duplicates(name);
-    }
-
-  }
-
-  pub fn calculate_best_splits(&mut self, objective_id: String) {
-    let empty = Vec::new();
-    let runs = self.loaded_runs.get(&objective_id).unwrap_or(&empty);
-
-    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
-    for run in runs {
-      for (id, time) in run.get_splits().iter().enumerate() {
-        result[id] = result[id].min(time);
-      }
-    }
-    self.best_splits.insert(objective_id, result);
-  }
 
   fn save_no_remove_duplicates(&mut self, timed_run: TimedRun) -> Option<String> {
     if timed_run.len() == 1 { return None }
@@ -68,23 +37,13 @@ impl SaveManager {
     return Some(name);
   }
 
-  /// save multiple runs into the RAM memory.
-  /// 
-  /// duplicates are automatically removed.
-  pub fn save_multiple(&mut self, timed_runs: Vec<TimedRun>) {
+  fn get_directory() -> Option<PathBuf> {
     
-    let mut set = HashSet::new();
-
-    for run in timed_runs {
-      if let Some(name) = self.save_no_remove_duplicates(run) {
-        set.insert(name);
-      }
+    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
+      return Some(proj_dirs.data_dir().to_path_buf())
     }
 
-    for name in set {
-      self.remove_duplicates(name);
-    }
-
+    None
   }
 
   fn remove_duplicates(&mut self, name: String) {
@@ -105,6 +64,58 @@ impl SaveManager {
     }
     
     max
+  }
+
+  /// save a single timed run into RAM
+  /// 
+  /// duplicates are automatically removed.
+  pub fn save(&mut self, timed_run: TimedRun) {
+
+    if let Some(name) = self.save_no_remove_duplicates(timed_run) {
+      self.remove_duplicates(name);
+    }
+
+  }
+
+  pub fn save_rundown(&mut self, run_manager: RunManager) { 
+    
+    match self.rundown_percent.get_mut(run_manager.get_objective()) {
+      Some(vec) => vec.push(run_manager.into()),
+      None => { self.rundown_percent.insert(run_manager.get_objective().clone(), vec![run_manager.into()]); },
+    }
+
+  }
+
+  pub fn calculate_best_splits(&mut self, objective_id: String) {
+    let empty = Vec::new();
+    let runs = self.loaded_runs.get(&objective_id).unwrap_or(&empty);
+
+    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
+    for run in runs {
+      for (id, time) in run.get_splits().iter().enumerate() {
+        result[id] = result[id].min(time);
+      }
+    }
+    self.best_splits.insert(objective_id, result);
+  }
+
+  /// save multiple runs into the RAM memory.
+  /// 
+  /// duplicates are automatically removed.
+  pub fn save_multiple(&mut self, timed_runs: Vec<TimedRun>) {
+    
+    let mut set = HashSet::new();
+
+    for run in timed_runs {
+      if let Some(name) = self.save_no_remove_duplicates(run) {
+        set.insert(name);
+      }
+    }
+
+    for name in set {
+      self.remove_duplicates(name);
+    }
+
   }
 
   // returns the world record run for a level
@@ -138,6 +149,35 @@ impl SaveManager {
     }
 
     self.loaded_runs.get_mut(&id)
+  }
+
+  /// returns all runs for the full rundown/game objective.
+  pub fn get_game_runs(&self, objective: &String) -> Option<&Vec<(Vec<TimedRun>, Time, bool)>> {
+    self.rundown_percent.get(objective)
+  }
+
+  /// returns only the best run for the full rundown/game objective.
+  pub fn get_best_game_run(&mut self, objective: &String) -> Option<&(Vec<TimedRun>, Time, bool)> {
+    let mut best: Option<&(Vec<TimedRun>, Time, bool)> = None;
+
+    if let Some(runs) = self.get_game_runs(objective) {
+
+      for it in runs {
+        best = match best {
+          Some(run) => {
+            if it.1.is_smaller_than(&run.1) {
+              return Some(it)
+            }
+
+            best
+          },
+          None => Some(it),
+        }
+      }
+
+    }
+
+    best
   }
 
   /// returns all best splits for the objective.

@@ -6,6 +6,9 @@ pub mod log_parser_window;
 pub mod run_manager_window;
 pub mod live_window;
 pub mod settings_window;
+pub mod full_game_window;
+
+pub mod live_parser;
 
 pub fn create_text<T>(text: T) -> egui::RichText
 where T: Into<RichText> {

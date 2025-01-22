@@ -1,17 +1,13 @@
-use std::{fs::{self, File}, io::{BufRead, BufReader, Seek}};
 
 use egui::{Color32, FontId, Ui, Vec2};
 
-use crate::{key_guess::KeyGuess, logs::{parser::Parser, token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
+use crate::{key_guess::KeyGuess, logs::{token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
 
-use super::settings_window::SettingsWindow;
+use super::{live_parser::LiveParser, settings_window::SettingsWindow};
 
 pub struct LiveWindow<'a> {
   
-  file: Option<File>,
   frame_counter: u8,
-  last_position: u64,
-  file_name: Option<String>,
   objective: ObjectiveData,
   player_input_string: String,
   key_guess_input_string: String, 
@@ -19,25 +15,23 @@ pub struct LiveWindow<'a> {
   runs_count: usize,
   ui_y_size: usize,
   
-  parser: Parser,
   key_guesser: KeyGuess<'a>,
+  parser: LiveParser,
 
 }
 
 impl<'a> Default for LiveWindow<'a> {
   fn default() -> Self {
     Self { 
-      file: Default::default(), 
-      frame_counter: Default::default(), 
-      last_position: Default::default(), 
-      file_name: Default::default(), 
+      frame_counter: Default::default(),
       objective: Default::default(), 
       player_input_string: Default::default(), 
       key_guess_input_string: "----".to_owned(), 
       runs_count: Default::default(), 
-      ui_y_size: Default::default(), 
-      parser: Default::default(), 
-      key_guesser: Default::default() }
+      ui_y_size: Default::default(),
+      key_guesser: Default::default(),
+      parser: LiveParser::default(),
+    }
   }
 }
 
@@ -221,7 +215,7 @@ impl<'a> LiveWindow<'a> {
     self.frame_counter += 1;
     if self.frame_counter == 32 {
       self.frame_counter = 0;
-      let new_lines = self.load_text();
+      let new_lines = self.parser.load_text();
 
       let tokens = Tokenizer::tokenize(&new_lines);
       
@@ -378,64 +372,6 @@ impl<'a> LiveWindow<'a> {
   }
 
   pub fn load_file(&mut self, settings: &SettingsWindow) {
-    let path = settings.get_logs_folder();
-
-    let path = fs::read_dir(path)
-      .expect("Couldn't access local directory")
-      .flatten()
-      .filter(|f| {
-        let metadata = match f.metadata() {
-          Ok(metadata) => metadata,
-          Err(_) => { return false; },
-        };
-
-        metadata.is_file() && f.file_name().to_str().unwrap_or_default().contains("NICKNAME_NETSTATUS")
-      })
-      .max_by_key(|x| {
-        match x.metadata() {
-          Ok(metadata) => metadata.modified().ok(),
-          Err(_) => Default::default(),
-        }
-      });
-
-    if let Some(path) = path {
-      let path = path.path();
-      let name = path.file_name().unwrap_or_default();
-      let str_name = name.to_str().unwrap_or_default();
-    
-      self.file_name = Some(str_name.to_string());
-      self.file = match File::open(path) {
-        Ok(file) => Some(file),
-        Err(_) => None,
-      };
-
-      self.parser = Parser::default();
-      self.last_position = 0;
-      self.ui_y_size = 0;
-    }
-
+    self.parser.load_file(settings);
   }
-
-  fn load_text(&mut self) -> String {
-    if let Some(file) = &mut self.file {
-      let _ = file.seek(std::io::SeekFrom::Start(self.last_position));
-      let mut reader = BufReader::new(file);
-      let mut buffer = String::new();
-      let mut new_lines = Vec::new();
-
-      while reader.read_line(&mut buffer).unwrap_or_default() > 0 {
-        new_lines.push(buffer.to_string());
-        buffer.clear();
-      }
-
-      self.last_position = reader.seek(std::io::SeekFrom::Current(0)).expect("Seek 0 failed in live window.");
-    
-      return new_lines.iter()
-        .fold(String::new(), |s1, s2| s1 + s2)
-        .to_string();
-    }
-
-    "".to_owned()
-  }
-
 }

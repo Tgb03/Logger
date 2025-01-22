@@ -1,5 +1,8 @@
 
 
+use std::fmt::Display;
+use strum_macros::EnumIter;
+
 use crate::objective_data::ObjectiveData;
 
 use super::levels::GameRunRundown;
@@ -20,7 +23,7 @@ const OPTIONALS_ALL: [(bool, bool); 83] = [
   MAIN_ONLY, SECD_ONLY, SECD_ONLY, SECD_ONLY, SECD_ONLY, SECD_ONLY, PE_OBJECT, MAIN_ONLY, MAIN_ONLY, SECD_ONLY, SECD_ONLY, SECD_ONLY
 ];
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, EnumIter)]
 pub enum GameRunObjective {
 
   AnyPercent,
@@ -40,6 +43,15 @@ impl Into<&[(bool, bool)]> for GameRunRundown {
       GameRunRundown::Rundown7 => &OPTIONALS_ALL[61..71],
       GameRunRundown::Rundown8 => &OPTIONALS_ALL[71..83],
       GameRunRundown::FullGame => &OPTIONALS_ALL,
+    }
+  }
+}
+
+impl Display for GameRunObjective {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    match self {
+      GameRunObjective::AnyPercent => write!(f, "Any%"),
+      GameRunObjective::FullPercent => write!(f, "100%"),
     }
   }
 }

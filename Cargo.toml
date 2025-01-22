@@ -19,6 +19,8 @@ rfd = "0.15.1"
 whoami = "1.5.2"
 serde_yaml = "0.9.34"
 directories = "6.0.0"
+strum = "0.26.3"
+strum_macros = "0.26.4"
 
 [dev-dependencies]
 tempdir = "0.3.7"

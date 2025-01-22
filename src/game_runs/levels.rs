@@ -1,3 +1,5 @@
+use std::fmt::Display;
+use strum_macros::EnumIter;
 
 const LEVELS_ALL: [&str; 83] = [
   "R1A1", "R1B1", "R1B2", "R1C1", "R1C2", "R1D1", 
@@ -11,7 +13,7 @@ const LEVELS_ALL: [&str; 83] = [
 ];
 
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter)]
 pub enum GameRunRundown {
 
   Rundown1,
@@ -45,6 +47,22 @@ impl Into<&[&str]> for GameRunRundown {
     
   }
 
+}
+
+impl Display for GameRunRundown {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    match self {
+      GameRunRundown::Rundown1 => write!(f, "Rundown 1"),
+      GameRunRundown::Rundown2 => write!(f, "Rundown 2"),
+      GameRunRundown::Rundown3 => write!(f, "Rundown 3"),
+      GameRunRundown::Rundown4 => write!(f, "Rundown 4"),
+      GameRunRundown::Rundown5 => write!(f, "Rundown 5"),
+      GameRunRundown::Rundown6 => write!(f, "Rundown 6"),
+      GameRunRundown::Rundown7 => write!(f, "Rundown 7"),
+      GameRunRundown::Rundown8 => write!(f, "Rundown 8"),
+      GameRunRundown::FullGame => write!(f, "Full Game"),
+    }
+  }
 }
 
 #[cfg(test)]

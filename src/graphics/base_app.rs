@@ -3,9 +3,9 @@ use std::{collections::BTreeMap, fs::File, time::Duration};
 use eframe::CreationContext;
 use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
 
-use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
+use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective}, graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
 
-use super::{live_window::LiveWindow, settings_window::SettingsWindow};
+use super::{full_game_window::FullGameWindow, live_window::LiveWindow, settings_window::SettingsWindow};
 
 #[derive(PartialEq, serde::Serialize, serde::Deserialize)]
 enum AppState {
@@ -14,6 +14,7 @@ enum AppState {
   LogParserWindow,
   ManagingRuns,
   LiveWindow,
+  FullGameWindow,
   SettingsWindow,
 
 }
@@ -25,6 +26,7 @@ pub struct BaseApp<'a> {
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
   live_window: LiveWindow<'a>,
+  full_game_window: FullGameWindow,
   settings_window: SettingsWindow,
 
   save_manager: SaveManager,
@@ -46,6 +48,7 @@ impl<'a> Default for BaseApp<'a> {
       log_parser_window: LogParserWindow::default(),
       run_manager_window: RunManagerWindow::default(),
       live_window: LiveWindow::default(),
+      full_game_window: FullGameWindow::default(),
       save_manager,
       settings_window,
     }
@@ -107,6 +110,18 @@ impl<'a> eframe::App for BaseApp<'a> {
           return;
         }
 
+        if self.app_state == AppState::FullGameWindow {
+          if ui.button(super::create_text("Stop Splitter")).clicked() {
+            self.app_state = AppState::None;
+
+            ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::Normal));
+            ctx.send_viewport_cmd(egui::ViewportCommand::Decorations(true));
+            ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 {x: 1024.0, y: 512.0 }));
+          }
+
+          return;
+        }
+
         if self.app_state == AppState::SettingsWindow {
           if ui.button(super::create_text("Save Settings")).clicked() {
             self.app_state = AppState::None;
@@ -123,6 +138,17 @@ impl<'a> eframe::App for BaseApp<'a> {
           ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::AlwaysOnTop));
           ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(self.settings_window.get_live_rectangle().min));
           ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.settings_window.get_live_rectangle().size()));
+        }
+
+        if ui.button(super::create_text("Start Rundown%/Game% Run")).clicked() {
+          self.app_state = AppState::FullGameWindow;
+
+          ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::AlwaysOnTop));
+          ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(self.settings_window.get_live_rectangle().min));
+          ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.settings_window.get_live_rectangle().size()));
+
+          self.full_game_window.load_file(ctx, &self.settings_window, &mut self.save_manager);
+          self.full_game_window.start_run(GameRunRundown::Rundown1, GameRunObjective::AnyPercent, 1);
         }
         
         if ui.button(super::create_text("Input Speedrun Logs...")).clicked() {
@@ -162,6 +188,7 @@ impl<'a> eframe::App for BaseApp<'a> {
         AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
         AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
         AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, &self.settings_window, ctx),
+        AppState::FullGameWindow => self.full_game_window.show(ui, &mut self.save_manager),
         AppState::SettingsWindow => self.settings_window.show(ui),
       }
       

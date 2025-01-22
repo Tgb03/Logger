@@ -103,3 +103,20 @@ impl TimedRun {
 
 }
 
+pub trait GetByObjective {
+
+  fn get_by_objective(&self, objective_data: &ObjectiveData) -> Option<&TimedRun>;
+
+}
+
+impl GetByObjective for [TimedRun] {
+  fn get_by_objective(&self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
+    for it in self {
+      if it.objective_data == *objective_data {
+        return Some(it)
+      }
+    }
+
+    None
+  }
+}
