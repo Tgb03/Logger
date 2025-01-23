@@ -3,7 +3,7 @@ use std::{collections::{HashMap, HashSet}, fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
-use crate::{game_runs::run_manager::RunManager, objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
+use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective, run_manager::RunManager}, objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
 
 /// Save manager struct
 /// 
@@ -78,6 +78,8 @@ impl SaveManager {
   }
 
   pub fn save_rundown(&mut self, run_manager: RunManager) { 
+
+    println!("Saved {}", run_manager.get_objective());
     
     match self.rundown_percent.get_mut(run_manager.get_objective()) {
       Some(vec) => vec.push(run_manager.into()),
@@ -210,6 +212,15 @@ impl SaveManager {
             self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
           }
 
+          if entry.file_name().into_string().is_ok_and(|v| v.contains(".rsave")) {
+            let name = entry.file_name().into_string().unwrap();
+            if let Ok(data) = std::fs::read(entry.path()) {
+              if let Ok(v) = bincode::deserialize(&data) {
+                self.rundown_percent.insert(name, v);
+              }
+            }
+          }
+
         }
       }
     }
@@ -328,6 +339,25 @@ impl SaveManager {
     let mut v = self.loaded_runs.keys().cloned().collect::<Vec<String>>();
     v.sort();
     v
+  }
+
+  pub fn save_to_file_full_game(&self, rundown: GameRunRundown, objective: GameRunObjective, player_count: u8) {
+    let obj_str = format!("{}_{}_{}p.rsave", objective, rundown, player_count);
+
+    match (self.get_game_runs(&obj_str), Self::get_directory()) {
+      (Some(runs), Some(file_path)) => {
+        if !file_path.exists() {
+          let _ = std::fs::create_dir_all(&file_path);
+        }
+
+        let file_path = file_path.join(obj_str.clone());
+
+        if let Ok(bin_data) = bincode::serialize(runs) {
+          let _ = std::fs::write(file_path, &bin_data);
+        }
+      },
+      _ => {},
+    }
   }
 
 }

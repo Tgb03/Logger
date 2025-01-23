@@ -125,7 +125,7 @@ impl FullGameWindow {
         ui.label(super::create_text("DIFFERENCE  "));
       });
 
-      for run in run_manager.get_last_n_runs(5) {
+      for run in run_manager.get_last_n_runs(6) {
         ui.horizontal(|ui| {
           
           ui.label(super::create_text(format!("{} ", &run.objective_data.level_name)));

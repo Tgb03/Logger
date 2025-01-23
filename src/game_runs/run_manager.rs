@@ -42,7 +42,7 @@ impl RunManager {
 
   pub fn new(objective: GameRunObjective, rundown: GameRunRundown, player_count: u8) -> RunManager {
     Self {
-      objective_string: format!("{}_{}_{}p", objective, rundown, player_count),
+      objective_string: format!("{}_{}_{}p.rsave", objective, rundown, player_count),
       levels_required: objective.clone().into_objective(rundown.clone(), player_count),
       runs_done: Vec::new(),
       total_time: Time::new(),

@@ -5,7 +5,7 @@ use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
 
 use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective}, graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
 
-use super::{full_game_window::FullGameWindow, live_window::LiveWindow, settings_window::SettingsWindow};
+use super::{full_game_window::FullGameWindow, full_run_manager_window::FullRunManagerWindow, live_window::LiveWindow, settings_window::SettingsWindow};
 
 #[derive(PartialEq, serde::Serialize, serde::Deserialize)]
 enum AppState {
@@ -13,6 +13,7 @@ enum AppState {
   None,
   LogParserWindow,
   ManagingRuns,
+  ManagingFullGameRuns,
   LiveWindow,
   FullGameWindow,
   SettingsWindow,
@@ -27,6 +28,7 @@ pub struct BaseApp<'a> {
   run_manager_window: RunManagerWindow,
   live_window: LiveWindow<'a>,
   full_game_window: FullGameWindow,
+  full_run_manager_window: FullRunManagerWindow,
   settings_window: SettingsWindow,
 
   save_manager: SaveManager,
@@ -49,6 +51,7 @@ impl<'a> Default for BaseApp<'a> {
       run_manager_window: RunManagerWindow::default(),
       live_window: LiveWindow::default(),
       full_game_window: FullGameWindow::default(),
+      full_run_manager_window: FullRunManagerWindow::default(),
       save_manager,
       settings_window,
     }
@@ -173,6 +176,10 @@ impl<'a> eframe::App for BaseApp<'a> {
           self.app_state = AppState::ManagingRuns;
         }
 
+        if ui.button(super::create_text("Check Rundown/Game Runs")).clicked() {
+          self.app_state = AppState::ManagingFullGameRuns;
+        }
+
         if ui.button(super::create_text("Settings")).clicked() {
           self.app_state = AppState::SettingsWindow;
         }
@@ -190,6 +197,7 @@ impl<'a> eframe::App for BaseApp<'a> {
         AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, &self.settings_window, ctx),
         AppState::FullGameWindow => self.full_game_window.show(ui, &mut self.save_manager),
         AppState::SettingsWindow => self.settings_window.show(ui),
+        AppState::ManagingFullGameRuns => self.full_run_manager_window.show(ui, &mut self.save_manager),
       }
       
     });

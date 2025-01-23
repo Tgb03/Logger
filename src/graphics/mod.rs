@@ -7,6 +7,7 @@ pub mod run_manager_window;
 pub mod live_window;
 pub mod settings_window;
 pub mod full_game_window;
+pub mod full_run_manager_window;
 
 pub mod live_parser;
 
