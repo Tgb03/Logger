@@ -1,9 +1,10 @@
 
 use egui::{Color32, FontId, Ui, Vec2};
 
-use crate::{key_guess::KeyGuess, logs::{token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::TimedRun};
+use crate::{key_guess::KeyGuess, logs::{token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::{LevelRun, Timed, TimedRun}};
 
 use super::{live_parser::LiveParser, settings_window::SettingsWindow};
+use std::hash::Hash;
 
 pub struct LiveWindow<'a> {
   
@@ -38,7 +39,11 @@ impl<'a> Default for LiveWindow<'a> {
 
 impl<'a> LiveWindow<'a> {
 
-  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun, mapper_size: usize, key_guesser_lines: usize) {
+  fn resize_gui<T, O>(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun<T, O>, mapper_size: usize, key_guesser_lines: usize) 
+  where 
+    T: Timed,
+    O: Hash {
+
     let times = timed_run.get_times();
     let end_len = 
       times.len() 
@@ -125,7 +130,11 @@ impl<'a> LiveWindow<'a> {
     len
   }
 
-  fn render_timed_run(&self, ui: &mut Ui, timed_run: &TimedRun, compared_run: Option<&TimedRun>, compared_splits: Option<&Vec<Time>>) {
+  fn render_timed_run<T, O>(&self, ui: &mut Ui, timed_run: &TimedRun<T, O>, compared_run: Option<&TimedRun<T, O>>, compared_splits: Option<&Vec<Time>>) 
+  where 
+    T: Timed,
+    O: Hash {
+
     let times = timed_run.get_times();
     let compared_times = match compared_run {
       Some(run) => Some(run.get_times()),
@@ -224,12 +233,12 @@ impl<'a> LiveWindow<'a> {
       let vecs = self.parser.into_result();
       while self.runs_count < vecs.get_runs().len() {
         let mut run = vecs.get_runs().get(self.runs_count).unwrap().clone();
-        run.objective_data.early_drop = self.objective.early_drop;
-        run.objective_data.glitched = self.objective.glitched;
-        run.objective_data.secondary = self.objective.secondary.max(run.objective_data.secondary);
-        run.objective_data.overload = self.objective.overload.max(run.objective_data.overload);
+        run.get_objective_mut().early_drop = self.objective.early_drop;
+        run.get_objective_mut().glitched = self.objective.glitched;
+        run.get_objective_mut().secondary = self.objective.secondary.max(run.get_objective_mut().secondary);
+        run.get_objective_mut().overload = self.objective.overload.max(run.get_objective_mut().overload);
         if let Ok(id) = self.player_input_string.parse::<u8>() {
-          run.objective_data.player_count = id;
+          run.get_objective_mut().player_count = id;
         } 
         save_manager.save(run);
         self.runs_count += 1;
@@ -303,8 +312,8 @@ impl<'a> LiveWindow<'a> {
       
       if self.parser.get_run_parser().is_none() {
         let run = match settings.get_show_splitter() {
-          true => &self.parser.into_result().get_runs().last().unwrap_or(&TimedRun::new("".to_owned())).clone(),
-          false => &TimedRun::new("".to_owned()),
+          true => &self.parser.into_result().get_runs().last().unwrap_or(&LevelRun::default()).clone(),
+          false => &LevelRun::default(),
         };
 
         self.resize_gui(
@@ -322,13 +331,13 @@ impl<'a> LiveWindow<'a> {
     if let Some(parser) = self.parser.get_run_parser() {
       let timed_run = parser.into_result();
 
-      self.objective.level_name = timed_run.objective_data.level_name.clone();
-      self.objective.player_count = timed_run.objective_data.player_count;
+      self.objective.level_name = timed_run.get_objective().level_name.clone();
+      self.objective.player_count = timed_run.get_objective().player_count;
 
-      ui.label(super::create_text(format!("In run: {}", self.objective.get_id())));
+      ui.label(super::create_text(format!("In run: {}", self.objective)));
 
       if settings.get_show_splitter() {
-        ui.label(self.objective.get_id());
+        ui.label(format!("{}", self.objective));
         let compared_run = match settings.get_compare_to_record() { 
           true => save_manager.get_best_run(&self.objective), 
           false => None,
@@ -348,7 +357,7 @@ impl<'a> LiveWindow<'a> {
     let result = self.parser.into_result();
     if let Some(timed_run) = result.get_runs().last() {
       
-      self.objective.level_name = timed_run.objective_data.level_name.clone();
+      self.objective.level_name = timed_run.get_objective().level_name.clone();
 
       if settings.get_show_splitter() {
         let compared_run = match settings.get_compare_to_record() { 
@@ -364,7 +373,7 @@ impl<'a> LiveWindow<'a> {
         self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
       }
 
-      ui.label(self.objective.get_id());
+      ui.label(format!("{}", self.objective));
       ui.label(super::create_text("Not currently in run"));
 
       return;

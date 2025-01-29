@@ -1,17 +1,17 @@
-use crate::{time::Time, timed_run::TimedRun};
+use crate::{time::Time, timed_run::LevelRun};
 
 use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
 
 #[derive(Default)]
 pub struct ParserResult {
 
-  runs: Vec<TimedRun>,
+  runs: Vec<LevelRun>,
   locations: Vec<Location>,
 
 }
 
-impl Into<Vec<TimedRun>> for ParserResult {
-  fn into(self) -> Vec<TimedRun> {
+impl Into<Vec<LevelRun>> for ParserResult {
+  fn into(self) -> Vec<LevelRun> {
     self.runs
   }
 }
@@ -22,11 +22,11 @@ impl ParserResult {
     self.runs.extend(other.runs);
   }
 
-  pub fn get_runs(&self) -> &Vec<TimedRun> {
+  pub fn get_runs(&self) -> &Vec<LevelRun> {
     &self.runs
   }
 
-  pub fn get_runs_mut(&mut self) -> &mut Vec<TimedRun> {
+  pub fn get_runs_mut(&mut self) -> &mut Vec<LevelRun> {
     &mut self.runs
   }
 
@@ -138,7 +138,7 @@ impl TokenParserT<ParserResult> for Parser {
       ParserState::InGame => {
         if self.run_parser.as_mut().unwrap().parse_one_token((time, token)) {
           
-          let run: TimedRun = self.run_parser.take().unwrap().into();
+          let run: LevelRun = self.run_parser.take().unwrap().into();
           self.result.runs.push(run);
           self.state = ParserState::OutOfGame;
         

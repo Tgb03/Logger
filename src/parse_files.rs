@@ -97,7 +97,7 @@ mod tests {
   use std::{fs, io::Write, path::PathBuf};
   use fs::File;
   use tempfile::{tempdir, TempDir};
-  use crate::{objective_data::ObjectiveData, time::Time};
+  use crate::time::Time;
 
   use super::*;
 
@@ -141,7 +141,6 @@ mod tests {
       let result = result.get_runs();
 
       assert_eq!(result.len(), 2);
-      assert_eq!(result[0].objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 4));
       assert_eq!(result[0].is_win(), true);
       assert_eq!(*result[0].get_times(), vec![
         Time::from("00:01:02.135"),

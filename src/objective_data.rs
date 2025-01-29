@@ -1,4 +1,6 @@
 
+use std::fmt::Display;
+
 use serde::{Serialize, Deserialize};
 
 #[derive(Default, PartialEq, Eq, Hash, Clone, Debug, Serialize, Deserialize)]
@@ -11,6 +13,29 @@ pub struct ObjectiveData {
   pub early_drop: bool,
   pub player_count: u8,
 
+}
+
+impl Display for ObjectiveData {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let secondary = match self.secondary {
+      true => "_sec",
+      false => ""
+    };
+    let overload = match self.overload {
+      true => "_ovrl",
+      false => ""
+    };
+    let glitched = match self.glitched {
+      true => "_glitch",
+      false => ""
+    };
+    let early_drop = match self.early_drop {
+      true => "_edrop",
+      false => ""
+    };
+
+    write!(f, "{}_{}{}{}{}{}.save", self.level_name.to_uppercase(), self.get_player_count(), secondary, overload, glitched, early_drop)  
+  }
 }
 
 impl ObjectiveData {
@@ -40,28 +65,6 @@ impl ObjectiveData {
 
   pub fn reset_players(&mut self) {
     self.player_count = 0;
-  }
-
-  pub fn get_id(&self) -> String {
-    let secondary = match self.secondary {
-      true => "_sec",
-      false => ""
-    };
-    let overload = match self.overload {
-      true => "_ovrl",
-      false => ""
-    };
-    let glitched = match self.glitched {
-      true => "_glitch",
-      false => ""
-    };
-    let early_drop = match self.early_drop {
-      true => "_edrop",
-      false => ""
-    };
-
-    //println!("Saved: {}{}{}{}{}_{}.save", objective_data.level_name, secondary, overload, glitched, early_drop, objective_data.get_player_count());
-    format!("{}_{}{}{}{}{}.save", self.level_name.to_uppercase(), self.get_player_count(), secondary, overload, glitched, early_drop)
   }
 
   pub fn from_id(id: &String) -> Self {

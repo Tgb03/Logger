@@ -57,7 +57,7 @@ impl RunManagerWindow {
 
     ui.horizontal(|ui| {
        egui::ComboBox::from_label(super::create_text("Select loaded objective"))
-        .selected_text(super::create_text(format!("{}", &self.objective.get_id())))
+        .selected_text(super::create_text(format!("{}", self.objective)))
         .height(500.0)
         .show_ui(ui, |ui| {
           
@@ -126,7 +126,7 @@ impl RunManagerWindow {
         let timed_run = &mut timed_runs[row];
         ui.horizontal(|ui| {
 
-          ui.label(super::create_text(&timed_run.objective_data.level_name));
+          ui.label(super::create_text(&timed_run.get_objective().level_name));
   
           let time_color = match timed_run.is_win() {
             true => Color32::GREEN,
@@ -158,7 +158,7 @@ impl RunManagerWindow {
     });
     
     if has_deleted {
-      save_manager.calculate_best_splits(self.objective.get_id());
+      save_manager.calculate_best_splits(format!("{}", self.objective));
     }
   }
 }

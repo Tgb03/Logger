@@ -1,9 +1,10 @@
 
-use std::{collections::{HashMap, HashSet}, fs, path::PathBuf};
+use std::{collections::{HashMap, HashSet}, fmt::Display, fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
-use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective, run_manager::RunManager}, objective_data::ObjectiveData, time::Time, timed_run::TimedRun};
+use crate::{objective_data::ObjectiveData, time::Time, timed_run::LevelRun};
+
 
 /// Save manager struct
 /// 
@@ -11,19 +12,18 @@ use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective, ru
 #[derive(Default)]
 pub struct SaveManager {
 
-  loaded_runs: HashMap<String, Vec<TimedRun>>,
-  best_splits: HashMap<String, Vec<Time>>,
+  loaded_runs: HashMap<String, Vec<LevelRun>>,
 
-  rundown_percent: HashMap<String, Vec<(Vec<TimedRun>, Time, bool)>>,
+  best_splits: HashMap<String, Vec<Time>>,
 
 }
 
 impl SaveManager {
 
-  fn save_no_remove_duplicates(&mut self, timed_run: TimedRun) -> Option<String> {
+  fn save_no_remove_duplicates(&mut self, timed_run: LevelRun) -> Option<String> {
     if timed_run.len() == 1 { return None }
 
-    let name = timed_run.objective_data.get_id();
+    let name = format!("{}", timed_run.get_objective());
 
     match self.loaded_runs.get_mut(&name) {
       Some(vec) => { 
@@ -48,7 +48,7 @@ impl SaveManager {
 
   fn remove_duplicates(&mut self, name: String) {
     if let Some(vec) = self.loaded_runs.remove(&name) {
-      let set: HashSet<TimedRun> = HashSet::from_iter(vec);
+      let set: HashSet<LevelRun> = HashSet::from_iter(vec);
       
       self.loaded_runs.insert(name, 
         set
@@ -57,10 +57,10 @@ impl SaveManager {
     }
   }
 
-  fn get_largest_stamp_count(runs: &Vec<TimedRun>) -> usize {
+  fn get_largest_stamp_count(runs: &Vec<LevelRun>) -> usize {
     let mut max = 0;
     for run in runs {
-      max = max.max(run.get_splits().len()); 
+      max = max.max(run.len()); 
     }
     
     max
@@ -69,21 +69,10 @@ impl SaveManager {
   /// save a single timed run into RAM
   /// 
   /// duplicates are automatically removed.
-  pub fn save(&mut self, timed_run: TimedRun) {
+  pub fn save(&mut self, timed_run: LevelRun) {
 
     if let Some(name) = self.save_no_remove_duplicates(timed_run) {
       self.remove_duplicates(name);
-    }
-
-  }
-
-  pub fn save_rundown(&mut self, run_manager: RunManager) { 
-
-    println!("Saved {}", run_manager.get_objective());
-    
-    match self.rundown_percent.get_mut(run_manager.get_objective()) {
-      Some(vec) => vec.push(run_manager.into()),
-      None => { self.rundown_percent.insert(run_manager.get_objective().clone(), vec![run_manager.into()]); },
     }
 
   }
@@ -104,7 +93,7 @@ impl SaveManager {
   /// save multiple runs into the RAM memory.
   /// 
   /// duplicates are automatically removed.
-  pub fn save_multiple(&mut self, timed_runs: Vec<TimedRun>) {
+  pub fn save_multiple(&mut self, timed_runs: Vec<LevelRun>) {
     
     let mut set = HashSet::new();
 
@@ -121,8 +110,8 @@ impl SaveManager {
   }
 
   // returns the world record run for a level
-  pub fn get_best_run(&self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
-    let id = objective_data.get_id();
+  pub fn get_best_run(&self, objective_data: &ObjectiveData) -> Option<&LevelRun> {
+    let id = format!("{}", objective_data);
 
     match self.loaded_runs.get(&id) {
       Some(runs) => {
@@ -143,8 +132,8 @@ impl SaveManager {
   }
 
   /// returns all runs for the objective.
-  pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<TimedRun>> {
-    let id = objective_data.get_id();
+  pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<LevelRun>> {
+    let id = format!("{}", objective_data);
 
     if !self.loaded_runs.contains_key(&id){
       //self.load(objective_data);
@@ -153,39 +142,10 @@ impl SaveManager {
     self.loaded_runs.get_mut(&id)
   }
 
-  /// returns all runs for the full rundown/game objective.
-  pub fn get_game_runs(&self, objective: &String) -> Option<&Vec<(Vec<TimedRun>, Time, bool)>> {
-    self.rundown_percent.get(objective)
-  }
-
-  /// returns only the best run for the full rundown/game objective.
-  pub fn get_best_game_run(&mut self, objective: &String) -> Option<&(Vec<TimedRun>, Time, bool)> {
-    let mut best: Option<&(Vec<TimedRun>, Time, bool)> = None;
-
-    if let Some(runs) = self.get_game_runs(objective) {
-
-      for it in runs {
-        best = match best {
-          Some(run) => {
-            if it.1.is_smaller_than(&run.1) {
-              return Some(it)
-            }
-
-            best
-          },
-          None => Some(it),
-        }
-      }
-
-    }
-
-    best
-  }
-
   /// returns all best splits for the objective.
   pub fn get_best_splits(&self, objective_data: &ObjectiveData) -> Option<&Vec<Time>> {
     
-    self.best_splits.get(&objective_data.get_id())
+    self.best_splits.get(&format!("{}", objective_data))
 
   }
 
@@ -212,6 +172,7 @@ impl SaveManager {
             self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
           }
 
+          /*
           if entry.file_name().into_string().is_ok_and(|v| v.contains(".rsave")) {
             let name = entry.file_name().into_string().unwrap();
             if let Ok(data) = std::fs::read(entry.path()) {
@@ -220,6 +181,7 @@ impl SaveManager {
               }
             }
           }
+          */
 
         }
       }
@@ -272,7 +234,7 @@ impl SaveManager {
   /// load from file the objective data.
   pub fn load(&mut self, objective_data: &ObjectiveData) {
 
-    let id = objective_data.get_id();
+    let id = format!("{}", objective_data);
     let file_path = Self::get_directory()
       .map(|path| { path.join(id.clone()) });
 
@@ -280,12 +242,10 @@ impl SaveManager {
       match std::fs::read(file_path) {
         Ok(binary_data) => {
 
-          let mut vec: Vec<TimedRun> = match bincode::deserialize(&binary_data) {
+          let vec: Vec<LevelRun> = match bincode::deserialize(&binary_data) {
               Ok(vec) => vec,
               Err(_) => Vec::new(),
           };
-
-          vec.iter_mut().for_each(|r| r.objective_data = objective_data.clone());
 
           //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
           self.save_multiple(vec);
@@ -297,6 +257,32 @@ impl SaveManager {
     }
   }
 
+  pub fn save_to_file<O>(&self, objective_data: &O)
+  where
+    O: Display {
+    
+    let id = format!("{}", objective_data);
+    let file_path = Self::get_directory();
+
+    if let Some(file_path) = file_path.as_ref() {
+      if !file_path.exists() {
+        let _ = std::fs::create_dir(&file_path);
+      }
+    }
+    
+    let file_path = file_path
+      .map(|path| { path.join(id.clone()) });
+
+    let empty = Vec::new();
+    if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(&id).unwrap_or(&empty)) {
+      if let Some(file_path) = file_path {
+        let _ = std::fs::write(file_path, &bin_data);
+      }
+    }
+
+  }
+
+  /*
   /// save one objective data to pc folder
   pub fn save_to_file(&self, objective_data: &ObjectiveData) {
     let id = objective_data.get_id();
@@ -319,6 +305,7 @@ impl SaveManager {
       }
     }
   }
+  */
 
   /// save all loaded runs to files
   pub fn save_to_files(&self) {
@@ -339,25 +326,6 @@ impl SaveManager {
     let mut v = self.loaded_runs.keys().cloned().collect::<Vec<String>>();
     v.sort();
     v
-  }
-
-  pub fn save_to_file_full_game(&self, rundown: GameRunRundown, objective: GameRunObjective, player_count: u8) {
-    let obj_str = format!("{}_{}_{}p.rsave", objective, rundown, player_count);
-
-    match (self.get_game_runs(&obj_str), Self::get_directory()) {
-      (Some(runs), Some(file_path)) => {
-        if !file_path.exists() {
-          let _ = std::fs::create_dir_all(&file_path);
-        }
-
-        let file_path = file_path.join(obj_str.clone());
-
-        if let Ok(bin_data) = bincode::serialize(runs) {
-          let _ = std::fs::write(file_path, &bin_data);
-        }
-      },
-      _ => {},
-    }
   }
 
 }

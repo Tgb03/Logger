@@ -1,122 +1,110 @@
 
-use crate::{objective_data::ObjectiveData, time::Time};
-use serde::{Serialize, Deserialize};
+use std::{fmt::Display, hash::Hash};
 
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub struct TimedRun {
+use crate::{game_runs::objectives::GameRunObjective, objective_data::ObjectiveData, time::Time};
 
-  #[serde(skip)] pub objective_data: ObjectiveData,
+pub type LevelRun = TimedRun<Time, ObjectiveData>;
+pub type RundownRun = TimedRun<LevelRun, GameRunObjective>;
+
+pub trait Timed {
   
-  win: bool,
-  last_drop: Time,
-  times: Vec<Time>,
-
-  buffered_times_result: Vec<Time>,
-  buffered_split_results: Vec<Time>,
+  fn get_time(&self) -> Time;
+  fn get_name(&self) -> Option<String>;
 
 }
 
-impl TimedRun {
+impl Timed for Time {
+  fn get_time(&self) -> Time {
+    *self
+  }
+  
+  fn get_name(&self) -> Option<String> {
+    None
+  }
+}
 
-  pub fn new(name: String) -> TimedRun {
-    TimedRun { 
-      objective_data: ObjectiveData::from(name, false, false, false, false, 0),
-      win: false,
-      last_drop: Time::new(),
-      times: Vec::new(),  
+#[derive(PartialEq, Eq, Hash, Serialize, Deserialize, Clone, Default)]
+pub struct TimedRun<T, O>
+where 
+  T: Timed {
 
-      buffered_times_result: Vec::new(),
-      buffered_split_results: Vec::new(),
+  splits: Vec<T>,
+  times: Vec<Time>,
+  total_time: Time,
+  is_win: bool,
+
+  objective: O,
+
+}
+
+impl<T, O> Timed for TimedRun<T, O>
+where 
+  T: Timed,
+  O: Display, {
+  
+  fn get_time(&self) -> Time {
+    self.total_time
+  }
+
+  fn get_name(&self) -> Option<String> {
+    Some(format!("{}", self.get_objective()))    
+  }
+
+}
+
+impl<T, O> TimedRun<T, O>
+where 
+  T: Timed {
+
+  pub fn new(objective_data: O) -> Self {
+    Self {
+      splits: Vec::new(),
+      times: Vec::new(),
+      total_time: Time::default(),
+      objective: objective_data,
+      is_win: false,
     }
   }
 
-  pub fn get_split(&self, id: usize) -> Time {
-    if id == 0 {
-      return self.times[0];
-    }
-
-    return self.times[id].sub(&self.times[id - 1])
+  pub fn get_objective(&self) -> &O {
+    &self.objective
   }
 
-  pub fn get_splits(&self) -> &Vec<Time> {
-    &self.buffered_split_results
+  pub fn get_objective_mut(&mut self) -> &mut O {
+    &mut self.objective
   }
 
-  pub fn get_times(&self) -> &Vec<Time> {
-    &self.buffered_times_result
-  }
+  pub fn add_split(&mut self, split: T) {
+    self.total_time = self.total_time.add(&split.get_time());
+    self.times.push(self.total_time);
 
-  fn calculate_vecs(&mut self) {
-    // calculate the times
-    self.buffered_times_result.clear();
-    let times_end_id = if self.win { self.times.len() } else { self.times.len().saturating_sub(1) };
-    for i in 0..times_end_id {
-      self.buffered_times_result.push(match self.objective_data.early_drop {
-        true => {self.times[i].sub(&self.last_drop)},
-        false => self.times[i],
-      })
-    }
-    
-    // calculate the splits
-    self.buffered_split_results.clear();
-    if self.times.len() > 1 { self.buffered_split_results.push(self.times[0]); }
-    let times_end_id = if self.win { self.times.len().saturating_sub(1) } else { self.times.len().saturating_sub(2) };
-    for i in 0..times_end_id {
-      self.buffered_split_results.push(self.times[i + 1].sub(&self.times[i]));
-    }
+    self.splits.push(split);
   }
 
   pub fn get_time(&self) -> Time {
-    if self.times.len() == 0 {
-      return Time::new()
-    }
-
-    let time = self.times[self.times.len() - 1];
-    if self.objective_data.early_drop { return time.sub(&self.last_drop) }
-    
-    time
-  }
-
-  pub fn push(&mut self, value: Time) {
-    self.times.push(value);
-    self.calculate_vecs();
-  }
-
-  pub fn len(&self) -> usize {
-    self.times.len()
+    self.total_time
   }
 
   pub fn is_win(&self) -> bool {
-    self.win
+    self.is_win
   }
 
   pub fn set_win(&mut self, win: bool) {
-    self.win = win;
-    self.calculate_vecs();
+    self.is_win = win;
   }
 
-  pub fn set_last_drop(&mut self, time: Time) {
-    self.last_drop = time;
-    self.calculate_vecs();
+  pub fn len(&self) -> usize {
+    self.splits.len()
   }
 
-}
-
-pub trait GetByObjective {
-
-  fn get_by_objective(&self, objective_data: &ObjectiveData) -> Option<&TimedRun>;
-
-}
-
-impl GetByObjective for [TimedRun] {
-  fn get_by_objective(&self, objective_data: &ObjectiveData) -> Option<&TimedRun> {
-    for it in self {
-      if it.objective_data == *objective_data {
-        return Some(it)
-      }
-    }
-
-    None
+  pub fn get_splits(&self) -> &Vec<T> {
+    &self.splits
   }
+
+  pub fn get_times(&self) -> &Vec<Time> {
+    &self.times
+  }
+
 }
