@@ -67,7 +67,7 @@ impl TokenParserT<LevelRun> for RunParser {
         self.timed_run.get_objective_mut().player_count = self.players.len() as u8;
       },
       Token::DoorOpen | Token::BulkheadScanDone => {
-        self.timed_run.add_split(time.sub(&self.start_time));
+        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
       },
       Token::SecondaryDone => self.timed_run.get_objective_mut().secondary = true,
       Token::OverloadDone => self.timed_run.get_objective_mut().overload = true,
@@ -75,14 +75,14 @@ impl TokenParserT<LevelRun> for RunParser {
         self.timed_run.set_win(true);
         self.timed_run.get_objective_mut().player_count = self.players.len() as u8;
         self.is_done = true;
-        self.timed_run.add_split(time.sub(&self.start_time));
+        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
 
         return true;
       },
       Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => { 
         self.is_done = true; 
         self.timed_run.get_objective_mut().player_count = self.players.len() as u8; 
-        self.timed_run.add_split(time.sub(&self.start_time));
+        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
         return true; 
       },
       Token::SelectExpedition(_) => { /* IGNORE TOKEN FOR EARLY DROP */ }
