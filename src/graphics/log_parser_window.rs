@@ -1,7 +1,9 @@
-use egui::{Color32, Ui};
+use egui::Ui;
 use strum::IntoEnumIterator;
 
-use crate::{game_runs::{levels::GameRunRundown, objectives::GameRunObjective}, graphics::sorter_window::add_sorter_buttons, save_run::SaveManager, timed_run::LevelRun};
+use crate::{run::{objectives::{game_run_objective::GameRunObjective, game_run_rundown::GameRunRundown, run_objective::RunObjective}, run_enum::RunEnum, timed_run::LevelRun, traits::Run}, save_run::SaveManager};
+
+use super::{sorter_window::add_sorter_buttons, traits::RenderRun};
 
 pub struct LogParserWindow {
 
@@ -52,31 +54,36 @@ impl LogParserWindow {
       let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, super::create_text("Set ALL glitched"));
       let early_drop_checkbox = ui.checkbox(&mut self.set_all_early_drop, super::create_text("Set ALL early drop"));
       if ui.button(super::create_text("Save ALL runs")).clicked() {
-        save_manager.save_multiple(self.timed_runs.clone());
+        save_manager.save_multiple(
+          self.timed_runs
+            .iter()
+            .map(|f| RunEnum::Level(f.clone()))
+            .collect()
+        );
         self.timed_runs = Vec::new();
       }
     
       if secondary_checkbox.clicked() {
         for timed_run in &mut self.timed_runs {
-          timed_run.get_objective_mut().secondary = self.set_all_secondary;
+          timed_run.set_objective(&timed_run.get_objective::<RunObjective>().unwrap().with_glitched(self.set_all_secondary));
         }
       }
       
       if overload_checkbox.clicked() {
         for timed_run in &mut self.timed_runs {
-          timed_run.get_objective_mut().overload = self.set_all_overload;
+          timed_run.set_objective(&timed_run.get_objective::<RunObjective>().unwrap().with_glitched(self.set_all_overload));
         }
       }
 
       if glitched_checkbox.clicked() {
         for timed_run in &mut self.timed_runs {
-          timed_run.get_objective_mut().glitched = self.set_all_glitched;
+          timed_run.set_objective(&timed_run.get_objective::<RunObjective>().unwrap().with_glitched(self.set_all_glitched));
         }
       }
 
       if early_drop_checkbox.clicked() {
         for timed_run in &mut self.timed_runs {
-          timed_run.get_objective_mut().early_drop = self.set_all_early_drop;
+          timed_run.set_objective(&timed_run.get_objective::<RunObjective>().unwrap().with_glitched(self.set_all_early_drop));
         }
       }
     });
@@ -122,36 +129,9 @@ impl LogParserWindow {
       for row in row_range {
         let timed_run = &mut self.timed_runs[row];
 
-        ui.horizontal(|ui|{
-          ui.colored_label(Color32::WHITE, super::create_text(&timed_run.get_objective().level_name));
+        let result = timed_run.show_editable(ui);
 
-          let time_color = match timed_run.is_win() {
-            true => Color32::GREEN,
-            false => Color32::RED,
-          };
-          let times = timed_run.get_times();
-
-          ui.colored_label(time_color, super::create_text(timed_run.get_time().to_string()));
-          ui.label(super::create_text(format!("{:03} stamps", times.len())));
-          ui.label(super::create_text(format!("{} players", timed_run.get_objective().get_player_count())));
-
-          ui.checkbox(&mut timed_run.get_objective_mut().secondary, super::create_text("Secondary"));
-          ui.checkbox(&mut timed_run.get_objective_mut().overload, super::create_text("Overload"));
-          ui.checkbox(&mut timed_run.get_objective_mut().glitched, super::create_text("Glitched"));
-          ui.checkbox(&mut timed_run.get_objective_mut().early_drop, super::create_text("Early Drop"));
-
-          if timed_run.get_objective().early_drop { timed_run.get_objective_mut().glitched = true; }
-          
-          if ui.button(super::create_text("Save Run")).clicked() {
-            save_manager.save(timed_run.clone());
-            for_removal.push(row);
-          };
-
-          if ui.button(super::create_text("Remove Run")).clicked() {
-            for_removal.push(row);
-          }
-          
-        });
+        if result.delete { for_removal.push(row); }
       }
 
       for id in for_removal.iter().rev() {

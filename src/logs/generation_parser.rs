@@ -1,4 +1,5 @@
-use crate::time::Time;
+
+use crate::run::time::Time;
 
 use super::{location::{Location, LocationType}, token_parser::TokenParserT, tokenizer::Token};
 

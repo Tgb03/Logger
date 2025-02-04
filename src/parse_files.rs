@@ -97,9 +97,10 @@ mod tests {
   use std::{fs, io::Write, path::PathBuf};
   use fs::File;
   use tempfile::{tempdir, TempDir};
-  use crate::time::Time;
 
-  use super::*;
+  use crate::run::{time::Time, traits::Run};
+
+use super::*;
 
   fn init_file(dir: &TempDir, name: &str, data: &str) -> (File, PathBuf) {
     let file_path = dir.path().join(name);

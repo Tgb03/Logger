@@ -1,6 +1,6 @@
 [package]
 name = "Logger"
-version = "1.1.1"
+version = "1.2.0"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
@@ -21,10 +21,11 @@ serde_yaml = "0.9.34"
 directories = "6.0.0"
 strum = "0.26.3"
 strum_macros = "0.26.4"
+enum_dispatch = "0.3.13"
 
 [dev-dependencies]
 tempdir = "0.3.7"
-tempfile = "3.15.0"
+tempfile = "3.16.0"
 
 [profile.release]
 codegen-units = 1

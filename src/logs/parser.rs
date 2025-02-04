@@ -1,4 +1,6 @@
-use crate::{time::Time, timed_run::LevelRun};
+
+
+use crate::run::{time::Time, timed_run::LevelRun};
 
 use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
 

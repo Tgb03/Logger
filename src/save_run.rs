@@ -1,9 +1,9 @@
 
-use std::{collections::{HashMap, HashSet}, fmt::Display, fs, path::PathBuf};
+use std::{collections::{HashMap, HashSet}, fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
-use crate::{objective_data::ObjectiveData, time::Time, timed_run::LevelRun};
+use crate::run::{objectives::objective_enum::ObjectiveEnum, run_enum::RunEnum, time::Time, traits::{Run, Timed}};
 
 
 /// Save manager struct
@@ -12,33 +12,40 @@ use crate::{objective_data::ObjectiveData, time::Time, timed_run::LevelRun};
 #[derive(Default)]
 pub struct SaveManager {
 
-  loaded_runs: HashMap<String, Vec<LevelRun>>,
-
-  best_splits: HashMap<String, Vec<Time>>,
+  loaded_runs: HashMap<ObjectiveEnum, Vec<RunEnum>>,
+  best_splits: HashMap<ObjectiveEnum, Vec<Time>>,
 
 }
 
 impl SaveManager {
 
-  fn save_no_remove_duplicates(&mut self, timed_run: LevelRun) -> Option<String> {
+  fn save_no_remove_duplicates(&mut self, timed_run: RunEnum) -> Option<ObjectiveEnum> {
     if timed_run.len() == 1 { return None }
 
-    let name = format!("{}", timed_run.get_objective());
+    let objective = timed_run.get_objective_str()
+      .try_into()
+      .unwrap_or_default();
 
-    match self.loaded_runs.get_mut(&name) {
+    match self.loaded_runs.get_mut(&objective) {
       Some(vec) => { 
         vec.push(timed_run);
       },
-      None => { self.loaded_runs.insert(name.clone(), vec![timed_run]); },
+      None => { self.loaded_runs.insert(objective.clone(), vec![timed_run]); },
     };
 
-    self.calculate_best_splits(name.clone());
+    self.calculate_best_splits(objective.clone());
 
-    return Some(name);
+    return Some(objective);
   }
 
   fn get_directory() -> Option<PathBuf> {
     
+    #[cfg(debug_assertions)]
+    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger Debug") {
+      return Some(proj_dirs.data_dir().to_path_buf())
+    }
+
+    #[cfg(not(debug_assertions))]
     if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
       return Some(proj_dirs.data_dir().to_path_buf())
     }
@@ -46,30 +53,21 @@ impl SaveManager {
     None
   }
 
-  fn remove_duplicates(&mut self, name: String) {
-    if let Some(vec) = self.loaded_runs.remove(&name) {
-      let set: HashSet<LevelRun> = HashSet::from_iter(vec);
+  fn remove_duplicates(&mut self, objective: ObjectiveEnum) {
+    if let Some(vec) = self.loaded_runs.remove(&objective) {
+      let set: HashSet<RunEnum> = HashSet::from_iter(vec);
       
-      self.loaded_runs.insert(name, 
+      self.loaded_runs.insert(objective, 
         set
         .into_iter()
         .collect());
     }
   }
 
-  fn get_largest_stamp_count(runs: &Vec<LevelRun>) -> usize {
-    let mut max = 0;
-    for run in runs {
-      max = max.max(run.len()); 
-    }
-    
-    max
-  }
-
   /// save a single timed run into RAM
   /// 
   /// duplicates are automatically removed.
-  pub fn save(&mut self, timed_run: LevelRun) {
+  pub fn save(&mut self, timed_run: RunEnum) {
 
     if let Some(name) = self.save_no_remove_duplicates(timed_run) {
       self.remove_duplicates(name);
@@ -77,23 +75,34 @@ impl SaveManager {
 
   }
 
-  pub fn calculate_best_splits(&mut self, objective_id: String) {
+  pub fn calculate_best_splits(&mut self, objective_id: ObjectiveEnum) {
     let empty = Vec::new();
     let runs = self.loaded_runs.get(&objective_id).unwrap_or(&empty);
 
-    let mut result = vec![Time::max(); Self::get_largest_stamp_count(runs)];
+    let mut none_result: Vec<Time> = Vec::new();
+    let mut result: HashMap<String, Time> = HashMap::new();
+    
     for run in runs {
-      for (id, time) in run.get_splits().iter().enumerate() {
-        result[id] = result[id].min(time);
+      for split in run.get_splits() {
+        match split.get_name() {
+          Some(name) => {
+            match result.get(name) {
+              Some(time) => if split.get_time().is_smaller_than(time) { result.insert(name.clone(), split.get_time()); },
+              None => { result.insert(name.clone(), split.get_time()); },
+            }
+          },
+          None => none_result.push(split.get_time()),
+        }
       }
     }
-    self.best_splits.insert(objective_id, result);
+
+    self.best_splits.insert(objective_id, result.into_values().collect());
   }
 
   /// save multiple runs into the RAM memory.
   /// 
   /// duplicates are automatically removed.
-  pub fn save_multiple(&mut self, timed_runs: Vec<LevelRun>) {
+  pub fn save_multiple(&mut self, timed_runs: Vec<RunEnum>) {
     
     let mut set = HashSet::new();
 
@@ -110,10 +119,8 @@ impl SaveManager {
   }
 
   // returns the world record run for a level
-  pub fn get_best_run(&self, objective_data: &ObjectiveData) -> Option<&LevelRun> {
-    let id = format!("{}", objective_data);
-
-    match self.loaded_runs.get(&id) {
+  pub fn get_best_run(&self, objective_data: &ObjectiveEnum) -> Option<&RunEnum> {
+    match self.loaded_runs.get(&objective_data) {
       Some(runs) => {
         let mut best_run = None;
         let mut best_time = Time::max();
@@ -132,20 +139,16 @@ impl SaveManager {
   }
 
   /// returns all runs for the objective.
-  pub fn get_runs(&mut self, objective_data: &ObjectiveData) -> Option<&mut Vec<LevelRun>> {
-    let id = format!("{}", objective_data);
+  pub fn get_runs(&mut self, objective_data: &ObjectiveEnum) -> Option<&mut Vec<RunEnum>> {
 
-    if !self.loaded_runs.contains_key(&id){
-      //self.load(objective_data);
-    }
+    self.loaded_runs.get_mut(&objective_data)
 
-    self.loaded_runs.get_mut(&id)
   }
 
   /// returns all best splits for the objective.
-  pub fn get_best_splits(&self, objective_data: &ObjectiveData) -> Option<&Vec<Time>> {
+  pub fn get_best_splits(&self, objective_data: &ObjectiveEnum) -> Option<&Vec<Time>> {
     
-    self.best_splits.get(&format!("{}", objective_data))
+    self.best_splits.get(objective_data)
 
   }
 
@@ -169,7 +172,14 @@ impl SaveManager {
         if let Ok(entry) = path {
 
           if entry.file_name().into_string().unwrap().contains(".save") {
-            self.load(&ObjectiveData::from_id(&entry.file_name().into_string().unwrap()));
+            self.load(&ObjectiveEnum::Run(
+              entry.file_name()
+                .into_string()
+                .unwrap()
+                .as_str()
+                .try_into()
+                .unwrap_or_default()
+              ));
           }
 
           /*
@@ -193,7 +203,7 @@ impl SaveManager {
   /// important information
   /// 
   /// if the run is not world record or has a best split it is removed
-  pub fn optimize_obj(&mut self, objective_data: &ObjectiveData) {
+  pub fn optimize_obj(&mut self, objective_data: &ObjectiveEnum) {
     let best_splits = match self.get_best_splits(objective_data).clone() {
       Some(v) => v.clone(),
       None => Vec::new(),
@@ -213,7 +223,7 @@ impl SaveManager {
         }
 
         for (id, time) in run.get_splits().into_iter().enumerate() {
-          if *time == best_splits[id] {
+          if time.get_time() == best_splits[id] {
             is_valid = true;
             break;
           }
@@ -232,9 +242,9 @@ impl SaveManager {
   }
 
   /// load from file the objective data.
-  pub fn load(&mut self, objective_data: &ObjectiveData) {
+  pub fn load(&mut self, objective_data: &ObjectiveEnum) {
 
-    let id = format!("{}", objective_data);
+    let id: String = objective_data.to_string();
     let file_path = Self::get_directory()
       .map(|path| { path.join(id.clone()) });
 
@@ -242,10 +252,14 @@ impl SaveManager {
       match std::fs::read(file_path) {
         Ok(binary_data) => {
 
-          let vec: Vec<LevelRun> = match bincode::deserialize(&binary_data) {
+          let mut vec: Vec<RunEnum> = match bincode::deserialize(&binary_data) {
               Ok(vec) => vec,
               Err(_) => Vec::new(),
           };
+
+          for it in &mut vec {
+            it.set_objective(objective_data);
+          }
 
           //println!("Added vec with size: {}, {}", vec.len(), binary_data.len());
           self.save_multiple(vec);
@@ -257,11 +271,8 @@ impl SaveManager {
     }
   }
 
-  pub fn save_to_file<O>(&self, objective_data: &O)
-  where
-    O: Display {
+  pub fn save_to_file(&self, objective_data: &ObjectiveEnum) {
     
-    let id = format!("{}", objective_data);
     let file_path = Self::get_directory();
 
     if let Some(file_path) = file_path.as_ref() {
@@ -271,10 +282,10 @@ impl SaveManager {
     }
     
     let file_path = file_path
-      .map(|path| { path.join(id.clone()) });
+      .map(|path| { path.join(Into::<String>::into(objective_data.to_string())) });
 
     let empty = Vec::new();
-    if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(&id).unwrap_or(&empty)) {
+    if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(objective_data).unwrap_or(&empty)) {
       if let Some(file_path) = file_path {
         let _ = std::fs::write(file_path, &bin_data);
       }
@@ -311,7 +322,7 @@ impl SaveManager {
   pub fn save_to_files(&self) {
     for (key, vec) in &self.loaded_runs {
       let file_path = Self::get_directory()
-      .map(|path| { path.join(key) });
+      .map(|path| { path.join(Into::<String>::into(key.to_string())) });
       
       if let Ok(bin_data) = bincode::serialize(&vec) {
         //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
@@ -322,9 +333,9 @@ impl SaveManager {
     }
   }
 
-  pub fn get_all_objectives(&self) -> Vec<String> {
-    let mut v = self.loaded_runs.keys().cloned().collect::<Vec<String>>();
-    v.sort();
+  pub fn get_all_objectives(&self) -> Vec<ObjectiveEnum> {
+    let mut v = self.loaded_runs.keys().cloned().collect::<Vec<ObjectiveEnum>>();
+    v.sort_by_key(|a| Into::<String>::into(a.to_string()));
     v
   }
 

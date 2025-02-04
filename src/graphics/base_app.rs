@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, fs::File, time::Duration};
 use eframe::CreationContext;
 use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
 
-use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, save_run::SaveManager};
+use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, run::timed_run::LevelRun, save_run::SaveManager};
 
 use super::{live_window::LiveWindow, settings_window::SettingsWindow};
 
@@ -138,7 +138,9 @@ impl<'a> eframe::App for BaseApp<'a> {
 
             // let parse_result = parse_all_files(&files);
             let parse_result = parse_all_files_async(files);
-            self.log_parser_window.set_times(parse_result.into());
+            self.log_parser_window.set_times(
+              Into::<Vec<LevelRun>>::into(parse_result)
+            );
             self.app_state = AppState::LogParserWindow;
           }
         }

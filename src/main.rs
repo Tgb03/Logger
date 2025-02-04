@@ -4,11 +4,8 @@ use eframe::egui;
 use graphics::base_app::BaseApp;
 
 pub mod logs;
-pub mod game_runs;
+pub mod run;
 
-pub mod time;
-pub mod timed_run;
-pub mod objective_data;
 pub mod parse_files;
 pub mod save_run;
 pub mod graphics;
@@ -29,7 +26,7 @@ fn main() -> eframe::Result {
     persist_window: true,
     ..Default::default()
   };
-
+ 
   eframe::run_native(
     "GTFO Logger",
     options_base_app,

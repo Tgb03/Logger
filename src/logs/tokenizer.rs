@@ -1,7 +1,7 @@
 
 use std::u32;
 
-use crate::time::Time;
+use crate::run::time::Time;
 
 
 /// These are Tokens. We parse the log file into these Tokens

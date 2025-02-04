@@ -1,16 +1,14 @@
 use egui::Color32;
 
-use crate::{objective_data::ObjectiveData, save_run::SaveManager, time::Time};
+use crate::{run::{objectives::objective_enum::ObjectiveEnum, time::Time}, save_run::SaveManager};
 
-use super::sorter_window::add_sorter_buttons;
+use super::{sorter_window::add_sorter_buttons, traits::RenderRun};
 
 
 #[derive(Default)]
 pub struct RunManagerWindow {
 
-  objective: ObjectiveData,
-
-  player_input_string: String,
+  objective: ObjectiveEnum,
 
 }
 
@@ -32,6 +30,7 @@ impl RunManagerWindow {
       None => Vec::new(),
     };
 
+    /*
     ui.horizontal(|ui| {
       ui.label(super::create_text("Level name: "));
       ui.add(egui::TextEdit::singleline(&mut self.objective.level_name)
@@ -54,16 +53,20 @@ impl RunManagerWindow {
       }
       
     });
+    */
 
     ui.horizontal(|ui| {
        egui::ComboBox::from_label(super::create_text("Select loaded objective"))
-        .selected_text(super::create_text(format!("{}", self.objective)))
+        .selected_text(super::create_text(self.objective.to_string()))
         .height(500.0)
         .show_ui(ui, |ui| {
           
           for key in save_manager.get_all_objectives() {
-            if ui.selectable_value(&mut self.objective, ObjectiveData::from_id(&key), super::create_text(key)).clicked() {
-              self.player_input_string = self.objective.player_count.to_string();
+            if ui.selectable_value(
+              &mut self.objective, 
+              ObjectiveEnum::from(key.clone()), 
+              super::create_text(key.to_string())).clicked() {
+              
             };
           }
         }
@@ -101,8 +104,8 @@ impl RunManagerWindow {
     });
       
     // handles all sorters
-    if let Some(mut runs) = save_manager.get_runs(&self.objective) {
-      add_sorter_buttons(ui, &mut runs);
+    if let Some(runs) = save_manager.get_runs(&self.objective) {
+      add_sorter_buttons(ui, runs);
     }
 
     ui.horizontal(|ui| {
@@ -124,32 +127,10 @@ impl RunManagerWindow {
       
       for row in row_range {
         let timed_run = &mut timed_runs[row];
-        ui.horizontal(|ui| {
-
-          ui.label(super::create_text(&timed_run.get_objective().level_name));
-  
-          let time_color = match timed_run.is_win() {
-            true => Color32::GREEN,
-            false => Color32::RED,
-          };
-          let times = timed_run.get_times();
-  
-          ui.colored_label(time_color, super::create_text(timed_run.get_time().to_string()));
-          ui.label(super::create_text(format!("{:03}", times.len())));
-
-          if ui.button(super::create_text("Delete Run")).clicked() {
-            for_deletion.push(row);
-            has_deleted = true;
-          }
-          
-          for (id, stamp) in timed_run.get_splits().iter().enumerate() {
-            let time_color = match best_splits.len() > id && stamp.is_equal(&best_splits[id]) {
-              true => Color32::GREEN,
-              false => Color32::from_rgb(127, 127, 127),
-            };
-            ui.colored_label(time_color, super::create_text(stamp.to_string_no_hours()));
-          }
-        });
+        
+        let result = timed_run.show(ui);
+        
+        if result.delete { for_deletion.push(row); has_deleted = true; }
       }
 
       for it in for_deletion.iter().rev() {
@@ -158,7 +139,7 @@ impl RunManagerWindow {
     });
     
     if has_deleted {
-      save_manager.calculate_best_splits(format!("{}", self.objective));
+      save_manager.calculate_best_splits(self.objective.clone());
     }
   }
 }

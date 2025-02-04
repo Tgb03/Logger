@@ -1,15 +1,17 @@
 
+
 use egui::{Color32, FontId, Ui, Vec2};
 
-use crate::{key_guess::KeyGuess, logs::{token_parser::TokenParserT, tokenizer::Tokenizer}, objective_data::ObjectiveData, save_run::SaveManager, time::Time, timed_run::{LevelRun, Timed, TimedRun}};
+
+use crate::{key_guess::KeyGuess, logs::{token_parser::TokenParserT, tokenizer::Tokenizer}, run::{objectives::{game_objective::GameObjective, objective_enum::ObjectiveEnum, run_objective::RunObjective}, run_enum::RunEnum, time::Time, timed_run::LevelRun, traits::Run}, save_run::SaveManager};
 
 use super::{live_parser::LiveParser, settings_window::SettingsWindow};
-use std::hash::Hash;
 
 pub struct LiveWindow<'a> {
   
   frame_counter: u8,
-  objective: ObjectiveData,
+  objective_level: RunObjective,
+  objective_game: GameObjective,
   player_input_string: String,
   key_guess_input_string: String, 
 
@@ -25,7 +27,8 @@ impl<'a> Default for LiveWindow<'a> {
   fn default() -> Self {
     Self { 
       frame_counter: Default::default(),
-      objective: Default::default(), 
+      objective_level: Default::default(), 
+      objective_game: Default::default(), 
       player_input_string: Default::default(), 
       key_guess_input_string: "----".to_owned(), 
       runs_count: Default::default(), 
@@ -39,25 +42,45 @@ impl<'a> Default for LiveWindow<'a> {
 
 impl<'a> LiveWindow<'a> {
 
-  fn resize_gui<T, O>(&mut self, width: f32, ctx: &egui::Context, timed_run: &TimedRun<T, O>, mapper_size: usize, key_guesser_lines: usize) 
-  where 
-    T: Timed,
-    O: Hash {
+  fn get_current_run(&self) -> Option<&LevelRun> {
 
-    let times = timed_run.get_times();
-    let end_len = 
-      times.len() 
-      + match timed_run.get_time() != Time::default() {
-        true => 1,
-        false => 0,
-      }
-      + mapper_size
-      + key_guesser_lines;
+    if let Some(run_parser) = self.parser.get_run_parser() {
+      return Some(run_parser.into_result())
+    }
+
+    if let Some(timed_run) =  self.parser.into_result().get_runs().last() {
+      return Some(timed_run)
+    }
+
+    None
+
+  }
+
+  fn get_comparison_run<'b, T: Run>(&self, current_run: &T, save_manager: &'b SaveManager) -> Option<&'b RunEnum> {
+
+    save_manager.get_best_run(
+      &current_run.get_objective::<ObjectiveEnum>()?
+    )
+
+  }
+
+  fn get_comparison_splits<'b, T: Run>(&self, current_run: &T, save_manager: &'b SaveManager) -> Option<&'b Vec<Time>> {
+
+    save_manager.get_best_splits(
+      &current_run.get_objective::<ObjectiveEnum>()?
+    )
+
+  }
+
+  fn resize_gui(&mut self, width: f32, ctx: &egui::Context, timed_run_size: usize, mapper_size: usize, key_guesser_lines: usize) {
+
+    let end_len = timed_run_size + mapper_size + key_guesser_lines;
 
     if end_len != self.ui_y_size {
       self.ui_y_size = end_len;
       ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 { x: width, y: 122.0 + 22.0 * end_len as f32 }));
     }
+
   }
 
   fn render_key_guesser(&mut self, ui: &mut Ui, line_count: usize, line_width: usize) -> usize {
@@ -130,12 +153,13 @@ impl<'a> LiveWindow<'a> {
     len
   }
 
-  fn render_timed_run<T, O>(&self, ui: &mut Ui, timed_run: &TimedRun<T, O>, compared_run: Option<&TimedRun<T, O>>, compared_splits: Option<&Vec<Time>>) 
+  fn render_timed_run<T, Y>(&self, ui: &mut Ui, timed_run: &T, compared_run: Option<&Y>, compared_splits: Option<&Vec<Time>>) -> usize
   where 
-    T: Timed,
-    O: Hash {
+    T: Run,
+    Y: Run {
 
     let times = timed_run.get_times();
+    let mut result = timed_run.len();
     let compared_times = match compared_run {
       Some(run) => Some(run.get_times()),
       None => None,
@@ -185,6 +209,7 @@ impl<'a> LiveWindow<'a> {
 
         if final_time != Time::default() && !timed_run.is_win() && self.parser.get_run_parser().is_some_and(|p| !p.is_done()) {
           ui.label(super::create_text(final_time.to_string()));
+          result += 1;
 
           if let Some(compared_run) = compared_run {
             let compared_time = match timed_run.is_win() {
@@ -217,6 +242,8 @@ impl<'a> LiveWindow<'a> {
         }
       });
     }); 
+
+    result
   }
 
   pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
@@ -233,25 +260,27 @@ impl<'a> LiveWindow<'a> {
       let vecs = self.parser.into_result();
       while self.runs_count < vecs.get_runs().len() {
         let mut run = vecs.get_runs().get(self.runs_count).unwrap().clone();
-        run.get_objective_mut().early_drop = self.objective.early_drop;
-        run.get_objective_mut().glitched = self.objective.glitched;
-        run.get_objective_mut().secondary = self.objective.secondary.max(run.get_objective_mut().secondary);
-        run.get_objective_mut().overload = self.objective.overload.max(run.get_objective_mut().overload);
+        
+        let mut objective = run.get_objective::<RunObjective>()
+          .unwrap()
+          .with_secondary(self.objective_level.secondary)
+          .with_overload(self.objective_level.overload)
+          .with_glitched(self.objective_level.glitched)
+          .with_early_drop(self.objective_level.early_drop);
+        
         if let Ok(id) = self.player_input_string.parse::<u8>() {
-          run.get_objective_mut().player_count = id;
-        } 
-        save_manager.save(run);
+          objective = objective.with_player_count(id);
+        }
+
+        run.set_objective(&objective);
+        save_manager.save(RunEnum::Level(run));
         self.runs_count += 1;
       }
     }
 
-    // if let Some(file_name) = &self.file_name {
-    //   ui.label(format!("File:{}", file_name));
-    // }
-
     ui.horizontal(|ui| {
-      ui.checkbox(&mut self.objective.secondary, super::create_text("Sec"));
-      ui.checkbox(&mut self.objective.overload, super::create_text("Ovrld"));
+      ui.checkbox(&mut self.objective_level.secondary, super::create_text("Sec"));
+      ui.checkbox(&mut self.objective_level.overload, super::create_text("Ovrld"));
       ui.label(super::create_text("Ps:"));
       ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
         .char_limit(2)
@@ -259,13 +288,13 @@ impl<'a> LiveWindow<'a> {
     });
     
     ui.horizontal(|ui| {
-      ui.checkbox(&mut self.objective.glitched, super::create_text("Glitch"));
-      ui.checkbox(&mut self.objective.early_drop, super::create_text("E-Drop"));
+      ui.checkbox(&mut self.objective_level.glitched, super::create_text("Glitch"));
+      ui.checkbox(&mut self.objective_level.early_drop, super::create_text("E-Drop"));
     });
 
-    self.objective.level_name = self.objective.level_name.to_uppercase();
+    self.objective_level.level_name = self.objective_level.level_name.to_uppercase();
     if let Some(count) = self.player_input_string.parse::<u8>().ok() {
-      self.objective.player_count = count;
+      self.objective_level.player_count = count;
     }
 
     let mut key_guesser_lines = 0;
@@ -309,75 +338,23 @@ impl<'a> LiveWindow<'a> {
     if settings.get_show_warden_mapper() {
       ui.separator();
       mapper_size = self.render_mapper(ui, settings);
-      
-      if self.parser.get_run_parser().is_none() {
-        let run = match settings.get_show_splitter() {
-          true => &self.parser.into_result().get_runs().last().unwrap_or(&LevelRun::default()).clone(),
-          false => &LevelRun::default(),
-        };
-
-        self.resize_gui(
-          settings.get_live_rectangle().width(), 
-          ctx, 
-          run,
-          mapper_size,
-          key_guesser_lines
-        ); // try to find a way to remove this clone
-      }
     }
 
     ui.separator();
 
-    if let Some(parser) = self.parser.get_run_parser() {
-      let timed_run = parser.into_result();
+    let mut splitter_size = 0;
+    if settings.get_show_splitter() {
+      if let Some(current_run) = self.get_current_run() {
+        
+        let comparison_run = self.get_comparison_run(&RunEnum::Level(current_run.clone()), save_manager);
+        let comparison_splits = self.get_comparison_splits(&RunEnum::Level(current_run.clone()), save_manager);
 
-      self.objective.level_name = timed_run.get_objective().level_name.clone();
-      self.objective.player_count = timed_run.get_objective().player_count;
+        splitter_size = self.render_timed_run(ui, current_run, comparison_run, comparison_splits);
 
-      ui.label(super::create_text(format!("In run: {}", self.objective)));
-
-      if settings.get_show_splitter() {
-        ui.label(format!("{}", self.objective));
-        let compared_run = match settings.get_compare_to_record() { 
-          true => save_manager.get_best_run(&self.objective), 
-          false => None,
-        };
-        let best_splits = match settings.get_compare_to_theoretical() {
-          true => save_manager.get_best_splits(&self.objective),
-          false => None,
-        };
-        self.render_timed_run(ui, timed_run, compared_run, best_splits);
-        // TODO: DELETE .clone()
-        self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
       }
-
-      return;
     }
 
-    let result = self.parser.into_result();
-    if let Some(timed_run) = result.get_runs().last() {
-      
-      self.objective.level_name = timed_run.get_objective().level_name.clone();
-
-      if settings.get_show_splitter() {
-        let compared_run = match settings.get_compare_to_record() { 
-          true => save_manager.get_best_run(&self.objective), 
-          false => None,
-        };
-        let best_splits = match settings.get_compare_to_theoretical() {
-          true => save_manager.get_best_splits(&self.objective),
-          false => None,
-        };
-        self.render_timed_run(ui, timed_run, compared_run, best_splits);
-        // TODO: DELETE .clone()
-        self.resize_gui(settings.get_live_rectangle().width(), ctx, &timed_run.clone(), mapper_size, key_guesser_lines); // try to find a way to remove this clone
-      }
-
-      ui.label(format!("{}", self.objective));
-      ui.label(super::create_text("Not currently in run"));
-
-      return;
-    }
+    self.resize_gui(settings.get_live_rectangle().width(), ctx, splitter_size, mapper_size, key_guesser_lines);
   }
 
   pub fn load_file(&mut self, settings: &SettingsWindow) {
