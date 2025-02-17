@@ -73,7 +73,7 @@ impl ObjectiveData {
       overload: id.contains("ovrl"),
       glitched: id.contains("glitch"),
       early_drop: id.contains("edrop"),
-      player_count: id_arr[1].to_owned().parse::<u8>().unwrap(),
+      player_count: id_arr[1].to_owned().parse::<u8>().unwrap_or(1),
     }
   }
 }
