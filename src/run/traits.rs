@@ -6,15 +6,16 @@ use super::{objectives::Objective, time::Time, timed_run::{LevelRun, GameRun}, r
 pub trait Timed {
   
   fn get_time(&self) -> Time;
-  fn get_name(&self) -> Option<&String>;
+  fn get_name(&self) -> &String;
+  fn is_finished(&self) -> bool;
 
 }
 
 #[enum_dispatch(RunEnum)]
 pub trait Run: Timed {
 
-  fn get_times(&self) -> &Vec<Time>;
   fn get_splits<'a>(&'a self) -> Box<dyn Iterator<Item = &'a dyn Timed> + 'a>;
+  fn get_time_for_split(&self, split_name: &String) -> Option<Time>;
 
   fn is_win(&self) -> bool;
   fn len(&self) -> usize;

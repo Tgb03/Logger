@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use super::traits::Timed;
+
 
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Serialize, Deserialize)]
 pub struct Time {
@@ -125,16 +125,6 @@ impl Time {
     }
 
     *other
-  }
-}
-
-impl Timed for Time {
-  fn get_time(&self) -> Time {
-    *self
-  }
-  
-  fn get_name(&self) -> Option<&String> {
-    None
   }
 }
 

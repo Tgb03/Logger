@@ -27,6 +27,7 @@ fn main() -> eframe::Result {
     ..Default::default()
   };
  
+ 
   eframe::run_native(
     "GTFO Logger",
     options_base_app,

@@ -7,6 +7,10 @@ use egui::{Color32, Rect, Ui};
 pub struct SettingsWindow {
 
   show_splitter: bool,
+  show_game_splitter: bool,
+  splitter_length: usize,
+  game_splitter_length: usize,
+
   live_rectangle: Rect,
   automatic_loading: bool,
   compare_to_record: bool,
@@ -20,7 +24,7 @@ pub struct SettingsWindow {
   code_guess_line_width: usize,
   logs_folder: PathBuf,
 
-  text_inputs: [String; 7],
+  text_inputs: [String; 9],
 
 }
 
@@ -90,6 +94,18 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<usize>().unwrap_or(6),
       None => 6,
     };
+    let splitter_length = match props.get("splitter_length") {
+      Some(s) => s.parse::<usize>().unwrap_or(100),
+      None => 100,
+    };
+    let show_game_splitter = match props.get("show_game_splitter") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
+    let game_splitter_length = match props.get("game_splitter_length") {
+      Some(s) => s.parse::<usize>().unwrap_or(5),
+      None => 5,
+    };
     let logs_folder = match props.get("logs_folder") {
       Some(s) => PathBuf::from(s),
       None => {
@@ -111,6 +127,8 @@ impl Default for SettingsWindow {
 
     Self { 
       show_splitter,
+      show_game_splitter,
+      splitter_length,
       live_rectangle,
       automatic_loading,
       compare_to_record,
@@ -121,6 +139,7 @@ impl Default for SettingsWindow {
       code_guess_line_count,
       code_guess_line_width,
       logs_folder: logs_folder.clone(),
+      game_splitter_length,
 
       text_inputs: [
         x_pos.to_string(),
@@ -130,6 +149,8 @@ impl Default for SettingsWindow {
         code_guess_line_count.to_string(),
         code_guess_line_width.to_string(),
         logs_folder.to_str().map_or(String::new(), |s| s.to_owned()),
+        splitter_length.to_string(),
+        game_splitter_length.to_string(),
       ],
     }
   }
@@ -154,8 +175,20 @@ impl SettingsWindow {
     None
   }
 
+  pub fn get_show_game_splitter(&self) -> bool {
+    self.show_game_splitter
+  }
+
   pub fn get_show_splitter(&self) -> bool {
     self.show_splitter
+  }
+
+  pub fn get_splitter_length(&self) -> usize {
+    self.splitter_length
+  }
+
+  pub fn get_game_splitter_length(&self) -> usize {
+    self.game_splitter_length
   }
 
   pub fn get_live_rectangle(&self) -> Rect {
@@ -210,6 +243,12 @@ impl SettingsWindow {
       ui.checkbox(&mut self.show_splitter, super::create_text("Show Actual Splits"));
       ui.add_space(5.0);
       ui.label(super::create_text("Warning: this disables completely the splits part."));
+    });
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_game_splitter, super::create_text("Show Game Splitter"));
+      ui.add_space(5.0);
     });
     
     ui.horizontal(|ui| {
@@ -273,6 +312,34 @@ impl SettingsWindow {
       ui.checkbox(&mut self.compare_to_theoretical, super::create_text("Compare to best splits"));
     });
 
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.monospace(super::create_text("Splitter max length"));
+      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[7])
+        .desired_width(100.0)
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE))
+        .changed() {
+          if let Ok(x) = self.text_inputs[7].parse::<usize>() {
+            self.splitter_length = x;
+          }
+        };
+    });
+
+    ui.horizontal(|ui| {
+      ui.add_space(5.0);
+      ui.monospace(super::create_text("Game splitter max length"));
+      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[8])
+        .desired_width(100.0)
+        .background_color(Color32::from_rgb(32, 32, 32))
+        .text_color(Color32::WHITE))
+        .changed() {
+          if let Ok(x) = self.text_inputs[8].parse::<usize>() {
+            self.game_splitter_length = x;
+          }
+        };
+    });
+
     ui.separator();
 
     ui.add(egui::Label::new(super::create_text("Mapper settings: ")
@@ -334,6 +401,7 @@ impl SettingsWindow {
     ui.add_space(10.0);
     
     ui.label(super::create_text(format!("App version: {}", env!("CARGO_PKG_VERSION"))));
+    ui.label(super::create_text(format!("Made by Tgb03")));
 
   }
 
@@ -354,6 +422,8 @@ impl SettingsWindow {
     s.push_str(&format!("code_guess_line_width: {}\n", self.code_guess_line_width));
     s.push_str(&format!("logs_folder: {}\n", self.logs_folder.to_str().unwrap_or_default()));
     s.push_str(&format!("show_splitter: {}\n", self.show_splitter));
+    s.push_str(&format!("splitter_length: {}\n", self.splitter_length));
+    s.push_str(&format!("show_game_splitter: {}\n", self.show_game_splitter));
 
     if let Some(path) = Self::config_path() {
       

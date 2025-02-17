@@ -1,6 +1,6 @@
 use egui::ahash::HashSet;
 
-use crate::run::{objectives::run_objective::RunObjective, time::Time, timed_run::LevelRun, traits::{Run, Timed}};
+use crate::run::{named_time::NamedTime, objectives::run_objective::RunObjective, time::Time, timed_run::LevelRun, traits::{Run, Timed}};
 
 use super::{token_parser::TokenParserT, tokenizer::Token};
 
@@ -14,6 +14,9 @@ pub struct RunParser {
   timed_run: LevelRun,
   run_objective: RunObjective,
 
+  door_count: u8,
+  bulk_count: u8,
+
 }
 
 impl RunParser {
@@ -24,7 +27,9 @@ impl RunParser {
       players: Default::default(),
       is_done: false,
       timed_run: LevelRun::default(),
-      run_objective: RunObjective::from_name(level_name)
+      run_objective: RunObjective::from_name(level_name),
+      door_count: 1,
+      bulk_count: 1,
     }
   }
 
@@ -61,8 +66,13 @@ impl TokenParserT<LevelRun> for RunParser {
         self.players.insert(id);
         self.run_objective.player_count = self.players.len() as u8;
       },
-      Token::DoorOpen | Token::BulkheadScanDone => {
-        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
+      Token::DoorOpen => {
+        self.timed_run.add_split(NamedTime::new(time.sub(&self.start_time).sub(&self.timed_run.get_time()), format!("D_{:02}", self.door_count)));
+        self.door_count += 1;
+      },
+      Token::BulkheadScanDone => {
+        self.timed_run.add_split(NamedTime::new(time.sub(&self.start_time).sub(&self.timed_run.get_time()), format!("B_{:02}", self.bulk_count)));
+        self.bulk_count += 1;
       },
       Token::SecondaryDone => self.run_objective.secondary = true,
       Token::OverloadDone => self.run_objective.overload = true,
@@ -70,7 +80,7 @@ impl TokenParserT<LevelRun> for RunParser {
         self.timed_run.set_win(true);
         self.run_objective.player_count = self.players.len() as u8;
         self.is_done = true;
-        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
+        self.timed_run.add_split(NamedTime::new(time.sub(&self.start_time).sub(&self.timed_run.get_time()), "WIN ".to_owned()));
         self.timed_run.set_objective(&self.run_objective);
 
         return true;
@@ -78,7 +88,7 @@ impl TokenParserT<LevelRun> for RunParser {
       Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => { 
         self.is_done = true; 
         self.run_objective.player_count = self.players.len() as u8; 
-        self.timed_run.add_split(time.sub(&self.start_time).sub(&self.timed_run.get_time()));
+        self.timed_run.add_split(NamedTime::new(time.sub(&self.start_time).sub(&self.timed_run.get_time()), "LOSS".to_owned()));
         self.timed_run.set_objective(&self.run_objective);
         
         return true; 
@@ -94,7 +104,7 @@ impl TokenParserT<LevelRun> for RunParser {
 
 #[cfg(test)]
 mod tests {
-    use crate::{logs::{token_parser::TokenParserT, tokenizer::Token}, run::{objectives::run_objective::RunObjective, time::Time, traits::Run} };
+    use crate::{logs::{token_parser::TokenParserT, tokenizer::Token}, run::{objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}} };
 
     use super::RunParser;
 
@@ -121,13 +131,13 @@ mod tests {
         RunObjective::from_name("R1C1".to_string())
           .with_player_count(2)
       ));
-      assert_eq!(result.get_times(), &vec![
+      assert_eq!(result.get_splits().map(|v| v.get_time()).collect::<Vec<Time>>(), vec![
         Time::from("00:01:02.135"),
-        Time::from("00:03:02.198"),
-        Time::from("00:03:56.000"),
-        Time::from("00:14:02.135"),
-        Time::from("00:16:01.890"),
-        Time::from("00:17:49.343"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
       ]);
       assert_eq!(result.is_win(), true);
     }
@@ -152,14 +162,14 @@ mod tests {
         RunParser::new("R1C1".to_string(), Time::from("00:00:10.000"))
       );
   
-      let splits = result.get_splits().collect::<Vec<&Time>>();
+      let splits = result.get_splits().map(|v| v.get_time()).collect::<Vec<Time>>();
       assert_eq!(splits, vec![
-        &Time::from("00:01:02.135"),
-        &Time::from("00:02:00.063"),
-        &Time::from("00:00:53.802"),
-        &Time::from("00:10:06.135"),
-        &Time::from("00:01:59.755"),
-        &Time::from("00:01:47.453"),
+        Time::from("00:01:02.135"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
       ])
     }
   
@@ -186,14 +196,14 @@ mod tests {
         RunParser::new("R1C1".to_string(), Time::from("23:59:10.000"))
       );
   
-      let splits = result.get_splits().collect::<Vec<_>>();
+      let splits = result.get_splits().map(|v| v.get_time()).collect::<Vec<_>>();
       assert_eq!(splits, vec![
-        &Time::from("00:01:02.135"),
-        &Time::from("00:02:00.063"),
-        &Time::from("00:00:53.802"),
-        &Time::from("00:10:06.135"),
-        &Time::from("00:01:59.755"),
-        &Time::from("00:01:47.453"),
+        Time::from("00:01:02.135"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
       ]);
       assert_eq!(result.get_objective::<RunObjective>().is_some_and(|v| v.secondary == true), true);
   

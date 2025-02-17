@@ -1,6 +1,6 @@
 use egui::Ui;
 
-use crate::run::traits::Run;
+use crate::{run::traits::Run, save_run::SaveManager};
 
 #[derive(Default)]
 pub struct RenderResult {
@@ -12,8 +12,7 @@ pub struct RenderResult {
 
 pub trait RenderRun: Run {
 
-  fn show(&self, ui: &mut Ui) -> RenderResult;
-  fn show_editable(&mut self, ui: &mut Ui) -> RenderResult;
+  fn show(&self, save_manager: &SaveManager, ui: &mut Ui, show_split_times: bool) -> RenderResult;
 
 }
 

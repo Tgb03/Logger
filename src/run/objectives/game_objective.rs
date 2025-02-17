@@ -16,9 +16,9 @@ use super::{
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub struct GameObjective {
   
-  rundown: GameRunRundown,
-  objective: GameRunObjective,
-  player_count: u8,
+  pub rundown: GameRunRundown,
+  pub objective: GameRunObjective,
+  pub player_count: u8,
 
 }
 
@@ -100,6 +100,14 @@ impl GameObjective {
 
   pub fn get_objectives(&self) -> &GameRunObjective {
     &self.objective
+  }
+  
+  pub fn get_mut_rundown(&mut self) -> &mut GameRunRundown {
+    &mut self.rundown
+  }
+
+  pub fn get_mut_objectives(&mut self) -> &mut GameRunObjective {
+    &mut self.objective
   }
 
 }

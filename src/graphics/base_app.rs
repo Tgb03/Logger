@@ -3,9 +3,17 @@ use std::{collections::BTreeMap, fs::File, time::Duration};
 use eframe::CreationContext;
 use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
 
-use crate::{graphics::{log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow}, parse_files::file_parse::parse_all_files_async, run::timed_run::LevelRun, save_run::SaveManager};
+use crate::{
+  graphics::{
+    log_parser_window::LogParserWindow, 
+    run_manager_window::RunManagerWindow
+  }, parse_files::file_parse::parse_all_files_async, run::timed_run::LevelRun, save_run::SaveManager
+};
 
-use super::{live_window::LiveWindow, settings_window::SettingsWindow};
+use super::{
+  live::live_window::LiveWindow, 
+  settings_window::SettingsWindow
+};
 
 #[derive(PartialEq, serde::Serialize, serde::Deserialize)]
 enum AppState {
@@ -24,8 +32,8 @@ pub struct BaseApp<'a> {
 
   log_parser_window: LogParserWindow,
   run_manager_window: RunManagerWindow,
-  live_window: LiveWindow<'a>,
   settings_window: SettingsWindow,
+  live_window: LiveWindow<'a>,
 
   save_manager: SaveManager,
 
@@ -163,8 +171,12 @@ impl<'a> eframe::App for BaseApp<'a> {
         AppState::None => {},
         AppState::LogParserWindow => self.log_parser_window.show(ui, &mut self.save_manager),
         AppState::ManagingRuns => self.run_manager_window.show(ui, &mut self.save_manager),
-        AppState::LiveWindow => self.live_window.show(ui, &mut self.save_manager, &self.settings_window, ctx),
         AppState::SettingsWindow => self.settings_window.show(ui),
+        AppState::LiveWindow => { 
+        
+          self.live_window.show(ui, &self.save_manager, &self.settings_window, ctx);
+        
+        },
       }
       
     });
@@ -174,4 +186,5 @@ impl<'a> eframe::App for BaseApp<'a> {
     // }
   }
 }
+
 

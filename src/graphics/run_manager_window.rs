@@ -9,51 +9,23 @@ use super::{sorter_window::add_sorter_buttons, traits::RenderRun};
 pub struct RunManagerWindow {
 
   objective: ObjectiveEnum,
+  show_split_times: bool,
 
 }
 
 impl RunManagerWindow {
 
-  fn sum_run_splits(run: &Vec<Time>) -> Time {
+  fn sum_run_splits(run: impl Iterator<Item = Time>) -> Time {
     let mut result = Time::new();
 
     for time in run {
-      result = result.add(time);
+      result = result.add(&time);
     }
 
     result
   }
 
   pub fn show(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager) {
-    let best_splits = match save_manager.get_best_splits(&self.objective) {
-      Some(v) => v.clone(),
-      None => Vec::new(),
-    };
-
-    /*
-    ui.horizontal(|ui| {
-      ui.label(super::create_text("Level name: "));
-      ui.add(egui::TextEdit::singleline(&mut self.objective.level_name)
-          .desired_width(60.0)
-          .background_color(Color32::from_rgb(16, 16, 16))
-          .text_color(Color32::WHITE));
-      ui.label(super::create_text("Player count: "));
-      ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
-          .desired_width(15.0)
-          .background_color(Color32::from_rgb(16, 16, 16))
-          .text_color(Color32::WHITE));
-      ui.checkbox(&mut self.objective.secondary, super::create_text("Secondary"));
-      ui.checkbox(&mut self.objective.overload, super::create_text("Overload"));
-      ui.checkbox(&mut self.objective.glitched, super::create_text("Glitched"));
-      ui.checkbox(&mut self.objective.early_drop, super::create_text("Early Drop Bug"));
-
-      self.objective.level_name = self.objective.level_name.to_uppercase();
-      if let Some(count) = self.player_input_string.parse::<u8>().ok() {
-        self.objective.player_count = count;
-      }
-      
-    });
-    */
 
     ui.horizontal(|ui| {
        egui::ComboBox::from_label(super::create_text("Select loaded objective"))
@@ -76,8 +48,21 @@ impl RunManagerWindow {
         save_manager.optimize_obj(&self.objective);
       }
         
-      ui.colored_label(Color32::GOLD, super::create_text("Theoretical:"));
-      ui.colored_label(Color32::GOLD, super::create_text(Self::sum_run_splits(&best_splits).to_string()));
+      if let Some(best_splits) = save_manager.get_best_splits(&self.objective) {
+      
+        ui.colored_label(Color32::GOLD, super::create_text("Theoretical:"));
+        ui.colored_label(Color32::GOLD, super::create_text(
+          Self::sum_run_splits(
+            save_manager.get_split_names(&self.objective)
+              .unwrap_or(&Vec::new())
+              .iter()
+              .map(|name| best_splits.get(name).cloned().unwrap_or_default())
+          ).to_string()
+        ));
+        
+      }
+
+      ui.checkbox(&mut self.show_split_times, super::create_text("Show Split Times"));
 
     });
 
@@ -104,14 +89,27 @@ impl RunManagerWindow {
     });
       
     // handles all sorters
-    if let Some(runs) = save_manager.get_runs(&self.objective) {
+    if let Some(runs) = save_manager.get_runs_mut(&self.objective) {
       add_sorter_buttons(ui, runs);
     }
 
     ui.horizontal(|ui| {
-      ui.label(super::create_text("Best split for each part:         "));
-      for stamp in &best_splits {
-        ui.label(super::create_text(stamp.to_string_no_hours()));
+      ui.vertical(|ui| {
+      
+        ui.label(super::create_text("Name of splits:                   "));
+        ui.label(super::create_text("Best split for each part:         "));
+
+      });
+
+      if let Some(vec) = save_manager.get_split_names(&self.objective) {
+        if let Some(hash_map) = save_manager.get_best_splits(&self.objective) {
+          for name in vec {
+            ui.vertical(|ui| {
+              ui.label(super::create_text(format!("{: ^12}", name)));
+              ui.label(super::create_text(hash_map.get(name).unwrap_or(&Time::default()).to_string()));
+            });
+          }
+        }
       }
     });
 
@@ -124,19 +122,22 @@ impl RunManagerWindow {
     let mut for_deletion = Vec::new();
 
     egui::ScrollArea::vertical().show_rows(ui, ui.text_style_height(&egui::TextStyle::Body), timed_runs.len(), |ui, row_range| {
-      
       for row in row_range {
-        let timed_run = &mut timed_runs[row];
+        let timed_run = &timed_runs[row];
         
-        let result = timed_run.show(ui);
+        let result = timed_run.show(&save_manager, ui, self.show_split_times);
         
         if result.delete { for_deletion.push(row); has_deleted = true; }
       }
-
-      for it in for_deletion.iter().rev() {
-        timed_runs.remove(*it);
-      }
     });
+
+    let timed_runs = match save_manager.get_runs_mut(&self.objective) {
+      Some(run) => run,
+      None => return,
+    };
+    for it in for_deletion.iter().rev() {
+      timed_runs.remove(*it);
+    }
     
     if has_deleted {
       save_manager.calculate_best_splits(self.objective.clone());

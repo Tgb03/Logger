@@ -98,7 +98,7 @@ mod tests {
   use fs::File;
   use tempfile::{tempdir, TempDir};
 
-  use crate::run::{time::Time, traits::Run};
+  use crate::run::{time::Time, traits::{Run, Timed}};
 
 use super::*;
 
@@ -143,13 +143,13 @@ use super::*;
 
       assert_eq!(result.len(), 2);
       assert_eq!(result[0].is_win(), true);
-      assert_eq!(*result[0].get_times(), vec![
+      assert_eq!(*result[0].get_splits().map(|v| v.get_time()).collect::<Vec<Time>>(), vec![
         Time::from("00:01:02.135"),
-        Time::from("00:03:02.198"),
-        Time::from("00:03:56.000"),
-        Time::from("00:14:02.135"),
-        Time::from("00:16:01.890"),
-        Time::from("00:17:49.343"),
+        Time::from("00:02:00.063"),
+        Time::from("00:00:53.802"),
+        Time::from("00:10:06.135"),
+        Time::from("00:01:59.755"),
+        Time::from("00:01:47.453"),
       ]);
 
       drop(file1);

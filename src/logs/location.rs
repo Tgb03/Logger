@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub enum LocationType {
@@ -28,13 +30,13 @@ pub struct Location {
 
 }
 
-impl From<&Location> for String {
+impl Display for Location {
 
-  fn from(value: &Location) -> Self {
-    format!("{}: {} at {}", 
-      match &value.item_name { None => "No Name", Some(name) => name }, 
-      match &value.zone { None => "Unknown Zone".to_owned(), Some(zone) => format!("ZONE {}", zone) }, 
-      match &value.id { None => "Unknown ID".to_owned(), Some(id) => id.to_string() },
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "{}: {} at {}", 
+      self.item_name.as_ref().map(|v| v.as_str()).unwrap_or("No Name"), 
+      match &self.zone { None => "Unknown Zone".to_owned(), Some(zone) => format!("ZONE {}", zone) }, 
+      match &self.id { None => "Unknown ID".to_owned(), Some(id) => id.to_string() },
     )
   }
 
@@ -66,8 +68,8 @@ impl Location {
     self
   }
 
-  pub fn has_type(&self, location_type: LocationType) -> bool {
-    self.location_type == location_type
+  pub fn has_type(&self, location_type: &LocationType) -> bool {
+    self.location_type == *location_type
   }
 
   pub fn get_name(&self) -> Option<&String> {

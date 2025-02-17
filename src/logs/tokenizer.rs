@@ -125,7 +125,7 @@ impl Token {
       "38" => "R5",
       "39" => "training",
       "41" => "R6",
-      _ => "$R_"
+      _ => "$R"
     };
 
     if rundown_name == "training" { return Token::SelectExpedition("TRAINING".to_string()); }

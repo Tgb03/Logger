@@ -3,10 +3,10 @@ use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
-use super::{objectives::Objective, time::Time, traits::{Run, Timed}};
+use super::{named_time::NamedTime, objectives::{game_objective::GameObjective, run_objective::RunObjective, Objective}, time::Time, traits::{Run, Timed}};
 
-pub type LevelRun = TimedRun<Time>;
-pub type GameRun = TimedRun<TimedRun<Time>>;
+pub type LevelRun = TimedRun<NamedTime>;
+pub type GameRun = TimedRun<LevelRun>;
 
 #[derive(PartialEq, Eq, Hash, Serialize, Deserialize, Clone, Default)]
 pub struct TimedRun<T>
@@ -14,11 +14,10 @@ where
   T: Timed {
 
   splits: Vec<T>,
-  times: Vec<Time>,
   total_time: Time,
   is_win: bool,
 
-  #[serde(skip)] objective: String,
+  objective: String,
 
 }
 
@@ -30,8 +29,12 @@ where
     self.total_time
   }
 
-  fn get_name(&self) -> Option<&String> {
-    Some(&self.objective)
+  fn get_name(&self) -> &String {
+    &self.objective
+  }
+
+  fn is_finished(&self) -> bool {
+    self.is_win
   }
 
 }
@@ -43,7 +46,6 @@ where
   pub fn new<O: Objective>(objective_data: O) -> Self {
     Self {
       splits: Vec::new(),
-      times: Vec::new(),
       total_time: Time::default(),
       objective: objective_data.to_string(),
       is_win: false,
@@ -56,16 +58,12 @@ impl<T> Run for TimedRun<T>
 where 
   T: Timed {
 
-  fn get_times(&self) -> &Vec<Time> {
-    &self.times
-  }
-
   fn is_win(&self) -> bool {
     self.is_win
   }
 
   fn len(&self) -> usize {
-    self.splits.len() - if self.is_win { 0 } else { 1 }
+    self.splits.len()
   }
 
   fn get_objective<O: Objective>(&self) -> Option<O> {
@@ -90,9 +88,28 @@ where
   }
   
   fn get_splits<'a>(&'a self) -> Box<dyn Iterator<Item = &'a dyn Timed> + 'a> {
+    
     Box::new(
       self.splits.iter().map(|v| v as &dyn Timed)
     )
+    
+  }
+  
+  fn get_time_for_split(&self, split_name: &String) -> Option<Time> {
+    let mut time = Time::default();
+    let mut exists = false;
+
+    for split in &self.splits {
+      if split.get_name() == split_name {
+        time = time.add(&split.get_time());
+        exists = true;
+      }
+    }
+
+    match exists {
+      true => Some(time),
+      false => None,
+    }
   }
 }
 
@@ -105,33 +122,75 @@ where T: Timed {
 
   pub fn add_split(&mut self, split: T) {
     self.total_time = self.total_time.add(&split.get_time());
-    self.times.push(self.total_time.clone());
     self.splits.push(split);
   }
+
+}
+
+impl GameRun {
+
+  pub fn get_split_for_objective(&self, objective: &RunObjective) -> (Time, bool) {
+
+    let mut time = Time::default();
+    let mut is_win = false;
+
+    for run in self.get_splits() {
+      let mut correct = true;
+      // println!("A: {:?}", run.get_objective_str());
+      let run_obj = run.get_objective::<RunObjective>().unwrap();
+
+      if run_obj.level_name != objective.level_name { correct = false }
+      if run_obj.secondary && !objective.secondary { correct = false }
+      if run_obj.overload && !objective.overload { correct = false }
+      if !run_obj.glitched && objective.glitched { correct = false }
+      
+      if correct {
+        is_win = is_win.max(run.is_win);
+        time = time.add(&run.get_time());
+      }
+    }
+
+    (time, is_win)
+
+  }
+
+  pub fn validate(&mut self) {
+    let objectives: Vec<RunObjective> = (&self.get_objective::<GameObjective>()
+      .unwrap())
+      .into();
+
+    let mut is_good = true;
+    for objective in objectives {
+      let (_, win) = self.get_split_for_objective(&objective);
+
+      if win == false {
+        is_good = false;
+      }
+    }
+
+    if is_good { self.set_win(true); }
+  }  
+
 }
 
 
 #[cfg(test)]
 mod tests {
-  use crate::run::{objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}};
+  use crate::run::{named_time::NamedTime, objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}};
   use super::TimedRun;
 
   #[test]
   pub fn test_basic() {
-    let mut run = TimedRun::<Time>::new(RunObjective::default());
+    let mut run = TimedRun::<NamedTime>::new(RunObjective::default());
 
-    run.add_split(Time::from("00:01:10.000"));
-    run.add_split(Time::from("00:01:10.000"));
-    run.add_split(Time::from("00:01:10.000"));
+    run.add_split(NamedTime::new(Time::from("00:01:10.000"), "D1".to_owned()));
+    run.add_split(NamedTime::new(Time::from("00:01:10.000"), "D1".to_owned()));
+    run.add_split(NamedTime::new(Time::from("00:01:10.000"), "D1".to_owned()));
 
     assert_eq!(run.get_time(), Time::from("00:03:30.000"));
     assert_eq!(run.len(), 3);
-    let it = run.get_times();
-    assert_eq!(it.get(0).map(|t| t.get_time()), Some(Time::from("00:01:10.000")));
-    assert_eq!(it.get(1).map(|t| t.get_time()), Some(Time::from("00:02:20.000")));
-    assert_eq!(it.get(2).map(|t| t.get_time()), Some(Time::from("00:03:30.000")));
     for split in run.get_splits() {
-      assert_eq!(*split, Time::from("00:01:10.000"));
+      assert_eq!(*split, NamedTime::new(Time::from("00:01:10.000"), "D1".to_owned()));
     }
   }
 
