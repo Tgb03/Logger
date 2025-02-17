@@ -17,9 +17,9 @@ pub struct RunParser {
 
 impl RunParser {
 
-  pub fn new(level_name: String, start_time: Time) -> RunParser {
+  pub fn new(level_name: String) -> RunParser {
     RunParser {
-      start_time,
+      start_time: Time::default(),
       players: Default::default(),
       is_done: false,
       timed_run: TimedRun::new(level_name)
@@ -55,6 +55,9 @@ impl TokenParserT<TimedRun> for RunParser {
     // println!("parsed: {:?}", token);
     
     match token {
+      Token::GameStarted => {
+        self.start_time = time;
+      }
       Token::PlayerDroppedInLevel(id) => {
         self.players.insert(id);
         self.timed_run.objective_data.player_count = self.players.len() as u8;
@@ -97,6 +100,7 @@ mod tests {
     #[test]
     pub fn test_base_game() {
       let tokens = vec![
+        (Time::from("00:00:10.000"), Token::GameStarted),
         (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
         (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
         (Time::from("00:01:12.135"), Token::DoorOpen),
@@ -109,7 +113,7 @@ mod tests {
       
       let result = RunParser::parse_all_tokens(
         tokens.into_iter(), 
-        RunParser::new("R1C1".to_string(), Time::from("00:00:10.000"))
+        RunParser::new("R1C1".to_string())
       );
       
       assert_eq!(result.objective_data, ObjectiveData::from("R1C1".to_string(), false, false, false, false, 2));
@@ -127,6 +131,7 @@ mod tests {
     #[test]
     pub fn test_splits() {
       let tokens = vec![
+        (Time::from("00:00:10.000"), Token::GameStarted),
         (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
         (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(2)),
         (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -141,7 +146,7 @@ mod tests {
       
       let result = RunParser::parse_all_tokens(
         tokens.into_iter(), 
-        RunParser::new("R1C1".to_string(), Time::from("00:00:10.000"))
+        RunParser::new("R1C1".to_string())
       );
   
       let splits = result.get_splits();
@@ -159,6 +164,7 @@ mod tests {
     pub fn test_overflow() {
   
       let tokens = vec![
+        (Time::from("23:59:10.000"), Token::GameStarted),
         (Time::from("23:59:10.000"), Token::PlayerDroppedInLevel(1)),
         (Time::from("23:59:10.100"), Token::PlayerDroppedInLevel(2)),
         (Time::from("23:59:10.110"), Token::PlayerDroppedInLevel(3)),
@@ -175,7 +181,7 @@ mod tests {
       
       let result = RunParser::parse_all_tokens(
         tokens.into_iter(), 
-        RunParser::new("R1C1".to_string(), Time::from("23:59:10.000"))
+        RunParser::new("R1C1".to_string())
       );
   
       let splits = result.get_splits();
