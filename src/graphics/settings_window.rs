@@ -106,7 +106,7 @@ impl Default for SettingsWindow {
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
-      max: [x_pos + x_size, y_pos + 80.0].into() 
+      max: [x_pos + x_size, y_pos + 100.0].into() 
     };
 
     Self { 
