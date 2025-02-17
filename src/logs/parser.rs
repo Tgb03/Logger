@@ -100,10 +100,10 @@ impl TokenParserT<ParserResult> for Parser {
             self.generation_parser = Some(GenerationParser::default());
           }
           Token::SelectExpedition(name) => self.name_of_level = name,
-          Token::GameStarted => {
+          Token::GameStarting => {
             //eprintln!("Started game.");
             self.state = ParserState::InGame;
-            self.run_parser = Some(RunParser::new(self.name_of_level.clone(), time))
+            self.run_parser = Some(RunParser::new(self.name_of_level.clone()))
           },
           // logs have so many edge cases like this bs one
           // at some point some shit like this might be useful

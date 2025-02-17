@@ -17,6 +17,7 @@ pub enum Token {
   ObjectiveAllocated(u64, Option<u64>), // zone, id
   ObjectiveSpawned(String), // name
   SelectExpedition(String),
+  GameStarting,
   GameStarted,
   PlayerDroppedInLevel(u32),
   DoorOpen,
@@ -157,8 +158,8 @@ impl Token {
     if line.contains("LG_Distribute_WardenObjective, placing warden objective item with function HydroStatisUnit for wardenObjectiveType: HSU_FindTakeSample") { return Some(Token::create_hsu_objective_alloc(line)); }
     if line.contains("LG_Distribute_WardenObjective, PLACE GATHER ITEMS") { return Some(Token::create_gather_objective_spawn(line)); }
     if line.contains("WardenObjectiveManager.RegisterObjectiveItemForCollection") { return Some(Token::create_object_spawn(line)); }
-    if line.contains("SNET : OnMasterCommand : ReceivingSync_Dropin") { return Some(Token::GameStarted); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
+    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel") { return Some(Token::GameStarting); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
     if line.contains("exits PLOC_InElevator") { return Some(Self::create_player(line)); }
     if line.contains("OnDoorIsOpened, LinkedToZoneData.EventsOnEnter") { return Some(Token::DoorOpen); }
