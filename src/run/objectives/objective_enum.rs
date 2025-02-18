@@ -57,4 +57,11 @@ impl Objective for ObjectiveEnum {
       ObjectiveEnum::Game(game_objective) => ObjectiveEnum::Game(game_objective.with_player_count(player_count)),
     }  
   }
+  
+  fn get_player_count(&self) -> u8 {
+    match self {
+        ObjectiveEnum::Run(run_objective) => run_objective.get_player_count(),
+        ObjectiveEnum::Game(game_objective) => game_objective.get_player_count(),
+    }
+  }
 }

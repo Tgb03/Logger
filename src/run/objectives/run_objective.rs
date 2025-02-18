@@ -75,6 +75,10 @@ impl Objective for RunObjective {
 
     self  
   }
+  
+  fn get_player_count(&self) -> u8 {
+    self.player_count
+  }
 }
 
 impl RunObjective {

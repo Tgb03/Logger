@@ -1,7 +1,7 @@
 
 use egui::Color32;
 
-use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{objectives::objective_enum::ObjectiveEnum, time::Time, traits::Run}, save_run::SaveManager};
+use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, time::Time, traits::Run}, save_run::SaveManager};
 
 
 impl<T> RenderRun for T
@@ -23,11 +23,14 @@ where T: Run {
       
       ui.label(create_text("RUN:"));
       ui.colored_label(color, create_text(time.to_string()));
+
+      ui.label(create_text(objective.get_player_count().to_string()));
       
       if ui.button(create_text(format!("DELETE RUN"))).clicked() {
         result.delete = true;
       }
       ui.label(create_text(format!("{:03}", self.len())));
+      
 
       let mut running_total = Time::default();
 

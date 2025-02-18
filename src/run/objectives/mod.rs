@@ -17,6 +17,7 @@ pub trait Objective:
   Display +
   Hash {
 
+  fn get_player_count(&self) -> u8;
   fn with_player_count(self, player_count: u8) -> Self;
 
 }

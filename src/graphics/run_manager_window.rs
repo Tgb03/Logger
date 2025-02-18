@@ -96,8 +96,8 @@ impl RunManagerWindow {
     ui.horizontal(|ui| {
       ui.vertical(|ui| {
       
-        ui.label(super::create_text("Name of splits:                   "));
-        ui.label(super::create_text("Best split for each part:         "));
+        ui.label(super::create_text("Name of splits:                    "));
+        ui.label(super::create_text("Best split for each part:          "));
 
       });
 

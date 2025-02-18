@@ -149,9 +149,11 @@ impl LogParserWindow {
         ui.horizontal(|ui| {
           
           ui.label(super::create_text(&objective.level_name));
+          ui.colored_label(Color32::WHITE, super::create_text(format!("{}p", objective.get_player_count().to_string())));
+          
           ui.colored_label(color, super::create_text(time.to_string()));
 
-          ui.colored_label(Color32::WHITE, super::create_text(format!("{:03}", timed_run.len())));
+          ui.colored_label(Color32::WHITE, super::create_text(format!("{:03} stamps", timed_run.len())));
 
           ui.checkbox(&mut objective.secondary, super::create_text("Secondary"));
           ui.checkbox(&mut objective.overload, super::create_text("Overload"));
