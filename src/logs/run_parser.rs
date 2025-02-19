@@ -38,6 +38,10 @@ impl RunParser {
     self.is_done
   }
 
+  pub fn get_result_mut(&mut self) -> &mut LevelRun {
+    &mut self.timed_run
+  }
+
 }
 
 impl Into<LevelRun> for RunParser {
@@ -101,6 +105,10 @@ impl TokenParserT<LevelRun> for RunParser {
     }
     
     return false;
+  }
+
+  fn into_result_mut(&mut self) -> &mut LevelRun {
+    &mut self.timed_run    
   }
 
 }

@@ -2,7 +2,12 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{error::ObjectiveParseError, game_objective::GameObjective, run_objective::RunObjective, Objective};
+use super::{
+  error::ObjectiveParseError, 
+  game_objective::GameObjective, 
+  run_objective::RunObjective, 
+  Objective
+};
 
 #[derive(Hash, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ObjectiveEnum {
@@ -60,8 +65,8 @@ impl Objective for ObjectiveEnum {
   
   fn get_player_count(&self) -> u8 {
     match self {
-        ObjectiveEnum::Run(run_objective) => run_objective.get_player_count(),
-        ObjectiveEnum::Game(game_objective) => game_objective.get_player_count(),
+      ObjectiveEnum::Run(run_objective) => run_objective.get_player_count(),
+      ObjectiveEnum::Game(game_objective) => game_objective.get_player_count(),
     }
   }
 }

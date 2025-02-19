@@ -28,12 +28,14 @@ impl RunObjectiveReader {
     &self.objective
   }
 
-  pub fn show(&mut self, ui: &mut Ui) {
+  pub fn show(&mut self, ui: &mut Ui) -> Option<&RunObjective> {
+
+    let mut changed = false;
     
     ui.horizontal(|ui| {
 
-      ui.checkbox(&mut self.objective.secondary, create_text("Sec"));
-      ui.checkbox(&mut self.objective.overload, create_text("Ovrl"));
+      if ui.checkbox(&mut self.objective.secondary, create_text("Sec")).changed() { changed = true; }
+      if ui.checkbox(&mut self.objective.overload, create_text("Ovrl")).changed() { changed = true; }
 
       if ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
         .desired_width(20.0)
@@ -50,10 +52,15 @@ impl RunObjectiveReader {
     
     ui.horizontal(|ui| {
 
-      ui.checkbox(&mut self.objective.glitched, create_text("Glitch"));
-      ui.checkbox(&mut self.objective.early_drop, create_text("E-Drop"));
+      if ui.checkbox(&mut self.objective.glitched, create_text("Glitch")).changed() { changed = true; }
+      if ui.checkbox(&mut self.objective.early_drop, create_text("E-Drop")).changed() { changed = true; }
 
     });
+
+    match changed {
+      true => Some(&self.objective),
+      false => None,
+    }
 
   }
 

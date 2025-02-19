@@ -140,12 +140,13 @@ impl<'a> LiveWindow<'a> {
     }
     if settings.get_show_splitter() {
       self.level_run_reader.show(ui);
+
       y_size += 50;
 
       ui.separator();
 
       if let Some(current_run) = self.get_current_run() {
-        y_size += RunRenderer::render_run(ui, current_run, settings.get_splitter_length(), save_manager)
+        y_size += RunRenderer::render_run(ui, current_run, settings.get_splitter_length(), save_manager);
       } 
     }
 

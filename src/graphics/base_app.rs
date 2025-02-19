@@ -95,7 +95,7 @@ impl<'a> eframe::App for BaseApp<'a> {
   }
 
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-    ctx.request_repaint_after(Duration::from_millis(25));
+    ctx.request_repaint_after(Duration::from_millis(50));
 
     let frame = Frame::none()
       .fill(Color32::TRANSPARENT);

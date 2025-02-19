@@ -153,4 +153,8 @@ impl TokenParserT<ParserResult> for Parser {
     false
   }
 
+fn into_result_mut(&mut self) -> &mut ParserResult {
+  &mut self.result
+}
+
 }

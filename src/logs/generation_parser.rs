@@ -113,4 +113,8 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
     false
 
   }
+  
+  fn into_result_mut(&mut self) -> &mut Vec<Location> {
+    &mut self.result
+  }
 }
