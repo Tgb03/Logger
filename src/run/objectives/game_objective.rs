@@ -64,6 +64,10 @@ impl Objective for GameObjective {
   fn get_player_count(&self) -> u8 {
     self.player_count
   }
+  
+  fn get_name(&self) -> Option<&String> {
+    None
+  }
 }
 
 impl Into<Vec<RunObjective>> for &GameObjective {

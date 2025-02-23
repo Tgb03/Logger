@@ -266,8 +266,8 @@ impl SaveManager {
         Ok(binary_data) => {
 
           let mut vec: Vec<RunEnum> = match bincode::deserialize(&binary_data) {
-              Ok(vec) => vec,
-              Err(_) => Vec::new(),
+            Ok(vec) => vec,
+            Err(_) => Vec::new(),
           };
 
           for it in &mut vec {

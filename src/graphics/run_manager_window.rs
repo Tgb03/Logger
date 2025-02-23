@@ -1,3 +1,6 @@
+
+use std::collections::HashMap;
+
 use egui::Color32;
 
 use crate::{run::time::Time, save_run::SaveManager};
@@ -10,6 +13,8 @@ pub struct RunManagerWindow {
 
   objective: String,
   show_split_times: bool,
+
+  bottom_range: usize,
 
 }
 
@@ -39,6 +44,8 @@ impl RunManagerWindow {
               key.clone(), 
               super::create_text(key)).clicked() {
               
+              self.bottom_range = 0;
+
             };
           }
         }
@@ -93,24 +100,34 @@ impl RunManagerWindow {
       add_sorter_buttons(ui, runs);
     }
 
+    let binding = Vec::new();
+    let split_names = save_manager.get_split_names(&self.objective).unwrap_or(&binding);
+    let mut min_size = vec![12; split_names.len().saturating_sub(self.bottom_range) + 1];
+    let binding = HashMap::default();
+    let best_splits = save_manager.get_best_splits(&self.objective).unwrap_or(&binding);
+
     ui.horizontal(|ui| {
-      ui.vertical(|ui| {
       
-        ui.label(super::create_text("Name of splits:                    "));
-        ui.label(super::create_text("Best split for each part:          "));
-
-      });
-
-      if let Some(vec) = save_manager.get_split_names(&self.objective) {
-        if let Some(hash_map) = save_manager.get_best_splits(&self.objective) {
-          for name in vec {
-            ui.vertical(|ui| {
-              ui.label(super::create_text(format!("{: ^12}", name)));
-              ui.label(super::create_text(hash_map.get(name).unwrap_or(&Time::default()).to_string()));
-            });
-          }
-        }
+      ui.label(super::create_text("Name of splits:           "));
+      if ui.button(super::create_text(" < ")).clicked() { self.bottom_range = self.bottom_range.saturating_sub(1); }
+      if ui.button(super::create_text(" > ")).clicked() { 
+        self.bottom_range = (self.bottom_range + 1).min(split_names.len() - 1); 
       }
+      for (id, name) in split_names[self.bottom_range..].iter().enumerate() {
+        ui.label(super::create_text(format!("{: ^12}", name)));
+        
+        min_size[id] = min_size[id].max(name.len());
+      }
+
+    });
+
+    ui.horizontal(|ui| {
+      
+      ui.label(super::create_text("Best split for each part:           "));
+      for (id, name) in split_names[self.bottom_range..].iter().enumerate() {
+        ui.label(super::create_text(format!("{: ^fill$}", best_splits.get(name).unwrap_or(&Time::default()).to_string(), fill = min_size[id])));
+      }
+
     });
 
     let timed_runs = match save_manager.get_runs(&self.objective) {
@@ -125,7 +142,7 @@ impl RunManagerWindow {
       for row in row_range {
         let timed_run = &timed_runs[row];
         
-        let result = timed_run.show(&save_manager, ui, self.show_split_times);
+        let result = timed_run.show(&min_size, self.bottom_range..split_names.len(), &save_manager, ui, self.show_split_times);
         
         if result.delete { for_deletion.push(row); has_deleted = true; }
       }

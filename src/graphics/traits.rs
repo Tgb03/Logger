@@ -1,3 +1,6 @@
+
+use std::ops::Range;
+
 use egui::Ui;
 
 use crate::{run::traits::Run, save_run::SaveManager};
@@ -12,7 +15,7 @@ pub struct RenderResult {
 
 pub trait RenderRun: Run {
 
-  fn show(&self, save_manager: &SaveManager, ui: &mut Ui, show_split_times: bool) -> RenderResult;
+  fn show(&self, min_sizes: &Vec<usize>, range: Range<usize>, save_manager: &SaveManager, ui: &mut Ui, show_split_times: bool) -> RenderResult;
 
 }
 

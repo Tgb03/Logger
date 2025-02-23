@@ -69,4 +69,11 @@ impl Objective for ObjectiveEnum {
       ObjectiveEnum::Game(game_objective) => game_objective.get_player_count(),
     }
   }
+  
+  fn get_name(&self) -> Option<&String> {
+    match self {
+      ObjectiveEnum::Run(run_objective) => run_objective.get_name(),
+      ObjectiveEnum::Game(game_objective) => game_objective.get_name(),
+    }  
+  }
 }

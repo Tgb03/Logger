@@ -1,4 +1,6 @@
 
+use std::ops::Range;
+
 use egui::Color32;
 
 use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, time::Time, traits::Run}, save_run::SaveManager};
@@ -6,7 +8,7 @@ use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{ob
 
 impl<T> RenderRun for T
 where T: Run {
-  fn show(&self, save_manager: &SaveManager, ui: &mut egui::Ui, show_split_times: bool) -> RenderResult {
+  fn show(&self, min_sizes: &Vec<usize>, range: Range<usize>, save_manager: &SaveManager, ui: &mut egui::Ui, show_split_times: bool) -> RenderResult {
     let mut result = RenderResult::default();
     let empty_vec = Vec::new();
     let objective_str = self.get_objective_str();
@@ -35,19 +37,21 @@ where T: Run {
 
       let mut running_total = Time::default();
 
-      for obj in split_names {
-        if let Some(time) = self.get_time_for_split(obj) {
+      let first = range.start;
+
+      for id in range {
+        if let Some(time) = self.get_time_for_split(&split_names[id]) {
           
           if show_split_times {
-            let color = match save_manager.get_best_split(&objective_str, obj).is_some_and(|v| v.is_equal(&time)) {
+            let color = match save_manager.get_best_split(&objective_str, &split_names[id]).is_some_and(|v| v.is_equal(&time)) {
               true => Color32::GREEN,
               false => Color32::GRAY,
             };
 
-            ui.colored_label(color, create_text(time.to_string()));
+            ui.colored_label(color, create_text(format!("{: ^fill$}", time.to_string(), fill = min_sizes[id - first])));
           } else {
             running_total = running_total.add(&time);
-            ui.colored_label(Color32::GRAY, create_text(running_total.to_string()));
+            ui.colored_label(Color32::GRAY, create_text(format!("{: ^fill$}", running_total.to_string(), fill = min_sizes[id - first])));
           }
         } else {
           ui.label(create_text("            "));
