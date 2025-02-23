@@ -21,7 +21,7 @@ pub const LEVELS_ALL: [&str; 83] = [
   "R3A1", "R3A2", "R3A3", "R3B1", "R3B2", "R3C1", "R3D1", 
   "R4A1", "R4A2", "R4A3", "R4B1", "R4B2", "R4B3", "R4C1", "R4C2", "R4C3", "R4D1", "R4D2", "R4E1", 
   "R5A1", "R5A2", "R5A3", "R5B1", "R5B2", "R5B3", "R5B4", "R5C1", "R5C2", "R5C3", "R5D1", "R5D2", "R5E1", 
-  "R6A1", "R6AX", "R6B1", "R6B2", "R6BX", "R6C1", "R6C2", "R6C3", "R6CX", "R6D1", "R6D2", "R6D3", "R6D4", 
+  "R6A1", "R6A2", "R6B1", "R6B2", "R6B4", "R6C1", "R6C2", "R6C3", "R6C4", "R6D1", "R6D2", "R6D3", "R6D4", 
   "R7A1", "R7B1", "R7B2", "R7B3", "R7C1", "R7C2", "R7C3", "R7D1", "R7D2", "R7E1", 
   "R8A1", "R8A3", "R8B1", "R8B2", "R8B3", "R8B4", "R8C1", "R8C3", "R8D1", "R8D3", "R8E1", "R8E3"
 ];

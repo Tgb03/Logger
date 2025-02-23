@@ -1,134 +1,65 @@
 
+use std::ops::Range;
+
 use egui::Color32;
 
-use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{objectives::{game_objective::GameObjective, run_objective::RunObjective}, run_enum::RunEnum, timed_run::{GameRun, LevelRun}, traits::{Run, Timed}}};
+use crate::{graphics::{create_text, traits::{RenderResult, RenderRun}}, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, time::Time, traits::Run}, save_run::SaveManager};
 
 
-impl RenderRun for LevelRun {
-  fn show(&self, ui: &mut egui::Ui) -> RenderResult {
-    
+impl<T> RenderRun for T
+where T: Run {
+  fn show(&self, min_sizes: &Vec<usize>, range: Range<usize>, save_manager: &SaveManager, ui: &mut egui::Ui, show_split_times: bool) -> RenderResult {
     let mut result = RenderResult::default();
+    let empty_vec = Vec::new();
+    let objective_str = self.get_objective_str();
+    let objective = self.get_objective::<ObjectiveEnum>().unwrap();
+    let split_names = save_manager.get_split_names(&objective_str).unwrap_or(&empty_vec);
 
     ui.horizontal(|ui| {
 
-      let objective = self.get_objective::<RunObjective>().unwrap();
       let time = self.get_time();
-
-      ui.label(create_text(objective.level_name));
-      
-      let color = match self.is_win() {
-        true => Color32::GREEN,
-        false => Color32::RED,
-      };
-
-      ui.colored_label(color, create_text(time.to_string()));
-      ui.label(create_text(format!("{:03}", self.len())));
-      
-      if ui.button(create_text(format!("DELETE RUN"))).clicked() {
-        result.delete = true;
-      }
-
-      for stamp in self.get_splits() {
-        ui.colored_label(Color32::GRAY, create_text(stamp.to_string_no_hours()));
-      }
-    });
-
-    result
-
-  }
-
-  fn show_editable(&mut self, ui: &mut egui::Ui) -> RenderResult {
-    
-    let mut result = RenderResult::default();
-
-    ui.horizontal(|ui| {
-
-      let mut objective = self.get_objective::<RunObjective>().unwrap();
-      let time = self.get_time();
-
-      ui.label(create_text(&objective.level_name));
       
       let color = match self.is_win() {
         true => Color32::GREEN,
         false => Color32::RED,
       };
       
+      ui.label(create_text("RUN:"));
       ui.colored_label(color, create_text(time.to_string()));
-      ui.label(create_text(format!("{:03}", self.len())));
+
+      ui.label(create_text(objective.get_player_count().to_string()));
       
-      ui.label(create_text(format!("{} players", objective.player_count)));
-
-      ui.checkbox(&mut objective.secondary, create_text("Secondary"));
-      ui.checkbox(&mut objective.overload, create_text("Overload"));
-      ui.checkbox(&mut objective.glitched, create_text("Glitched"));
-      if ui.checkbox(&mut objective.early_drop, create_text("EarlyDrop")).changed() {
-        objective.glitched = objective.early_drop;
-      }
-      
-      if ui.button(create_text(format!("DELETE RUN"))).clicked() {
-        result.delete = true;
-      }
-      
-      if ui.button(create_text(format!("SAVE RUN"))).clicked() {
-        result.save = true;
-      }
-
-      self.set_objective(&objective);
-
-    });
-
-    result
-
-  }
-}
-
-impl RenderRun for GameRun {
-  fn show(&self, ui: &mut egui::Ui) -> RenderResult {
-    let mut result = RenderResult::default();
-
-    ui.horizontal(|ui| {
-
-      let objective = self.get_objective::<GameObjective>().unwrap();
-      let time = self.get_time();
-
-      ui.label(create_text::<String>(objective.to_string()));
-      
-      let color = match self.is_win() {
-        true => Color32::GREEN,
-        false => Color32::RED,
-      };
-      
-      ui.colored_label(color, create_text(time.to_string()));
       if ui.button(create_text(format!("DELETE RUN"))).clicked() {
         result.delete = true;
       }
       ui.label(create_text(format!("{:03}", self.len())));
       
-      let level_names: &[&str] = objective.get_rundown().clone().into();
 
-      todo!()
+      let mut running_total = Time::default();
+
+      let first = range.start;
+
+      for id in range {
+        if let Some(time) = self.get_time_for_split(&split_names[id]) {
+          
+          if show_split_times {
+            let color = match save_manager.get_best_split(&objective_str, &split_names[id]).is_some_and(|v| v.is_equal(&time)) {
+              true => Color32::GREEN,
+              false => Color32::GRAY,
+            };
+
+            ui.colored_label(color, create_text(format!("{: ^fill$}", time.to_string(), fill = min_sizes[id - first])));
+          } else {
+            running_total = running_total.add(&time);
+            ui.colored_label(Color32::GRAY, create_text(format!("{: ^fill$}", running_total.to_string(), fill = min_sizes[id - first])));
+          }
+        } else {
+          ui.label(create_text("            "));
+        }
+      }
+
     });
 
     result
-  }
-
-  fn show_editable(&mut self, ui: &mut egui::Ui) -> RenderResult {
-    todo!()
-  }
-}
-
-impl RenderRun for RunEnum {
-  fn show(&self, ui: &mut egui::Ui) -> RenderResult {
-    match self {
-      RunEnum::Level(timed_run) => timed_run.show(ui),
-      RunEnum::Game(timed_run) => timed_run.show(ui),
-    }
-  }
-
-  fn show_editable(&mut self, ui: &mut egui::Ui) -> RenderResult {
-    match self {
-      RunEnum::Level(timed_run) => timed_run.show_editable(ui),
-      RunEnum::Game(timed_run) => timed_run.show_editable(ui),
-    }
   }
 }

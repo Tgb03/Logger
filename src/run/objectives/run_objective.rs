@@ -75,6 +75,14 @@ impl Objective for RunObjective {
 
     self  
   }
+  
+  fn get_player_count(&self) -> u8 {
+    self.player_count
+  }
+  
+  fn get_name(&self) -> Option<&String> {
+    Some(&self.level_name)  
+  }
 }
 
 impl RunObjective {
@@ -120,6 +128,10 @@ impl RunObjective {
     self.player_count = player_count;
 
     self
+  }
+
+  pub fn set_name(&mut self, name: String) {
+    self.level_name = name;
   }
 
 }

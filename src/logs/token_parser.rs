@@ -9,6 +9,9 @@ pub trait TokenParserT<R> : Into<R> {
   /// get the current result from the parser
   fn into_result(&self) -> &R;
 
+  /// get the current result mutable
+  fn into_result_mut(&mut self) -> &mut R;
+
   /// parse on token and return whether or not the parser finished
   fn parse_one_token(&mut self, token_pair: (Time, Token)) -> bool;
 

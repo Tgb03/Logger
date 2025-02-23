@@ -35,7 +35,7 @@ where T: Run {
     // }
 
     if ui.button(super::create_text("Sort by Stamps")).clicked() {
-      timed_runs.sort_by(|d, e| d.get_times().len().cmp(&e.get_times().len()).reverse());
+      timed_runs.sort_by(|a, b| a.len().cmp(&b.len()).reverse());
     }
   });
 }

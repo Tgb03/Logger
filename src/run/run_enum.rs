@@ -29,10 +29,17 @@ impl Timed for RunEnum {
     }
   }
 
-  fn get_name(&self) -> Option<&String> {
+  fn get_name(&self) -> &String {
     match self {
       RunEnum::Level(timed_run) => timed_run.get_name(),
       RunEnum::Game(timed_run) => timed_run.get_name(),
+    }
+  }
+
+  fn is_finished(&self) -> bool {
+    match self {
+      RunEnum::Level(timed_run) => timed_run.is_finished(),
+      RunEnum::Game(timed_run) => timed_run.is_finished(),
     }
   }
 }

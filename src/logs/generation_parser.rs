@@ -7,8 +7,6 @@ use super::{location::{Location, LocationType}, token_parser::TokenParserT, toke
 pub struct GenerationParser {
 
   buffer_keys: Vec<String>,
-  buffer_objective: Vec<Location>,
-  buffer_obj_alloc: Vec<Location>,
 
   result: Vec<Location>,
 
@@ -25,6 +23,10 @@ impl From<GenerationParser> for Vec<Location> {
 impl TokenParserT<Vec<Location>> for GenerationParser {
   fn into_result(&self) -> &Vec<Location> {
     &self.result
+  }
+  
+  fn into_result_mut(&mut self) -> &mut Vec<Location> {
+    &mut self.result
   }
 
   fn parse_one_token(&mut self, (_time, token): (Time, Token)) -> bool {
@@ -48,60 +50,6 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
 
         self.result.push(location);
         self.result.sort();
-      },
-      Token::ObjectiveAllocated(zone, id) => {
-        let location = Location::default()
-          .with_zone(zone)
-          .with_type(LocationType::Objective);
-
-        let location = match id {
-          Some(id) => location.with_id(id),
-          None => location
-        };
-
-        if self.buffer_obj_alloc.len() > 0 {
-          let obj = self.buffer_obj_alloc.remove(0);
-
-          self.result.push(
-            
-            location.with_name(
-              obj.get_name()
-                .unwrap_or(&"".to_owned())
-                .clone()
-            )
-
-          );
-          self.result.sort();
-
-          return false;
-        }
-
-        self.buffer_objective.push(location)
-      },
-      Token::ObjectiveSpawned(name) => {
-        let known = self.buffer_objective.pop();
-
-        let location = match known {
-          Some(known) => known.with_name(name),
-          None => Location::default().with_name(name)
-        };
-
-        self.result.push(location.with_type(LocationType::Objective));
-        self.result.sort();
-      },
-      Token::ObjectiveGather(id, count) => {
-        let name = match id {
-          149 => "GLP",
-          150 => "OSIP",
-          _ => "Unknown",
-        };
-        
-        for _ in 0..count {
-          self.buffer_obj_alloc.push(
-            Location::default()
-              .with_name(name.to_owned())
-          );
-        }
       },
       Token::GeneratingFinished | Token::GameEndAbort => {
         self.done = true;

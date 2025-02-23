@@ -70,6 +70,10 @@ impl Parser {
     self.run_parser.as_ref()
   }
 
+  pub fn get_run_parser_mut(&mut self) -> Option<&mut RunParser> {
+    self.run_parser.as_mut()
+  }
+
   pub fn get_generation_parser(&self) -> Option<&GenerationParser> {
     self.generation_parser.as_ref()
   }
@@ -100,10 +104,10 @@ impl TokenParserT<ParserResult> for Parser {
             self.generation_parser = Some(GenerationParser::default());
           }
           Token::SelectExpedition(name) => self.name_of_level = name,
-          Token::GameStarted => {
+          Token::GameStarting => {
             //eprintln!("Started game.");
             self.state = ParserState::InGame;
-            self.run_parser = Some(RunParser::new(self.name_of_level.clone(), time))
+            self.run_parser = Some(RunParser::new(self.name_of_level.clone()))
           },
           // logs have so many edge cases like this bs one
           // at some point some shit like this might be useful
@@ -152,5 +156,9 @@ impl TokenParserT<ParserResult> for Parser {
 
     false
   }
+
+fn into_result_mut(&mut self) -> &mut ParserResult {
+  &mut self.result
+}
 
 }

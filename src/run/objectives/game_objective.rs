@@ -16,9 +16,9 @@ use super::{
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub struct GameObjective {
   
-  rundown: GameRunRundown,
-  objective: GameRunObjective,
-  player_count: u8,
+  pub rundown: GameRunRundown,
+  pub objective: GameRunObjective,
+  pub player_count: u8,
 
 }
 
@@ -60,6 +60,14 @@ impl Objective for GameObjective {
 
     self
   }
+  
+  fn get_player_count(&self) -> u8 {
+    self.player_count
+  }
+  
+  fn get_name(&self) -> Option<&String> {
+    None
+  }
 }
 
 impl Into<Vec<RunObjective>> for &GameObjective {
@@ -100,6 +108,14 @@ impl GameObjective {
 
   pub fn get_objectives(&self) -> &GameRunObjective {
     &self.objective
+  }
+  
+  pub fn get_mut_rundown(&mut self) -> &mut GameRunRundown {
+    &mut self.rundown
+  }
+
+  pub fn get_mut_objectives(&mut self) -> &mut GameRunObjective {
+    &mut self.objective
   }
 
 }
