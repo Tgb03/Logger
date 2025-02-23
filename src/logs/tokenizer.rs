@@ -13,9 +13,6 @@ pub enum Token {
   GeneratingFinished,
   ItemAllocated(String), // name
   ItemSpawn(u64, u64), // zone, id
-  ObjectiveGather(u64, u64), // item id, item count
-  ObjectiveAllocated(u64, Option<u64>), // zone, id
-  ObjectiveSpawned(String), // name
   SelectExpedition(String),
   GameStarting,
   GameStarted,
@@ -28,69 +25,18 @@ pub enum Token {
   GameEndLost,
   GameEndAbort,
   LogFileEnd,
+  
+  Invalid,
 
 }
 
 impl Token {
 
-  fn create_gather_objective_spawn(line: &str) -> Token {
-    let words: Vec<&str> = line.split(" ").collect();
-
-    let zone_count = words[10]
-      .strip_suffix(']')
-      .unwrap_or(words[10])
-      .parse::<u64>()
-      .unwrap_or_default();
-
-    let id = words[14 + zone_count as usize]
-      .strip_suffix(',')
-      .unwrap_or(words[14 + zone_count as usize])
-      .parse::<u64>()
-      .unwrap_or_default();
-
-    let count = words[13 + zone_count as usize]
-      .strip_suffix(']')
-      .unwrap_or(words[13 + zone_count as usize])
-      .parse::<u64>()
-      .unwrap_or_default();
-
-    Token::ObjectiveGather(id, count)
-  }
-
-  fn create_basic_objective_alloc(line: &str) -> Token {
-    let words: Vec<&str> = line.split(" ").collect();
-
-    let zone = words[7];
-    let zone = zone.to_owned()[4..].parse::<u64>().ok();
-
-    Token::ObjectiveAllocated(zone.unwrap_or_default(), None)
-  }
-
-  fn create_hsu_objective_alloc(line: &str) -> Token {
-    let words: Vec<&str> = line.split(" ").collect();
-
-    let zone = words[16];
-    let id = words[18].split('_').collect::<Vec<&str>>()[0].parse::<u64>().ok();
-    let zone = zone.trim_end_matches(',');
-    let zone = match zone.len() > 3 {
-      true => &zone[4..],
-      false => ""
-    }.parse().ok();
-
-    Token::ObjectiveAllocated(zone.unwrap_or_default(), id)
-  }
-
-  fn create_object_spawn(line: &str) -> Token {
-    let words: Vec<&str> = line.split(" ").collect();
-
-    let name = words[5];
-
-    Token::ObjectiveSpawned(name.to_owned())
-  }
-
   fn create_item_alloc(line: &str) -> Token {
     
     let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 6 { return Token::Invalid }
 
     let name = words[5];
 
@@ -101,20 +47,33 @@ impl Token {
 
     let words: Vec<&str> = line.split(" ").collect(); 
 
-    let zone = words[6][4..].parse().ok();
-    let id = words[14].parse::<u64>().unwrap_or_default();
+    if words.len() < 15 { return Token::Invalid }
+    if words[6].len() < 4 { return Token::Invalid }
 
-    Token::ItemSpawn(zone.unwrap_or_default(), id)
+    let zone = words[6][4..].parse().ok();
+    let id = words[14].parse::<u64>();
+
+    match (zone, id) {
+      (Some(zone), Ok(id)) => Token::ItemSpawn(zone, id),
+      _ => Token::Invalid
+    }
   }
 
   fn create_expedition(line: &str) -> Token {
     //println!("LINE: {}", line);
 
     let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 8 { return Token::Invalid }
+    if words[6].len() < 6 { return Token::Invalid }
+    if words[7].len() < 5 { return Token::Invalid }
     
     let rundown_id = &words[6][6..];
     let tier = &words[7][4..5];
-    let level = words[8].parse::<i32>().unwrap() + 1;
+    let level = match words[8].parse::<i32>() {
+      Ok(val) => val + 1,
+      Err(_) => return Token::Invalid,
+    };
  
     let rundown_name = match rundown_id {
       "31" => "R7",
@@ -144,7 +103,7 @@ impl Token {
 
     match player_id.parse::<u32>() {
       Ok(id) => Token::PlayerDroppedInLevel(id),
-      Err(_) => Token::PlayerDroppedInLevel(u32::MAX),
+      Err(_) => Token::Invalid,
     }
   }
 
@@ -154,10 +113,6 @@ impl Token {
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
     if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
     if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
-    if line.contains("LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_basic_objective_alloc(line)); }
-    if line.contains("LG_Distribute_WardenObjective, placing warden objective item with function HydroStatisUnit for wardenObjectiveType: HSU_FindTakeSample") { return Some(Token::create_hsu_objective_alloc(line)); }
-    if line.contains("LG_Distribute_WardenObjective, PLACE GATHER ITEMS") { return Some(Token::create_gather_objective_spawn(line)); }
-    if line.contains("WardenObjectiveManager.RegisterObjectiveItemForCollection") { return Some(Token::create_object_spawn(line)); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel") { return Some(Token::GameStarting); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
@@ -189,7 +144,9 @@ impl Tokenizer {
     for line in log_string.split('\n') {
       if let Some(token) = Token::tokenize_str(line) {
         // println!("{:?} tokenized", token);
-        result.push((Time::from(line.trim()), token));
+        if let Ok(time) = Time::from(line.trim()) {
+          result.push((time, token));
+        }
       }
     }
 
@@ -224,18 +181,18 @@ mod tests {
     );
 
     assert_eq!(token_arr, vec![
-      (Time::from("00:00:00.000"), Token::SelectExpedition("R1C1".to_string())),
-      (Time::from("00:00:10.000"), Token::GameStarted),
-      (Time::from("00:00:10.000"), Token::PlayerDroppedInLevel(1)),
-      (Time::from("00:00:10.100"), Token::PlayerDroppedInLevel(23423)),
-      (Time::from("00:00:10.110"), Token::PlayerDroppedInLevel(3)),
-      (Time::from("00:00:10.250"), Token::PlayerDroppedInLevel(4)),
-      (Time::from("00:01:12.135"), Token::DoorOpen),
-      (Time::from("00:03:12.198"), Token::DoorOpen),
-      (Time::from("00:04:06.000"), Token::DoorOpen),
-      (Time::from("00:14:12.135"), Token::DoorOpen),
-      (Time::from("00:16:11.890"), Token::DoorOpen),
-      (Time::from("00:17:59.343"), Token::GameEndWin),
+      (Time::from("00:00:00.000").unwrap(), Token::SelectExpedition("R1C1".to_string())),
+      (Time::from("00:00:10.000").unwrap(), Token::GameStarted),
+      (Time::from("00:00:10.000").unwrap(), Token::PlayerDroppedInLevel(1)),
+      (Time::from("00:00:10.100").unwrap(), Token::PlayerDroppedInLevel(23423)),
+      (Time::from("00:00:10.110").unwrap(), Token::PlayerDroppedInLevel(3)),
+      (Time::from("00:00:10.250").unwrap(), Token::PlayerDroppedInLevel(4)),
+      (Time::from("00:01:12.135").unwrap(), Token::DoorOpen),
+      (Time::from("00:03:12.198").unwrap(), Token::DoorOpen),
+      (Time::from("00:04:06.000").unwrap(), Token::DoorOpen),
+      (Time::from("00:14:12.135").unwrap(), Token::DoorOpen),
+      (Time::from("00:16:11.890").unwrap(), Token::DoorOpen),
+      (Time::from("00:17:59.343").unwrap(), Token::GameEndWin),
     ]);
   }
 }

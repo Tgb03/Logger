@@ -24,6 +24,8 @@ pub trait Run: Timed {
 
   fn get_objective<O: Objective>(&self) -> Option<O>;
   fn set_objective<O: Objective>(&mut self, objective: &O);
-  fn get_objective_str(&self) -> &str;
+  
+  fn get_objective_str(&self) -> &String;
+  fn set_objective_str(&mut self, objective: String);
 
 }

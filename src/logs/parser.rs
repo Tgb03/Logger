@@ -70,6 +70,10 @@ impl Parser {
     self.run_parser.as_ref()
   }
 
+  pub fn get_run_parser_mut(&mut self) -> Option<&mut RunParser> {
+    self.run_parser.as_mut()
+  }
+
   pub fn get_generation_parser(&self) -> Option<&GenerationParser> {
     self.generation_parser.as_ref()
   }

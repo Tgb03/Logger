@@ -9,8 +9,9 @@ where T: Run {
   fn show(&self, save_manager: &SaveManager, ui: &mut egui::Ui, show_split_times: bool) -> RenderResult {
     let mut result = RenderResult::default();
     let empty_vec = Vec::new();
+    let objective_str = self.get_objective_str();
     let objective = self.get_objective::<ObjectiveEnum>().unwrap();
-    let split_names = save_manager.get_split_names(&objective).unwrap_or(&empty_vec);
+    let split_names = save_manager.get_split_names(&objective_str).unwrap_or(&empty_vec);
 
     ui.horizontal(|ui| {
 
@@ -38,7 +39,7 @@ where T: Run {
         if let Some(time) = self.get_time_for_split(obj) {
           
           if show_split_times {
-            let color = match save_manager.get_best_split(&objective, obj).is_some_and(|v| v.is_equal(&time)) {
+            let color = match save_manager.get_best_split(&objective_str, obj).is_some_and(|v| v.is_equal(&time)) {
               true => Color32::GREEN,
               false => Color32::GRAY,
             };

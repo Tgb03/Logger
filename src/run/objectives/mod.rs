@@ -14,6 +14,7 @@ pub mod objective_enum;
 
 pub trait Objective: 
   for<'a> TryFrom<&'a str> +
+  ToString +
   Display +
   Hash {
 

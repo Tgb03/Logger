@@ -174,7 +174,7 @@ impl<'a> eframe::App for BaseApp<'a> {
         AppState::SettingsWindow => self.settings_window.show(ui),
         AppState::LiveWindow => { 
         
-          self.live_window.show(ui, &self.save_manager, &self.settings_window, ctx);
+          self.live_window.show(ui, &mut self.save_manager, &self.settings_window, ctx);
         
         },
       }

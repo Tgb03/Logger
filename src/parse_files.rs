@@ -98,7 +98,7 @@ mod tests {
   use fs::File;
   use tempfile::{tempdir, TempDir};
 
-  use crate::run::{time::Time, traits::{Run, Timed}};
+  use crate::run::{objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}};
 
 use super::*;
 
@@ -121,6 +121,7 @@ use super::*;
     let dir = dir.unwrap();
     
     let text = "00:00:00.000 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierC 0 433572712 1571494152  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,3,0 ActiveExpeditionUniqueKey: Local_32_TierC_0</color>
+      00:00:09.000 - GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel
       00:00:10.000 - GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel
       00:00:10.000 - Player1 exits PLOC_InElevator 1</color>
       00:00:10:055 - Useless line
@@ -143,13 +144,14 @@ use super::*;
 
       assert_eq!(result.len(), 2);
       assert_eq!(result[0].is_win(), true);
+      assert_eq!(result[0].get_objective::<RunObjective>().unwrap().level_name, "R1C1");
       assert_eq!(*result[0].get_splits().map(|v| v.get_time()).collect::<Vec<Time>>(), vec![
-        Time::from("00:01:02.135"),
-        Time::from("00:02:00.063"),
-        Time::from("00:00:53.802"),
-        Time::from("00:10:06.135"),
-        Time::from("00:01:59.755"),
-        Time::from("00:01:47.453"),
+        Time::from("00:01:02.135").unwrap(),
+        Time::from("00:02:00.063").unwrap(),
+        Time::from("00:00:53.802").unwrap(),
+        Time::from("00:10:06.135").unwrap(),
+        Time::from("00:01:59.755").unwrap(),
+        Time::from("00:01:47.453").unwrap(),
       ]);
 
       drop(file1);

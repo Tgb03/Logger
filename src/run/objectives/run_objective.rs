@@ -126,6 +126,10 @@ impl RunObjective {
     self
   }
 
+  pub fn set_name(&mut self, name: String) {
+    self.level_name = name;
+  }
+
 }
 
 

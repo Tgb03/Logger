@@ -41,6 +41,10 @@ impl LiveParser {
     self.parser.get_run_parser()
   }
 
+  pub fn get_run_parser_mut(&mut self) -> Option<&mut RunParser> {
+    self.parser.get_run_parser_mut()
+  }
+
   pub fn get_generation_parser(&self) -> Option<&GenerationParser> {
     self.parser.get_generation_parser()
   }

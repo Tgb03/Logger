@@ -72,7 +72,7 @@ impl GameObjectiveReader {
       if ui.add(egui::TextEdit::singleline(&mut self.player_input_string)
         .desired_width(20.0)
         .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE)).clicked() {
+        .text_color(Color32::WHITE)).changed() {
 
         if let Ok(player_count) = self.player_input_string.parse::<u8>() {
           self.objective.player_count = player_count;

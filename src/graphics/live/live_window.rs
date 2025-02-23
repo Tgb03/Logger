@@ -9,7 +9,7 @@ use crate::{
   logs::{
     location::LocationType, parser::ParserResult, token_parser::TokenParserT, tokenizer::Tokenizer
   }, 
-  run::timed_run::{GameRun, LevelRun}, save_run::SaveManager
+  run::{objectives::run_objective::RunObjective, run_enum::RunEnum, timed_run::{GameRun, LevelRun}, traits::Run}, save_run::SaveManager
 };
 
 use super::{run_objective_reader::RunObjectiveReader, game_objective_reader::GameObjectiveReader, key_guesser::KeyGuesser, mapper::Mapper, run_renderer::RunRenderer};
@@ -17,6 +17,7 @@ use super::{run_objective_reader::RunObjectiveReader, game_objective_reader::Gam
 pub struct LiveWindow<'a> {
   
   frame_counter: u8,
+  run_counter: usize,
   parser: LiveParser,
   
   key_guesser: KeyGuesser<'a>,
@@ -32,6 +33,7 @@ impl<'a> Default for LiveWindow<'a> {
   fn default() -> Self {
     Self {
       frame_counter: Default::default(),
+      run_counter: 0,
       parser: LiveParser::default(),
       key_guesser: KeyGuesser::default(),
       game_run_reader: GameObjectiveReader::default(),
@@ -50,7 +52,7 @@ impl<'a> LiveWindow<'a> {
 
     if let Some(run_parser) = self.parser.get_run_parser() {
       return Some(run_parser.into_result())
-    }
+    } 
 
     self.parser.into_result().get_runs().last()
 
@@ -61,8 +63,11 @@ impl<'a> LiveWindow<'a> {
   }
 
   /// read the logs and update 
+  /// 
+  /// also saves the new runs to the save_manager.
+  /// 
   /// beware this needs to be called 32 times for it to read logs once.
-  fn read_logs(&mut self) {
+  fn read_logs(&mut self, save_manager: &mut SaveManager) {
 
     self.frame_counter += 1;
     if self.frame_counter == 32 {
@@ -72,7 +77,16 @@ impl<'a> LiveWindow<'a> {
       let tokens = Tokenizer::tokenize(&new_lines);
       
       self.parser.parse_continously(tokens.into_iter());
+    
+      let runs = self.parser.into_result().get_runs();
+      if runs.len() > self.run_counter {
+        let to_save = &runs[self.run_counter..runs.len()];
+        self.run_counter = runs.len();
+
+        save_manager.save_multiple(to_save.iter().map(|v| RunEnum::Level(v.clone())).collect());
+      }
     }
+
   }
 
   /// load the latest file in the logs and proceed with this file.
@@ -80,8 +94,8 @@ impl<'a> LiveWindow<'a> {
     self.parser.load_file(settings);
   }
 
-  pub fn show(&mut self, ui: &mut Ui, save_manager: &SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
-    self.read_logs();
+  pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
+    self.read_logs(save_manager);
 
     let mut y_size = 22;
     
@@ -99,7 +113,7 @@ impl<'a> LiveWindow<'a> {
             valid = false;
           }
 
-          y_size += 28 + RunRenderer::render_run(ui, &run, settings.get_game_splitter_length(), save_manager);
+          y_size += 28 + RunRenderer::render_run(ui, &run, None, settings.get_game_splitter_length(), save_manager);
 
           ui.separator();
         
@@ -134,7 +148,7 @@ impl<'a> LiveWindow<'a> {
           true => None,
           false => Some(LocationType::Key),
         }
-      ); 
+      );
 
       ui.separator();
     }
@@ -145,8 +159,12 @@ impl<'a> LiveWindow<'a> {
 
       ui.separator();
 
+      if let Some(objective) = self.get_current_run().map(|r| r.get_objective::<RunObjective>()).flatten() {
+        self.level_run_reader.set_name(objective.level_name);
+      }
+
       if let Some(current_run) = self.get_current_run() {
-        y_size += RunRenderer::render_run(ui, current_run, settings.get_splitter_length(), save_manager);
+        y_size += RunRenderer::render_run(ui, current_run, Some(&self.level_run_reader.get_objective().to_string()), settings.get_splitter_length(), save_manager);
       } 
     }
 

@@ -1,3 +1,5 @@
+use std::num::ParseIntError;
+
 use serde::{Serialize, Deserialize};
 
 
@@ -30,15 +32,15 @@ impl Time {
   /// Creates a Time from a String
   /// String format: {Hours}:{Minutes}:{Seconds}.{Milliseconds}
   ///
-  pub fn from(time: &str) -> Time {
-    let hours: u64 = time[0..2].parse::<u64>().unwrap();
-    let minutes: u64 = time[3..5].parse::<u64>().unwrap();
-    let seconds: u64 = time[6..8].parse::<u64>().unwrap();
-    let milliseconds: u64 = time[9..12].parse::<u64>().unwrap();
+  pub fn from(time: &str) -> Result<Time, ParseIntError> {
+    let hours: u64 = time[0..2].parse::<u64>()?;
+    let minutes: u64 = time[3..5].parse::<u64>()?;
+    let seconds: u64 = time[6..8].parse::<u64>()?;
+    let milliseconds: u64 = time[9..12].parse::<u64>()?;
 
-    return Time {
+    Ok(Time {
       stamp: (((hours * 60 + minutes) * 60) + seconds) * 1000 + milliseconds
-    };
+    })
   }
 
   pub fn max() -> Time {
@@ -146,57 +148,57 @@ mod tests {
     #[test]
   fn test_from() {
 
-    let time1: Time = Time::from("11:22:33.444");
-    let time2: Time = Time::from("23:59:59.999");
-    let time3: Time = Time::from("00:00:00.000");
+    let time1 = Time::from("11:22:33.444");
+    let time2 = Time::from("23:59:59.999");
+    let time3 = Time::from("00:00:00.000");
       
-    assert_eq!(time1.stamp, 40953444);
-    assert_eq!(time2.stamp, 86399999);
-    assert_eq!(time3.stamp, 0);
+    assert_eq!(time1.unwrap().stamp, 40953444);
+    assert_eq!(time2.unwrap().stamp, 86399999);
+    assert_eq!(time3.unwrap().stamp, 0);
 
   }
 
   #[test] 
   fn test_from_overflow() {
 
-    let time1: Time = Time::from("11:22:33.44400");
-    let time2: Time = Time::from("23:59:59.999adda");
-    let time3: Time = Time::from("00:00:00.000111");
+    let time1 = Time::from("11:22:33.44400");
+    let time2 = Time::from("23:59:59.999adda");
+    let time3 = Time::from("00:00:00.000111");
       
-    assert_eq!(time1.stamp, 40953444);
-    assert_eq!(time2.stamp, 86399999);
-    assert_eq!(time3.stamp, 0);
+    assert_eq!(time1.unwrap().stamp, 40953444);
+    assert_eq!(time2.unwrap().stamp, 86399999);
+    assert_eq!(time3.unwrap().stamp, 0);
 
   }
 
   #[test]
   fn test_to_string() {
 
-    let time1: Time = Time::from("11:22:33.444");
-    let time2: Time = Time::from("23:59:59.999");
-    let time3: Time = Time::from("00:00:00.000");
+    let time1 = Time::from("11:22:33.444");
+    let time2 = Time::from("23:59:59.999");
+    let time3 = Time::from("00:00:00.000");
 
-    assert_eq!(time1.to_string(), "11:22:33.444");
-    assert_eq!(time2.to_string(), "23:59:59.999");
-    assert_eq!(time3.to_string(), "00:00:00.000");
+    assert_eq!(time1.unwrap().to_string(), "11:22:33.444");
+    assert_eq!(time2.unwrap().to_string(), "23:59:59.999");
+    assert_eq!(time3.unwrap().to_string(), "00:00:00.000");
 
   }
 
   #[test]
   fn test_add() {
 
-    let time1: Time = Time::from("00:00:00.010");
-    let time2: Time = Time::from("00:00:00.133");
+    let time1 = Time::from("00:00:00.010");
+    let time2 = Time::from("00:00:00.133");
 
-    assert_eq!(time1.add(&time2).to_string(), "00:00:00.143".to_string());
+    assert_eq!(time1.unwrap().add(&time2.unwrap()).to_string(), "00:00:00.143".to_string());
 
   }
 
   #[test]
   fn test_sub_normal() {
 
-    let time1: Time = Time::from("00:00:00.500");
-    let time2: Time = Time::from("00:00:00.133");
+    let time1: Time = Time::from("00:00:00.500").unwrap();
+    let time2: Time = Time::from("00:00:00.133").unwrap();
 
     assert_eq!(time1.sub(&time2).to_string(), "00:00:00.367".to_string());
 
@@ -205,8 +207,8 @@ mod tests {
   #[test]
   fn test_sub_underflow() {
 
-    let time1: Time = Time::from("00:00:00.500");
-    let time2: Time = Time::from("00:00:01.000");
+    let time1: Time = Time::from("00:00:00.500").unwrap();
+    let time2: Time = Time::from("00:00:01.000").unwrap();
 
     assert_eq!(time1.sub(&time2).to_string(), "23:59:59.500".to_string());
 
@@ -215,8 +217,8 @@ mod tests {
   #[test]
   fn test_operators() {
 
-    let time1: Time = Time::from("00:00:01.000");
-    let time2: Time = Time::from("00:00:02.000");
+    let time1: Time = Time::from("00:00:01.000").unwrap();
+    let time2: Time = Time::from("00:00:02.000").unwrap();
 
     assert!(time2.is_greater_than(&time1));
     assert!(time2.is_greater_or_equal_than(&time1));

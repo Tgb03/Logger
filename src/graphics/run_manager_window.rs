@@ -1,6 +1,6 @@
 use egui::Color32;
 
-use crate::{run::{objectives::objective_enum::ObjectiveEnum, time::Time}, save_run::SaveManager};
+use crate::{run::time::Time, save_run::SaveManager};
 
 use super::{sorter_window::add_sorter_buttons, traits::RenderRun};
 
@@ -8,7 +8,7 @@ use super::{sorter_window::add_sorter_buttons, traits::RenderRun};
 #[derive(Default)]
 pub struct RunManagerWindow {
 
-  objective: ObjectiveEnum,
+  objective: String,
   show_split_times: bool,
 
 }
@@ -36,8 +36,8 @@ impl RunManagerWindow {
           for key in save_manager.get_all_objectives() {
             if ui.selectable_value(
               &mut self.objective, 
-              ObjectiveEnum::from(key.clone()), 
-              super::create_text(key.to_string())).clicked() {
+              key.clone(), 
+              super::create_text(key)).clicked() {
               
             };
           }
@@ -140,7 +140,7 @@ impl RunManagerWindow {
     }
     
     if has_deleted {
-      save_manager.calculate_best_splits(self.objective.clone());
+      save_manager.calculate_best_splits(&self.objective.to_string());
     }
   }
 }
