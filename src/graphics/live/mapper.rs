@@ -18,7 +18,7 @@ impl Mapper {
       }
     }
 
-    len * 22 + 27
+    len * 22
   }
 
 

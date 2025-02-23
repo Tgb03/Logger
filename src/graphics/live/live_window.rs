@@ -113,7 +113,14 @@ impl<'a> LiveWindow<'a> {
             valid = false;
           }
 
-          y_size += 28 + RunRenderer::render_run(ui, &run, None, settings.get_game_splitter_length(), save_manager);
+          y_size += 28 + RunRenderer::render_run(
+            ui, 
+            &run, 
+            None, 
+            settings.get_compare_to_record(),
+            settings.get_compare_to_theoretical(),
+            settings.get_game_splitter_length(), 
+            save_manager);
 
           ui.separator();
         
@@ -161,10 +168,18 @@ impl<'a> LiveWindow<'a> {
 
       if let Some(objective) = self.get_current_run().map(|r| r.get_objective::<RunObjective>()).flatten() {
         self.level_run_reader.set_name(objective.level_name);
+        self.level_run_reader.set_player_count(objective.player_count);
       }
 
       if let Some(current_run) = self.get_current_run() {
-        y_size += RunRenderer::render_run(ui, current_run, Some(&self.level_run_reader.get_objective().to_string()), settings.get_splitter_length(), save_manager);
+        y_size += RunRenderer::render_run(
+          ui, 
+          current_run, 
+          Some(&self.level_run_reader.get_objective().to_string()), 
+          settings.get_compare_to_record(),
+          settings.get_compare_to_theoretical(),
+          settings.get_splitter_length(), 
+          save_manager);
       } 
     }
 
