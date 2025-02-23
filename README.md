@@ -13,12 +13,12 @@ This app aims to streamline using logs to get all the data from them automatical
 
 ## WardenMapper:
 - [x] Automatically find keys.
-- [ ] Automatically find objective items.
+- [x] Automatically find objective items.
 
 ## Full game/rundown speedruns:
 - [x] Automatically give time.
 - [ ] Automatically check if run is complete.
-- [ ] Calculate splits.
+- [x] Calculate splits.
 - [ ] Calculate theoretical best.
 
 # How to use:
