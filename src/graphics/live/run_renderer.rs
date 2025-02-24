@@ -79,7 +79,7 @@ impl RunRenderer {
                   .unwrap_or_default()
               );
 
-              let (time, color) = match current_time.is_smaller_than(&compared_run_time) {
+              let (time, color) = match current_time.is_smaller_or_equal_than(&compared_run_time) {
                 true => (compared_run_time.sub(&current_time), Color32::GREEN),
                 false => (current_time.sub(&compared_run_time), Color32::RED),
               };
@@ -92,7 +92,7 @@ impl RunRenderer {
 
           if compare_theoretical {
             if let Some(best_split) = save_manager.get_best_split(&objective, split.get_name()) {
-              let (time, color) = match split_time.is_smaller_than(best_split) {
+              let (time, color) = match split_time.is_smaller_or_equal_than(best_split) {
                 true => (best_split.sub(&split_time), Color32::GREEN),
                 false => (split_time.sub(best_split), Color32::RED),
               };

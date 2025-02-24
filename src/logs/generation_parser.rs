@@ -51,7 +51,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         self.result.push(location);
         self.result.sort();
       },
-      Token::GeneratingFinished | Token::GameEndAbort => {
+      Token::GeneratingFinished | Token::GameEndAbort | Token::LogFileEnd => {
         self.done = true;
         return true;
       },
