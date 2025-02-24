@@ -4,12 +4,27 @@ use egui::{Ui, Vec2};
 
 use crate::{
   graphics::{
-    create_text, live_parser::LiveParser, settings_window::SettingsWindow
+    create_text, live_parser::LiveParser, 
+    settings_window::SettingsWindow
   }, 
   logs::{
-    location::LocationType, parser::ParserResult, token_parser::TokenParserT, tokenizer::Tokenizer
+    location::{
+      Location, 
+      LocationType
+    }, 
+    token_parser::TokenParserT, 
+    tokenizer::Tokenizer
   }, 
-  run::{objectives::run_objective::RunObjective, run_enum::RunEnum, timed_run::{GameRun, LevelRun}, traits::Run}, save_run::SaveManager
+  run::{
+    objectives::run_objective::RunObjective, 
+    run_enum::RunEnum, 
+    timed_run::{
+      GameRun, 
+      LevelRun
+    }, 
+    traits::Run
+  }, 
+  save_run::SaveManager
 };
 
 use super::{run_objective_reader::RunObjectiveReader, game_objective_reader::GameObjectiveReader, key_guesser::KeyGuesser, mapper::Mapper, run_renderer::RunRenderer};
@@ -47,6 +62,19 @@ impl<'a> Default for LiveWindow<'a> {
 
 impl<'a> LiveWindow<'a> {
 
+  /// return the last map locations in the logs or the current ones.
+  /// 
+  /// this function exists otherwise the logs are only 
+  /// shown when the game starts.
+  fn get_current_map(&self) -> Option<&Vec<Location>> {
+
+    if let Some(gen_parser) = self.parser.get_generation_parser() {
+      return Some(gen_parser.into_result());
+    }
+
+    Some(self.parser.into_result().get_locations())
+  }
+
   /// return the last LevelRun stored in the logs.
   fn get_current_run(&self) -> Option<&LevelRun> {
 
@@ -56,10 +84,6 @@ impl<'a> LiveWindow<'a> {
 
     self.parser.into_result().get_runs().last()
 
-  }
-
-  fn get_result(&self) -> &ParserResult {
-    self.parser.into_result()
   }
 
   /// read the logs and update 
@@ -150,7 +174,7 @@ impl<'a> LiveWindow<'a> {
     if settings.get_show_warden_mapper() {
       y_size += 6 + Mapper::render_type(
         ui, 
-        self.get_result(), 
+        self.get_current_map().unwrap_or(&Vec::new()), 
         match settings.get_show_objective_items() {
           true => None,
           false => Some(LocationType::Key),

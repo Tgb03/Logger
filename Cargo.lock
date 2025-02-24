@@ -20,7 +20,6 @@ dependencies = [
  "strum_macros",
  "tempdir",
  "tempfile",
- "whoami",
 ]
 
 [[package]]
@@ -2549,12 +2548,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasite"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8dad83b4f25e74f184f64c43b150b91efe7647395b42289f38e50566d82855b"
-
-[[package]]
 name = "wasm-bindgen"
 version = "0.2.100"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2756,17 +2749,6 @@ dependencies = [
  "objc2",
  "objc2-foundation",
  "url",
- "web-sys",
-]
-
-[[package]]
-name = "whoami"
-version = "1.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "372d5b87f58ec45c384ba03563b03544dc5fadc3983e434b286913f5b4a9bb6d"
-dependencies = [
- "redox_syscall 0.5.8",
- "wasite",
  "web-sys",
 ]
 
