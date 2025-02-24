@@ -23,6 +23,10 @@ This app aims to streamline using logs to get all the data from them automatical
 
 # How to use:
 
+Basic tutorial until I make a slightly better one:
+
+https://youtu.be/rvlCpxyXw_k
+
 Open the app and press the "Input Speedrun Logs..." button on the top left, now select all the logs you wish to input.
 Now all the runs have been opened, you can play around and see what each button does, if you wish to restart simply press the button again and reinput the same logs.
 Once you are done checking out the runs and selecting whether the run attempted secondary or overload, you can save each one individiually or all of them.
