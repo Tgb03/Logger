@@ -13,7 +13,7 @@ This app aims to streamline using logs to get all the data from them automatical
 
 ## WardenMapper:
 - [x] Automatically find keys.
-- [x] Automatically find objective items.
+- [ ] Automatically find objective items.
 
 ## Full game/rundown speedruns:
 - [x] Automatically give time.
