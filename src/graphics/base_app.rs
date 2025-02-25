@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fs::File, time::Duration};
+use std::{collections::{BTreeMap, HashSet}, fs::File, time::Duration};
 
 use eframe::CreationContext;
 use egui::{Color32, FontData, FontDefinitions, FontFamily, Frame, Vec2};
@@ -146,8 +146,10 @@ impl<'a> eframe::App for BaseApp<'a> {
 
             // let parse_result = parse_all_files(&files);
             let parse_result = parse_all_files_async(files);
+            let hash: HashSet<LevelRun> = HashSet::from_iter(Into::<Vec<LevelRun>>::into(parse_result));
             self.log_parser_window.set_times(
-              Into::<Vec<LevelRun>>::into(parse_result)
+              hash.into_iter()
+                .collect()
             );
             self.app_state = AppState::LogParserWindow;
           }
