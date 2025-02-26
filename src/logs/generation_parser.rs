@@ -1,4 +1,5 @@
 
+
 use crate::run::time::Time;
 
 use super::{location::{Location, LocationType}, token_parser::TokenParserT, tokenizer::Token};
@@ -7,6 +8,9 @@ use super::{location::{Location, LocationType}, token_parser::TokenParserT, toke
 pub struct GenerationParser {
 
   buffer_keys: Vec<String>,
+
+  buffer_collectable: Vec<Location>,
+  collectable_id: usize,
 
   result: Vec<Location>,
 
@@ -51,6 +55,20 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         self.result.push(location);
         self.result.sort();
       },
+      Token::CollectableAllocated(zone) => {
+        self.buffer_collectable.push(Location::default().with_zone(zone));
+      }
+      Token::CollectableItemID(id) => {
+        self.buffer_collectable[self.collectable_id].set_name(Self::get_collectable_name(id));
+        self.collectable_id += 1;
+      }
+      Token::CollectableItemSeed(seed) => {
+        self.result.push(
+          self.buffer_collectable.remove(0)
+            .with_id(seed)
+            .with_type(LocationType::Objective)
+        )
+      }
       Token::GeneratingFinished | Token::GameEndAbort | Token::LogFileEnd => {
         self.done = true;
         return true;
@@ -61,4 +79,16 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
     false
 
   }
+}
+
+impl GenerationParser {
+
+  fn get_collectable_name(id: u64) -> String {
+    match id {
+      129 => "PD".to_owned(),
+      168 => "DataCube".to_owned(),
+      _ => "UNK".to_owned(),
+    }
+  }
+
 }

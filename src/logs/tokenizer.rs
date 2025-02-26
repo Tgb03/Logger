@@ -13,6 +13,9 @@ pub enum Token {
   GeneratingFinished,
   ItemAllocated(String), // name
   ItemSpawn(u64, u64), // zone, id
+  CollectableAllocated(u64), // zone
+  CollectableItemID(u64), // item id
+  CollectableItemSeed(u64), // item seed
   SelectExpedition(String),
   GameStarting,
   GameStarted,
@@ -56,6 +59,45 @@ impl Token {
     match (zone, id) {
       (Some(zone), Ok(id)) => Token::ItemSpawn(zone, id),
       _ => Token::Invalid
+    }
+  }
+
+  fn create_collectable_allocated(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 7 { return Token::Invalid }
+    if words[6].len() < 4 { return Token::Invalid }
+
+    match words[6][4..].parse() {
+      Ok(zone) => Token::CollectableAllocated(zone),
+      Err(_) => Token::Invalid,
+    }
+
+  }
+
+  fn create_collectable_item_id(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 8 { return Token::Invalid }
+
+    match words[7].parse() {
+      Ok(id) => Token::CollectableItemID(id),
+      Err(_) => Token::Invalid,
+    }
+
+  }
+
+  fn create_collectable_item_seed(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 4 { return Token::Invalid }
+
+    match words[4].parse() {
+      Ok(seed) => Token::CollectableItemSeed(seed),
+      Err(_) => Token::Invalid,
     }
   }
 
@@ -113,6 +155,9 @@ impl Token {
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
     if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
     if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
+    if line.contains("<color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_collectable_allocated(line)); }
+    if line.contains("<color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems") { return Some(Token::create_collectable_item_id(line)); }
+    if line.contains("GenericSmallPickupItem_Core.SetupFromLevelgen, seed:") { return Some(Token::create_collectable_item_seed(line)); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel") { return Some(Token::GameStarting); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
