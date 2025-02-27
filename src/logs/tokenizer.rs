@@ -66,10 +66,10 @@ impl Token {
 
     let words: Vec<&str> = line.split(" ").collect();
 
-    if words.len() < 7 { return Token::Invalid }
-    if words[6].len() < 4 { return Token::Invalid }
+    if words.len() < 8 { return Token::Invalid }
+    if words[7].len() < 4 { return Token::Invalid }
 
-    match words[6][4..].parse() {
+    match words[7][4..].parse() {
       Ok(zone) => Token::CollectableAllocated(zone),
       Err(_) => Token::Invalid,
     }
@@ -77,12 +77,11 @@ impl Token {
   }
 
   fn create_collectable_item_id(line: &str) -> Token {
-
     let words: Vec<&str> = line.split(" ").collect();
 
-    if words.len() < 8 { return Token::Invalid }
+    if words.len() < 9 { return Token::Invalid }
 
-    match words[7].parse() {
+    match words[8].parse() {
       Ok(id) => Token::CollectableItemID(id),
       Err(_) => Token::Invalid,
     }
