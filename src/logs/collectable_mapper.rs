@@ -28,7 +28,7 @@ impl CollectableMapper {
   /// it assumes the linked file is a .ron file which contains the correct
   /// hash map for this mapper.
   pub fn load_from_web() -> Option<Self> {
-    let link = "https://raw.githubusercontent.com/Tgb03/Logger/collectables/collectable_maps.ron";
+    let link = "https://raw.githubusercontent.com/Tgb03/Logger/master/collectable_maps.ron";
 
     let resp = reqwest::blocking::get(link)
       .ok()?
