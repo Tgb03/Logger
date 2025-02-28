@@ -101,7 +101,7 @@ impl TokenParserT<ParserResult> for Parser {
             //eprintln!("Started generating.");
             self.state = ParserState::GeneratingLevel;
             self.result.locations.clear();
-            self.generation_parser = Some(GenerationParser::default());
+            self.generation_parser = Some(GenerationParser::new(self.name_of_level.clone()));
           }
           Token::SelectExpedition(name) => self.name_of_level = name,
           Token::GameStarting => {

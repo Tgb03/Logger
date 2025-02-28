@@ -3,17 +3,16 @@
 use crate::run::time::Time;
 
 use super::{
-  location::{
+  collectable_mapper, location::{
     Location, 
     LocationType
-  }, 
-  token_parser::TokenParserT, 
-  tokenizer::Token
+  }, token_parser::TokenParserT, tokenizer::Token
 };
 
 #[derive(Default)]
 pub struct GenerationParser {
 
+  level_name: String,
   buffer_keys: Vec<String>,
   buffer_collectable: (Vec<String>, Vec<u64>, usize),
 
@@ -62,12 +61,45 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
       },
       Token::CollectableAllocated(zone) => {
         self.buffer_collectable.1.push(zone);
+      },
+      Token::ObjectiveSpawnedOverride(id) => {
+        let zone = self.buffer_collectable.1.pop().unwrap();
+
+        self.result.push(Location::default()
+          .with_zone(zone)
+          .with_id(id)
+          .with_type(LocationType::Objective)  
+        );
       }
       Token::CollectableItemID(id) => {
-        self.buffer_collectable.0.push(Self::get_collectable_name(id));
+        let id = Self::get_collectable_name(id);
+        if id != "Cryo" {
+          self.buffer_collectable.0.push(id);
+        } else {
+
+          let zone = self.buffer_collectable.1.remove(0);
+
+          self.result.push(Location::default()
+            .with_name(id)
+            .with_zone(zone)
+            .with_type(LocationType::Objective));
+
+        }
       }
-      Token::CollectableItemSeed(seed) => {
-        
+      Token::CollectableItemSeed(mut seed) => {
+        self.buffer_collectable.1.sort();
+
+        if let Ok(mutex) = collectable_mapper::COLLECTABLE_MAPPER.lock() {
+          mutex.as_ref()
+            .map(|m| 
+              m.get_id(
+                &self.level_name, 
+                *self.buffer_collectable.1.get(0).unwrap_or(&0), 
+                seed
+              )
+            ).flatten()
+            .map(|v| { seed = v });
+        }
 
         let location = Location::default()
           .with_name(self.buffer_collectable.0.remove(0))
@@ -90,10 +122,21 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
 
 impl GenerationParser {
 
+  pub fn new(level_name: String) -> Self {
+    Self {
+      level_name,
+      ..Default::default()
+    }
+  }
+
   fn get_collectable_name(id: u64) -> String {
     match id {
       129 => "PD".to_owned(),
+      148 => "Cryo".to_owned(),
+      149 => "ID".to_owned(),
+      150 => "OSIP".to_owned(),
       165 => "DataCube".to_owned(),
+      176 => "Cargo".to_owned(),
       _ => "UNK".to_owned(),
     }
   }

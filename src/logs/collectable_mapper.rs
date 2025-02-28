@@ -1,6 +1,8 @@
-use std::{collections::HashMap, fs::File, io::Read};
+use std::{collections::HashMap, sync::Mutex};
 
 use serde::Deserialize;
+
+pub static COLLECTABLE_MAPPER: Mutex<Option<CollectableMapper>> = Mutex::new(None);
 
 #[derive(Deserialize)]
 pub struct CollectableMapper {
@@ -10,6 +12,16 @@ pub struct CollectableMapper {
 }
 
 impl CollectableMapper {
+
+  /// initialize the static variable
+  pub fn init() {
+    let s = Self::load_from_web();
+    
+    match COLLECTABLE_MAPPER.lock() {
+      Ok(mut mapper) => *mapper = s,
+      Err(_) => {},
+    }
+  }
   
   /// load the file from the web.
   /// 
@@ -23,8 +35,6 @@ impl CollectableMapper {
       .text()
       .ok()?;
 
-    println!("{}", resp);
-
     let result = ron::from_str(&resp);
 
     match result {
@@ -33,19 +43,32 @@ impl CollectableMapper {
     }
   }
 
+  pub fn get_id(&self, level_name: &str, zone: u64, seed: u64) -> Option<u64> {
+    //println!("Called: {} in {} at {}", level_name, zone, seed);
+
+    self.map
+      .get(level_name)?
+      .get(&zone)?
+      .get(&seed)
+      .cloned()
+  }
+
 }
 
 #[cfg(test)]
 mod tests {
-    use super::CollectableMapper;
-
+  use super::CollectableMapper;
 
   #[test]
   fn load_file() {
 
     let map = CollectableMapper::load_from_web();
 
-    assert!(map.is_some())
+    assert!(map.is_some());
+    let map = map.unwrap();
+
+    assert_eq!(map.get_id("R8B3", 336, 1913762560), Some(19));
+    assert_eq!(map.get_id("R8B3", 334, 1604288640), Some(0));
 
   }
 

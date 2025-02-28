@@ -14,6 +14,7 @@ pub enum Token {
   ItemAllocated(String), // name
   ItemSpawn(u64, u64), // zone, id
   CollectableAllocated(u64), // zone
+  ObjectiveSpawnedOverride(u64), // id
   CollectableItemID(u64), // item id
   CollectableItemSeed(u64), // item seed
   SelectExpedition(String),
@@ -74,6 +75,35 @@ impl Token {
       Err(_) => Token::Invalid,
     }
 
+  }
+
+  fn create_objective_spawned_override(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 19 { return Token::Invalid }
+    
+    if let Some(first) = words[18].split('_').collect::<Vec<&str>>().get(0) {
+      match first.parse::<u64>() {
+        Ok(i) => return Token::ObjectiveSpawnedOverride(i),
+        Err(_) => return Token::Invalid,
+      }
+    }
+
+    Token::Invalid
+  }
+
+  fn create_hsu_alloc(line: &str) -> Token {
+
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 13 { return Token::Invalid }
+    if words[12].len() < 5 { return Token::Invalid }
+
+    match words[12][5..words[12].len() - 1].parse() {
+      Ok(zone) => Token::CollectableAllocated(zone),
+      Err(_) => Token::Invalid,
+    }
   }
 
   fn create_collectable_item_id(line: &str) -> Token {
@@ -155,6 +185,8 @@ impl Token {
     if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
     if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
     if line.contains("<color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_collectable_allocated(line)); }
+    if line.contains("TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") { return Some(Token::create_hsu_alloc(line)); }
+    if line.contains("<color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function") { return Some(Token::create_objective_spawned_override(line)); }
     if line.contains("<color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems") { return Some(Token::create_collectable_item_id(line)); }
     if line.contains("GenericSmallPickupItem_Core.SetupFromLevelgen, seed:") { return Some(Token::create_collectable_item_seed(line)); }
     if line.contains("SelectActiveExpedition : Selected!") { return Some(Self::create_expedition(line)); }

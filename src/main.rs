@@ -29,6 +29,8 @@ fn main() -> eframe::Result {
     persist_window: true,
     ..Default::default()
   };
+
+  logs::collectable_mapper::CollectableMapper::init();
  
   eframe::run_native(
     "GTFO Logger",
