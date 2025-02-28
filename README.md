@@ -32,6 +32,14 @@ Now all the runs have been opened, you can play around and see what each button 
 Once you are done checking out the runs and selecting whether the run attempted secondary or overload, you can save each one individiually or all of them.
 You can then press the check saved runs to see more data about each level and run such as best splits, total time spent running that level or other information.
 
+# Mapper:
+
+Simply turn on the Mapper feature and you should see all keys mapped. 
+For GTFO here are all the key maps kept updated by d4rkeva currently made:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3166671266
+
+If one map is missing please message me and I will see if I can obtain a map or poke others for it. I however cannot confirm anything.
+
 # Beware:
 
 There are issues with the app which can cause the times to be innacurate, always double check with a VOD for runs you are submitting and take the Theoretical Best Time with a grain of salt. It may be innacurate.
