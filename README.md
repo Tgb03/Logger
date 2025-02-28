@@ -40,6 +40,8 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3166671266
 
 If one map is missing please message me and I will see if I can obtain a map or poke others for it. I however cannot confirm anything.
 
+Important note is the mapper loads data from https://github.com/Tgb03/Logger/blob/master/collectable_maps.ron so if you would like to add support for a level, simply make a pull request and I will merge it.
+
 # Beware:
 
 There are issues with the app which can cause the times to be innacurate, always double check with a VOD for runs you are submitting and take the Theoretical Best Time with a grain of salt. It may be innacurate.
