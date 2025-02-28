@@ -63,7 +63,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         self.buffer_collectable.1.push(zone);
       },
       Token::ObjectiveSpawnedOverride(id) => {
-        let zone = self.buffer_collectable.1.pop().unwrap();
+        let zone = self.buffer_collectable.1.pop().unwrap_or(9999);
 
         self.result.push(Location::default()
           .with_zone(zone)
