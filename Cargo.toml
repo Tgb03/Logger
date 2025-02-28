@@ -1,6 +1,6 @@
 [package]
 name = "Logger"
-version = "1.2.1"
+version = "2.0.0"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
@@ -21,6 +21,8 @@ directories = "6.0.0"
 strum = "0.26.3"
 strum_macros = "0.26.4"
 enum_dispatch = "0.3.13"
+ron = "0.8.1" 
+reqwest = { version = "0.12.12", features = ["blocking"] }
 
 [dev-dependencies]
 tempdir = "0.3.7"

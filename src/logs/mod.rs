@@ -6,3 +6,4 @@ pub mod generation_parser;
 pub mod parser;
 
 pub mod location;
+pub mod collectable_mapper;

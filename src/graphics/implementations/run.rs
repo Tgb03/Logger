@@ -36,6 +36,11 @@ where T: Run {
       
 
       let mut running_total = Time::default();
+      for id in 0..range.start {
+        if let Some(time) = self.get_time_for_split(&split_names[id]) {
+          running_total = running_total.add(&time);
+        } 
+      }
 
       let first = range.start;
 

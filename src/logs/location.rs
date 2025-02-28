@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum LocationType {
   
   Unknown,
@@ -18,7 +18,7 @@ impl Default for LocationType {
 }
 
 
-#[derive(Default, PartialEq, Eq, Ord)]
+#[derive(Default, PartialEq, Eq, Ord, Hash)]
 pub struct Location {
 
   item_name: Option<String>,
@@ -76,6 +76,18 @@ impl Location {
     
     self.item_name.as_ref()
     
+  }
+
+  pub fn set_name(&mut self, item_name: String) {
+    self.item_name = Some(item_name);
+  }
+
+  pub fn set_zone(&mut self, zone: u64) {
+    self.zone = Some(zone);
+  }
+
+  pub fn set_id(&mut self, id: u64) {
+    self.id = Some(id);
   }
 
 }
