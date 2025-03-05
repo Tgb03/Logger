@@ -73,7 +73,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
       }
       Token::CollectableItemID(id) => {
         let id = Self::get_collectable_name(id);
-        if id != "Cryo" {
+        if id != "Cryo" && id != "Cargo" {
           self.buffer_collectable.0.push(id);
         } else {
 
