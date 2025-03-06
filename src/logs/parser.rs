@@ -8,6 +8,7 @@ use super::{generation_parser::GenerationParser, location::Location, run_parser:
 pub struct ParserResult {
 
   runs: Vec<LevelRun>,
+  total_counter: u64,
   locations: Vec<Location>,
 
 }
@@ -34,6 +35,10 @@ impl ParserResult {
 
   pub fn get_locations(&self) -> &Vec<Location> {
     &self.locations
+  }
+
+  pub fn get_counter(&self) -> u64 {
+    self.total_counter
   }
 
 }
@@ -102,6 +107,8 @@ impl TokenParserT<ParserResult> for Parser {
             self.state = ParserState::GeneratingLevel;
             self.result.locations.clear();
             self.generation_parser = Some(GenerationParser::new(self.name_of_level.clone()));
+
+            self.result.total_counter += 1;
           }
           Token::SelectExpedition(name) => self.name_of_level = name,
           Token::GameStarting => {

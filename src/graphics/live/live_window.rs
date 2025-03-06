@@ -171,6 +171,13 @@ impl<'a> LiveWindow<'a> {
         },
       }
     }
+    if settings.get_show_run_counter() {
+      y_size += 27;
+
+      ui.label(create_text(format!("Run Counter: {}", self.parser.into_result().get_counter())));
+
+      ui.separator();
+    }
     if settings.get_show_warden_mapper() {
       y_size += 6 + Mapper::render_type(
         ui, 

@@ -16,6 +16,7 @@ pub struct SettingsWindow {
   compare_to_record: bool,
   compare_to_theoretical: bool,
 
+  show_run_counter: bool,
   show_warden_mapper: bool,
   show_objective_items: bool,
 
@@ -119,6 +120,10 @@ impl Default for SettingsWindow {
       Some(s) => s.parse::<bool>().unwrap_or(true),
       None => true,
     };
+    let show_run_counter = match props.get("show_run_counter") {
+      Some(s) => s.parse::<bool>().unwrap_or(false),
+      None => false,
+    };
     
     let live_rectangle = Rect { 
       min: [x_pos, y_pos].into(), 
@@ -126,6 +131,7 @@ impl Default for SettingsWindow {
     };
 
     Self { 
+      show_run_counter,
       show_splitter,
       show_game_splitter,
       splitter_length,
@@ -173,6 +179,10 @@ impl SettingsWindow {
     }
 
     None
+  }
+
+  pub fn get_show_run_counter(&self) -> bool {
+    self.show_run_counter
   }
 
   pub fn get_show_game_splitter(&self) -> bool {
@@ -248,6 +258,12 @@ impl SettingsWindow {
     ui.horizontal(|ui| { 
       ui.add_space(5.0);
       ui.checkbox(&mut self.show_game_splitter, super::create_text("Show Game Splitter"));
+      ui.add_space(5.0);
+    });
+
+    ui.horizontal(|ui| { 
+      ui.add_space(5.0);
+      ui.checkbox(&mut self.show_run_counter, super::create_text("Show Run Counter"));
       ui.add_space(5.0);
     });
     
@@ -424,6 +440,7 @@ impl SettingsWindow {
     s.push_str(&format!("show_splitter: {}\n", self.show_splitter));
     s.push_str(&format!("splitter_length: {}\n", self.splitter_length));
     s.push_str(&format!("show_game_splitter: {}\n", self.show_game_splitter));
+    s.push_str(&format!("show_run_counter: {}\n", self.show_run_counter));
 
     if let Some(path) = Self::config_path() {
       
