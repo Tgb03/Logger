@@ -69,7 +69,7 @@ impl<'a> LiveWindow<'a> {
   fn get_current_map(&self) -> Option<&Vec<Location>> {
 
     if let Some(gen_parser) = self.parser.get_generation_parser() {
-      return Some(gen_parser.into_result());
+      return Some(&gen_parser.into_result());
     }
 
     Some(self.parser.into_result().get_locations())
@@ -174,7 +174,12 @@ impl<'a> LiveWindow<'a> {
     if settings.get_show_run_counter() {
       y_size += 27;
 
-      ui.label(create_text(format!("Run Counter: {}", self.parser.into_result().get_counter())));
+      ui.horizontal(|ui| {
+        let result = self.parser.into_result();
+
+        ui.label(create_text(format!("Run Counter: {}", result.get_counter())));
+        ui.label(create_text(format!("Unique: {}", result.get_set().len())));
+      });
 
       ui.separator();
     }

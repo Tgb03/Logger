@@ -10,6 +10,7 @@ use crate::run::time::Time;
 pub enum Token {
  
   GeneratingLevel,
+  SessionSeed(u64),
   GeneratingFinished,
   ItemAllocated(String), // name
   ItemSpawn(u64, u64), // zone, id
@@ -35,6 +36,17 @@ pub enum Token {
 }
 
 impl Token {
+
+  fn create_session_seed(line: &str) -> Token {
+    let words: Vec<&str> = line.split(" ").collect();
+
+    if words.len() < 6 { return Token::Invalid }
+    
+    match words[5].parse::<u64>() {
+      Ok(seed) => Token::SessionSeed(seed),
+      Err(_) => Token::Invalid,
+    }
+  }
 
   fn create_item_alloc(line: &str) -> Token {
     
@@ -180,6 +192,7 @@ impl Token {
 
   pub fn tokenize_str(line: &str) -> Option<Token> {
     
+    if line.contains("<color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: ") { return Some(Self::create_session_seed(line)); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating") { return Some(Token::GeneratingLevel); }
     if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
     if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }

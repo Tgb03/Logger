@@ -1,5 +1,7 @@
 
 
+use std::collections::HashSet;
+
 use crate::run::{time::Time, timed_run::LevelRun};
 
 use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
@@ -8,6 +10,7 @@ use super::{generation_parser::GenerationParser, location::Location, run_parser:
 pub struct ParserResult {
 
   runs: Vec<LevelRun>,
+  seed_set: HashSet<u64>,
   total_counter: u64,
   locations: Vec<Location>,
 
@@ -39,6 +42,10 @@ impl ParserResult {
 
   pub fn get_counter(&self) -> u64 {
     self.total_counter
+  }
+
+  pub fn get_set(&self) -> &HashSet<u64> {
+    &self.seed_set
   }
 
 }
@@ -139,6 +146,7 @@ impl TokenParserT<ParserResult> for Parser {
         }
       },
       ParserState::GeneratingLevel => {
+        if let Token::SessionSeed(seed) = token { self.result.seed_set.insert(seed); }
         if self.generation_parser.as_mut().unwrap().parse_one_token((time, token)) {
 
           let locations: Vec<Location> = self.generation_parser.take().unwrap().into();
