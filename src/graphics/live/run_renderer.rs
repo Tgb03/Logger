@@ -26,7 +26,7 @@ impl RunRenderer {
 
   pub fn render_run<T: Run>(ui: &mut Ui, run: &T, objective: Option<&String>, compare_best: bool, compare_theoretical: bool, mut max_length: usize, save_manager: &SaveManager) -> usize {
     
-    let size = run.len();
+    let mut size = run.len();
     let objective = match objective {
       None => &run.get_objective_str(),
       Some(obj) => obj,
@@ -60,6 +60,8 @@ impl RunRenderer {
       for split in splits {
 
         if split.get_name() == "LOSS" {
+          size -= 1;
+          
           continue;
         }
         
