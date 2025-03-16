@@ -57,7 +57,6 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         };
 
         self.result.push(location);
-        self.result.sort();
       },
       Token::CollectableAllocated(zone) => {
         self.buffer_collectable.1.push(zone);
@@ -87,8 +86,6 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         }
       }
       Token::CollectableItemSeed(mut seed) => {
-        self.buffer_collectable.1.sort();
-
         if let Ok(mutex) = collectable_mapper::COLLECTABLE_MAPPER.lock() {
           mutex.as_ref()
             .map(|m| 
