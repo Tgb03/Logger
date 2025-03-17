@@ -1,0 +1,35 @@
+// file gets loaded once only when starting the app so after
+// modifications are made the app needs restarted.
+LevelView(
+  key_colors: [
+    // Key for Zone 52
+    {
+      145: {
+        Blue: [0, 3, 4, 34, 41], // Blue aka god keys
+        Green: [2, 27, 30, 29, 36], // green aka good keys
+        Yellow: [11, 12, 31, 33, 39, 42, 44], // yellow aka mediocre but still runnable
+        // red completely horrible keys default
+      }
+    },
+  ],
+  objective_colors: {
+	// Zone 52 HSU (marked in logs as enum ZONE_3)
+    "DataCube": {
+      147: {
+        Green: [0], // still very good hsu   : green
+        Red: [1], // very bad hsu          : red
+      },
+      151: {
+        Green: [0],
+        Red: [1],
+      },
+      153: {
+        Green: [0, 1, 2, 4],
+        Yellow: [6, 7, 8],
+        Red: [3, 5]
+      }
+    },
+  },
+  ignore_zones: [],
+  default_color: Red
+)

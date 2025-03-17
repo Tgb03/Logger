@@ -64,6 +64,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         };
 
         self.result.push(location);
+        self.result.sort_by(|a, b| a.get_type().cmp(b.get_type()));
       },
       Token::CollectableAllocated(zone) => {
         self.buffer_collectable.1.push(zone);

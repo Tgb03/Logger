@@ -97,6 +97,7 @@ impl Token {
 
     let name = match words[13] {
       "HSU_FindTakeSample" => Some("HSU".to_string()),
+      "TerminalUplink" => Some("Uplink".to_string()),
       _ => None,
     };
     
