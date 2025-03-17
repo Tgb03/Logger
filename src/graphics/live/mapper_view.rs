@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use egui::Color32;
 use serde::{Deserialize, Serialize};
@@ -8,7 +8,7 @@ use crate::logs::location::{Location, LocationType};
 use super::mapper::LookUpColor;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub enum MapperColor {
+enum MapperColor {
     Blue,
     Green,
     Yellow,
@@ -28,50 +28,98 @@ impl From<&MapperColor> for Color32 {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct LevelView {
     key_colors: Vec<HashMap<u64, HashMap<MapperColor, Vec<u64>>>>,
     objective_colors: HashMap<String, HashMap<u64, HashMap<MapperColor, Vec<u64>>>>,
     ignore_zones: Vec<u64>,
+    default_color: MapperColor,
 }
 
-impl LookUpColor for LevelView {
-    fn lookup(&self, location_vec_id: usize, location: &Location) -> Option<Color32> {
-        let zone = location.get_zone()?;
-        let id = location.get_id()?;
+pub struct OptimizedLevelView {
+  
+    key_colors: Vec<HashMap<u64, Vec<(Color32, HashSet<u64>)>>>,
+    objective_colors: HashMap<String, HashMap<u64, Vec<(Color32, HashSet<u64>)>>>,
+    ignore_zones: HashSet<u64>,
+    default_color: Color32,
 
+}
+
+impl Into<OptimizedLevelView> for LevelView {
+    fn into(self) -> OptimizedLevelView {
+        let key_colors: Vec<HashMap<u64, Vec<(Color32, HashSet<u64>)>>> = self.key_colors
+            .into_iter()
+            .map(|map| {
+                map.into_iter()
+                    .map(|(key, inner_map)| {
+                        let transformed_vec: Vec<(Color32, HashSet<u64>)> = inner_map
+                            .into_iter()
+                            .map(|(color, values)| ((&color).into(), values.into_iter().collect()))
+                            .collect();
+                        (key, transformed_vec)
+                    })
+                    .collect()
+            })
+            .collect();
+
+        let objective_colors: HashMap<String, HashMap<u64, Vec<(Color32, HashSet<u64>)>>> = self.objective_colors
+            .into_iter()
+            .map(|(name, map)| {(
+                    name,
+                    map.into_iter()
+                        .map(|(key, map)| {
+                            let transformed_vec: Vec<(Color32, HashSet<u64>)> = map
+                                .into_iter()
+                                .map(|(color, values)| ((&color).into(), values.into_iter().collect()))
+                                .collect();
+                            (key, transformed_vec)
+                        })
+                        .collect()
+                )
+            })
+            .collect();
+
+        OptimizedLevelView { 
+            key_colors, 
+            objective_colors, 
+            ignore_zones: self.ignore_zones
+                .into_iter()
+                .collect(),
+            default_color: (&self.default_color).into()
+        }
+    }
+}
+
+impl LookUpColor for OptimizedLevelView {
+    fn lookup(&self, location_vec_id: usize, location: &Location) -> Option<Color32> {
         match location.get_type() {
             LocationType::Unknown => None,
             LocationType::ColoredKey | LocationType::BulkheadKey => {
-                if location_vec_id >= self.key_colors.len() {
-                    return None;
-                }
+                let id = location.get_id()?;
+                let zone = location.get_zone()?;
 
-                let map = &self.key_colors[location_vec_id];
-                let zone_colors = map.get(&zone)?;
-
-                for (color, vec) in zone_colors {
-                    if vec.contains(&id) {
-                        return Some(color.into());
-                    }
-                }
-
-                None
-            }
+                self.key_colors
+                    .get(location_vec_id)?
+                    .get(&zone)?
+                    .iter()
+                    .filter(|(_, vec)| vec.contains(&id))
+                    .next()
+                    .map(|(color, _)| *color)
+            },
             LocationType::Objective => {
                 let name = location.get_name()?;
+                let zone = location.get_zone()?;
+                let id = location.get_id()?;
 
-                let map = self.objective_colors.get(name)?;
-                let zone_colors = map.get(&zone)?;
-
-                for (color, vec) in zone_colors {
-                    if vec.contains(&id) {
-                        return Some(color.into());
-                    }
-                }
-
-                None
-            }
+                self.objective_colors
+                    .get(name)?
+                    .get(&zone)?
+                    .iter()
+                    .filter(|(_, map)| map.contains(&id))
+                    .next()
+                    .map(|(color, _)| *color)
+                    
+            },
         }
     }
 
@@ -80,9 +128,9 @@ impl LookUpColor for LevelView {
     }
 }
 
-impl LookUpColor for Option<&LevelView> {
+impl LookUpColor for Option<&OptimizedLevelView> {
     fn lookup(&self, location_vec_id: usize, location: &Location) -> Option<Color32> {
-        self.map(|s| s.lookup(location_vec_id, location)).flatten()
+        self.map(|s| s.lookup(location_vec_id, location).unwrap_or(s.default_color))
     }
 
     fn is_valid_zone(&self, zone: &u64) -> bool {

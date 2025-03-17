@@ -4,7 +4,7 @@ use egui::{Color32, Ui};
 
 use crate::{graphics::create_text, logs::location::{Location, LocationType}, save_run::SaveManager};
 
-use super::mapper_view::LevelView;
+use super::mapper_view::{LevelView, OptimizedLevelView};
 
 pub trait LookUpColor {
 
@@ -16,7 +16,7 @@ pub trait LookUpColor {
 #[derive(Default)]
 pub struct Mapper {
 
-  location_colors: HashMap<String, LevelView>,
+  location_colors: HashMap<String, Option<OptimizedLevelView>>,
 
 }
 
@@ -26,7 +26,7 @@ impl Mapper {
     ui: &mut Ui, 
     locations: &Vec<Location>, 
     show_objectives: bool,
-    level_view: Option<&LevelView>,
+    level_view: Option<&OptimizedLevelView>,
   ) -> usize {
 
     let mut len = 0;
@@ -55,8 +55,8 @@ impl Mapper {
     len * 22
   }
 
-  pub fn get_color_info(&self, level_name: &String) -> Option<&LevelView> {
-    self.location_colors.get(level_name)
+  pub fn get_color_info(&self, level_name: &String) -> Option<&OptimizedLevelView> {
+    self.location_colors.get(level_name)?.as_ref()
   }
 
   pub fn load_level_info(&mut self, level: &String) {
@@ -68,19 +68,18 @@ impl Mapper {
     path = path.map(|mut m| { m.set_extension("ron"); m });
 
     if let Some(data) = path.map(|p| fs::read_to_string(p).ok()).flatten() {
-      match ron::from_str(&data) {
+      match ron::from_str::<LevelView>(&data) {
         Ok(level_view) => {
-          println!("Loaded {}", level);
-          println!("Full data: {:?}", level_view);
-          self.location_colors.insert(level.clone(), level_view);
+          println!("Loaded: {:?}", level_view);
+          self.location_colors.insert(level.clone(), Some(level_view.into()));
         }
         Err(e) => {
           println!("{:?}", e);
-          self.location_colors.insert(level.clone(), LevelView::default());
+          self.location_colors.insert(level.clone(), None);
         },
       }
     } else {
-      self.location_colors.insert(level.clone(), LevelView::default());
+      self.location_colors.insert(level.clone(), None);
     }
   }
 

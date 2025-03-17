@@ -1,0 +1,22 @@
+// file gets loaded once only when starting the app so after
+// modifications are made the app needs restarted.
+LevelView(
+  key_colors: [
+    // Key for Zone 52
+    {
+      76: {
+        Blue: [0, 1, 2, 3, 4, 5], // light blue aka god keys
+        Green: [37, 26], // green aka good keys
+        Yellow: [6, 7, 8, 9, 10, 11, 25, 27, 29, 30, 35, 36, 38], // yellow aka mediocre but still runnable
+      },
+      77: {
+        Blue: [0, 1, 2, 3, 4, 5], // light blue aka god keys
+        Green: [6, 16, 17], // green aka good keys
+        Yellow: [15, 24, 18], // yellow aka mediocre but still runnable
+      },
+    },
+  ],
+  objective_colors: {},
+  ignore_zones: [],
+  default_color: Red
+)
