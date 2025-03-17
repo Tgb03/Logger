@@ -144,7 +144,7 @@ impl GenerationParser {
       128 => "ID".to_owned(),
       129 => "PD".to_owned(),
       148 => "Cryo".to_owned(),
-      149 => "ID".to_owned(),
+      149 => "GLP".to_owned(),
       150 => "OSIP".to_owned(),
       165 => "DataCube".to_owned(),
       176 => "Cargo".to_owned(),
