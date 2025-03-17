@@ -1,5 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
+
+
 use eframe::egui;
 use egui::Visuals;
 use graphics::base_app::BaseApp;
@@ -17,7 +19,6 @@ fn main() -> eframe::Result {
   // for (id, val) in std::env::vars() {
   //   println!("{}: {}", id, val);
   // }
-
   
   let options_base_app = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()

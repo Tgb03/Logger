@@ -1,11 +1,12 @@
 use std::fmt::Display;
 
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum LocationType {
   
   Unknown,
-  Key,
+  ColoredKey,
+  BulkheadKey,
   Objective,
 
 }
@@ -18,7 +19,7 @@ impl Default for LocationType {
 }
 
 
-#[derive(Default, PartialEq, Eq, Ord, Hash)]
+#[derive(Default, PartialEq, Eq, Ord, Hash, Debug)]
 pub struct Location {
 
   item_name: Option<String>,
@@ -26,7 +27,7 @@ pub struct Location {
   zone: Option<u64>,
   id: Option<u64>,
 
-  location_type: LocationType, 
+  location_type: LocationType,
 
 }
 
@@ -35,8 +36,8 @@ impl Display for Location {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{}: {} at {}", 
       self.item_name.as_ref().map(|v| v.as_str()).unwrap_or("No Name"), 
-      match &self.zone { None => "Unknown Zone".to_owned(), Some(zone) => format!("ZONE {}", zone) }, 
-      match &self.id { None => "Unknown ID".to_owned(), Some(id) => id.to_string() },
+      match &self.zone { None => "No Zone".to_owned(), Some(zone) => format!("ZONE {}", zone) }, 
+      match &self.id { None => "No ID".to_owned(), Some(id) => id.to_string() },
     )
   }
 
@@ -88,6 +89,18 @@ impl Location {
 
   pub fn set_id(&mut self, id: u64) {
     self.id = Some(id);
+  }
+
+  pub fn get_id(&self) -> Option<u64> {
+    self.id
+  }
+
+  pub fn get_zone(&self) -> Option<u64> {
+    self.zone
+  }
+
+  pub fn get_type(&self) -> &LocationType {
+    &self.location_type
   }
 
 }

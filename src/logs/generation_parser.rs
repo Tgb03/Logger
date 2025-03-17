@@ -4,8 +4,7 @@ use crate::run::time::Time;
 
 use super::{
   collectable_mapper, location::{
-    Location, 
-    LocationType
+    Location, LocationType
   }, token_parser::TokenParserT, tokenizer::Token
 };
 
@@ -13,7 +12,7 @@ use super::{
 pub struct GenerationParser {
 
   level_name: String,
-  buffer_keys: Vec<String>,
+  buffer_keys: Vec<(String, LocationType)>,
   buffer_collectable: (Vec<String>, Vec<u64>, usize),
 
   result: Vec<Location>,
@@ -42,17 +41,25 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
     if self.done { return true }
 
     match token {
-      Token::ItemAllocated(name) => self.buffer_keys.push(name),
+      Token::ItemAllocated(name, key_type) => { 
+        self.buffer_keys.push((name, match key_type {
+            true => LocationType::BulkheadKey,
+            false => LocationType::ColoredKey,
+        }))
+      },
       Token::ItemSpawn(zone, id) => {
-        let name = self.buffer_keys.pop();
+        let name_loc = self.buffer_keys.pop();
 
         let location = Location::default()
           .with_id(id)
-          .with_zone(zone)
-          .with_type(LocationType::Key);
+          .with_zone(zone);
 
-        let location = match name {
-          Some(name) => location.with_name(name),
+        let location = match name_loc {
+          Some((name, key_type)) => {
+            location
+              .with_name(name)
+              .with_type(key_type)
+          },
           None => location,
         };
 
@@ -61,14 +68,18 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
       Token::CollectableAllocated(zone) => {
         self.buffer_collectable.1.push(zone);
       },
-      Token::ObjectiveSpawnedOverride(id) => {
+      Token::ObjectiveSpawnedOverride(id, name) => {
         let zone = self.buffer_collectable.1.pop().unwrap_or(9999);
-
-        self.result.push(Location::default()
+        let location = Location::default()
           .with_zone(zone)
           .with_id(id)
-          .with_type(LocationType::Objective)  
-        );
+          .with_type(LocationType::Objective);
+        let location = match name {
+          Some(name) => location.with_name(name),
+          None => location,
+        };
+
+        self.result.push(location);
       }
       Token::CollectableItemID(id) => {
         let id = Self::get_collectable_name(id);
@@ -101,6 +112,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         let location = Location::default()
           .with_name(self.buffer_collectable.0.remove(0))
           .with_zone(self.buffer_collectable.1.remove(0))
+          .with_type(LocationType::Objective)
           .with_id(seed);
 
         self.result.push(location);
@@ -128,6 +140,7 @@ impl GenerationParser {
 
   fn get_collectable_name(id: u64) -> String {
     match id {
+      128 => "ID".to_owned(),
       129 => "PD".to_owned(),
       148 => "Cryo".to_owned(),
       149 => "ID".to_owned(),

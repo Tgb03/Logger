@@ -2,7 +2,9 @@
 use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
 use directories::ProjectDirs;
-use egui::{Color32, Rect, Ui};
+use egui::{Color32, Rect, ScrollArea, Ui};
+
+use crate::save_run::SaveManager;
 
 pub struct SettingsWindow {
 
@@ -243,174 +245,196 @@ impl SettingsWindow {
 
   pub fn show(&mut self, ui: &mut Ui) {
 
-    ui.add(egui::Label::new(super::create_text("LiveSplitter settings: ")
-      .size(14.0)));
+    ScrollArea::vertical()
+      .max_height(ui.available_height() - 60.0)
+      .show(ui, |ui| {
 
-    ui.add_space(10.0);
+      ui.add(egui::Label::new(super::create_text("LiveSplitter settings: ")
+        .size(14.0)));
+  
+      ui.add_space(10.0);
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_splitter, super::create_text("Show Actual Splits"));
+        ui.add_space(5.0);
+        ui.label(super::create_text("Warning: this disables completely the splits part."));
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_game_splitter, super::create_text("Show Game Splitter"));
+        ui.add_space(5.0);
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_run_counter, super::create_text("Show Run Counter"));
+        ui.add_space(5.0);
+      });
+      
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Path to logs folder: "));
+        ui.add(egui::TextEdit::singleline(&mut self.text_inputs[6])
+          .desired_width(512.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE));
+      });
+  
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("X position"));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[0])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[0].parse::<f32>() {
+              self.live_rectangle.set_left(x);
+            }
+          };
+      });
+      
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Y position"));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[1])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(y) = self.text_inputs[1].parse::<f32>() {
+              self.live_rectangle.set_top(y);
+            }
+          };
+      });
+      
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("X size    "));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[2])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[2].parse::<f32>() {
+              self.live_rectangle.set_right(x + self.live_rectangle.left());
+            }
+          };
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.compare_to_record, super::create_text("Compare to saved record."));
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.compare_to_theoretical, super::create_text("Compare to best splits"));
+      });
+  
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Splitter max length"));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[7])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[7].parse::<usize>() {
+              self.splitter_length = x;
+            }
+          };
+      });
+  
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Game splitter max length"));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[8])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[8].parse::<usize>() {
+              self.game_splitter_length = x;
+            }
+          };
+      });
+  
+      ui.separator();
+  
+      ui.add(egui::Label::new(super::create_text("Mapper settings: ")
+        .size(14.0)));
+      ui.add_space(10.0);
 
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_splitter, super::create_text("Show Actual Splits"));
-      ui.add_space(5.0);
-      ui.label(super::create_text("Warning: this disables completely the splits part."));
-    });
-
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_game_splitter, super::create_text("Show Game Splitter"));
-      ui.add_space(5.0);
-    });
-
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_run_counter, super::create_text("Show Run Counter"));
-      ui.add_space(5.0);
-    });
-    
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Path to logs folder: "));
-      ui.add(egui::TextEdit::singleline(&mut self.text_inputs[6])
-        .desired_width(512.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE));
-    });
-
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("X position"));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[0])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[0].parse::<f32>() {
-            self.live_rectangle.set_left(x);
+      ui.horizontal(|ui| {
+        if ui.button(super::create_text("Open LevelView folder")).clicked() {
+          if let Some(path) = SaveManager::get_directory() {
+            let _ = opener::open(
+              path
+                .join("config")
+                .join("levels")
+            );
           }
-        };
-    });
-    
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Y position"));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[1])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(y) = self.text_inputs[1].parse::<f32>() {
-            self.live_rectangle.set_top(y);
-          }
-        };
-    });
-    
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("X size    "));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[2])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[2].parse::<f32>() {
-            self.live_rectangle.set_right(x + self.live_rectangle.left());
-          }
-        };
-    });
+        }
 
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.compare_to_record, super::create_text("Compare to saved record."));
-    });
+        if ui.button(super::create_text("Open examples for LevelView")).clicked() {
+          let _ = open::that("https://github.com/Tgb03/Logger/examples/level_view");
+        }
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_warden_mapper, super::create_text("Show Mapper in live splitter"));
+      });
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_objective_items, super::create_text("Show objective items in live splitter"));
+      });
+  
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.show_code_guess, super::create_text("Show code guess"));
+      });
+      
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Code guess number of lines: "));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[4])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[4].parse::<usize>() {
+              self.code_guess_line_count = x;
+            }
+          };
+      });
+      
+      ui.horizontal(|ui| {
+        ui.add_space(5.0);
+        ui.monospace(super::create_text("Code guess number of words per line: "));
+        if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[5])
+          .desired_width(100.0)
+          .background_color(Color32::from_rgb(32, 32, 32))
+          .text_color(Color32::WHITE))
+          .changed() {
+            if let Ok(x) = self.text_inputs[5].parse::<usize>() {
+              self.code_guess_line_width = x;
+            }
+          };
+      });
+  
+      ui.separator();
+      ui.add_space(10.0);
+  
+      ui.horizontal(|ui| { 
+        ui.add_space(5.0);
+        ui.checkbox(&mut self.automatic_loading, super::create_text("Automatic Loading of Runs"));
+      });
 
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.compare_to_theoretical, super::create_text("Compare to best splits"));
-    });
-
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Splitter max length"));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[7])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[7].parse::<usize>() {
-            self.splitter_length = x;
-          }
-        };
-    });
-
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Game splitter max length"));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[8])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[8].parse::<usize>() {
-            self.game_splitter_length = x;
-          }
-        };
-    });
-
-    ui.separator();
-
-    ui.add(egui::Label::new(super::create_text("Mapper settings: ")
-      .size(14.0)));
-    ui.add_space(10.0);
-
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_warden_mapper, super::create_text("Show Mapper in live splitter"));
-    });
-
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_objective_items, super::create_text("Show objective items in live splitter"));
-    });
-
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.show_code_guess, super::create_text("Show code guess"));
-    });
-    
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Code guess number of lines: "));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[4])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[4].parse::<usize>() {
-            self.code_guess_line_count = x;
-          }
-        };
-    });
-    
-    ui.horizontal(|ui| {
-      ui.add_space(5.0);
-      ui.monospace(super::create_text("Code guess number of words per line: "));
-      if ui.add(egui::TextEdit::singleline(&mut self.text_inputs[5])
-        .desired_width(100.0)
-        .background_color(Color32::from_rgb(32, 32, 32))
-        .text_color(Color32::WHITE))
-        .changed() {
-          if let Ok(x) = self.text_inputs[5].parse::<usize>() {
-            self.code_guess_line_width = x;
-          }
-        };
-    });
-
-    ui.separator();
-    ui.add_space(10.0);
-
-    ui.horizontal(|ui| { 
-      ui.add_space(5.0);
-      ui.checkbox(&mut self.automatic_loading, super::create_text("Automatic Loading of Runs"));
     });
 
     ui.separator();
