@@ -370,12 +370,16 @@ impl SettingsWindow {
 
       ui.horizontal(|ui| {
         if ui.button(super::create_text("Open LevelView folder")).clicked() {
-          if let Some(path) = SaveManager::get_directory() {
-            let _ = opener::open(
-              path
-                .join("config")
-                .join("levels")
-            );
+          if let Some(mut path) = SaveManager::get_directory() {
+            path = path
+              .join("config")
+              .join("levels");
+
+            if !path.exists() {
+              let _ = std::fs::create_dir_all(&path);
+            }
+
+            let _ = opener::open(path);
           }
         }
 
