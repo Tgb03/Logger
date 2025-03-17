@@ -12,10 +12,10 @@ pub enum Token {
   GeneratingLevel,
   SessionSeed(u64),
   GeneratingFinished,
-  ItemAllocated(String), // name
+  ItemAllocated(String, bool), // name
   ItemSpawn(u64, u64), // zone, id
   CollectableAllocated(u64), // zone
-  ObjectiveSpawnedOverride(u64), // id
+  ObjectiveSpawnedOverride(u64, Option<String>), // id, name of objective
   CollectableItemID(u64), // item id
   CollectableItemSeed(u64), // item seed
   SelectExpedition(String),
@@ -56,7 +56,7 @@ impl Token {
 
     let name = words[5];
 
-    Token::ItemAllocated(name.to_owned())
+    Token::ItemAllocated(name.to_owned(), name.contains("BULKHEAD"))
   }
 
   fn create_item_spawn(line: &str) -> Token {
@@ -94,10 +94,15 @@ impl Token {
     let words: Vec<&str> = line.split(" ").collect();
 
     if words.len() < 19 { return Token::Invalid }
+
+    let name = match words[13] {
+      "HSU_FindTakeSample" => Some("HSU".to_string()),
+      _ => None,
+    };
     
     if let Some(first) = words[18].split('_').collect::<Vec<&str>>().get(0) {
       match first.parse::<u64>() {
-        Ok(i) => return Token::ObjectiveSpawnedOverride(i),
+        Ok(i) => return Token::ObjectiveSpawnedOverride(i, name),
         Err(_) => return Token::Invalid,
       }
     }
@@ -232,7 +237,7 @@ impl Tokenizer {
 
     for line in log_string.split('\n') {
       if let Some(token) = Token::tokenize_str(line) {
-        // println!("{:?} tokenized", token);
+        println!("{:?} tokenized", token);
         if let Ok(time) = Time::from(line.trim()) {
           result.push((time, token));
         }

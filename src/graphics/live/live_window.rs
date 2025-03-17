@@ -8,10 +8,7 @@ use crate::{
     settings_window::SettingsWindow
   }, 
   logs::{
-    location::{
-      Location, 
-      LocationType
-    }, 
+    location::Location, 
     token_parser::TokenParserT, 
     tokenizer::Tokenizer
   }, 
@@ -34,6 +31,7 @@ pub struct LiveWindow<'a> {
   frame_counter: u8,
   run_counter: usize,
   parser: LiveParser,
+  mapper: Mapper,
   
   key_guesser: KeyGuesser<'a>,
   last_y_size: usize,
@@ -48,6 +46,7 @@ impl<'a> Default for LiveWindow<'a> {
   fn default() -> Self {
     Self {
       frame_counter: Default::default(),
+      mapper: Default::default(),
       run_counter: 0,
       parser: LiveParser::default(),
       key_guesser: KeyGuesser::default(),
@@ -184,13 +183,14 @@ impl<'a> LiveWindow<'a> {
       ui.separator();
     }
     if settings.get_show_warden_mapper() {
+      let level_name = &self.level_run_reader.get_objective().to_string();
+      self.mapper.load_level_info(level_name);
+
       y_size += 6 + Mapper::render_type(
         ui, 
         self.get_current_map().unwrap_or(&Vec::new()), 
-        match settings.get_show_objective_items() {
-          true => None,
-          false => Some(LocationType::Key),
-        }
+        settings.get_show_objective_items(),
+        self.mapper.get_color_info(level_name)
       );
 
       ui.separator();

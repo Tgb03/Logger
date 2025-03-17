@@ -42,7 +42,7 @@ impl SaveManager {
     return Some(objective);
   }
 
-  fn get_directory() -> Option<PathBuf> {
+  pub fn get_directory() -> Option<PathBuf> {
     
     #[cfg(debug_assertions)]
     if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger Debug") {
