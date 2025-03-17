@@ -378,6 +378,10 @@ impl SettingsWindow {
             );
           }
         }
+
+        if ui.button(super::create_text("Open examples for LevelView")).clicked() {
+          let _ = open::that("https://github.com/Tgb03/Logger/examples/level_view");
+        }
       });
   
       ui.horizontal(|ui| { 

@@ -26,6 +26,7 @@ enum_dispatch = "0.3.13"
 ron = "0.8.1" 
 reqwest = { version = "0.12.12", features = ["blocking"] }
 opener = "0.7.2"
+open = "5.3.2"
 
 [dev-dependencies]
 tempdir = "0.3.7"
