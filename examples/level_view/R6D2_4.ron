@@ -1,0 +1,23 @@
+LevelView(
+  key_colors: [
+    // key for blood door in mom zone
+    {
+      205: {
+        Green: [1, 2, 3, 5, 7],
+        Yellow: [8, 4],
+      }
+    },
+    // Bulkhead key main
+    {
+      197: {
+        Blue: [16, 17], // Blue aka god keys
+        Green: [0, 4, 15, 18, 19, 25], // green aka good keys
+        Yellow: [1, 2, 3, 5, 20, 21, 26, 28], // yellow aka mediocre but still runnable
+        // red completely horrible keys default
+      }
+    },
+  ],
+  objective_colors: {},
+  ignore_zones: [ 365 ],
+  default_color: Red
+)
