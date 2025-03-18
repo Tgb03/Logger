@@ -62,8 +62,8 @@ impl Mapper {
   pub fn load_level_info(&mut self, level: &String) {
     if self.location_colors.contains_key(level) { return; }
 
-    let mut path = SaveManager::get_directory().map(
-      |v| v.join("config").join("levels").join(level)
+    let mut path = SaveManager::get_config_directory().map(
+      |v| v.join("levels").join(level)
     );
     path = path.map(|mut m| { m.set_extension("ron"); m });
 

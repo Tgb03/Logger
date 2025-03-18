@@ -1,7 +1,6 @@
 
 use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
-use directories::ProjectDirs;
 use egui::{Color32, Rect, ScrollArea, Ui};
 
 use crate::save_run::SaveManager;
@@ -34,7 +33,7 @@ pub struct SettingsWindow {
 impl Default for SettingsWindow {
 
   fn default() -> Self {
-    let path = Self::config_path();
+    let path = SaveManager::get_config_directory();
     let file_str: Option<String> = path.map(|path| {
       match File::open(path.join("app.properties")) {
         Ok(mut file) => {
@@ -165,15 +164,6 @@ impl Default for SettingsWindow {
 }
 
 impl SettingsWindow {
-
-  fn config_path() -> Option<PathBuf> {
-    
-    if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
-      return Some(proj_dirs.config_dir().to_path_buf());
-    }
-
-    None
-  }
 
   fn logs_path() -> Option<PathBuf> {
     if let Some(dirs) = directories::UserDirs::new() {
@@ -370,9 +360,8 @@ impl SettingsWindow {
 
       ui.horizontal(|ui| {
         if ui.button(super::create_text("Open LevelView folder")).clicked() {
-          if let Some(mut path) = SaveManager::get_directory() {
+          if let Some(mut path) = SaveManager::get_config_directory() {
             path = path
-              .join("config")
               .join("levels");
 
             if !path.exists() {
@@ -470,7 +459,7 @@ impl SettingsWindow {
     s.push_str(&format!("show_game_splitter: {}\n", self.show_game_splitter));
     s.push_str(&format!("show_run_counter: {}\n", self.show_run_counter));
 
-    if let Some(path) = Self::config_path() {
+    if let Some(path) = SaveManager::get_config_directory() {
       
       if !path.exists() {
         let _ = std::fs::create_dir_all(&path);
