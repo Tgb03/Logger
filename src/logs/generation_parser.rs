@@ -64,10 +64,11 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         };
 
         self.result.push(location);
-        self.result.sort_by(|a, b| a.get_type().cmp(b.get_type()));
+        self.result.sort();
       },
       Token::CollectableAllocated(zone) => {
         self.buffer_collectable.1.push(zone);
+        self.buffer_collectable.1.sort();
       },
       Token::ObjectiveSpawnedOverride(id, name) => {
         let zone = self.buffer_collectable.1.pop().unwrap_or(9999);
@@ -81,6 +82,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
         };
 
         self.result.push(location);
+        self.result.sort();
       }
       Token::CollectableItemID(id) => {
         let id = Self::get_collectable_name(id);
@@ -94,6 +96,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
             .with_name(id)
             .with_zone(zone)
             .with_type(LocationType::Objective));
+          self.result.sort();
 
         }
       }
@@ -117,6 +120,7 @@ impl TokenParserT<Vec<Location>> for GenerationParser {
           .with_id(seed);
 
         self.result.push(location);
+        self.result.sort();
       }
       Token::GeneratingFinished | Token::GameEndAbort | Token::LogFileEnd => {
         self.done = true;
@@ -143,6 +147,7 @@ impl GenerationParser {
     match id {
       128 => "ID".to_owned(),
       129 => "PD".to_owned(),
+      147 => "HDD".to_owned(),
       148 => "Cryo".to_owned(),
       149 => "GLP".to_owned(),
       150 => "OSIP".to_owned(),

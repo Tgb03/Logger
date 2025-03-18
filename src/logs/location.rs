@@ -112,6 +112,12 @@ impl PartialOrd for Location {
       ord => return ord,
     }
 
-    self.zone.partial_cmp(&other.zone)
+    if self.location_type != LocationType::BulkheadKey &&
+      self.location_type != LocationType::ColoredKey {
+      
+      return self.zone.partial_cmp(&other.zone)
+    }
+
+    None
   }
 }
