@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, u64};
 
 use egui::{Color32, Ui};
+use ron::de::SpannedError;
 
 use crate::{graphics::create_text, logs::location::{Location, LocationType}, save_run::SaveManager};
 
@@ -13,10 +14,17 @@ pub trait LookUpColor {
 
 }
 
+pub enum MapperColorError {
+  
+  SpannedError(SpannedError),
+  FileNotFound,
+
+}
+
 #[derive(Default)]
 pub struct Mapper {
 
-  location_colors: HashMap<String, Option<OptimizedLevelView>>,
+  location_colors: HashMap<String, Result<OptimizedLevelView, MapperColorError>>,
 
 }
 
@@ -26,7 +34,7 @@ impl Mapper {
     ui: &mut Ui, 
     locations: &Vec<Location>, 
     show_objectives: bool,
-    level_view: Option<&OptimizedLevelView>,
+    level_view: Option<&OptimizedLevelView>
   ) -> usize {
 
     let mut len = 0;
@@ -55,12 +63,34 @@ impl Mapper {
     len * 22
   }
 
+  pub fn render_error(&mut self, ui: &mut Ui, level_name: &String) -> usize {
+    if let Some(Err(MapperColorError::SpannedError(error))) = self.location_colors.get(level_name) {
+      ui.colored_label(Color32::RED, create_text(format!("{:?}", error)));
+
+      if ui.button(create_text("Reload file")).clicked() {
+        self.force_load_level_info(level_name);
+      }
+
+      return 12;
+    }
+
+    0
+  }
+
   pub fn get_color_info(&self, level_name: &String) -> Option<&OptimizedLevelView> {
-    self.location_colors.get(level_name)?.as_ref()
+    match self.location_colors.get(level_name) {
+      Some(result) => result.as_ref().ok(),
+      None => None,
+    }
   }
 
   pub fn load_level_info(&mut self, level: &String) {
     if self.location_colors.contains_key(level) { return; }
+
+    self.force_load_level_info(level);
+  }
+
+  fn force_load_level_info(&mut self, level: &String) {
 
     let mut path = SaveManager::get_config_directory().map(
       |v| v.join("levels").join(level)
@@ -70,17 +100,19 @@ impl Mapper {
     if let Some(data) = path.map(|p| fs::read_to_string(p).ok()).flatten() {
       match ron::from_str::<LevelView>(&data) {
         Ok(level_view) => {
-          println!("Loaded: {:?}", level_view);
-          self.location_colors.insert(level.clone(), Some(level_view.into()));
+          self.location_colors.insert(level.clone(), Ok(level_view.into()));
         }
         Err(e) => {
-          println!("{:?}", e);
-          self.location_colors.insert(level.clone(), None);
+          self.location_colors.insert(level.clone(), Err(MapperColorError::SpannedError(e)));
         },
       }
     } else {
-      self.location_colors.insert(level.clone(), None);
+      self.location_colors.insert(
+        level.clone(), 
+        Err(MapperColorError::FileNotFound)
+      );
     }
+
   }
 
 }

@@ -193,6 +193,8 @@ impl<'a> LiveWindow<'a> {
         self.mapper.get_color_info(level_name)
       );
 
+      self.mapper.render_error(ui, level_name);
+
       ui.separator();
     }
     if settings.get_show_splitter() {
