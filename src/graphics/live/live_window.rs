@@ -119,6 +119,11 @@ impl<'a> LiveWindow<'a> {
 
   pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
     self.read_logs(save_manager);
+    
+    if let Some(objective) = self.get_current_run().map(|r| r.get_objective::<RunObjective>()).flatten() {
+      self.level_run_reader.set_name(objective.level_name);
+      self.level_run_reader.set_player_count(objective.player_count);
+    }
 
     let mut y_size = 22;
     
@@ -203,11 +208,6 @@ impl<'a> LiveWindow<'a> {
       y_size += 50;
 
       ui.separator();
-
-      if let Some(objective) = self.get_current_run().map(|r| r.get_objective::<RunObjective>()).flatten() {
-        self.level_run_reader.set_name(objective.level_name);
-        self.level_run_reader.set_player_count(objective.player_count);
-      }
 
       if let Some(current_run) = self.get_current_run() {
         y_size += RunRenderer::render_run(
