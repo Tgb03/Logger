@@ -2,7 +2,7 @@ use egui::ahash::HashSet;
 
 use crate::run::{named_time::NamedTime, objectives::run_objective::RunObjective, time::Time, timed_run::LevelRun, traits::{Run, Timed}};
 
-use super::{token_parser::TokenParserT, tokenizer::Token};
+use super::{token_parser::TokenParserT, token::Token};
 
 /// struct for parsing a single run
 pub struct RunParser {
@@ -122,7 +122,7 @@ impl TokenParserT<LevelRun> for RunParser {
 
 #[cfg(test)]
 mod tests {
-    use crate::{logs::{token_parser::TokenParserT, tokenizer::Token}, run::{objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}} };
+    use crate::{logs::{token_parser::TokenParserT, token::Token}, run::{objectives::run_objective::RunObjective, time::Time, traits::{Run, Timed}} };
 
     use super::RunParser;
 

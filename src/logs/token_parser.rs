@@ -1,7 +1,8 @@
 
 use crate::run::time::Time;
 
-use super::tokenizer::Token;
+use super::token::Token;
+
 
 /// generic trait for a parser
 pub trait TokenParserT<R> : Into<R> {

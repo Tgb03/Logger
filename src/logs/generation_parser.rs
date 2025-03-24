@@ -3,9 +3,13 @@
 use crate::run::time::Time;
 
 use super::{
-  collectable_mapper, location::{
-    Location, LocationType
-  }, token_parser::TokenParserT, tokenizer::Token
+  collectable_mapper, 
+  location::{
+    Location, 
+    LocationType
+  }, 
+  token_parser::TokenParserT, 
+  token::Token
 };
 
 #[derive(Default)]

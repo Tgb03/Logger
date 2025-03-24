@@ -4,7 +4,7 @@ use std::collections::HashSet;
 
 use crate::run::{time::Time, timed_run::LevelRun};
 
-use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, tokenizer::Token};
+use super::{generation_parser::GenerationParser, location::Location, run_parser::RunParser, token_parser::TokenParserT, token::Token};
 
 #[derive(Default)]
 pub struct ParserResult {

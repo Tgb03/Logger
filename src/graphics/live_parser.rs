@@ -31,7 +31,7 @@ impl TokenParserT<ParserResult> for LiveParser {
     self.parser.into_result_mut()
   }
 
-  fn parse_one_token(&mut self, token_pair: (crate::run::time::Time, crate::logs::tokenizer::Token)) -> bool {
+  fn parse_one_token(&mut self, token_pair: (crate::run::time::Time, crate::logs::token::Token)) -> bool {
     self.parser.parse_one_token(token_pair)
   }
 }
