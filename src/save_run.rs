@@ -321,31 +321,6 @@ impl SaveManager {
 
   }
 
-  /*
-  /// save one objective data to pc folder
-  pub fn save_to_file(&self, objective_data: &ObjectiveData) {
-    let id = objective_data.get_id();
-    let file_path = Self::get_directory();
-    
-    if let Some(file_path) = file_path.clone() {
-      if !file_path.exists() {
-        let _ = std::fs::create_dir_all(&file_path);
-      }
-    }
-
-    let file_path = file_path
-      .map(|path| { path.join(id.clone()) });
-
-    let empty = Vec::new();
-    if let Ok(bin_data) = bincode::serialize(self.loaded_runs.get(&id).unwrap_or(&empty)) {
-      //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
-      if let Some(file_path) = file_path {
-        let _ = std::fs::write(file_path, &bin_data);
-      }
-    }
-  }
-  */
-
   /// save all loaded runs to files
   pub fn save_to_files(&self) {
     for (key, vec) in &self.loaded_runs {
