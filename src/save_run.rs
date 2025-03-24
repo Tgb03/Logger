@@ -368,3 +368,11 @@ impl SaveManager {
   }
 
 }
+
+impl Drop for SaveManager {
+  fn drop(&mut self) {
+
+    self.save_to_files();
+  
+  }
+}
