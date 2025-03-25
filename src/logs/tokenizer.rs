@@ -10,9 +10,9 @@ pub trait Tokenizer {
   fn tokenize(&self, lines: &str) -> Vec<(Time, Token)> {
     let mut result = Vec::new();
 
-    for line in lines.split('\n') {
+    for line in lines.split('\n').map(|v| v.trim_start()) {
       if let Some(token) = self.tokenize_single(line) {
-        if let Ok(time) = Time::from(line.trim_start()) {
+        if let Ok(time) = Time::from(line) {
           result.push((time, token));
         }
       }  
@@ -42,7 +42,7 @@ where
 
 }
 
-pub struct BaseTokenizer;
+struct BaseTokenizer;
 pub struct RunTokenizer;
 pub struct GenerationTokenizer;
 
