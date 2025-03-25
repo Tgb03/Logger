@@ -11,7 +11,7 @@ pub struct LiveParser {
   last_position: u64,
   parser: Parser,
   
-  file: Option<File>,
+  file: Option<BufReader<File>>,
   file_name: Option<String>,
 
 }
@@ -83,7 +83,7 @@ impl LiveParser {
     
       self.file_name = Some(str_name.to_string());
       self.file = match File::open(path) {
-        Ok(file) => Some(file),
+        Ok(file) => Some(BufReader::new(file)),
         Err(_) => None,
       };
 
@@ -93,25 +93,25 @@ impl LiveParser {
   }
 
   pub fn load_text(&mut self) -> String {
-    if let Some(file) = &mut self.file {
-      let _ = file.seek(std::io::SeekFrom::Start(self.last_position));
-      let mut reader = BufReader::new(file);
-      let mut buffer = String::new();
-      let mut new_lines = Vec::new();
+    let Some(reader) = &mut self.file else {
+      return String::new();
+    };
 
-      while reader.read_line(&mut buffer).unwrap_or_default() > 0 {
-        new_lines.push(buffer.to_string());
-        buffer.clear();
-      }
-
-      self.last_position = reader.seek(std::io::SeekFrom::Current(0)).expect("Seek 0 failed in live window.");
-    
-      return new_lines.iter()
-        .fold(String::new(), |s1, s2| s1 + s2)
-        .to_string();
+    if let Err(_) = reader.seek(std::io::SeekFrom::Start(self.last_position)) {
+      return String::new();
     }
 
-    "".to_owned()
+    let mut buffer = String::new();
+    let mut line = String::new();
+
+    while reader.read_line(&mut line).unwrap_or(0) > 0 {
+      buffer.push_str(&line);
+      line.clear();
+    }
+
+    self.last_position = reader.stream_position().unwrap_or(self.last_position);
+
+    buffer
   }
 }
 
