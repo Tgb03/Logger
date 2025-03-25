@@ -11,7 +11,7 @@ pub mod file_parse {
 
   use crate::logs::parser::{Parser, ParserResult};
   use crate::logs::token_parser::TokenParserT;
-  use crate::logs::tokenizer::Tokenizer;
+  use crate::logs::tokenizer::{GenericTokenizer, RunTokenizer, Tokenizer};
 
   pub fn parse_all_files_async<'a>(paths: Vec<File>) -> ParserResult {
     #[cfg(debug_assertions)]
@@ -86,7 +86,9 @@ pub mod file_parse {
     let res = path.read_to_string(&mut data);
     if res.is_err() { return Default::default(); }
     
-    let tokens = Tokenizer::tokenize(&data);
+    let tokens = GenericTokenizer::default()
+      .add_tokenizer(RunTokenizer)
+      .tokenize(&data);
 
     Parser::parse_all_tokens_default(tokens.into_iter())
   }

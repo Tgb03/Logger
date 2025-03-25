@@ -10,7 +10,12 @@ use crate::{
   logs::{
     location::Location, 
     token_parser::TokenParserT, 
-    tokenizer::Tokenizer
+    tokenizer::{
+      GenerationTokenizer, 
+      GenericTokenizer, 
+      RunTokenizer, 
+      Tokenizer
+    }
   }, 
   run::{
     objectives::run_objective::RunObjective, 
@@ -97,7 +102,10 @@ impl<'a> LiveWindow<'a> {
       self.frame_counter = 0;
       let new_lines = self.parser.load_text();
 
-      let tokens = Tokenizer::tokenize(&new_lines);
+      let tokens = GenericTokenizer::default()
+        .add_tokenizer(RunTokenizer)
+        .add_tokenizer(GenerationTokenizer)
+        .tokenize(&new_lines);
       
       self.parser.parse_continously(tokens.into_iter());
     
