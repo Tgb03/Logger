@@ -48,9 +48,9 @@ pub struct GenerationTokenizer;
 
 impl Tokenizer for BaseTokenizer {
   fn tokenize_single(&self, line: &str) -> Option<Token> {
-    if line.contains("<color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: ") { return Some(Token::create_session_seed(line)); }
-    if line.contains("SelectActiveExpedition : Selected!") { return Some(Token::create_expedition(line)); }
-    if line.contains("OnApplicationQuit") { return Some(Token::LogFileEnd); }
+    if line.get(44..60).is_some_and(|v| v == "SetSessionIDSeed") { return Some(Token::create_session_seed(line)); }
+    if line.get(30..52).is_some_and(|v| v == "SelectActiveExpedition") { return Some(Token::create_expedition(line)); }
+    if line.get(15..32).is_some_and(|v| v == "OnApplicationQuit") { return Some(Token::LogFileEnd); }
   
     None
   }
@@ -58,17 +58,17 @@ impl Tokenizer for BaseTokenizer {
 
 impl Tokenizer for RunTokenizer {
   fn tokenize_single(&self, line: &str) -> Option<Token> {
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel") { return Some(Token::GameStarting); }
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
     if line.contains("exits PLOC_InElevator") { return Some(Token::create_player(line)); }
-    if line.contains("OnDoorIsOpened, LinkedToZoneData.EventsOnEnter") { return Some(Token::DoorOpen); }
-    if line.contains("BulkheadDoorController_Core.OnScanDone") { return Some(Token::BulkheadScanDone); }
-    if line.contains("WardenObjectiveManager.CheckWardenObjectiveStatus, layer: SecondaryLayer, status is diff! newStatus: WardenObjectiveItemSolved") { return Some(Token::SecondaryDone) }
-    if line.contains("WardenObjectiveManager.CheckWardenObjectiveStatus, layer: ThirdLayer, status is diff! newStatus: WardenObjectiveItemSolved") { return Some(Token::OverloadDone) }
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess") { return Some(Token::GameEndWin); }
-    if line.contains("RundownManager.OnExpeditionEnded(endState: Abort") { return Some(Token::GameEndAbort); }
-    if line.contains("RundownManager.EndGameSession") { return Some(Token::GameEndAbort); }
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionFail") { return Some(Token::GameEndLost); }
+    if line.get(69..109).is_some_and(|v| v == ": StopElevatorRide TO: ReadyToStartLevel") { return Some(Token::GameStarting); }
+    if line.get(69..100).is_some_and(|v| v == ": ReadyToStartLevel TO: InLevel") { return Some(Token::GameStarted); }
+    if line.get(31..61).is_some_and(|v| v == "LinkedToZoneData.EventsOnEnter") { return Some(Token::DoorOpen); }
+    if line.get(15..42).is_some_and(|v| v == "BulkheadDoorController_Core") { return Some(Token::BulkheadScanDone); }
+    if line.get(116..141).is_some_and(|v| v == "WardenObjectiveItemSolved") { return Some(Token::SecondaryDone) }
+    if line.get(112..137).is_some_and(|v| v == "WardenObjectiveItemSolved") { return Some(Token::OverloadDone) }
+    if line.get(71..100).is_some_and(|v| v == "InLevel TO: ExpeditionSuccess") { return Some(Token::GameEndWin); }
+    if line.get(15..63).is_some_and(|v| v == "RundownManager.OnExpeditionEnded(endState: Abort") { return Some(Token::GameEndAbort); }
+    if line.get(15..44).is_some_and(|v| v == "RundownManager.EndGameSession") { return Some(Token::GameEndAbort); }
+    if line.get(71..97).is_some_and(|v| v == "InLevel TO: ExpeditionFail") { return Some(Token::GameEndLost); }
 
     None
   }
@@ -76,15 +76,15 @@ impl Tokenizer for RunTokenizer {
 
 impl Tokenizer for GenerationTokenizer {
   fn tokenize_single(&self, line: &str) -> Option<Token> {
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating") { return Some(Token::GeneratingLevel); }
-    if line.contains("GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
-    if line.contains("CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
-    if line.contains("TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
-    if line.contains("<color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_collectable_allocated(line)); }
-    if line.contains("TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") { return Some(Token::create_hsu_alloc(line)); }
-    if line.contains("<color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function") { return Some(Token::create_objective_spawned_override(line)); }
-    if line.contains("<color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems") { return Some(Token::create_collectable_item_id(line)); }
-    if line.contains("GenericSmallPickupItem_Core.SetupFromLevelgen, seed:") { return Some(Token::create_collectable_item_seed(line)); }
+    if line.get(69..91).is_some_and(|v| v == ": Lobby TO: Generating") { return Some(Token::GeneratingLevel); }
+    if line.get(69..109).is_some_and(|v| v == ": Generating TO: ReadyToStopElevatorRide") { return Some(Token::GeneratingFinished); }
+    if line.get(29..54).is_some_and(|v| v == "CreateKeyItemDistribution") { return Some(Token::create_item_alloc(line)); }
+    if line.get(30..81).is_some_and(|v| v == "TryGetExistingGenericFunctionDistributionForSession") { return Some(Token::create_item_spawn(line)); }
+    if line.get(30..102).is_some_and(|v| v == "LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount") { return Some(Token::create_collectable_allocated(line)); }
+    if line.get(35..121).is_some_and(|v| v == "TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") { return Some(Token::create_hsu_alloc(line)); }
+    if line.get(35..109).is_some_and(|v| v == "LG_Distribute_WardenObjective, placing warden objective item with function") { return Some(Token::create_objective_spawned_override(line)); }
+    if line.get(30..89).is_some_and(|v| v == "LG_Distribute_WardenObjective.DistributeGatherRetrieveItems") { return Some(Token::create_collectable_item_id(line)); }
+    if line.get(15..67).is_some_and(|v| v == "GenericSmallPickupItem_Core.SetupFromLevelgen, seed:") { return Some(Token::create_collectable_item_seed(line)); }
 
     None
   }
