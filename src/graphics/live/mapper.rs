@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, u64};
 
-use egui::{Color32, Ui};
+use egui::{Color32, RichText, Ui, WidgetText};
+use itertools::Itertools;
 use ron::de::SpannedError;
 
 use crate::{graphics::create_text, logs::location::{Location, LocationType}, save_run::SaveManager};
@@ -30,6 +31,14 @@ pub struct Mapper {
 
 impl Mapper {
 
+  fn show_colored<T>(ui: &mut Ui, text: T, color: Option<Color32>)
+  where T: Into<RichText> + Into<WidgetText> {
+    match color {
+      Some(color) => ui.colored_label(color, text),
+      None => ui.label(text),
+    };
+  }
+
   pub fn render_type(
     ui: &mut Ui, 
     locations: &Vec<Location>, 
@@ -39,25 +48,48 @@ impl Mapper {
 
     let mut len = 0;
 
-    for (id, location) in locations.iter().enumerate() {
-      if location.get_zone().is_some_and(|z| !level_view.is_valid_zone(&z)) { continue; }
+    for (id, key_location) in locations
+      .iter()
+      .filter(|v| 
+        !v.has_type(&LocationType::Objective) &&
+        v.get_zone().is_none_or(|z| level_view.is_valid_zone(&z))
+      )
+      .enumerate() {
+      
+      let color = level_view.lookup(id, key_location);
+      Self::show_colored(ui, create_text(format!("{key_location}")), color);
+      len += 1;
 
-      if show_objectives || !location.has_type(&LocationType::Objective) {
-        let color = level_view.lookup(id, location);
+    }
 
-        match color {
-          Some(color) => {
-            ui.colored_label(
-              color,
-              create_text(format!("{}", location))
-            );
-          },
-          None => {
-            ui.label(create_text(format!("{}", location)));
-          },
+    if show_objectives {
+      for ((name, zone), group) in locations
+        .iter()
+        .filter(|v| v.has_type(&LocationType::Objective))
+        .chunk_by(|v| (v.get_name(), v.get_zone()))
+        .into_iter() {
+
+          ui.horizontal(|ui| {
+            ui.label(create_text(format!("{}: ZONE {} at",
+              name.map(|v| v.as_str()).unwrap_or("No name"),
+              zone.map(|v| v.to_string()).unwrap_or("No ID".to_owned()),
+            )));
+
+            for it in group {
+              let color = level_view.lookup(0, it);
+              Self::show_colored(
+                ui, 
+                create_text(
+                  it.get_id().map(|v| v.to_string()).unwrap_or("No ID".to_owned())
+                ), 
+                color
+              );
+            }
+          });
+
+          len += 1;
+
         }
-        len += 1;
-      }
     }
 
     len * 22
