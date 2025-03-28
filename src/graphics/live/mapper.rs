@@ -75,7 +75,7 @@ impl Mapper {
           ui.horizontal(|ui| {
             ui.label(create_text(format!("{}: ZONE {} at",
               name.map(|v| v.as_str()).unwrap_or("No name"),
-              zone.map(|v| v.to_string()).unwrap_or("No ID".to_owned()),
+              zone.map(|v| v.to_string()).unwrap_or("None".to_owned()),
             )));
 
             for it in group {
