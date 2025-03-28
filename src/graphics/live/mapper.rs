@@ -65,7 +65,10 @@ impl Mapper {
     if show_objectives {
       for ((name, zone), group) in locations
         .iter()
-        .filter(|v| v.has_type(&LocationType::Objective))
+        .filter(|v| 
+          v.has_type(&LocationType::Objective) &&
+          v.get_zone().is_none_or(|z| level_view.is_valid_zone(&z))
+        )
         .chunk_by(|v| (v.get_name(), v.get_zone()))
         .into_iter() {
 
