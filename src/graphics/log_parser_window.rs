@@ -99,7 +99,7 @@ impl LogParserWindow {
 
         save_manager.save(RunEnum::Game(game_run));
       }
-      if ui.button(super::create_text("Export File")).clicked() {
+      if ui.button(super::create_text("Export to CSV")).clicked() {
         if let Some(path) = rfd::FileDialog::new()
           .set_title("Export to file")
           .set_file_name("new_file.csv")
