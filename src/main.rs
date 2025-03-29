@@ -13,6 +13,7 @@ pub mod parse_files;
 pub mod save_run;
 pub mod graphics;
 pub mod key_guess;
+pub mod export;
 
 fn main() -> eframe::Result {
 
