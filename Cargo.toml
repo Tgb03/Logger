@@ -1,6 +1,6 @@
 [package]
 name = "Logger"
-version = "2.1.6"
+version = "2.1.7"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
@@ -28,6 +28,7 @@ reqwest = { version = "0.12.12", features = ["blocking"] }
 opener = "0.7.2"
 open = "5.3.2"
 itertools = "0.14.0"
+might_sleep = "0.2.0"
 
 [dev-dependencies]
 tempdir = "0.3.7"

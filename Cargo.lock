@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Logger"
-version = "2.1.6"
+version = "2.1.7"
 dependencies = [
  "bincode",
  "directories",
@@ -13,6 +13,7 @@ dependencies = [
  "egui_extras",
  "enum_dispatch",
  "itertools",
+ "might_sleep",
  "open",
  "opener",
  "pad",
@@ -1758,6 +1759,12 @@ checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
 dependencies = [
  "autocfg",
 ]
+
+[[package]]
+name = "might_sleep"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ed1ba687a02494933113456248f2993adb98252e39a0a8723a1a49e367ed912"
 
 [[package]]
 name = "mime"

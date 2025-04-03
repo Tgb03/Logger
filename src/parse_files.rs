@@ -28,6 +28,8 @@ pub mod file_parse {
       threads.push(thread::spawn(move || {
         
         let mut result = ParserResult::default();
+        let tokenizer = GenericTokenizer::default()
+          .add_tokenizer(RunTokenizer);
 
         loop {
           
@@ -39,7 +41,7 @@ pub mod file_parse {
           };
 
           match file {
-            Some(file) => result.merge_result(parse_file(&file)),
+            Some(file) => result.merge_result(parse_file(&file, &tokenizer)),
             None => return result,
           }
 
@@ -69,11 +71,14 @@ pub mod file_parse {
     I: IntoIterator<Item = &'a File> {
     let mut result: ParserResult = Default::default();
 
+    let tokenizer = GenericTokenizer::default()
+      .add_tokenizer(RunTokenizer);
+
     // let start = Instant::now();
     // let mut counter = 0;
     for path in paths {
       // counter += 1;
-      result.merge_result(parse_file(path));
+      result.merge_result(parse_file(path, &tokenizer));
     }
     // let duration = start.elapsed();
     //println!("Parsed without threads {} files in: {:?}", counter, duration); 
@@ -81,14 +86,12 @@ pub mod file_parse {
     result
   }
 
-  fn parse_file(mut path: &File) -> ParserResult {
+  fn parse_file(mut path: &File, tokenizer: &impl Tokenizer) -> ParserResult {
     let mut data = String::new();
     let res = path.read_to_string(&mut data);
     if res.is_err() { return Default::default(); }
     
-    let tokens = GenericTokenizer::default()
-      .add_tokenizer(RunTokenizer)
-      .tokenize(&data);
+    let tokens = tokenizer.tokenize(&data);
 
     Parser::parse_all_tokens_default(tokens.into_iter())
   }
