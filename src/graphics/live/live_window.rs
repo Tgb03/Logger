@@ -44,6 +44,8 @@ pub struct LiveWindow<'a> {
   level_run_reader: RunObjectiveReader,
   game_run_reader: GameObjectiveReader,
   game_run: Option<GameRun>,
+  
+  tokenizer: GenericTokenizer,
 
 }
 
@@ -59,6 +61,9 @@ impl<'a> Default for LiveWindow<'a> {
       level_run_reader: RunObjectiveReader::default(),
       game_run: None,
       last_y_size: 0,
+      tokenizer: GenericTokenizer::default()
+      .add_tokenizer(RunTokenizer)
+      .add_tokenizer(GenerationTokenizer)
     }
   }
 }
@@ -111,10 +116,7 @@ impl<'a> LiveWindow<'a> {
       self.parser.load_file();
       let new_lines = self.parser.load_text();
 
-      let tokens = GenericTokenizer::default()
-        .add_tokenizer(RunTokenizer)
-        .add_tokenizer(GenerationTokenizer)
-        .tokenize(&new_lines);
+      let tokens = self.tokenizer.tokenize(&new_lines);
       
       self.parser.parse_continously(tokens.into_iter());
     
