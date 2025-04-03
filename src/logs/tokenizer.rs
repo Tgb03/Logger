@@ -13,6 +13,8 @@ pub trait Tokenizer {
     for line in lines.split('\n').map(|v| v.trim_start()) {
       if let Some(token) = self.tokenize_single(line) {
         if let Ok(time) = Time::from(line) {
+          #[cfg(debug_assertions)]
+          eprintln!("{} Token parsed:{:?}", time.to_string(), token);
           result.push((time, token));
         }
       }  
@@ -67,7 +69,8 @@ impl Tokenizer for RunTokenizer {
     if line.get(112..137).is_some_and(|v| v == "WardenObjectiveItemSolved") { return Some(Token::OverloadDone) }
     if line.get(71..100).is_some_and(|v| v == "InLevel TO: ExpeditionSuccess") { return Some(Token::GameEndWin); }
     if line.get(15..63).is_some_and(|v| v == "RundownManager.OnExpeditionEnded(endState: Abort") { return Some(Token::GameEndAbort); }
-    if line.get(15..44).is_some_and(|v| v == "RundownManager.EndGameSession") { return Some(Token::GameEndAbort); }
+    if line.get(15..48).is_some_and(|v| v == "CleanupAfterExpedition AfterLevel") { return Some(Token::GameEndAbort); }
+    if line.get(15..58).is_some_and(|v| v == "DEBUG : Leaving session hub! : IsInHub:True") { return Some(Token::GameEndAbort); }
     if line.get(71..97).is_some_and(|v| v == "InLevel TO: ExpeditionFail") { return Some(Token::GameEndLost); }
 
     None

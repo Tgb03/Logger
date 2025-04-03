@@ -110,7 +110,8 @@ impl TokenParserT<ParserResult> for Parser {
       ParserState::OutOfGame => {
         match token {
           Token::GeneratingLevel => {
-            //eprintln!("Started generating.");
+            #[cfg(debug_assertions)]
+            eprintln!("Started generating.");
             self.state = ParserState::GeneratingLevel;
             self.result.locations.clear();
             self.generation_parser = Some(GenerationParser::new(self.name_of_level.clone()));
@@ -119,7 +120,8 @@ impl TokenParserT<ParserResult> for Parser {
           }
           Token::SelectExpedition(name) => self.name_of_level = name,
           Token::GameStarting => {
-            //eprintln!("Started game.");
+            #[cfg(debug_assertions)]
+            eprintln!("Started game.");
             self.state = ParserState::InGame;
             self.run_parser = Some(RunParser::new(self.name_of_level.clone()))
           },
@@ -136,7 +138,6 @@ impl TokenParserT<ParserResult> for Parser {
             self.run_parser = Some(parser);
           },
           */
-          Token::GameEndAbort => return self.state == ParserState::Finished,
           Token::LogFileEnd => {
             self.state = ParserState::Finished;
             
@@ -153,7 +154,8 @@ impl TokenParserT<ParserResult> for Parser {
           self.result.locations.extend(locations);
           self.state = ParserState::OutOfGame;
 
-          //eprintln!("Finished generating");
+          #[cfg(debug_assertions)]
+          eprintln!("Finished generating");
         }
       }
       ParserState::InGame => {
@@ -163,7 +165,8 @@ impl TokenParserT<ParserResult> for Parser {
           self.result.runs.push(run);
           self.state = ParserState::OutOfGame;
         
-          //eprintln!("Finished game");
+          #[cfg(debug_assertions)]
+          eprintln!("Finished game");
         }
       },
       ParserState::Finished => return true,
