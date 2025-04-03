@@ -62,8 +62,8 @@ impl<'a> Default for LiveWindow<'a> {
       game_run: None,
       last_y_size: 0,
       tokenizer: GenericTokenizer::default()
-      .add_tokenizer(RunTokenizer)
-      .add_tokenizer(GenerationTokenizer)
+        .add_tokenizer(RunTokenizer)
+        .add_tokenizer(GenerationTokenizer)
     }
   }
 }
