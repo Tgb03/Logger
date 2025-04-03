@@ -90,6 +90,14 @@ impl<'a> LiveWindow<'a> {
 
   }
 
+  pub fn start_watcher(&mut self, settings: &SettingsWindow) {
+    self.parser.start_watcher(settings.get_logs_folder().clone());
+  }
+
+  pub fn stop_watcher(&mut self) {
+    self.parser.stop_watcher();
+  }
+
   /// read the logs and update 
   /// 
   /// also saves the new runs to the save_manager.
@@ -100,6 +108,7 @@ impl<'a> LiveWindow<'a> {
     self.frame_counter += 1;
     if self.frame_counter == 32 {
       self.frame_counter = 0;
+      self.parser.load_file();
       let new_lines = self.parser.load_text();
 
       let tokens = GenericTokenizer::default()
@@ -118,11 +127,6 @@ impl<'a> LiveWindow<'a> {
       }
     }
 
-  }
-
-  /// load the latest file in the logs and proceed with this file.
-  pub fn load_file(&mut self, settings: &SettingsWindow) {
-    self.parser.load_file(settings);
   }
 
   pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {

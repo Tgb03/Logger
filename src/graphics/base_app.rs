@@ -106,6 +106,7 @@ impl<'a> eframe::App for BaseApp<'a> {
         if self.app_state == AppState::LiveWindow {
           if ui.button(super::create_text("Stop Splitter")).clicked() {
             self.app_state = AppState::None;
+            self.live_window.stop_watcher();
 
             ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::Normal));
             ctx.send_viewport_cmd(egui::ViewportCommand::Decorations(true));
@@ -127,7 +128,7 @@ impl<'a> eframe::App for BaseApp<'a> {
 
         if ui.button(super::create_text("Live Splitter")).clicked() {
           self.app_state = AppState::LiveWindow;
-          self.live_window.load_file(&self.settings_window);
+          self.live_window.start_watcher(&self.settings_window);
           ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::AlwaysOnTop));
           ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(self.settings_window.get_live_rectangle().min));
           ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.settings_window.get_live_rectangle().size()));

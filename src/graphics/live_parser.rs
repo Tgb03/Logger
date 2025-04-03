@@ -1,9 +1,8 @@
-use std::{fs::{self, File}, io::{BufRead, BufReader, Seek}};
+use std::{fs::File, io::{BufRead, BufReader, Seek}, path::PathBuf, sync::mpsc::Receiver};
 
 use crate::logs::{generation_parser::GenerationParser, parser::{Parser, ParserResult}, run_parser::RunParser, token_parser::TokenParserT};
 
-use super::settings_window::SettingsWindow;
-
+use super::folder_watcher::FolderWatcher;
 
 #[derive(Default)]
 pub struct LiveParser {
@@ -12,7 +11,7 @@ pub struct LiveParser {
   parser: Parser,
   
   file: Option<BufReader<File>>,
-  file_name: Option<String>,
+  folder_watcher: Option<Receiver<PathBuf>>,
 
 }
 
@@ -54,34 +53,21 @@ impl LiveParser {
     self.last_position = 0;
   }
 
+  pub fn start_watcher(&mut self, folder_path: PathBuf) {
+    self.folder_watcher = Some(FolderWatcher::new_watcher(folder_path));
+  }
+
+  pub fn stop_watcher(&mut self) {
+    self.folder_watcher = None;
+  }
   
-  pub fn load_file(&mut self, settings: &SettingsWindow) {
-    let path = settings.get_logs_folder();
-
-    let path = fs::read_dir(path)
-      .expect("Couldn't access local directory")
-      .flatten()
-      .filter(|f| {
-        let metadata = match f.metadata() {
-          Ok(metadata) => metadata,
-          Err(_) => { return false; },
-        };
-
-        metadata.is_file() && f.file_name().to_str().unwrap_or_default().contains("NICKNAME_NETSTATUS")
-      })
-      .max_by_key(|x| {
-        match x.metadata() {
-          Ok(metadata) => metadata.modified().ok(),
-          Err(_) => Default::default(),
-        }
-      });
+  pub fn load_file(&mut self) {
+    let path = self.folder_watcher.as_mut()
+      .map(|v| v.try_recv().ok())
+      .flatten();
 
     if let Some(path) = path {
-      let path = path.path();
-      let name = path.file_name().unwrap_or_default();
-      let str_name = name.to_str().unwrap_or_default();
-    
-      self.file_name = Some(str_name.to_string());
+
       self.file = match File::open(path) {
         Ok(file) => Some(BufReader::new(file)),
         Err(_) => None,

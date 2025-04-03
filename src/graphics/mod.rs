@@ -12,6 +12,8 @@ pub mod live_parser;
 pub mod implementations;
 pub mod live;
 
+pub mod folder_watcher;
+
 pub fn create_text<T>(text: T) -> egui::RichText
 where T: Into<RichText> {
   Into::<RichText>::into(text)
