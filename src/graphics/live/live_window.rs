@@ -108,6 +108,16 @@ impl<'a> LiveWindow<'a> {
     self.parser.stop_watcher();
   }
 
+  pub fn save_unsaved_runs(&mut self, save_manager: &mut SaveManager) {
+    let runs = self.parser.into_result().get_runs();
+    if self.parser.get_run_parser().is_some() && runs.len() > self.run_counter {
+      let to_save = &runs[self.run_counter..runs.len()];
+      self.run_counter = runs.len();
+
+      save_manager.save_multiple(to_save.iter().map(|v| RunEnum::Level(v.clone())).collect());
+    }
+  }
+
   /// read the logs and update 
   /// 
   /// also saves the new runs to the save_manager.
@@ -124,13 +134,7 @@ impl<'a> LiveWindow<'a> {
       let tokens = self.tokenizer.tokenize(&new_lines);
       self.parser.parse_continously(tokens.into_iter());
     
-      let runs = self.parser.into_result().get_runs();
-      if runs.len() > self.run_counter {
-        let to_save = &runs[self.run_counter..runs.len()];
-        self.run_counter = runs.len();
-
-        save_manager.save_multiple(to_save.iter().map(|v| RunEnum::Level(v.clone())).collect());
-      }
+      self.save_unsaved_runs(save_manager);
     }
 
     self.level_run_renderer = match (self.level_run_renderer.take(), self.get_current_run(), self.parser.get_run_parser().is_some()) {
