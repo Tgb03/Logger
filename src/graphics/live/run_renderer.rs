@@ -10,6 +10,8 @@ pub struct RunRenderer {
   best_run_labels: VecDeque<(String, Color32)>,
   best_split_labels: VecDeque<(String, Color32)>,
 
+  current_run_total_time: Time,
+
   best_run: Option<RunEnum>,
   best_run_total_time: Time,
 
@@ -34,6 +36,8 @@ impl RunRenderer {
       best_split_labels: VecDeque::new(),
 
       best_run,
+
+      current_run_total_time: Time::default(),
       best_run_total_time: Time::default(),
 
       size: 0,
@@ -61,18 +65,19 @@ impl RunRenderer {
     // println!("!!! Theoretical: {:?}", self.compare_theoretical);
 
     if let Some(best_run) = &self.best_run {
+      let mut copy = self.current_run_total_time;
+
       self.best_run_labels.extend(
-        best_run.get_splits()
-          .skip(self.size)
-          .zip(times_to_be_added.iter())
-          .map(|(s, time): (&dyn Timed, &&dyn Timed)| {
-            let run_time = time.get_time();
-            let compared_time = s.get_time();
-            self.best_run_total_time = self.best_run_total_time.add(&compared_time);
-            
-            match run_time.is_smaller_or_equal_than(&compared_time) {
-              true => (compared_time.sub(&run_time).to_string_no_hours(), Color32::GREEN),
-              false => (run_time.sub(&compared_time).to_string_no_hours(), Color32::RED),
+        times_to_be_added.iter()
+          .map(|v| {
+            copy = copy.add(&v.get_time());
+            self.best_run_total_time = self.best_run_total_time.add(
+              &best_run.get_time_for_split(v.get_name()).unwrap_or_default()
+            );
+
+            match copy.is_smaller_or_equal_than(&self.best_run_total_time) {
+              true => (self.best_run_total_time.sub(&copy).to_string_no_hours(), Color32::GREEN),
+              false => (copy.sub(&self.best_run_total_time).to_string_no_hours(), Color32::RED),
             }
           })
       );
@@ -99,7 +104,13 @@ impl RunRenderer {
     }
 
     self.labels.extend(
-      times_to_be_added.iter().map(|v| v.get_time().to_string())
+      times_to_be_added
+        .iter()
+        .map(|v| {
+          self.current_run_total_time = self.current_run_total_time.add(&v.get_time());
+
+          self.current_run_total_time.to_string()
+        })
     );
 
     self.size += times_to_be_added.len();

@@ -107,7 +107,7 @@ impl<'a> eframe::App for BaseApp<'a> {
           if ui.button(super::create_text("Stop Splitter")).clicked() {
             self.app_state = AppState::None;
 
-            self.live_window.save_unsaved_runs(&mut self.save_manager);
+            self.live_window.save_unsaved_forced(&mut self.save_manager);
             self.live_window.stop_watcher();
 
             ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(egui::WindowLevel::Normal));

@@ -102,19 +102,25 @@ impl<'a> LiveWindow<'a> {
 
   pub fn start_watcher(&mut self, settings: &SettingsWindow) {
     self.parser.start_watcher(settings.get_logs_folder().clone());
+    self.last_y_size = 0;
   }
 
   pub fn stop_watcher(&mut self) {
     self.parser.stop_watcher();
   }
 
-  pub fn save_unsaved_runs(&mut self, save_manager: &mut SaveManager) {
+  pub fn save_unsaved_forced(&mut self, save_manager: &mut SaveManager) {
+    let runs = self.parser.into_result().get_runs();
+    let to_save = &runs[self.run_counter..runs.len()];
+    self.run_counter = runs.len();
+
+    save_manager.save_multiple(to_save.iter().map(|v| RunEnum::Level(v.clone())).collect());
+  }
+
+  fn save_unsaved_runs(&mut self, save_manager: &mut SaveManager) {
     let runs = self.parser.into_result().get_runs();
     if self.parser.get_run_parser().is_some() && runs.len() > self.run_counter {
-      let to_save = &runs[self.run_counter..runs.len()];
-      self.run_counter = runs.len();
-
-      save_manager.save_multiple(to_save.iter().map(|v| RunEnum::Level(v.clone())).collect());
+      self.save_unsaved_forced(save_manager);
     }
   }
 
