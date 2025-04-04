@@ -98,7 +98,7 @@ impl RunRenderer {
                   false => (run_split.sub(best_split).to_string_no_hours(), Color32::RED),
                 }
               })
-              .unwrap_or(("            ".to_string(), Color32::BLACK))
+              .unwrap_or(("         ".to_string(), Color32::BLACK))
           })
       );
     }
@@ -134,12 +134,12 @@ impl RunRenderer {
 
         match self.best_run_labels.get(i) {
           Some((label, color)) => ui.colored_label(*color, create_text(label)),
-          None => ui.label(create_text("            ")),
+          None => ui.label(create_text("         ")),
         };
 
         match self.best_split_labels.get(i) {
           Some((label, color)) => ui.colored_label(*color, create_text(label)),
-          None => ui.label(create_text("            ")),
+          None => ui.label(create_text("         ")),
         }
       });
     }
