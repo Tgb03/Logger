@@ -261,7 +261,7 @@ impl<'a> LiveWindow<'a> {
 
       ui.separator();
 
-      y_size += 50 + self.level_run_renderer.as_ref().map(|r| r.render(ui)).unwrap_or_default();
+      y_size += 32 + self.level_run_renderer.as_ref().map(|r| r.render(ui)).unwrap_or_default();
     }
 
     if self.last_y_size != y_size {
