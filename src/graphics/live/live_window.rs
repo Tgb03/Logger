@@ -44,6 +44,9 @@ pub struct LiveWindow<'a> {
   level_run_reader: RunObjectiveReader,
   game_run_reader: GameObjectiveReader,
   game_run: Option<GameRun>,
+
+  game_run_renderer: Option<RunRenderer>,
+  level_run_renderer: Option<RunRenderer>,
   
   tokenizer: GenericTokenizer,
 
@@ -59,6 +62,8 @@ impl<'a> Default for LiveWindow<'a> {
       key_guesser: KeyGuesser::default(),
       game_run_reader: GameObjectiveReader::default(),
       level_run_reader: RunObjectiveReader::default(),
+      level_run_renderer: None,
+      game_run_renderer: None,
       game_run: None,
       last_y_size: 0,
       tokenizer: GenericTokenizer::default()
@@ -108,7 +113,7 @@ impl<'a> LiveWindow<'a> {
   /// also saves the new runs to the save_manager.
   /// 
   /// beware this needs to be called 32 times for it to read logs once.
-  fn read_logs(&mut self, save_manager: &mut SaveManager) {
+  fn read_logs(&mut self, save_manager: &mut SaveManager, settings: &SettingsWindow) {
 
     self.frame_counter += 1;
     if self.frame_counter == 32 {
@@ -117,7 +122,6 @@ impl<'a> LiveWindow<'a> {
       let new_lines = self.parser.load_text();
 
       let tokens = self.tokenizer.tokenize(&new_lines);
-      
       self.parser.parse_continously(tokens.into_iter());
     
       let runs = self.parser.into_result().get_runs();
@@ -129,10 +133,27 @@ impl<'a> LiveWindow<'a> {
       }
     }
 
+    self.level_run_renderer = match (self.level_run_renderer.take(), self.get_current_run(), self.parser.get_run_parser().is_some()) {
+        (None, Some(run), _) => Some(RunRenderer::new(
+          run,
+          settings.get_compare_to_record(), 
+          settings.get_compare_to_theoretical(), 
+          settings.get_splitter_length(), 
+          save_manager)),
+        (Some(_), Some(run), true) => Some(RunRenderer::new(
+          run,
+          settings.get_compare_to_record(), 
+          settings.get_compare_to_theoretical(), 
+          settings.get_splitter_length(), 
+          save_manager)),
+        (Some(renderer), Some(_), false) => Some(renderer),
+        _ => None,
+    }
+
   }
 
   pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
-    self.read_logs(save_manager);
+    self.read_logs(save_manager, settings);
     
     if let Some(objective) = self.get_current_run().map(|r| r.get_objective::<RunObjective>()).flatten() {
       self.level_run_reader.set_name(objective.level_name);
@@ -153,16 +174,11 @@ impl<'a> LiveWindow<'a> {
 
           if ui.button(create_text("Stop Game Run")).clicked() {
             valid = false;
+            self.game_run_renderer = None;
           }
 
-          y_size += 28 + RunRenderer::render_run(
-            ui, 
-            &run, 
-            None, 
-            settings.get_compare_to_record(),
-            settings.get_compare_to_theoretical(),
-            settings.get_game_splitter_length(), 
-            save_manager);
+          self.game_run_renderer.as_mut().map(|r| r.update(&run, save_manager));
+          y_size += 28 + self.game_run_renderer.as_ref().map(|r| r.render(ui)).unwrap_or_default();
 
           ui.separator();
         
@@ -183,7 +199,19 @@ impl<'a> LiveWindow<'a> {
           ui.separator();
 
           match start {
-            true => Some(GameRun::new(self.game_run_reader.get_objective().clone())),
+            true => {
+              let run = GameRun::new(self.game_run_reader.get_objective().clone());
+
+              self.game_run_renderer = Some(RunRenderer::new(
+                &run, 
+                settings.get_compare_to_record(), 
+                settings.get_compare_to_theoretical(), 
+                settings.get_game_splitter_length(), 
+                save_manager
+              ));
+
+              Some(run)
+            },
             false => None,
           }
         },
@@ -219,20 +247,9 @@ impl<'a> LiveWindow<'a> {
     if settings.get_show_splitter() {
       self.level_run_reader.show(ui);
 
-      y_size += 50;
-
       ui.separator();
 
-      if let Some(current_run) = self.get_current_run() {
-        y_size += RunRenderer::render_run(
-          ui, 
-          current_run, 
-          Some(&self.level_run_reader.get_objective().to_string()), 
-          settings.get_compare_to_record(),
-          settings.get_compare_to_theoretical(),
-          settings.get_splitter_length(), 
-          save_manager);
-      } 
+      y_size += 50 + self.level_run_renderer.as_ref().map(|r| r.render(ui)).unwrap_or_default();
     }
 
     if self.last_y_size != y_size {
