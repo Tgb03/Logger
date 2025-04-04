@@ -134,7 +134,9 @@ impl<'a> LiveWindow<'a> {
     self.frame_counter += 1;
     if self.frame_counter == 32 {
       self.frame_counter = 0;
-      self.parser.load_file();
+      if self.parser.load_file() {
+        self.run_counter = 0;
+      }
       let new_lines = self.parser.load_text();
 
       let tokens = self.tokenizer.tokenize(&new_lines);

@@ -61,7 +61,7 @@ impl LiveParser {
     self.folder_watcher = None;
   }
   
-  pub fn load_file(&mut self) {
+  pub fn load_file(&mut self) -> bool {
     let path = self.folder_watcher.as_mut()
       .map(|v| v.try_recv().ok())
       .flatten();
@@ -74,8 +74,11 @@ impl LiveParser {
       };
 
       self.reset();
+
+      return true
     }
 
+    false
   }
 
   pub fn load_text(&mut self) -> String {
