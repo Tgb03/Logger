@@ -1,6 +1,6 @@
 [package]
 name = "Logger"
-version = "2.1.8"
+version = "2.1.9"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 

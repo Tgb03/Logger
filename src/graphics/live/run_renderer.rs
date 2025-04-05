@@ -20,6 +20,8 @@ pub struct RunRenderer {
   compare_theoretical: bool,
   max_length: usize,
 
+  objective_str: String,
+
 }
 
 impl RunRenderer {
@@ -44,6 +46,7 @@ impl RunRenderer {
 
       compare_theoretical,
       max_length,
+      objective_str: run.get_objective_str().clone(),
     };
 
     result.update(run, save_manager);
@@ -145,6 +148,10 @@ impl RunRenderer {
     }
 
     (size + 1) * 22
+  }
+
+  pub fn get_objective_str(&self) -> &String {
+    &self.objective_str
   }
 
 }
