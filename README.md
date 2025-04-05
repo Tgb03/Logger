@@ -13,13 +13,50 @@ This app aims to streamline using logs to get all the data from them automatical
 
 ## WardenMapper:
 - [x] Automatically find keys.
-- [ ] Automatically find objective items.
+- [x] Automatically find objective items.
 
 ## Full game/rundown speedruns:
 - [x] Automatically give time.
 - [ ] Automatically check if run is complete.
 - [x] Calculate splits.
 - [ ] Calculate theoretical best.
+
+# What each setting does:
+
+### Livesplitter Settings
+
+- `Show Actual Splits` Shows the splits in each run. Simply turn it off if you don't want to see the splits.
+
+- `Show Game Splitter` Shows the full rundown/game splits. Use this if you are running a GTFO% or Rundown% run.
+
+- `Show Run Counter` Shows a run counter in the livesplitter along with a seed counter. The run counter is how many times u dropped into a level (resets included) while the seed counter is how many unique seeds you got.
+
+- `Path to logs folder` The path for where the game saves your logs. Modify this if you have some weird setup.
+
+- `X position` The default X position for the livesplitter on your screen.
+
+- `Y position` The default Y position for the livesplitter on your screen.
+
+- `Compare to saved record` Whether or not the current run you are in gets compared to the saved record on the app.
+
+- `Compare to best splits` Whether or not the current run you are in gets compared to the best splits saved on the app.
+
+- `Splitter max length` how many splits are shown max in the livesplitter.
+- `Game splitter max length` how many splits are shown max in the gamesplitter.
+
+### Mapper Settings
+
+- `Open LevelView folder` show the folder in which the levelview files are stored
+- `Open examples for LevelView` open a link to a few examples for how these files look so you can make your own
+- `Show Mapper in live splitter` show the mapper in the live splitter
+- `Show objective items in live splitter` show objectives in the mapper
+- `Show code guess` show code guess part of the livesplitter
+- `Code guess number of lines` number of shown lines
+- `Code guess number of words per line` number of words per line
+
+### General
+
+- `Automatic Loading of runs` automatically load file save data from PC.
 
 # How to use:
 

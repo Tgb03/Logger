@@ -47,6 +47,7 @@ pub struct LiveWindow<'a> {
 
   game_run_renderer: Option<RunRenderer>,
   level_run_renderer: Option<RunRenderer>,
+  last_level_renderer: Option<RunRenderer>,
   
   tokenizer: GenericTokenizer,
 
@@ -64,6 +65,7 @@ impl<'a> Default for LiveWindow<'a> {
       level_run_reader: RunObjectiveReader::default(),
       level_run_renderer: None,
       game_run_renderer: None,
+      last_level_renderer: None,
       game_run: None,
       last_y_size: 0,
       tokenizer: GenericTokenizer::default()
@@ -141,27 +143,64 @@ impl<'a> LiveWindow<'a> {
 
       let tokens = self.tokenizer.tokenize(&new_lines);
       self.parser.parse_continously(tokens.into_iter());
+
+      self.update_render(save_manager, settings);
     
       self.save_unsaved_runs(save_manager);
     }
 
-    self.level_run_renderer = match (self.level_run_renderer.take(), self.get_current_run(), self.parser.get_run_parser().is_some()) {
-        (None, Some(run), _) => Some(RunRenderer::new(
-          run,
-          settings.get_compare_to_record(), 
-          settings.get_compare_to_theoretical(), 
-          settings.get_splitter_length(), 
-          save_manager)),
-        (Some(_), Some(run), true) => Some(RunRenderer::new(
-          run,
-          settings.get_compare_to_record(), 
-          settings.get_compare_to_theoretical(), 
-          settings.get_splitter_length(), 
-          save_manager)),
-        (Some(renderer), Some(_), false) => Some(renderer),
-        _ => None,
-    }
+  }
 
+  fn update_render(&mut self, save_manager: &mut SaveManager, settings: &SettingsWindow) {
+    self.level_run_renderer = match (
+      self.level_run_renderer.take(),
+      self.parser.get_run_parser().map(|v| v.into_result())
+    ) {
+        (None, None) => None,
+        (None, Some(run)) => Some(
+          RunRenderer::new(
+            run, 
+            settings.get_compare_to_record(), 
+            settings.get_compare_to_theoretical(), 
+            settings.get_splitter_length(), 
+            save_manager
+          )
+        ),
+        (Some(mut renderer), None) => {
+          if let Some(run) = self.get_current_run() {
+            renderer.update(run, save_manager);
+          }
+          self.last_level_renderer = Some(renderer);
+
+          None
+        },
+        (Some(mut renderer), Some(run)) => {
+          renderer.update(run, save_manager);
+
+          Some(renderer)
+        },
+    };
+
+    self.last_level_renderer = match (
+      self.last_level_renderer.take(), 
+      match self.parser.get_run_parser().map(|v| v.into_result()) {
+        Some(_) => None,
+        None => self.get_current_run(),
+      }
+    ) {
+      (None, None) => None,
+      (None, Some(run)) => Some(
+        RunRenderer::new(
+          run, 
+          settings.get_compare_to_record(), 
+          settings.get_compare_to_theoretical(), 
+          settings.get_splitter_length(), 
+          save_manager
+        )
+      ),
+      (Some(_), None) => None,
+      (Some(renderer), Some(_)) => Some(renderer),
+    };
   }
 
   pub fn show(&mut self, ui: &mut Ui, save_manager: &mut SaveManager, settings: &SettingsWindow, ctx: &egui::Context) {
@@ -261,7 +300,19 @@ impl<'a> LiveWindow<'a> {
 
       ui.separator();
 
-      y_size += 32 + self.level_run_renderer.as_ref().map(|r| r.render(ui)).unwrap_or_default();
+      y_size += 50;
+
+      let renderer = match (&self.level_run_renderer, &self.last_level_renderer) {
+        (None, None) => None,
+        (None, Some(renderer)) => Some(renderer),
+        (Some(renderer), None) => Some(renderer),
+        (Some(renderer), Some(_)) => Some(renderer),
+      };
+
+      if let Some(run_renderer) = renderer {
+        y_size += 8 + run_renderer.render(ui);
+        ui.label(create_text(format!("Rendering: {}", run_renderer.get_objective_str())));
+      }
     }
 
     if self.last_y_size != y_size {
