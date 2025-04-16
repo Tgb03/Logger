@@ -2,6 +2,7 @@ pub mod file_parse {
 
     const MAX_THREAD: usize = 8;
 
+    use std::path::PathBuf;
     use std::sync::{Arc, Mutex};
     use std::thread;
     #[cfg(debug_assertions)]
@@ -12,7 +13,7 @@ pub mod file_parse {
     use crate::logs::token_parser::TokenParserT;
     use crate::logs::tokenizer::{GenericTokenizer, RunTokenizer, Tokenizer};
 
-    pub fn parse_all_files_async<'a>(paths: Vec<File>) -> ParserResult {
+    pub fn parse_all_files_async<'a>(paths: Vec<PathBuf>) -> ParserResult {
         #[cfg(debug_assertions)]
         let start = Instant::now();
 
@@ -70,7 +71,7 @@ pub mod file_parse {
 
     pub fn parse_all_files<'a, I>(paths: I) -> ParserResult
     where
-        I: IntoIterator<Item = &'a File>,
+        I: IntoIterator<Item = &'a PathBuf>,
     {
         let mut result: ParserResult = Default::default();
 
@@ -88,15 +89,17 @@ pub mod file_parse {
         result
     }
 
-    fn parse_file(mut path: &File, tokenizer: &impl Tokenizer) -> ParserResult {
+    fn parse_file(path: &PathBuf, tokenizer: &impl Tokenizer) -> ParserResult {
         let mut data = String::new();
-        let res = path.read_to_string(&mut data);
-        if res.is_err() {
-            return Default::default();
+        let file = File::open(path);
+        if let Ok(mut file) = file {
+            let res = file.read_to_string(&mut data);
+            if res.is_err() {
+                return Default::default();
+            }
         }
 
         let tokens = tokenizer.tokenize(&data);
-
         Parser::parse_all_tokens_default(tokens.into_iter())
     }
 }
@@ -156,9 +159,7 @@ mod tests {
         let (file1, path1) = init_file(&dir, "file1.txt", text);
         let (file2, path2) = init_file(&dir, "file2.txt", text);
 
-        let file1_reader = File::open(path1).unwrap();
-        let file2_reader = File::open(path2).unwrap();
-        let result = file_parse::parse_all_files(&vec![file1_reader, file2_reader]);
+        let result = file_parse::parse_all_files(&vec![path1, path2]);
         let result = result.get_runs();
 
         assert_eq!(result.len(), 2);

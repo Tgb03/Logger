@@ -3,9 +3,7 @@ use core::{
     run::timed_run::LevelRun, save_manager::SaveManager,
 };
 use std::{
-    collections::{BTreeMap, HashSet},
-    fs::File,
-    time::Duration,
+    collections::{BTreeMap, HashSet}, time::Duration
 };
 
 use eframe::CreationContext;
@@ -161,19 +159,9 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     if ui.button("Input Speedrun Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            let files: Vec<File> = paths
-                                .iter()
-                                .filter_map(|p| match File::open(p) {
-                                    Ok(file) => Some(file),
-                                    Err(_) => {
-                                        println!("Failed to parse {:?}", p);
-                                        None
-                                    }
-                                })
-                                .collect();
 
                             // let parse_result = parse_all_files(&files);
-                            let parse_result = parse_all_files_async(files);
+                            let parse_result = parse_all_files_async(paths);
                             let hash: HashSet<LevelRun> =
                                 HashSet::from_iter(Into::<Vec<LevelRun>>::into(parse_result));
                             let runs = hash.into_iter().collect();
