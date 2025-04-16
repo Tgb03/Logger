@@ -5,7 +5,7 @@ use core::{
         token_parser::TokenParserT,
         tokenizer::{GenerationTokenizer, GenericTokenizer, RunTokenizer, Tokenizer},
     },
-    run::{objectives::run_objective::RunObjective, timed_run::LevelRun},
+    run::{objectives::run_objective::RunObjective, run_enum::RunEnum, timed_run::LevelRun},
     save_manager::SaveManager,
 };
 
@@ -105,6 +105,7 @@ pub struct LiveWindow<'a> {
     frame_counter: u8,
     run_counter: usize,
     parser: LiveParser,
+    to_be_added_runs: Vec<RunEnum>,
 
     render: LiveRender<'a>,
 
@@ -148,6 +149,7 @@ impl<'a> LiveWindow<'a> {
             tokenizer: GenericTokenizer::default()
                 .add_tokenizer(RunTokenizer)
                 .add_tokenizer(GenerationTokenizer),
+            to_be_added_runs: Vec::new(),
         };
 
         result
@@ -155,6 +157,10 @@ impl<'a> LiveWindow<'a> {
             .start_watcher(settings.get_logs_folder().clone());
 
         result
+    }
+
+    pub fn get_vec_list(&mut self) -> &mut Vec<RunEnum> {
+        &mut self.to_be_added_runs
     }
 }
 
@@ -176,6 +182,16 @@ impl<'a> BufferedRender for LiveWindow<'a> {
             self.parser.parse_continously(tokens.into_iter());
 
             self.render.update(&self.parser, save_manager);
+            for run in self.parser
+                    .into_result()
+                    .get_runs()
+                    .iter()
+                    .skip(self.run_counter) {
+                
+                self.to_be_added_runs.push(RunEnum::Level(run.clone()));
+                self.run_counter += 1;
+
+            }
         }
     }
 

@@ -200,6 +200,10 @@ impl<'a> eframe::App for BaseApp<'a> {
                             y: size as f32,
                         }));
                     }
+
+                    while let Some(run) = live_window.get_vec_list().pop() {
+                        self.save_manager.save(run);
+                    }
                 }
             });
 
