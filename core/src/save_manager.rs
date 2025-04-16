@@ -38,7 +38,7 @@ impl SaveManager {
     }
 
     fn save_no_remove_duplicates(&mut self, timed_run: RunEnum) -> Option<String> {
-        if timed_run.len() == 1 {
+        if timed_run.len() == 1 && !timed_run.is_win() {
             return None;
         }
 

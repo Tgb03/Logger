@@ -22,7 +22,7 @@ pub struct RunParser {
 
 impl RunParser {
     pub fn new(level_name: String, player_count: u8) -> RunParser {
-        println!("started run of {level_name} with {player_count} players.");
+        //println!("started run of {level_name} with {player_count} players.");
         let mut timed_run = LevelRun::default();
         let run_objective = RunObjective::from_name(level_name).with_player_count(player_count);
         timed_run.set_objective(&run_objective);
