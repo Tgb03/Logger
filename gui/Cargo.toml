@@ -1,0 +1,22 @@
+[package]
+name = "gui"
+version = "2.1.10"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+ron.workspace = true
+strum.workspace = true
+strum_macros.workspace = true
+itertools = "0.14.0"
+eframe = { version = "0.30.0", default-features = false, features = [
+  "glow", "default_fonts" 
+] }
+egui = { version = "0.30.0", default-features = false, features = [
+  "serde"
+] }
+core = { path = "../core" }
+serde_yaml = "0.9.34"
+directories = "6.0.0"
+opener = "0.7.2"
+rfd = "0.15.3"
