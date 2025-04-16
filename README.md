@@ -27,6 +27,8 @@ This app aims to streamline using logs to get all the data from them automatical
 
 - `Show Actual Splits` Shows the splits in each run. Simply turn it off if you don't want to see the splits.
 
+- `LiveWindow Transparency` A value between 0 and 1 that shows how transparent the app is. 1 is opaque, 0 is see-through.
+
 - `Show Game Splitter` Shows the full rundown/game splits. Use this if you are running a GTFO% or Rundown% run.
 
 - `Show Run Counter` Shows a run counter in the livesplitter along with a seed counter. The run counter is how many times u dropped into a level (resets included) while the seed counter is how many unique seeds you got.
