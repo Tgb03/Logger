@@ -23,7 +23,6 @@ use crate::{
 
 pub struct LogParserWindow {
     timed_runs: Vec<LevelRun>,
-    winrate: f32,
 
     set_all_secondary: bool,
     set_all_overload: bool,
@@ -36,14 +35,7 @@ pub struct LogParserWindow {
 
 impl LogParserWindow {
     pub fn new(runs: Vec<LevelRun>) -> Self {
-        let mut win_count = 0;
-        runs.iter().for_each(|v| 
-            if v.is_win() {
-                win_count += 1;
-            }
-        );
         Self {
-            winrate: win_count as f32 / runs.len() as f32 * 100.0,
             timed_runs: runs,
             set_all_secondary: false,
             set_all_overload: false,
@@ -59,8 +51,6 @@ impl LogParserWindow {
 
         // handles all the set all buttons.
         ui.horizontal(|ui| {
-            ui.colored_label(Color32::RED, format!("Winrate: {:.3}%", self.winrate));
-
             let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, "Set ALL secondary");
             let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
             let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, "Set ALL glitched");
