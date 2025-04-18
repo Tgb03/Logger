@@ -1,19 +1,16 @@
 use core::{
-    export::Export,
-    run::{
+    export::Export, logs::parser::ParserResult, run::{
         objectives::{
-            Objective, game_objective::GameObjective, game_run_objective::GameRunObjective,
-            game_run_rundown::GameRunRundown, run_objective::RunObjective,
+            game_objective::GameObjective, game_run_objective::GameRunObjective, game_run_rundown::GameRunRundown, run_objective::RunObjective, Objective
         },
         run_enum::RunEnum,
         timed_run::{GameRun, LevelRun},
         traits::{Run, Timed},
-    },
-    save_manager::SaveManager,
+    }, save_manager::SaveManager
 };
 
 use egui::{Color32, Ui};
-use std::fs::File;
+use std::{collections::HashSet, fs::File};
 use strum::IntoEnumIterator;
 
 use crate::{
@@ -256,5 +253,14 @@ impl LogParserWindow {
 impl VisualSorterButtons<LevelRun> for LogParserWindow {
     fn get_vec(&mut self) -> &mut Vec<LevelRun> {
         &mut self.timed_runs
+    }
+}
+
+impl From<ParserResult> for LogParserWindow {
+    fn from(value: ParserResult) -> Self {
+        let hash: HashSet<LevelRun> =
+            HashSet::from_iter(Into::<Vec<LevelRun>>::into(value));
+        let runs = hash.into_iter().collect();
+        Self::new(runs)
     }
 }

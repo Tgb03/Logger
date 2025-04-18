@@ -1,11 +1,10 @@
 use core::{
-    run::{
+    logs::parser::ParserResult, run::{
         timed_run::LevelRun,
         traits::{Run, Timed},
-    },
-    time::Time,
+    }, time::Time
 };
-use std::{collections::HashMap, fmt::Display, usize};
+use std::{collections::{HashMap, HashSet}, fmt::Display, usize};
 
 use egui::Color32;
 use itertools::Itertools;
@@ -40,7 +39,7 @@ impl From<&LevelRun> for LevelStat {
 
 impl Display for LevelStat {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Runs started: {}, Winrate: {:.3}%, Time: {}", 
+        write!(f, "Runs started: {: >3}, Winrate: {: >7.3}%, Time: {}", 
             self.run_count, 
             self.win_count as f32 * 100.0 / self.run_count as f32, 
             self.total_time.to_string()
@@ -296,5 +295,14 @@ impl Render for StatsWindow {
         }
 
         self.stats_shown.render(ui);
+    }
+}
+
+impl From<ParserResult> for StatsWindow {
+    fn from(value: ParserResult) -> Self {
+        let hash: HashSet<LevelRun> =
+            HashSet::from_iter(Into::<Vec<LevelRun>>::into(value));
+        let runs = hash.into_iter().collect();
+        Self::new(runs)
     }
 }
