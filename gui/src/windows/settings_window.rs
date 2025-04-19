@@ -65,24 +65,24 @@ impl Default for SettingsWindow {
             None => 0.3,
         };
         let automatic_loading = match props.get("automatic_loading") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
-            None => false,
+            Some(s) => s.parse::<bool>().unwrap_or(true),
+            None => true,
         };
         let compare_to_record = match props.get("compare_to_record") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
+            Some(s) => s.parse::<bool>().unwrap_or(true),
             None => true,
         };
         let compare_to_theoretical = match props.get("compare_to_theoretical") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
-            None => false,
+            Some(s) => s.parse::<bool>().unwrap_or(true),
+            None => true,
         };
         let show_warden_mapper = match props.get("show_warden_mapper") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
-            None => false,
+            Some(s) => s.parse::<bool>().unwrap_or(true),
+            None => true,
         };
         let show_objective_items = match props.get("show_objective_items") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
-            None => false,
+            Some(s) => s.parse::<bool>().unwrap_or(true),
+            None => true,
         };
         let show_code_guess = match props.get("show_code_guess") {
             Some(s) => s.parse::<bool>().unwrap_or(false),
@@ -120,8 +120,8 @@ impl Default for SettingsWindow {
             None => true,
         };
         let show_run_counter = match props.get("show_run_counter") {
-            Some(s) => s.parse::<bool>().unwrap_or(false),
-            None => false,
+            Some(s) => s.parse::<bool>().unwrap_or(true),
+            None => true,
         };
 
         let live_rectangle = Rect {
