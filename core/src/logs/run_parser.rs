@@ -11,6 +11,7 @@ use super::{token::Token, token_parser::TokenParserT};
 /// struct for parsing a single run
 pub struct RunParser {
     start_time: Time,
+    run_started: bool,
 
     is_done: bool,
     timed_run: LevelRun,
@@ -28,6 +29,7 @@ impl RunParser {
         timed_run.set_objective(&run_objective);
 
         RunParser {
+            run_started: false,
             start_time: Time::default(),
             is_done: false,
             timed_run,
@@ -40,6 +42,10 @@ impl RunParser {
     /// check whether or not the run parser finished.
     pub fn is_done(&self) -> bool {
         self.is_done
+    }
+
+    pub fn run_started(&self) -> bool {
+        self.run_started
     }
 
     pub fn get_result_mut(&mut self) -> &mut LevelRun {
@@ -68,6 +74,7 @@ impl TokenParserT<LevelRun> for RunParser {
         match token {
             Token::GameStarted => {
                 self.start_time = time;
+                self.run_started = true;
             }
             Token::DoorOpen => {
                 self.timed_run.add_split(NamedTime::new(
