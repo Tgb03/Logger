@@ -65,13 +65,13 @@ impl BufferedRender for BufferedTimer {
 
     fn update(&mut self, live_parser: &Self::UpdateData) {
 
-        match live_parser.get_run_parser() {
-            Some(_) => { 
+        match live_parser.get_run_parser().is_some_and(|v| v.run_started()) {
+            true => { 
                 if self.timer.stop_updating {
                     self.timer = Timer::default();
                 }
              },
-            None => { self.timer.stop_updating = true }
+            false => { self.timer.stop_updating = true }
         }
 
     }
