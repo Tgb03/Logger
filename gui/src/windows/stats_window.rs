@@ -15,8 +15,8 @@ pub struct LevelStat {
     run_count: usize,
     win_count: usize,
 
-    fastest_time: Time,
-    slowest_time : Time,
+    fastest_time: Option<Time>,
+    slowest_time : Option<Time>,
     
     total_time: Time,
     percent: f64,
@@ -27,8 +27,8 @@ impl Default for LevelStat {
         Self { 
             run_count: Default::default(), 
             win_count: Default::default(), 
-            fastest_time: Time::from("99:99:99.999").unwrap(), 
-            slowest_time: Default::default(), 
+            fastest_time: None, 
+            slowest_time: None, 
             total_time: Default::default(), 
             percent: Default::default() 
         }
@@ -41,8 +41,15 @@ impl LevelStat {
         if run.is_win() {
             self.win_count += 1;
 
-            self.slowest_time = self.slowest_time.max(run.get_time());
-            self.fastest_time = self.fastest_time.min(run.get_time());
+            self.slowest_time = match self.slowest_time {
+                Some(st) => Some(st.max(run.get_time())),
+                None => Some(run.get_time()),
+            };
+
+            self.fastest_time = match self.fastest_time {
+                Some(st) => Some(st.min(run.get_time())),
+                None => Some(run.get_time()),
+            };
         }
         self.total_time += run.get_time();
     }
@@ -67,8 +74,8 @@ impl Display for LevelStat {
             self.win_count as f32 * 100.0 / self.run_count as f32, 
             self.total_time.to_string(),
             self.percent,
-            self.fastest_time.to_string(),
-            self.slowest_time.to_string(),
+            self.fastest_time.map(|v| v.to_string()).unwrap_or("None".to_owned()),
+            self.slowest_time.map(|v| v.to_string()).unwrap_or("None".to_owned()),
         )
     }
 }
