@@ -11,12 +11,28 @@ use itertools::Itertools;
 
 use crate::render::Render;
 
-#[derive(Default)]
 pub struct LevelStat {
     run_count: usize,
     win_count: usize,
+
+    fastest_time: Time,
+    slowest_time : Time,
     
     total_time: Time,
+    percent: f64,
+}
+
+impl Default for LevelStat {
+    fn default() -> Self {
+        Self { 
+            run_count: Default::default(), 
+            win_count: Default::default(), 
+            fastest_time: Time::from("99:99:99.999").unwrap(), 
+            slowest_time: Default::default(), 
+            total_time: Default::default(), 
+            percent: Default::default() 
+        }
+    }
 }
 
 impl LevelStat {
@@ -24,8 +40,15 @@ impl LevelStat {
         self.run_count += 1;
         if run.is_win() {
             self.win_count += 1;
+
+            self.slowest_time = self.slowest_time.max(run.get_time());
+            self.fastest_time = self.fastest_time.min(run.get_time());
         }
         self.total_time += run.get_time();
+    }
+
+    pub fn calculate_percent(&mut self, total_time: Time) {
+        self.percent = self.total_time.get_stamp() as f64 / total_time.get_stamp() as f64 * 100.0;
     }
 }
 
@@ -39,10 +62,13 @@ impl From<&LevelRun> for LevelStat {
 
 impl Display for LevelStat {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Runs started: {: >3}, Winrate: {: >7.3}%, Time: {}", 
+        write!(f, "  {: >3}    {: >7.3}%    {: >13}    {: >7.3}%    {: >13}   {: >13}", 
             self.run_count, 
             self.win_count as f32 * 100.0 / self.run_count as f32, 
-            self.total_time.to_string()
+            self.total_time.to_string(),
+            self.percent,
+            self.fastest_time.to_string(),
+            self.slowest_time.to_string(),
         )
     }
 }
@@ -85,6 +111,10 @@ impl Stats {
             }
         }
 
+        for (_, s) in splits.iter_mut() {
+            s.calculate_percent(time_total);
+        }
+
         Self {
             text_total_time: format!("   Total time {}", time_total.to_string()),
             text_winrate: format!("   Winrate: {:.3}%", win_counter as f32 * 100.0 / number_of_runs as f32),
@@ -92,7 +122,7 @@ impl Stats {
             text_split_times: splits
                 .iter()
                 .sorted_by(|(a, _), (b, _)| a.cmp(b))
-                .map(|(name, stat)| format!("   {}: {}", name, stat))
+                .map(|(name, stat)| format!("   {: <8}: {}", name, stat))
                 .collect(),
         }
     }
@@ -102,9 +132,13 @@ impl Render for Stats {
     type Response = ();
 
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
+        ui.separator();
+
         ui.label(&self.text_total_time);
         ui.label(&self.text_winrate);
         ui.label(&self.text_number_of_runs);
+
+        ui.label("    Level     Runs       Win%         Time           Time%      FastestTime      SlowestTime");
 
         ui.separator();
 
