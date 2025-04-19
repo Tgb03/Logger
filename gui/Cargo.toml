@@ -1,6 +1,6 @@
 [package]
 name = "gui"
-version = "2.1.11"
+version.workspace = true
 edition = "2024"
 
 [dependencies]
