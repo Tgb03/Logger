@@ -182,15 +182,15 @@ impl<'a> BufferedRender for LiveWindow<'a> {
             self.parser.parse_continously(tokens.into_iter());
 
             self.render.update(&self.parser, save_manager);
-            for run in self.parser
-                    .into_result()
-                    .get_runs()
-                    .iter()
-                    .skip(self.run_counter) {
-                
+            for run in self
+                .parser
+                .into_result()
+                .get_runs()
+                .iter()
+                .skip(self.run_counter)
+            {
                 self.to_be_added_runs.push(RunEnum::Level(run.clone()));
                 self.run_counter += 1;
-
             }
         }
     }

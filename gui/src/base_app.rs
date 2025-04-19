@@ -1,9 +1,9 @@
 use core::{
-    logs::collectable_mapper::CollectableMapper, parse_files::file_parse::parse_all_files_async,
-    run::timed_run::LevelRun, save_manager::SaveManager,
+    logs::{collectable_mapper::CollectableMapper, parser::ParserResult}, parse_files::file_parse::AwaitParseFiles, save_manager::SaveManager,
 };
 use std::{
-    collections::{BTreeMap, HashSet}, time::Duration
+    collections::BTreeMap,
+    time::Duration,
 };
 
 use eframe::CreationContext;
@@ -14,6 +14,7 @@ use crate::{
     windows::{
         live_window::LiveWindow, log_parser_window::LogParserWindow,
         run_manager_window::RunManagerWindow, settings_window::SettingsWindow,
+        stats_window::StatsWindow,
     },
 };
 
@@ -21,9 +22,12 @@ use crate::egui::TextStyle::{Body, Button, Heading, Monospace, Small};
 
 enum AppState<'a> {
     None,
+    AwaitParseLogWindow(Option<AwaitParseFiles<LogParserWindow>>),
+    AwaitParseStatWindow(Option<AwaitParseFiles<StatsWindow>>),
     LogParserWindow(LogParserWindow),
     ManagingRuns(RunManagerWindow),
     LiveWindow(LiveWindow<'a>),
+    StatsWindow(StatsWindow),
     SettingsWindow,
 }
 
@@ -159,13 +163,13 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     if ui.button("Input Speedrun Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
+                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths)));
+                        }
+                    }
 
-                            // let parse_result = parse_all_files(&files);
-                            let parse_result = parse_all_files_async(paths);
-                            let hash: HashSet<LevelRun> =
-                                HashSet::from_iter(Into::<Vec<LevelRun>>::into(parse_result));
-                            let runs = hash.into_iter().collect();
-                            self.app_state = AppState::LogParserWindow(LogParserWindow::new(runs));
+                    if ui.button("Grab stats from Logs...").clicked() {
+                        if let Some(paths) = rfd::FileDialog::new().pick_files() {
+                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths)));
                         }
                     }
 
@@ -203,6 +207,23 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     while let Some(run) = live_window.get_vec_list().pop() {
                         self.save_manager.save(run);
+                    }
+                }
+                AppState::StatsWindow(stats_window) => {
+                    stats_window.render(ui);
+                }
+                AppState::AwaitParseLogWindow(awaiter) => {
+                    if awaiter.render(ui).is_some_and(|v| v == true) {
+                        let awaiter = awaiter.take().unwrap();
+                        let r: ParserResult = awaiter.into();
+                        self.app_state = AppState::LogParserWindow(LogParserWindow::new(r.into()));
+                    }
+                }
+                AppState::AwaitParseStatWindow(awaiter) => {
+                    if awaiter.render(ui).is_some_and(|v| v == true) {
+                        let awaiter = awaiter.take().unwrap();
+                        let r: ParserResult = awaiter.into();
+                        self.app_state = AppState::StatsWindow(StatsWindow::new(r.into()));
                     }
                 }
             });

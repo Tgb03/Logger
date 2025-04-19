@@ -1,19 +1,16 @@
 use core::{
-    export::Export,
-    run::{
+    export::Export, logs::parser::ParserResult, run::{
         objectives::{
-            Objective, game_objective::GameObjective, game_run_objective::GameRunObjective,
-            game_run_rundown::GameRunRundown, run_objective::RunObjective,
+            game_objective::GameObjective, game_run_objective::GameRunObjective, game_run_rundown::GameRunRundown, run_objective::RunObjective, Objective
         },
         run_enum::RunEnum,
         timed_run::{GameRun, LevelRun},
         traits::{Run, Timed},
-    },
-    save_manager::SaveManager,
+    }, save_manager::SaveManager
 };
 
 use egui::{Color32, Ui};
-use std::fs::File;
+use std::{collections::HashSet, fs::File};
 use strum::IntoEnumIterator;
 
 use crate::{
@@ -23,7 +20,6 @@ use crate::{
 
 pub struct LogParserWindow {
     timed_runs: Vec<LevelRun>,
-    winrate: f32,
 
     set_all_secondary: bool,
     set_all_overload: bool,
@@ -36,14 +32,7 @@ pub struct LogParserWindow {
 
 impl LogParserWindow {
     pub fn new(runs: Vec<LevelRun>) -> Self {
-        let mut win_count = 0;
-        runs.iter().for_each(|v| 
-            if v.is_win() {
-                win_count += 1;
-            }
-        );
         Self {
-            winrate: win_count as f32 / runs.len() as f32 * 100.0,
             timed_runs: runs,
             set_all_secondary: false,
             set_all_overload: false,
@@ -59,8 +48,6 @@ impl LogParserWindow {
 
         // handles all the set all buttons.
         ui.horizontal(|ui| {
-            ui.colored_label(Color32::RED, format!("Winrate: {:.3}%", self.winrate));
-
             let secondary_checkbox = ui.checkbox(&mut self.set_all_secondary, "Set ALL secondary");
             let overload_checkbox = ui.checkbox(&mut self.set_all_overload, "Set ALL overload");
             let glitched_checkbox = ui.checkbox(&mut self.set_all_glitched, "Set ALL glitched");
@@ -266,5 +253,14 @@ impl LogParserWindow {
 impl VisualSorterButtons<LevelRun> for LogParserWindow {
     fn get_vec(&mut self) -> &mut Vec<LevelRun> {
         &mut self.timed_runs
+    }
+}
+
+impl From<ParserResult> for LogParserWindow {
+    fn from(value: ParserResult) -> Self {
+        let hash: HashSet<LevelRun> =
+            HashSet::from_iter(Into::<Vec<LevelRun>>::into(value));
+        let runs = hash.into_iter().collect();
+        Self::new(runs)
     }
 }
