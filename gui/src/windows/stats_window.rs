@@ -230,7 +230,7 @@ impl Render for StatsWindow {
             if ui
                 .add(
                     egui::TextEdit::singleline(&mut self.name_filter)
-                        .desired_width(32.0)
+                        .desired_width(64.0)
                         .background_color(Color32::from_rgb(32, 32, 32))
                         .text_color(Color32::WHITE),
                 )
