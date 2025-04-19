@@ -12,7 +12,7 @@ use core::{
 use crate::{
     live::{
         key_guess::KeyGuesserVisual, mapper::Mapper, objective_reader::LevelObjectiveReader,
-        run_counter::RunCounterBuffer, run_renderer::RunRendererBuffer,
+        run_counter::RunCounterBuffer, run_renderer::RunRendererBuffer, timer::BufferedTimer,
     },
     render::{BufferedRender, Render},
     windows::settings_window::SettingsWindow,
@@ -26,6 +26,8 @@ pub struct LiveRender<'a> {
 
     level_renderer: Option<RunRendererBuffer<LevelRun, RunObjective>>,
     level_obj_reader: Option<LevelObjectiveReader>,
+
+    timer: Option<BufferedTimer>,
 
     last_y_size: usize,
 }
@@ -54,6 +56,10 @@ impl<'a> LiveRender<'a> {
         self.level_obj_reader = Some(level_obj_reader);
     }
 
+    pub fn add_timer(&mut self) {
+        self.timer = Some(BufferedTimer::default());
+    }
+
     pub fn add_level_renderer(
         &mut self,
         level_renderer: RunRendererBuffer<LevelRun, RunObjective>,
@@ -66,6 +72,7 @@ impl<'a> LiveRender<'a> {
         self.run_counter
             .as_mut()
             .map(|v| v.update(parser.into_result()));
+        self.timer.as_mut().map(|v| v.update(parser));
 
         if let Some(run) = Self::get_run_from_parser(parser) {
             self.level_renderer.as_mut().map(|v| {
@@ -90,6 +97,7 @@ impl<'a> Render for LiveRender<'a> {
         result.0 += self.mapper.render(ui).unwrap_or_default();
         result.0 += self.level_obj_reader.render(ui).unwrap_or_default();
         result.0 += self.key_guess.render(ui).unwrap_or_default();
+        result.0 += self.timer.render(ui).unwrap_or_default();
         result.0 += self.level_renderer.render(ui).unwrap_or_default();
 
         if result.0 != self.last_y_size {
@@ -139,6 +147,9 @@ impl<'a> LiveWindow<'a> {
         }
         if settings.get_show_splitter() {
             live_render.add_level_renderer(RunRendererBuffer::new("".to_string(), settings));
+        }
+        if settings.get_show_timer() {
+            live_render.add_timer();
         }
 
         let mut result = Self {

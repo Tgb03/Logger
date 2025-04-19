@@ -8,6 +8,7 @@ pub struct SettingsWindow {
     show_game_splitter: bool,
     splitter_length: usize,
     game_splitter_length: usize,
+    show_timer: bool,
 
     transparency: f32,
 
@@ -123,6 +124,10 @@ impl Default for SettingsWindow {
             Some(s) => s.parse::<bool>().unwrap_or(true),
             None => true,
         };
+        let show_timer = match props.get("show_timer") {
+            Some(s) => s.parse::<bool>().unwrap_or(false),
+            None => false,
+        };
 
         let live_rectangle = Rect {
             min: [x_pos, y_pos].into(),
@@ -146,6 +151,7 @@ impl Default for SettingsWindow {
             logs_folder: logs_folder.clone(),
             game_splitter_length,
             transparency,
+            show_timer,
 
             text_inputs: [
                 x_pos.to_string(),
@@ -240,6 +246,10 @@ impl SettingsWindow {
         self.transparency
     }
 
+    pub fn get_show_timer(&self) -> bool {
+        self.show_timer
+    }
+
     pub fn show(&mut self, ui: &mut Ui) {
         ScrollArea::vertical()
             .max_height(ui.available_height() - 60.0)
@@ -255,6 +265,13 @@ impl SettingsWindow {
                     ui.checkbox(&mut self.show_splitter, "Show Actual Splits");
                     ui.add_space(5.0);
                     ui.label("Warning: this disables completely the splits part.");
+                });
+
+                ui.horizontal(|ui| {
+                    ui.add_space(5.0);
+                    ui.checkbox(&mut self.show_timer, "Show Real Timer");
+                    ui.add_space(5.0);
+                    ui.label("Warning: this timer may not be accurate. Use the in game timer.");
                 });
 
                 ui.horizontal(|ui| {
@@ -506,6 +523,7 @@ impl SettingsWindow {
         s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
         s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
         s.push_str(&format!("transparency: {}\n", self.transparency));
+        s.push_str(&format!("show_timer: {}\n", self.show_timer));
         s.push_str(&format!(
             "compare_to_theoretical: {}\n",
             self.compare_to_theoretical
