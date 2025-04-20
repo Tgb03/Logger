@@ -214,7 +214,7 @@ pub mod file_parse {
         result
     }
 
-    fn parse_file(path: &PathBuf, tokenizer: &impl Tokenizer) -> ParserResult {
+    pub fn parse_file(path: &PathBuf, tokenizer: &impl Tokenizer) -> ParserResult {
         let mut data = String::new();
         let file = File::open(path);
         if let Ok(mut file) = file {
@@ -231,128 +231,72 @@ pub mod file_parse {
 
 #[cfg(test)]
 mod tests {
-    use fs::File;
-    use std::{fs, io::Write, path::PathBuf, thread::sleep, time::Duration};
-    use tempfile::{TempDir, tempdir};
-
-    use crate::{
-        logs::parser::ParserResult, run::{
-            objectives::run_objective::RunObjective,
-            traits::{Run, Timed},
-        }, time::Time
+    use std::{
+        env, 
+        path::PathBuf
     };
-
+    use crate::{
+        logs::{
+            parser::ParserResult, 
+            tokenizer::{
+                GenerationTokenizer, 
+                GenericTokenizer, 
+                RunTokenizer, 
+                Tokenizer
+            }
+        }, 
+        run::traits::{
+            Run, 
+            Timed
+        }
+    };
     use super::*;
 
-    const TEXT: &str = "00:00:00.000 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierC 0 433572712 1571494152  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,3,0 ActiveExpeditionUniqueKey: Local_32_TierC_0</color>
-      00:00:09.000 - GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel
-      00:00:10.000 - GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel
-      00:00:10.000 - Player1 exits PLOC_InElevator 1</color>
-      00:00:10:055 - Useless line
-      00:00:10.100 - Player2 exits PLOC_InElevator 2</color>
-      00:00:10.110 - Player3 exits PLOC_InElevator 3</color>
-      00:00:10.250 - Player4 exits PLOC_InElevator 4</color>
-      00:01:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:03:12.198 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:04:06.000 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:14:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:16:11.890 - BulkheadDoorController_Core.OnScanDone
-      00:17:59.343 - GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess";
+    fn create_tokenizer() -> GenericTokenizer {
+        GenericTokenizer::default()
+            .add_tokenizer(RunTokenizer)
+            .add_tokenizer(GenerationTokenizer)
+    }
 
-    fn init_file(dir: &TempDir, name: &str, data: &str) -> (File, PathBuf) {
-        let file_path = dir.path().join(name);
-        let file = File::create(&file_path);
-        if file.is_err() {
-            assert!(false)
-        }
-        let mut file = file.unwrap();
+    fn get_path(name: &str) -> Option<PathBuf> {
+        let path_buf = env::current_dir()
+            .ok()?
+            .parent()?
+            .join("examples")
+            .join("log_files")
+            .join(name)
+            .with_extension("txt");
 
-        let _ = write!(file, "{}", data);
+        Some(path_buf)
+    }
 
-        (file, file_path)
+    fn parse_file_t(name: &str, tokenizer: &impl Tokenizer) -> Option<ParserResult> {
+        let path = get_path(name)?;
+        
+        Some(
+            file_parse::parse_file(&path, tokenizer)
+        )
     }
 
     #[test]
-    pub fn test_base() {
-        let dir = tempdir().unwrap();
+    fn test_parser_r1a1() {
+        let tokenizer = create_tokenizer();
+        let result = vec![
+            "R1A1_client.frosty_exp_comp.txt",
+            "R1A1_host.maid_exp_comp.txt",
+        ];
+        
+        let iter = result
+            .into_iter()
+            .map(|v| parse_file_t(v, &tokenizer).unwrap());
 
-        let (file1, path1) = init_file(&dir, "file1.txt", TEXT);
-        let (file2, path2) = init_file(&dir, "file2.txt", TEXT);
-
-        let result = file_parse::parse_all_files(&vec![path1, path2]);
-        let result = result.get_runs();
-
-        assert_eq!(result.len(), 2);
-        assert_eq!(result[0].is_win(), true);
-        assert_eq!(
-            result[0]
-                .get_objective::<RunObjective>()
-                .unwrap()
-                .level_name,
-            "R1C1"
-        );
-        assert_eq!(
-            *result[0]
-                .get_splits()
-                .map(|v| v.get_time())
-                .collect::<Vec<Time>>(),
-            vec![
-                Time::from("00:01:02.135").unwrap(),
-                Time::from("00:02:00.063").unwrap(),
-                Time::from("00:00:53.802").unwrap(),
-                Time::from("00:10:06.135").unwrap(),
-                Time::from("00:01:59.755").unwrap(),
-                Time::from("00:01:47.453").unwrap(),
-            ]
-        );
-
-        drop(file1);
-        drop(file2);
-        let _ = dir.close();
-    }
-
-    #[test]
-    pub fn test_struct() {
-        let dir = tempdir().unwrap();
-
-        let (file1, path1) = init_file(&dir, "file1.txt", TEXT);
-        let (file2, path2) = init_file(&dir, "file2.txt", TEXT);
-
-        let result = file_parse::AwaitParseFiles::<ParserResult>::new(vec![path1, path2]);
-
-        while !result.is_done() {
-            sleep(Duration::from_millis(10));
+        for result in iter {
+            assert_eq!(result.get_counter(), 1);
+            assert_eq!(result.get_runs()[0].len(), 3);
+            assert_eq!(result.get_runs()[0].get_objective_str(), "R1A1_2.save");
+            assert_eq!(result.get_runs()[0].get_name(), "R1A1_2.save");
+            assert_eq!(result.get_level_name(), "R1A1");
+            assert_eq!(result.get_set().len(), 1);
         }
-
-        let binding = Into::<ParserResult>::into(result);
-        let result = binding.get_runs();
-
-        assert_eq!(result.len(), 2);
-        assert_eq!(result[0].is_win(), true);
-        assert_eq!(
-            result[0]
-                .get_objective::<RunObjective>()
-                .unwrap()
-                .level_name,
-            "R1C1"
-        );
-        assert_eq!(
-            *result[0]
-                .get_splits()
-                .map(|v| v.get_time())
-                .collect::<Vec<Time>>(),
-            vec![
-                Time::from("00:01:02.135").unwrap(),
-                Time::from("00:02:00.063").unwrap(),
-                Time::from("00:00:53.802").unwrap(),
-                Time::from("00:10:06.135").unwrap(),
-                Time::from("00:01:59.755").unwrap(),
-                Time::from("00:01:47.453").unwrap(),
-            ]
-        );
-
-        drop(file1);
-        drop(file2);
-        let _ = dir.close();
     }
 }
