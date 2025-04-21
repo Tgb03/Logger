@@ -14,6 +14,8 @@ pub enum Token {
     ObjectiveSpawnedOverride(u64, String), // id, name of objective
     CollectableItemID(u8),                 // item id
     CollectableItemSeed(u64),              // item seed
+    DimensionIncrease,
+    DimensionReset,
     SelectExpedition(String),
     GameStarting,
     GameStarted,

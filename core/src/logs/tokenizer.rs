@@ -189,7 +189,10 @@ impl Tokenizer for GenerationTokenizer {
         }) {
             return Some(Token::create_collectable_allocated(line));
         }
-        if line.get(35..121).is_some_and(|v| v == "TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") { return Some(Token::create_hsu_alloc(line)); }
+        if line.get(35..121).is_some_and(|v| v == "TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") 
+        { 
+            return Some(Token::create_hsu_alloc(line)); 
+        }
         if line.get(35..109).is_some_and(|v| {
             v == "LG_Distribute_WardenObjective, placing warden objective item with function"
         }) {
@@ -206,6 +209,18 @@ impl Tokenizer for GenerationTokenizer {
             .is_some_and(|v| v == "GenericSmallPickupItem_Core.SetupFromLevelgen, seed:")
         {
             return Some(Token::create_collectable_item_seed(line));
+        }
+        if line
+            .get(15..44)
+            .is_some_and(|v| v == "RESET placementDataIndex to 0") {
+            
+            return Some(Token::DimensionReset);
+        }
+        if line
+            .get(15..47)
+            .is_some_and(|v| v == "Increment placementDataIndex to ") {
+            
+            return Some(Token::DimensionIncrease);
         }
 
         None
