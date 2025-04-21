@@ -329,7 +329,9 @@ impl SettingsWindow {
                         .changed()
                     {
                         if let Ok(x) = self.text_inputs[0].parse::<f32>() {
+                            let width = self.live_rectangle.width();
                             self.live_rectangle.set_left(x);
+                            self.live_rectangle.set_width(width);
                         }
                     };
                 });
@@ -366,7 +368,7 @@ impl SettingsWindow {
                     {
                         if let Ok(x) = self.text_inputs[2].parse::<f32>() {
                             self.live_rectangle
-                                .set_right(x + self.live_rectangle.left());
+                                .set_width(x);
                         }
                     };
                 });

@@ -189,7 +189,10 @@ impl Tokenizer for GenerationTokenizer {
         }) {
             return Some(Token::create_collectable_allocated(line));
         }
-        if line.get(35..121).is_some_and(|v| v == "TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") { return Some(Token::create_hsu_alloc(line)); }
+        if line.get(35..121).is_some_and(|v| v == "TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex") 
+        { 
+            return Some(Token::create_hsu_alloc(line)); 
+        }
         if line.get(35..109).is_some_and(|v| {
             v == "LG_Distribute_WardenObjective, placing warden objective item with function"
         }) {
@@ -206,6 +209,18 @@ impl Tokenizer for GenerationTokenizer {
             .is_some_and(|v| v == "GenericSmallPickupItem_Core.SetupFromLevelgen, seed:")
         {
             return Some(Token::create_collectable_item_seed(line));
+        }
+        if line
+            .get(15..44)
+            .is_some_and(|v| v == "RESET placementDataIndex to 0") {
+            
+            return Some(Token::DimensionReset);
+        }
+        if line
+            .get(15..47)
+            .is_some_and(|v| v == "Increment placementDataIndex to ") {
+            
+            return Some(Token::DimensionIncrease);
         }
 
         None
@@ -243,63 +258,134 @@ impl GenericTokenizer {
 
 #[cfg(test)]
 mod tests {
+    use std::{env, fs::File, io::Read};
+
     use super::*;
 
-    fn create_tokenizer_max() -> impl Tokenizer {
+    fn create_tokenizer() -> GenericTokenizer {
         GenericTokenizer::default()
             .add_tokenizer(RunTokenizer)
             .add_tokenizer(GenerationTokenizer)
     }
 
-    #[test]
-    fn test_basic_game() {
-        let token_arr = create_tokenizer_max().tokenize(
-      "00:00:00.000 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierC 0 433572712 1571494152  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,3,0 ActiveExpeditionUniqueKey: Local_32_TierC_0</color>
-      00:00:10.000 - GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel
-      00:00:10.000 - Player1 exits PLOC_InElevator 1</color>
-      00:00:10:055 - Useless line
-      00:00:10.100 - Player2 exits PLOC_InElevator 23423</color>
-      00:00:10.110 - Player3 exits PLOC_InElevator 3</color>
-      00:00:10.250 - Player4 exits PLOC_InElevator 4</color>
-      00:01:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:03:12.198 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:04:06.000 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:14:12.135 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:16:11.890 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter
-      00:17:59.343 - GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess"
-    );
+    fn load_file(name: &str) -> Option<String> {
+        let mut result = String::default();
+        let path_buf = env::current_dir()
+            .ok()?
+            .parent()?
+            .join("examples")
+            .join("log_files")
+            .join(name)
+            .with_extension("txt");
 
-        assert_eq!(
-            token_arr,
-            vec![
-                (
-                    Time::from("00:00:00.000").unwrap(),
-                    Token::SelectExpedition("R1C1".to_string())
-                ),
-                (Time::from("00:00:10.000").unwrap(), Token::GameStarted),
-                (
-                    Time::from("00:00:10.000").unwrap(),
-                    Token::PlayerDroppedInLevel(1)
-                ),
-                (
-                    Time::from("00:00:10.100").unwrap(),
-                    Token::PlayerDroppedInLevel(23423)
-                ),
-                (
-                    Time::from("00:00:10.110").unwrap(),
-                    Token::PlayerDroppedInLevel(3)
-                ),
-                (
-                    Time::from("00:00:10.250").unwrap(),
-                    Token::PlayerDroppedInLevel(4)
-                ),
-                (Time::from("00:01:12.135").unwrap(), Token::DoorOpen),
-                (Time::from("00:03:12.198").unwrap(), Token::DoorOpen),
-                (Time::from("00:04:06.000").unwrap(), Token::DoorOpen),
-                (Time::from("00:14:12.135").unwrap(), Token::DoorOpen),
-                (Time::from("00:16:11.890").unwrap(), Token::DoorOpen),
-                (Time::from("00:17:59.343").unwrap(), Token::GameEndWin),
-            ]
-        );
+        println!("{:?}", path_buf);
+
+        let mut f = File::open(path_buf).ok()?;
+
+        match f.read_to_string(&mut result) {
+            Ok(_) => Some(result),
+            Err(_) => None,
+        }
     }
+
+    fn tokenize_file(name: &str, tokenizer: &GenericTokenizer) -> Vec<Token> {
+        let file_str = load_file(name).unwrap();
+
+        tokenizer
+            .tokenize(&file_str)
+            .into_iter()
+            .filter_map(|(_, v)| {
+                match v {
+                    Token::PlayerJoinedLobby |
+                    Token::PlayerLeftLobby |
+                    Token::UserExitLobby |
+                    Token::SessionSeed(_) |
+                    Token::PlayerDroppedInLevel(_) |
+                    Token::SelectExpedition(_) |
+                    Token::LogFileEnd => None,
+                    _ => Some(v),
+                }
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_generation_r1a1() {
+        let tokenizer = create_tokenizer();
+
+        let tokens_v= vec![
+            tokenize_file("R1A1_client.frosty_exp_comp.txt", &tokenizer),
+            tokenize_file("R1A1_host.maid_exp_comp.txt", &tokenizer),
+        ];
+        
+        for tokens in tokens_v {
+            assert_eq!(tokens, vec![
+                Token::GeneratingLevel,
+                Token::ItemAllocated("KEY_GREEN_245".to_string(), false),
+                Token::ItemSpawn(50, 48),
+                Token::CollectableAllocated(3),
+                Token::ObjectiveSpawnedOverride(18, "HSU".to_string()),
+                Token::GeneratingFinished,
+                Token::GameStarting,
+                Token::GameStarted,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::GameEndWin,
+                Token::GameEndAbort,
+            ]);
+        }
+    }
+
+    #[test]
+    fn test_run_r1b1() {
+        let tokenizer = create_tokenizer();
+
+        let tokens_v= vec![
+            tokenize_file("R1B2_client.alex_hsu_3keys.txt", &tokenizer),
+            tokenize_file("R1B2_client.frosty_hsu_3keys.txt", &tokenizer),
+            tokenize_file("R1B2_host.maid_hsu_3keys.txt", &tokenizer),
+        ];
+        
+        for tokens in tokens_v {
+            assert_eq!(tokens, vec![
+                Token::GeneratingLevel,
+                Token::ItemAllocated("KEY_BLUE_184".to_string(), false),
+                Token::ItemSpawn(18, 8),
+                Token::ItemAllocated("KEY_PURPLE_421".to_string(), false),
+                Token::ItemSpawn(23, 20),
+                Token::ItemAllocated("KEY_YELLOW_990".to_string(), false),
+                Token::ItemSpawn(23, 37),
+                Token::CollectableAllocated(5),
+                Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
+                Token::GeneratingFinished,
+                Token::GameStarting,
+                Token::GameStarted,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::GameEndLost,
+                Token::GameEndAbort,
+                Token::GeneratingLevel,
+                Token::ItemAllocated("KEY_PURPLE_389".to_string(), false),
+                Token::ItemSpawn(18, 1),
+                Token::ItemAllocated("KEY_GREY_560".to_string(), false),
+                Token::ItemSpawn(23, 21),
+                Token::ItemAllocated("KEY_ORANGE_338".to_string(), false),
+                Token::ItemSpawn(22, 14),
+                Token::CollectableAllocated(5),
+                Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
+                Token::GeneratingFinished,
+                Token::GameStarting,
+                Token::GameStarted,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::DoorOpen,
+                Token::GameEndWin,
+                Token::GameEndAbort,
+            ]);
+        }   
+    }
+    
 }

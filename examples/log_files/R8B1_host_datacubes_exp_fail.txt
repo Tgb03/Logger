@@ -1,0 +1,1660 @@
+15:18:36.506 - InControl (version 1.6.17 build 9143)
+15:18:36.531 - <size=13><color=red>TODO : Implement m_badPacketQuestion/m_badPacketAnswer and the SNet_BadPacketCatcher</color></size>
+15:18:36.532 - > GLOBAL SetupManagers, State : Dev HasNetwork: True
+15:18:36.533 - GameDataInit.Initialize
+15:18:38.370 - ------------------------------------------------------------  MusicManager. Loading soundbank for music! ------------------------------------------------------------ 
+15:18:40.267 - CM_PageCredits Setup Credits Page
+15:18:40.374 - Setting watermark revision to 34855
+15:18:40.662 - EnemyCostManager : Costs for Normal difficulty loaded
+15:18:40.663 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Inactive TO: Startup</color>
+15:18:40.664 - MusicManager - Setting music state to: StartUp
+15:18:40.984 - Steamworks.NET initilized
+15:18:41.024 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Startup TO: Offline</color>
+15:18:41.034 - MusicManager - Setting music state to: MainMenu
+15:18:41.034 - DropServerManager: Idle
+15:18:41.041 - DEBUG : Tried to Initialize the SteamAPI twice in one session
+15:18:41.041 - DEBUG : Tried to Initialize the SteamAPI twice in one session
+15:18:41.420 - SNET is Online, Woop!
+15:18:41.421 - Waiting for network.. DONE!
+15:18:41.424 - PlayFabManager.OnSteamInitialized
+15:18:41.747 - [163 - GetAuthSessionTicketResponse] - 3 -- k_EResultOK
+15:18:43.068 - PlayFabManager.OnLoginSuccess. NewlyCreated: False
+15:18:43.072 - PlayFabManager.RefreshGlobalTitleData
+15:18:43.272 - <color=purple>PlayFab.OnGetCurrentTime Monday, 15 July 2024</color>
+15:18:43.789 - UpdateLocalPlayerData Done, result: 2 OnSuccess: System.Action
+15:18:43.809 - TODO : Skipping icon generation for the hacking tool. It crashes later while trying to construct the tool for rendering
+15:18:45.881 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_35'...
+15:18:45.883 - PlayFabMatchMakingManager: Requesting list of QoS servers...
+15:18:45.899 - AchievementManager | <b>Achievement_ReadAllLogs</b> :: Initialized Data. Logs Read: 188 / 188 | IDs: [447164911, 2644574539, 1986026191, 1794210895, 606542306, 2831084690, 3899268189, 3847194193, 275287026, 1901056716, 1045760311, 2186934260, 779237148, 400053355, 3683555460, 3775742793, 4129196694, 2300319938, 4107631192, 3537071244, 2919353898, 2899831782, 3340509967, 3213710012, 1098021268, 1276363701, 4258872482, 649711753, 2618453398, 3124381907, 2902442685, 494690419, 2533283978, 971943816, 2844997865, 644899579, 2364096404, 1840975978, 4103690595, 2624531734, 1192257831, 3282570125, 3590505912, 3820350058, 3153164489, 2241631052, 887938260, 772314140, 314124724, 981564373, 3408451435, 3538439246, 1185765921, 3200929578, 2679426210, 3524738570, 3176992059, 1296350622, 3796032166, 517732520, 594128218, 1316842445, 799149046, 2790419951, 1695139195, 2159521601, 1985655597, 3018560530, 3889683438, 1735273668, 3527646331, 2040861153, 3570860951, 3625565585, 3140757614, 2010423636, 587510794, 3607696028, 2181231598, 2936981195, 3211309024, 190515691, 1094271245, 963101078, 1079094418, 1633079168, 2905821843, 521101963, 1678260641, 1104724433, 1948200247, 157832601, 953548732, 347493886, 2992419498, 3997759451, 2278907495, 2975106290, 3030991283, 1561986133, 193599546, 1382220608, 239801710, 3602901424, 1129659086, 3503323039, 330353654, 3306391961, 2426662631, 2882056421, 2348768522, 2631688360, 3979312916, 832966765, 1145885034, 2180421988, 1361284810, 11199380, 1704852273, 677330196, 3082519076, 1157654530, 2573146457, 2122525791, 2392728270, 699976094, 1892674022, 2897485929, 672968613, 2912524228, 296825981, 3726692377, 3404012700, 2095055332, 2601516214, 2714516313, 4115774219, 3072195836, 3526417802, 2998194090, 3537655951, 1921629421, 1786862515, 2047464033, 2660922051, 1606512465, 751637944, 2307214134, 972338481, 386604089, 1070298538, 882979268, 3919432281, 2518464736, 817633301, 294658885, 1170001647, 1784928424, 1825963506, 4016957134, 539142525, 2129465561, 2610278853, 142157049, 3992389097, 3664409843, 2550497166, 2145556797, 3263829601, 2690939055, 3464000470, 1561677308, 1704474804, 278517562, 2373894974, 333549741, 4102842342, 345796523, 3873520298, 2664070464, 2213213308, 1043032973, 3259409222, 210406149, 3421585823, 1170408647, 966839319, 2604686322]
+15:18:45.899 - Achievement Completed | LOCAL :: ACH_37
+15:18:45.900 - Achievement Completed | LOCAL :: ACH_38
+15:18:45.900 - Achievement Completed | LOCAL :: ACH_39
+15:18:45.901 - Achievement Completed | LOCAL :: ACH_40
+15:18:45.911 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_35)' request
+15:18:45.911 - DropServerManager: Woke up
+15:18:45.911 - DropServerManager: Making 'rundown progression (rundown: Local_35)' request...
+15:18:45.923 - DropServerManager: Enqueueing 'get player inventory' request
+15:18:46.325 - DropServerManager: 'rundown progression (rundown: Local_35)' request completed successfully
+15:18:46.325 - DropServerManager: Sleeping for 2 seconds...
+15:18:46.325 - RundownManager: Got rundown progression from drop server
+15:18:46.326 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:18:46.326 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:18:46.326 - tier: TierA index: 1 EXPEDITION LOCKED
+15:18:46.326 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:18:46.326 - tier: TierA index: 3 EXPEDITION LOCKED
+15:18:46.326 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierC index: 1 EXPEDITION LOCKED
+15:18:46.327 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:18:46.327 - tier: TierC index: 3 EXPEDITION LOCKED
+15:18:46.327 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:18:46.328 - tier: TierD index: 1 EXPEDITION LOCKED
+15:18:46.328 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:18:46.328 - tier: TierD index: 3 EXPEDITION LOCKED
+15:18:46.328 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:18:46.328 - tier: TierE index: 1 EXPEDITION LOCKED
+15:18:46.329 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:18:46.329 - tier: TierE index: 3 EXPEDITION LOCKED
+15:18:46.329 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:18:47.593 - TryGetMaterialGroup : Missing material on Cylinder
+15:18:47.593 - TryGetMaterialGroup : Missing material on Cylinder (1)
+15:18:47.593 - TryGetMaterialGroup : Missing material on cone_1x1m
+15:18:47.593 - TryGetMaterialGroup : Missing material on TextMeshPro
+15:18:47.593 - TryGetMaterialGroup : Missing material on TextMeshPro
+15:18:48.131 - DropServerManager: Making 'get player inventory' request...
+15:18:48.375 - DropServerManager: 'get player inventory' request completed successfully
+15:18:48.375 - DropServerManager: Sleeping for 2 seconds...
+15:18:50.374 - DropServerManager: Idle
+15:19:10.478 - OnBtnPress, ID: 0 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:19:12.091 - GS_Offline.OnLocalPlayerPressStart!
+15:19:12.105 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Offline TO: NoLobby</color>
+15:19:12.112 - MusicManager - Setting music state to: Silence
+15:19:12.132 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:19:12.132 - tier: TierA index: 1 EXPEDITION LOCKED
+15:19:12.132 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:19:12.132 - tier: TierA index: 3 EXPEDITION LOCKED
+15:19:12.132 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:19:12.132 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:19:12.132 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:19:12.132 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:19:12.133 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:19:12.133 - tier: TierC index: 1 EXPEDITION LOCKED
+15:19:12.133 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:19:12.133 - tier: TierC index: 3 EXPEDITION LOCKED
+15:19:12.133 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:19:12.133 - tier: TierD index: 1 EXPEDITION LOCKED
+15:19:12.133 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:19:12.133 - tier: TierD index: 3 EXPEDITION LOCKED
+15:19:12.134 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:19:12.134 - tier: TierE index: 1 EXPEDITION LOCKED
+15:19:12.134 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:19:12.134 - tier: TierE index: 3 EXPEDITION LOCKED
+15:19:12.134 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:19:12.135 - Pagerundown GOT RundownTimerData from playfab.
+15:19:51.210 - OnBtnPress, ID: 68 GO: Rundown_Surface_SelectionALT_R8 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:19:51.210 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_35'...
+15:19:51.236 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: False
+15:19:51.239 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_35)' request
+15:19:51.239 - DropServerManager: Woke up
+15:19:51.239 - DropServerManager: Making 'rundown progression (rundown: Local_35)' request...
+15:19:51.449 - DropServerManager: 'rundown progression (rundown: Local_35)' request completed successfully
+15:19:51.449 - DropServerManager: Sleeping for 2 seconds...
+15:19:51.450 - RundownManager: Got rundown progression from drop server
+15:19:51.450 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:19:51.450 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:19:51.450 - tier: TierA index: 1 EXPEDITION LOCKED
+15:19:51.450 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:19:51.450 - tier: TierA index: 3 EXPEDITION LOCKED
+15:19:51.451 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierC index: 1 EXPEDITION LOCKED
+15:19:51.451 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:19:51.451 - tier: TierC index: 3 EXPEDITION LOCKED
+15:19:51.451 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:19:51.452 - tier: TierD index: 1 EXPEDITION LOCKED
+15:19:51.452 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:19:51.452 - tier: TierD index: 3 EXPEDITION LOCKED
+15:19:51.452 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:19:51.452 - tier: TierE index: 1 EXPEDITION LOCKED
+15:19:51.452 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:19:51.452 - tier: TierE index: 3 EXPEDITION LOCKED
+15:19:51.452 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:19:51.453 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_32'...
+15:19:51.462 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_32)' request
+15:19:53.452 - DropServerManager: Making 'rundown progression (rundown: Local_32)' request...
+15:19:53.702 - DropServerManager: 'rundown progression (rundown: Local_32)' request completed successfully
+15:19:53.702 - DropServerManager: Sleeping for 2 seconds...
+15:19:53.703 - RundownManager: Got rundown progression from drop server
+15:19:53.703 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:19:53.703 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:19:53.703 - tier: TierA index: 1 EXPEDITION LOCKED
+15:19:53.703 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:19:53.704 - tier: TierA index: 3 EXPEDITION LOCKED
+15:19:53.704 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:19:53.704 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:19:53.704 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:19:53.704 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:19:53.704 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:19:53.705 - tier: TierC index: 1 EXPEDITION LOCKED
+15:19:53.705 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:19:53.705 - tier: TierC index: 3 EXPEDITION LOCKED
+15:19:53.705 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:19:53.705 - tier: TierD index: 1 EXPEDITION LOCKED
+15:19:53.706 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:19:53.706 - tier: TierD index: 3 EXPEDITION LOCKED
+15:19:53.706 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:19:53.707 - tier: TierE index: 1 EXPEDITION LOCKED
+15:19:53.707 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:19:53.707 - tier: TierE index: 3 EXPEDITION LOCKED
+15:19:53.707 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:19:53.708 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_31'...
+15:19:53.716 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_31)' request
+15:19:55.691 - DropServerManager: Making 'rundown progression (rundown: Local_31)' request...
+15:19:55.941 - DropServerManager: 'rundown progression (rundown: Local_31)' request completed successfully
+15:19:55.941 - DropServerManager: Sleeping for 2 seconds...
+15:19:55.942 - RundownManager: Got rundown progression from drop server
+15:19:55.942 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:19:55.942 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:19:55.942 - tier: TierA index: 1 EXPEDITION LOCKED
+15:19:55.942 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierA index: 3 EXPEDITION LOCKED
+15:19:55.943 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:19:55.943 - tier: TierC index: 1 EXPEDITION LOCKED
+15:19:55.943 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:19:55.944 - tier: TierC index: 3 EXPEDITION LOCKED
+15:19:55.944 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:19:55.944 - tier: TierD index: 1 EXPEDITION LOCKED
+15:19:55.944 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:19:55.944 - tier: TierD index: 3 EXPEDITION LOCKED
+15:19:55.944 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:19:55.944 - tier: TierE index: 1 EXPEDITION LOCKED
+15:19:55.944 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:19:55.944 - tier: TierE index: 3 EXPEDITION LOCKED
+15:19:55.945 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:19:55.945 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_33'...
+15:19:55.955 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_33)' request
+15:19:57.934 - DropServerManager: Making 'rundown progression (rundown: Local_33)' request...
+15:19:58.171 - DropServerManager: 'rundown progression (rundown: Local_33)' request completed successfully
+15:19:58.171 - DropServerManager: Sleeping for 2 seconds...
+15:19:58.172 - RundownManager: Got rundown progression from drop server
+15:19:58.172 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:19:58.172 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:19:58.172 - tier: TierA index: 1 EXPEDITION LOCKED
+15:19:58.172 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:19:58.172 - tier: TierA index: 3 EXPEDITION LOCKED
+15:19:58.173 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierC index: 1 EXPEDITION LOCKED
+15:19:58.173 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:19:58.173 - tier: TierC index: 3 EXPEDITION LOCKED
+15:19:58.174 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:19:58.174 - tier: TierD index: 1 EXPEDITION LOCKED
+15:19:58.174 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:19:58.174 - tier: TierD index: 3 EXPEDITION LOCKED
+15:19:58.174 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:19:58.174 - tier: TierE index: 1 EXPEDITION LOCKED
+15:19:58.174 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:19:58.174 - tier: TierE index: 3 EXPEDITION LOCKED
+15:19:58.175 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:19:58.175 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_34'...
+15:19:58.185 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_34)' request
+15:20:00.164 - DropServerManager: Making 'rundown progression (rundown: Local_34)' request...
+15:20:00.513 - DropServerManager: 'rundown progression (rundown: Local_34)' request completed successfully
+15:20:00.513 - DropServerManager: Sleeping for 2 seconds...
+15:20:00.514 - RundownManager: Got rundown progression from drop server
+15:20:00.514 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:20:00.514 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:20:00.514 - tier: TierA index: 1 EXPEDITION LOCKED
+15:20:00.514 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:20:00.514 - tier: TierA index: 3 EXPEDITION LOCKED
+15:20:00.515 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierC index: 1 EXPEDITION LOCKED
+15:20:00.515 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:20:00.515 - tier: TierC index: 3 EXPEDITION LOCKED
+15:20:00.516 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:20:00.516 - tier: TierD index: 1 EXPEDITION LOCKED
+15:20:00.516 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:20:00.516 - tier: TierD index: 3 EXPEDITION LOCKED
+15:20:00.516 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:20:00.516 - tier: TierE index: 1 EXPEDITION LOCKED
+15:20:00.517 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:20:00.517 - tier: TierE index: 3 EXPEDITION LOCKED
+15:20:00.517 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:20:00.518 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_37'...
+15:20:00.527 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_37)' request
+15:20:01.824 - OnBtnPress, ID: 0 GO: CM_ExpeditionIcon_New(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:20:02.506 - DropServerManager: Making 'rundown progression (rundown: Local_37)' request...
+15:20:03.064 - DropServerManager: 'rundown progression (rundown: Local_37)' request completed successfully
+15:20:03.064 - DropServerManager: Sleeping for 2 seconds...
+15:20:03.065 - RundownManager: Got rundown progression from drop server
+15:20:03.065 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:20:03.065 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierA index: 1 EXPEDITION LOCKED
+15:20:03.066 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierA index: 3 EXPEDITION LOCKED
+15:20:03.066 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:20:03.066 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:20:03.067 - tier: TierC index: 1 EXPEDITION LOCKED
+15:20:03.067 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:20:03.067 - tier: TierC index: 3 EXPEDITION LOCKED
+15:20:03.067 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:20:03.067 - tier: TierD index: 1 EXPEDITION LOCKED
+15:20:03.067 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:20:03.067 - tier: TierD index: 3 EXPEDITION LOCKED
+15:20:03.067 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:20:03.067 - tier: TierE index: 1 EXPEDITION LOCKED
+15:20:03.068 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:20:03.068 - tier: TierE index: 3 EXPEDITION LOCKED
+15:20:03.068 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:20:03.068 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_38'...
+15:20:03.078 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_38)' request
+15:20:03.259 - OnBtnPress, ID: 0 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:20:03.259 - SNet : Session reset
+15:20:03.260 - Global.OnResetSession
+15:20:03.260 - <color=purple>PlayerManager OnResetSession >  m_playerAgentsInLevel.Count : 0</color>
+15:20:03.261 - SessionGUID set to 
+15:20:03.277 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : NoLobby TO: Lobby</color>
+15:20:03.278 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:20:03.278 - MusicManager - Setting music state to: Silence
+15:20:03.278 - Player AngryMaid was added to session
+15:20:03.279 - DoCreateLobbyAndSelecteExpedition 1
+15:20:03.279 - waiting for lobby..
+15:20:03.538 - SNet_SessionHub : OnJoinedLobby True AngryMaid False -1
+15:20:03.538 - SNet_MasterManager : SearchingForMaster
+15:20:03.539 - Searching for master...
+15:20:03.550 - MasterManager : AngryMaid owns the lobby. IsLocal:True
+15:20:03.550 - SNet_MasterManager : Who's tha masta?! AngryMaid! AngryMaid!
+15:20:03.551 - SNET : OnFoundMaster > Master is Steam AngryMaid Session summary > Master InSessionHub -1 -1 0 0   Profile summary > AngryMaid : end
+15:20:03.551 - DoCreateLobbyAndSelecteExpedition 2
+15:20:03.551 - RundownManager.SetActiveExpedition, type:Local tier:TierB expIndex: 0
+15:20:03.551 - SessionGUID set to XKD4m/YbR0ePSYxfCQPTbA==
+15:20:03.579 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:20:03.579 - tier: TierA index: 1 EXPEDITION LOCKED
+15:20:03.579 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:20:03.579 - tier: TierA index: 3 EXPEDITION LOCKED
+15:20:03.580 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:20:03.580 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:20:03.580 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:20:03.581 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:20:03.581 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:20:03.581 - tier: TierC index: 1 EXPEDITION LOCKED
+15:20:03.581 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:20:03.581 - tier: TierC index: 3 EXPEDITION LOCKED
+15:20:03.581 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:20:03.581 - tier: TierD index: 1 EXPEDITION LOCKED
+15:20:03.581 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:20:03.582 - tier: TierD index: 3 EXPEDITION LOCKED
+15:20:03.582 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:20:03.582 - tier: TierE index: 1 EXPEDITION LOCKED
+15:20:03.582 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:20:03.582 - tier: TierE index: 3 EXPEDITION LOCKED
+15:20:03.582 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:20:03.597 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_35 TierB 0 131587319 548750987  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_35,2,0 ActiveExpeditionUniqueKey: Local_35_TierB_0</color>
+15:20:03.597 - DoCreateLobbyAndSelecteExpedition 3
+15:20:03.618 - DoCreateLobbyAndSelecteExpedition 4
+15:20:03.639 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : Unassigned InSessionHub
+15:20:03.640 - SNET : OnMasterCommand : AssignSlot 0 False
+15:20:03.640 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerInSession  Reason : None isPlayerMaster : True
+15:20:03.701 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSessionHub OutOfSync
+15:20:03.701 - SNET : OnMasterCommand : PickAvatar 0 False
+15:20:03.701 - <color=green>SNET : We got character 0 assigned</color>
+15:20:03.701 - IsReadyToSync : PickAvatar agent sent to AngryMaid
+15:20:03.705 - SNET : OnMasterCommand : InSessionHub_ReadyToGenerate 0 False
+15:20:03.705 - <color=green>SNET : Added AngryMaid to PlayersInGame</color>
+15:20:03.705 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerIsSynced  Reason : None isPlayerMaster : True
+15:20:03.705 - SpawnPlayerModel, index: 0
+15:20:03.744 - <color=green>SNET : GS_Lobby has not implemented functionality for InSessionHub_ReadyToGenerate!</color>
+15:20:03.753 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : OutOfSync InSessionHub_ReadyToGenerate
+15:20:03.753 - <color=green>SNET : OnSessionPlayerAction : Spawning AngryMaid's agent!  SpawnPlayerAgent</color>
+15:20:03.807 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : True
+15:20:03.810 - <color=green>GS_Lobby, player spawned but I'm in the hub/rundown page  so I won't care..</color>
+15:20:05.062 - DropServerManager: Making 'rundown progression (rundown: Local_38)' request...
+15:20:05.326 - DropServerManager: 'rundown progression (rundown: Local_38)' request completed successfully
+15:20:05.326 - DropServerManager: Sleeping for 2 seconds...
+15:20:05.327 - RundownManager: Got rundown progression from drop server
+15:20:05.327 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:20:05.327 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:20:05.327 - tier: TierA index: 1 EXPEDITION LOCKED
+15:20:05.327 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:20:05.327 - tier: TierA index: 3 EXPEDITION LOCKED
+15:20:05.328 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierC index: 1 EXPEDITION LOCKED
+15:20:05.328 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:20:05.328 - tier: TierC index: 3 EXPEDITION LOCKED
+15:20:05.329 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:20:05.329 - tier: TierD index: 1 EXPEDITION LOCKED
+15:20:05.329 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:20:05.329 - tier: TierD index: 3 EXPEDITION LOCKED
+15:20:05.329 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:20:05.329 - tier: TierE index: 1 EXPEDITION LOCKED
+15:20:05.329 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:20:05.329 - tier: TierE index: 3 EXPEDITION LOCKED
+15:20:05.330 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:20:05.330 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_41'...
+15:20:05.340 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_41)' request
+15:20:05.675 - OnBtnPress, ID: 617 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:20:07.331 - DropServerManager: Making 'rundown progression (rundown: Local_41)' request...
+15:20:07.568 - DropServerManager: 'rundown progression (rundown: Local_41)' request completed successfully
+15:20:07.568 - DropServerManager: Sleeping for 2 seconds...
+15:20:07.569 - RundownManager: Got rundown progression from drop server
+15:20:07.569 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:20:07.569 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:20:07.569 - tier: TierA index: 1 EXPEDITION LOCKED
+15:20:07.569 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierA index: 3 EXPEDITION LOCKED
+15:20:07.570 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:20:07.570 - tier: TierC index: 1 EXPEDITION LOCKED
+15:20:07.570 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:20:07.571 - tier: TierC index: 3 EXPEDITION LOCKED
+15:20:07.571 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:20:07.571 - tier: TierD index: 1 EXPEDITION LOCKED
+15:20:07.571 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:20:07.571 - tier: TierD index: 3 EXPEDITION LOCKED
+15:20:07.571 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:20:07.571 - tier: TierE index: 1 EXPEDITION LOCKED
+15:20:07.571 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:20:07.571 - tier: TierE index: 3 EXPEDITION LOCKED
+15:20:07.572 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:20:08.723 - OnBtnPress, ID: 618 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:20:08.723 - SNET : OnMasterCommand : StartGeneration 0 False
+15:20:08.724 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating</color>
+15:20:08.726 - RundownManager: Starting new game session
+15:20:08.727 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:20:08.744 - DropServerManager: Enqueueing 'new session (sessionId: XKD4m/YbR0ePSYxfCQPTbA==, rundown: Local_35, expedition: B1, boosters: [])' request
+15:20:08.744 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSessionHub_ReadyToGenerate GeneratingLevel
+15:20:08.745 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:20:09.566 - DropServerManager: Making 'new session (sessionId: XKD4m/YbR0ePSYxfCQPTbA==, rundown: Local_35, expedition: B1, boosters: [])' request...
+15:20:09.789 - DropServerManager: 'new session (sessionId: XKD4m/YbR0ePSYxfCQPTbA==, rundown: Local_35, expedition: B1, boosters: [])' request completed successfully
+15:20:09.789 - DropServerManager: Sleeping for 2 seconds...
+15:20:10.375 - <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+15:20:10.376 - <color=#C84800>>>>>>>>>>>>>> SetHostIDSeed, forcedSeed: 131587319 exp: GameData.ExpeditionInTierData HostIDRandom.Seed: 131587319</color>
+15:20:10.376 - <color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: 548750987 exp: GameData.ExpeditionInTierData SessionRandom.Seed: 548750987</color>
+15:20:10.376 - Builder.Build, settings seeds, activeExp: GameData.ExpeditionInTierData buildSeed: 1 hostIDSeed: 131587319 sessionSeed: 548750987
+15:20:10.377 - <color=#C84800>Builder.Build, Start Building using BuildSeed: 1 HostIDSeed: 131587319 SessionSeed: 548750987</color>
+15:20:10.377 - <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+15:20:10.377 - <color=#C84800>SerialGenerator GENERATE! SessionRandom.seed: 548750987</color>
+15:20:10.377 - >>>>>>>>>>>>> BuildFloor
+15:20:10.379 - <color=#C84800>LoadComplexResources complexResourceDataID: 100</color>
+15:20:10.379 - <color=#C84800>LG_LoadComplexDataSetResourcesJob.ComplexAssetBundleLoaded, ComplexResourceSetBlock: Complex_Tech_R8B1</color>
+15:20:10.379 - DIMENSION: Setting sound ENVIRONMENT state to Tech!
+15:20:10.390 - Last Batch: Setup
+		 Total Time: 0.014s Frames: 0 Ticks: 13
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: StaticLevel - Count: 0
+
+15:20:10.390 - Last Batch: StaticLevel
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Level - Count: 2
+
+15:20:11.808 - DropServerManager: Idle
+15:20:14.675 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:20:18.387 - Engine Started
+15:20:18.482 - Last Batch: LoadResourcesShards_Level
+		 Total Time: 8.092s Frames: 542 Ticks: 8092
+		 FrameTime (avg/max/ticks max): 13.9ms / 74.6ms / 83
+		 Jobs (started/looped): 1 / 542
+Next Batch: SetupFloor - Count: 1
+
+15:20:18.482 - <color=#C84800>LG_SetupFloor.Build</color>
+15:20:18.490 - <b>LG_Floor:</b> Setup() Setting up Base Dimension (0).
+15:20:18.493 - <b>LG_Floor:</b> Creating (Dimension_1) dimension at (0.0, 160.0, 0.0).
+15:20:18.494 - <b>LG_Floor:</b> Created Dimension (Index: Dimension_1, gridSize: 10, cellSize: 64).
+15:20:18.502 - <b>LG_Floor:</b> Found (1) unique dimension references in GameData for this expedition and created (0) enemy dimensions.
+15:20:18.503 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 135 with BuildFromZoneAlias135 zoneAliasStart: 135 aliasOffset: Zone_0</color>
+15:20:18.504 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 61 (Defined), <b>MarkerSubSeed:</b> 24 (Defined), <b>LightSubSeed:</b> 12 (Defined)
+15:20:18.504 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 136 with BuildFromZoneAlias135 zoneAliasStart: 135 aliasOffset: Zone_1</color>
+15:20:18.505 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 8 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.505 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 137 with BuildFromZoneAlias135 zoneAliasStart: 135 aliasOffset: Zone_2</color>
+15:20:18.505 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 7 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 3 (Defined)
+15:20:18.505 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 138 with BuildFromZoneAlias137 zoneAliasStart: 135 aliasOffset: Zone_3</color>
+15:20:18.505 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 6 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.505 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 139 with BuildFromZoneAlias138 zoneAliasStart: 135 aliasOffset: Zone_4</color>
+15:20:18.505 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 3 (Defined), <b>MarkerSubSeed:</b> 5 (Defined), <b>LightSubSeed:</b> 3 (Defined)
+15:20:18.505 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 140 with BuildFromZoneAlias139 zoneAliasStart: 135 aliasOffset: Zone_5</color>
+15:20:18.506 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 3 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 5 (Defined)
+15:20:18.506 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 141 with BuildFromZoneAlias139 zoneAliasStart: 135 aliasOffset: Zone_6</color>
+15:20:18.506 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 7 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.506 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 172 with BuildFromZoneAlias172 zoneAliasStart: 172 aliasOffset: Zone_0</color>
+15:20:18.506 - <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 28 (Defined), <b>MarkerSubSeed:</b> 330 (Defined), <b>LightSubSeed:</b> 213 (Defined)
+15:20:18.506 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 173 with BuildFromZoneAlias172 zoneAliasStart: 172 aliasOffset: Zone_1</color>
+15:20:18.507 - <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 32 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.507 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 174 with BuildFromZoneAlias173 zoneAliasStart: 172 aliasOffset: Zone_2</color>
+15:20:18.507 - <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 23 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.507 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 175 with BuildFromZoneAlias174 zoneAliasStart: 172 aliasOffset: Zone_3</color>
+15:20:18.507 - <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 6 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.507 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 176 with BuildFromZoneAlias175 zoneAliasStart: 172 aliasOffset: Zone_4</color>
+15:20:18.507 - <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 6 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 2 (Defined)
+15:20:18.507 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 138 with BuildFromZoneAlias138 zoneAliasStart: 138 aliasOffset: Zone_0</color>
+15:20:18.508 - <b>Zone Created</b> (New Game Object) in Dimension_1 MainLayer with 
+<b>SubSeed:</b> 4 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 6 (Defined)
+15:20:18.508 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 139 with BuildFromZoneAlias138 zoneAliasStart: 138 aliasOffset: Zone_1</color>
+15:20:18.508 - <b>Zone Created</b> (New Game Object) in Dimension_1 MainLayer with 
+<b>SubSeed:</b> 3 (Defined), <b>MarkerSubSeed:</b> 25 (Defined), <b>LightSubSeed:</b> 8 (Defined)
+15:20:18.508 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 140 with BuildFromZoneAlias139 zoneAliasStart: 138 aliasOffset: Zone_2</color>
+15:20:18.508 - <b>Zone Created</b> (New Game Object) in Dimension_1 MainLayer with 
+<b>SubSeed:</b> 3 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 8 (Defined)
+15:20:18.508 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 141 with BuildFromZoneAlias139 zoneAliasStart: 138 aliasOffset: Zone_3</color>
+15:20:18.508 - <b>Zone Created</b> (New Game Object) in Dimension_1 MainLayer with 
+<b>SubSeed:</b> 2 (Defined), <b>MarkerSubSeed:</b> 2 (Defined), <b>LightSubSeed:</b> 9 (Defined)
+15:20:18.508 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 142 with BuildFromZoneAlias139 zoneAliasStart: 138 aliasOffset: Zone_4</color>
+15:20:18.509 - <b>Zone Created</b> (New Game Object) in Dimension_1 MainLayer with 
+<b>SubSeed:</b> 1918864638 (Defined), <b>MarkerSubSeed:</b> 522408578 (Defined), <b>LightSubSeed:</b> 49325 (Defined)
+15:20:18.509 - Last Batch: SetupFloor
+		 Total Time: 0.000s Frames: 0 Ticks: 27
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: GenerateZones - Count: 17
+
+15:20:18.516 - <color=#C84800> ---- MainLayer ---- Picked build from area : Area_A</color>
+15:20:18.619 - <color=#C84800> ---- SecondaryLayer ---- Picked build from zone : New Game Object[SubSeed:3(3)]</color>
+15:20:18.722 - <color=#C84800> ---- MainLayer ---- Picked build from area : Area_A</color>
+15:20:18.800 - Last Batch: GenerateZones
+		 Total Time: 0.318s Frames: 8 Ticks: 291
+		 FrameTime (avg/max/ticks max): 42.3ms / 45.0ms / 45
+		 Jobs (started/looped): 16 / 157
+Next Batch: PlaceAddonZones - Count: 0
+
+15:20:18.800 - Last Batch: PlaceAddonZones
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: PrepareZones - Count: 7
+
+15:20:18.801 - Adding culling jobs for zone New Game Object[SubSeed:61(61)] from dimension Reality
+15:20:18.806 - Adding culling jobs for zone New Game Object[SubSeed:8(8)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:7(7)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:6(6)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:3(3)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:3(3)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:7(7)] from dimension Reality
+15:20:18.807 - Adding culling jobs for zone New Game Object[SubSeed:28(28)] from dimension Reality
+15:20:18.808 - Adding culling jobs for zone New Game Object[SubSeed:32(32)] from dimension Reality
+15:20:18.808 - Adding culling jobs for zone New Game Object[SubSeed:23(23)] from dimension Reality
+15:20:18.808 - Adding culling jobs for zone New Game Object[SubSeed:6(6)] from dimension Reality
+15:20:18.808 - Adding culling jobs for zone New Game Object[SubSeed:6(6)] from dimension Reality
+15:20:18.808 - Adding culling jobs for zone New Game Object[SubSeed:4(4)] from dimension Dimension_1
+15:20:18.809 - Adding culling jobs for zone New Game Object[SubSeed:3(3)] from dimension Dimension_1
+15:20:18.809 - Adding culling jobs for zone New Game Object[SubSeed:3(3)] from dimension Dimension_1
+15:20:18.809 - Adding culling jobs for zone New Game Object[SubSeed:2(2)] from dimension Dimension_1
+15:20:18.809 - Adding culling jobs for zone New Game Object[SubSeed:1918864638(362)] from dimension Dimension_1
+15:20:18.809 - Last Batch: PrepareZones
+		 Total Time: 0.000s Frames: 0 Ticks: 9
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 7 / 14
+Next Batch: BuildFloors - Count: 1
+
+15:20:18.810 - LG_BuildNodeVolumes() bulding NodeClusterData array with length of dimension count (2).
+15:20:18.810 - Last Batch: BuildFloors
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: Geomorphs - Count: 22
+
+15:20:18.821 - Last Batch: Geomorphs
+		 Total Time: 0.000s Frames: 0 Ticks: 11
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: Areas - Count: 55
+
+15:20:18.881 - Last Batch: Areas
+		 Total Time: 0.071s Frames: 2 Ticks: 60
+		 FrameTime (avg/max/ticks max): 24.1ms / 38.1ms / 38
+		 Jobs (started/looped): 53 / 2
+Next Batch: Plugs - Count: 61
+
+15:20:18.940 - Last Batch: Plugs
+		 Total Time: 0.070s Frames: 2 Ticks: 60
+		 FrameTime (avg/max/ticks max): 21.5ms / 33.1ms / 37
+		 Jobs (started/looped): 59 / 2
+Next Batch: Gates - Count: 148
+
+15:20:19.293 - <color=#C84800>>>>>>>>>>> ZONE 141 IS IN ZonesWithBulkheadEntrance!</color>
+15:20:19.332 - Last Batch: Gates
+		 Total Time: 0.375s Frames: 8 Ticks: 392
+		 FrameTime (avg/max/ticks max): 41.4ms / 95.1ms / 97
+		 Jobs (started/looped): 140 / 8
+Next Batch: AreaNames - Count: 2
+
+15:20:19.333 - Last Batch: AreaNames
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 2 / 0
+Next Batch: WardenObjectivePrep - Count: 0
+
+15:20:19.333 - Last Batch: WardenObjectivePrep
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: DistributionSetup - Count: 3
+
+15:20:19.333 - Last Batch: DistributionSetup
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 3 / 0
+Next Batch: TerminalDistribution - Count: 34
+
+15:20:19.333 - Last Batch: TerminalDistribution
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 34 / 0
+Next Batch: Distribution - Count: 3
+
+15:20:19.333 - <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+15:20:19.334 - <b>Artifacts:</b> Allocated 9 basic artifacts, 5 advanced artifacts and 1 specialized artifacts.
+15:20:19.334 - <b>Artifacts:</b> Zone 0 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.334 - <b>Artifacts:</b> Zone 1 has 1 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.334 - <b>Artifacts:</b> Zone 2 has 2 basic artifacts, 1 advanced artifacts and 1 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 3 has 1 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 4 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 5 has 1 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 6 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: SecondaryLayer, Using ArtifactDistribution.Default.
+15:20:19.335 - <b>Artifacts:</b> Allocated 9 basic artifacts, 5 advanced artifacts and 1 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 0 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 1 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 2 has 1 basic artifacts, 1 advanced artifacts and 1 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 3 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Zone 4 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+15:20:19.335 - <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+15:20:19.336 - <b>Artifacts:</b> Allocated 18 basic artifacts, 9 advanced artifacts and 3 specialized artifacts.
+15:20:19.336 - <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.336 - <b>Artifacts:</b> Zone 1 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.336 - <b>Artifacts:</b> Zone 2 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.336 - <b>Artifacts:</b> Zone 3 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.337 - <b>Artifacts:</b> Zone 4 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+15:20:19.337 - SetupAsLockedNoKey, interactionText: <color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>
+15:20:19.337 - SetupAsLockedNoKey, interactionText: <color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>
+15:20:19.339 - <color=purple>CreateKeyItemDistribution, keyItem: PublicName: BULKHEAD_KEY_49 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_49_terminalKey: BULKHEAD_KEY_49 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_5 ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+15:20:19.339 - <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: BULKHEAD_KEY_49 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_49_terminalKey: BULKHEAD_KEY_49 (KeyItemPickup_Core) --- Zone: ZONE140, AreaCount: 4 half: 2 even: True ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+15:20:19.339 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 1 MiddleMul: 0 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+15:20:19.340 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 1 StartMul: 0.5 MiddleMul: 0.5 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+15:20:19.340 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 2 StartMul: 0 MiddleMul: 0.5 EndMul: 0.5 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+15:20:19.340 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 3 StartMul: 0 MiddleMul: 0 EndMul: 1 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+15:20:19.340 - <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE140 function: ResourceContainerWeak available: 25 randomValue: 0.0832664 ri: 2 had weight: 1</color>
+15:20:19.340 - <color=#C84800>>>>> LG_Distribute_DetailedPlacedFunctionPerZone - Placing WEIGHTED function (BulkheadDoorController) in zone: ZONE139, area: AreaB ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+15:20:19.353 - <color=#C84800>------------------- LG_Distribute_WardenObjective, got objective for layer MainLayer: Gather_3_Data_Cubes_R8B1</color>
+15:20:19.354 - <color=red>LG_Distribute_WardenObjective, PLACE GATHER ITEMS, perZone: 1 PlacementZones: [Count: 3] System.Collections.Generic.List`1[GameData.ZonePlacementData], System.Collections.Generic.List`1[GameData.ZonePlacementData], System.Collections.Generic.List`1[GameData.ZonePlacementData] itemsToSpawn: [Count: 3] 165, 165, 165 spawnZones: [Count: 3] System.Collections.Generic.List`1[LevelGeneration.LG_Zone], System.Collections.Generic.List`1[LevelGeneration.LG_Zone], System.Collections.Generic.List`1[LevelGeneration.LG_Zone]</color>
+15:20:19.354 - <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE138 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+15:20:19.354 - <color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems, creating dist to spawn itemID: 165 for chainIndex: 0</color>
+15:20:19.354 - Increment placementDataIndex to 1
+15:20:19.354 - <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE140 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+15:20:19.354 - <color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems, creating dist to spawn itemID: 165 for chainIndex: 0</color>
+15:20:19.354 - Increment placementDataIndex to 2
+15:20:19.354 - <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE141 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+15:20:19.355 - <color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems, creating dist to spawn itemID: 165 for chainIndex: 0</color>
+15:20:19.355 - RESET placementDataIndex to 0
+15:20:19.355 - <color=purple>CreateKeyItemDistribution, keyItem: PublicName: BULKHEAD_KEY_535 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_535_terminalKey: BULKHEAD_KEY_535 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_0 ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+15:20:19.356 - <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: BULKHEAD_KEY_535 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_535_terminalKey: BULKHEAD_KEY_535 (KeyItemPickup_Core) --- Zone: ZONE172, AreaCount: 1 half: 0 even: False ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+15:20:19.356 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 0 MiddleMul: 1 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+15:20:19.356 - <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE172 function: ResourceContainerWeak available: 9 randomValue: 0.7691422 ri: 6 had weight: 1</color>
+15:20:19.356 - <color=#C84800>------------------- LG_Distribute_WardenObjective, got objective for layer SecondaryLayer: Gather_Backup_Data_Cubes_R8B1</color>
+15:20:19.356 - <color=red>LG_Distribute_WardenObjective, PLACE GATHER ITEMS, perZone: 1 PlacementZones: [Count: 1] System.Collections.Generic.List`1[GameData.ZonePlacementData] itemsToSpawn: [Count: 1] 178 spawnZones: [Count: 1] System.Collections.Generic.List`1[LevelGeneration.LG_Zone]</color>
+15:20:19.356 - <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE176 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+15:20:19.356 - <color=#C84800>LG_Distribute_WardenObjective.DistributeGatherRetrieveItems, creating dist to spawn itemID: 178 for chainIndex: 0</color>
+15:20:19.356 - RESET placementDataIndex to 0
+15:20:19.357 - SetupAsLockedNoKey, interactionText: <color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>
+15:20:19.357 - Last Batch: Distribution
+		 Total Time: 0.036s Frames: 1 Ticks: 24
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 8
+		 Jobs (started/looped): 223 / 1
+Next Batch: FunctionMarkers - Count: 17
+
+15:20:19.743 - <color=#C84800>Spawning Personnel ID in countainer: LockerWeakLock(Clone)_terminalKey: LOCKER_802</color>
+15:20:19.744 - GenericSmallPickupItem_Core.SetupFromLevelgen, seed: 519384640 isWardenObjective: True SpawnNode: AIGraph.AIG_CourseNode
+15:20:19.744 - GenericSmallPickupItem_Core.SetupPartialDecoder PersonnelPickup_Core.SetupPartialDecoder
+15:20:19.913 - <color=#C84800>Spawning KEYCARD (PublicName: BULKHEAD_KEY_49 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_49_terminalKey: BULKHEAD_KEY_49 (KeyItemPickup_Core)) in countainer: BoxWeakLock(Clone)_terminalKey: BOX_679</color>
+15:20:20.024 - <color=#C84800>Spawning KEYCARD (PublicName: BULKHEAD_KEY_535 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_535_terminalKey: BULKHEAD_KEY_535 (KeyItemPickup_Core)) in countainer: LockerWeakLock(Clone)_terminalKey: LOCKER_505</color>
+15:20:20.357 - <color=#C84800>Spawning Personnel ID in countainer: BoxWeakLock(Clone)_terminalKey: BOX_726</color>
+15:20:20.358 - GenericSmallPickupItem_Core.SetupFromLevelgen, seed: 1174872704 isWardenObjective: True SpawnNode: AIGraph.AIG_CourseNode
+15:20:20.358 - GenericSmallPickupItem_Core.SetupPartialDecoder PersonnelPickup_Core.SetupPartialDecoder
+15:20:20.571 - <color=#C84800>Spawning Personnel ID in countainer: BoxWeakLock(Clone)_terminalKey: BOX_480</color>
+15:20:20.572 - GenericSmallPickupItem_Core.SetupFromLevelgen, seed: 1308126592 isWardenObjective: True SpawnNode: AIGraph.AIG_CourseNode
+15:20:20.572 - GenericSmallPickupItem_Core.SetupPartialDecoder PersonnelPickup_Core.SetupPartialDecoder
+15:20:20.723 - <color=#C84800>Spawning Personnel ID in countainer: BoxWeakLock(Clone)_terminalKey: BOX_751</color>
+15:20:20.724 - GenericSmallPickupItem_Core.SetupFromLevelgen, seed: 487661248 isWardenObjective: True SpawnNode: AIGraph.AIG_CourseNode
+15:20:20.725 - GenericSmallPickupItem_Core.SetupPartialDecoder PersonnelPickup_Core.SetupPartialDecoder
+15:20:20.889 - Last Batch: FunctionMarkers
+		 Total Time: 1.524s Frames: 34 Ticks: 1533
+		 FrameTime (avg/max/ticks max): 53.5ms / 72.6ms / 73
+		 Jobs (started/looped): 17 / 773
+Next Batch: FunctionMarkerLeftovers - Count: 17
+
+15:20:21.040 - Last Batch: FunctionMarkerLeftovers
+		 Total Time: 0.156s Frames: 3 Ticks: 150
+		 FrameTime (avg/max/ticks max): 41.5ms / 57.6ms / 57
+		 Jobs (started/looped): 14 / 3
+Next Batch: Markers - Count: 1
+
+15:20:21.402 - Last Batch: Markers
+		 Total Time: 0.348s Frames: 9 Ticks: 362
+		 FrameTime (avg/max/ticks max): 37.9ms / 42.3ms / 42
+		 Jobs (started/looped): 1 / 311
+Next Batch: PrefabSpawners - Count: 34518
+
+15:20:23.106 - Last Batch: PrefabSpawners
+		 Total Time: 1.703s Frames: 41 Ticks: 1704
+		 FrameTime (avg/max/ticks max): 46.2ms / 59.1ms / 58
+		 Jobs (started/looped): 34516 / 33763
+Next Batch: LateMarkerCleanup - Count: 0
+
+15:20:23.106 - Last Batch: LateMarkerCleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: MarkerLoop - Count: 1
+
+15:20:23.106 - Last Batch: MarkerLoop
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: LateGeomorphScan - Count: 22
+
+15:20:25.507 - Last Batch: LateGeomorphScan
+		 Total Time: 2.422s Frames: 23 Ticks: 2400
+		 FrameTime (avg/max/ticks max): 107.7ms / 120.7ms / 122
+		 Jobs (started/looped): 22 / 88
+Next Batch: Pillars - Count: 0
+
+15:20:25.507 - Last Batch: Pillars
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGraph_UnityAIGraph - Count: 2
+
+15:20:25.663 - CollectNavMeshSources : From 16 roots and 168739 possible sources, 38118 vas valid
+15:20:25.664 - CollectNavMeshSources : NotStatic:0 NotActive:1358
+15:20:25.664 - CollectNavMeshSources : WrongLayer:9366 NoCollider:121254 WasTrigger:1 MissingMesh:0 BadColliderType:0
+15:20:25.664 - NavmeshUtils.NavMeshSourceCollector : 38118 valid NavMesh sources found!
+15:20:26.749 - ---------------------------------------------------------
+15:20:26.749 - Navmesh done! time: 1.219055
+15:20:26.749 - ---------------------------------------------------------
+15:20:26.817 - CollectNavMeshSources : From 6 roots and 56665 possible sources, 12260 vas valid
+15:20:26.817 - CollectNavMeshSources : NotStatic:0 NotActive:724
+15:20:26.817 - CollectNavMeshSources : WrongLayer:3349 NoCollider:41056 WasTrigger:0 MissingMesh:0 BadColliderType:0
+15:20:26.817 - NavmeshUtils.NavMeshSourceCollector : 12260 valid NavMesh sources found!
+15:20:27.275 - ---------------------------------------------------------
+15:20:27.275 - Navmesh done! time: 0.5128098
+15:20:27.275 - ---------------------------------------------------------
+15:20:27.275 - Last Batch: AIGraph_UnityAIGraph
+		 Total Time: 1.765s Frames: 22 Ticks: 1768
+		 FrameTime (avg/max/ticks max): 52.9ms / 178.3ms / 166
+		 Jobs (started/looped): 1 / 3673295
+Next Batch: AIGraph_Prepare - Count: 22
+
+15:20:27.364 - Last Batch: AIGraph_Prepare
+		 Total Time: 0.077s Frames: 2 Ticks: 89
+		 FrameTime (avg/max/ticks max): 24.0ms / 38.0ms / 38
+		 Jobs (started/looped): 20 / 2
+Next Batch: AIGraph_NodeVolumeJobs - Count: 1
+
+15:20:27.904 - Last Batch: AIGraph_NodeVolumeJobs
+		 Total Time: 0.550s Frames: 10 Ticks: 540
+		 FrameTime (avg/max/ticks max): 54.9ms / 86.0ms / 79
+		 Jobs (started/looped): 1 / 206251
+Next Batch: LadderAIGNodes - Count: 20
+
+15:20:27.912 - Last Batch: LadderAIGNodes
+		 Total Time: 0.000s Frames: 0 Ticks: 8
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: AIGraph_LinkGates - Count: 75
+
+15:20:27.936 - Last Batch: AIGraph_LinkGates
+		 Total Time: 0.036s Frames: 1 Ticks: 23
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 10
+		 Jobs (started/looped): 74 / 1
+Next Batch: AIGraph_LinkPlugs - Count: 0
+
+15:20:27.936 - Last Batch: AIGraph_LinkPlugs
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGRaph_SpecialNodesFindSource - Count: 20
+
+15:20:27.936 - Last Batch: AIGRaph_SpecialNodesFindSource
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: AIGRaph_SpecialNodesLinkIntoVolume - Count: 20
+
+15:20:27.936 - Last Batch: AIGRaph_SpecialNodesLinkIntoVolume
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: AIGraph_Start - Count: 22
+
+15:20:27.937 - Last Batch: AIGraph_Start
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: AIGraph_CreateNodeClusters - Count: 55
+
+15:20:28.043 - Last Batch: AIGraph_CreateNodeClusters
+		 Total Time: 0.111s Frames: 3 Ticks: 107
+		 FrameTime (avg/max/ticks max): 30.1ms / 37.2ms / 37
+		 Jobs (started/looped): 52 / 429
+Next Batch: AIGraph_ScoreNodeClusters - Count: 55
+
+15:20:28.064 - Last Batch: AIGraph_ScoreNodeClusters
+		 Total Time: 0.000s Frames: 0 Ticks: 20
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 55 / 0
+Next Batch: AIGraph_End - Count: 22
+
+15:20:28.064 - Last Batch: AIGraph_End
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: AIGraph_AirGraph - Count: 22
+
+15:20:28.115 - Populate grid created 32768 compound nodes and took ~128 KB and 48 ms
+15:20:28.212 - Populate grid created 32768 compound nodes and took ~128 KB and 56 ms
+15:20:28.296 - Populate grid created 32768 compound nodes and took ~128 KB and 47 ms
+15:20:28.384 - Populate grid created 32768 compound nodes and took ~128 KB and 48 ms
+15:20:28.488 - Populate grid created 32768 compound nodes and took ~128 KB and 70 ms
+15:20:28.571 - Populate grid created 32768 compound nodes and took ~128 KB and 43 ms
+15:20:28.643 - Populate grid created 32768 compound nodes and took ~128 KB and 41 ms
+15:20:28.714 - Populate grid created 32768 compound nodes and took ~128 KB and 39 ms
+15:20:28.792 - Populate grid created 32768 compound nodes and took ~128 KB and 46 ms
+15:20:28.860 - Populate grid created 32768 compound nodes and took ~128 KB and 31 ms
+15:20:28.910 - Populate grid created 32768 compound nodes and took ~128 KB and 20 ms
+15:20:28.981 - Populate grid created 32768 compound nodes and took ~128 KB and 41 ms
+15:20:29.051 - Populate grid created 32768 compound nodes and took ~128 KB and 35 ms
+15:20:29.140 - Populate grid created 32768 compound nodes and took ~128 KB and 57 ms
+15:20:29.201 - Populate grid created 32768 compound nodes and took ~128 KB and 22 ms
+15:20:29.239 - Populate grid created 32768 compound nodes and took ~128 KB and 12 ms
+15:20:29.301 - Populate grid created 32768 compound nodes and took ~128 KB and 50 ms
+15:20:29.382 - Populate grid created 32768 compound nodes and took ~128 KB and 41 ms
+15:20:29.454 - Populate grid created 32768 compound nodes and took ~128 KB and 42 ms
+15:20:29.517 - Populate grid created 32768 compound nodes and took ~128 KB and 31 ms
+15:20:29.591 - Populate grid created 32768 compound nodes and took ~128 KB and 41 ms
+15:20:29.680 - Populate grid created 32768 compound nodes and took ~128 KB and 60 ms
+15:20:29.704 - Last Batch: AIGraph_AirGraph
+		 Total Time: 1.576s Frames: 20 Ticks: 1640
+		 FrameTime (avg/max/ticks max): 69.4ms / 111.9ms / 110
+		 Jobs (started/looped): 2 / 20
+Next Batch: AIGraph_AirGraph_PostProcess - Count: 22
+
+15:20:29.717 - Last Batch: AIGraph_AirGraph_PostProcess
+		 Total Time: 0.096s Frames: 1 Ticks: 13
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 0
+		 Jobs (started/looped): 21 / 1
+Next Batch: SetGateAlwaysTraversable - Count: 75
+
+15:20:29.718 - Last Batch: SetGateAlwaysTraversable
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 75 / 75
+Next Batch: FunctionMarkerFallback - Count: 18
+
+15:20:29.718 - LG_BuildBulkheadDoorControllerLogicJob, dc: Bulkhead_Door_Controller_GO_UID:4304_terminalKey: BULKHEAD_DC_765_func:BulkheadDoorController_funcWasSpawned:True (LevelGeneration.LG_BulkheadDoorController_Core)
+15:20:29.718 - >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECURITY DOOR, SetupBulkheadDCLock BULKHEAD_DC_765
+15:20:29.718 - >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECURITY DOOR, SetupBulkheadDCLock BULKHEAD_DC_765
+15:20:29.726 - Last Batch: FunctionMarkerFallback
+		 Total Time: 0.000s Frames: 0 Ticks: 8
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 18 / 0
+Next Batch: SetGateTraversableFromStart - Count: 75
+
+15:20:29.727 - Last Batch: SetGateTraversableFromStart
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 75 / 75
+Next Batch: Ladders - Count: 20
+
+15:20:29.738 - Last Batch: Ladders
+		 Total Time: 0.000s Frames: 0 Ticks: 11
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: DoorLocks - Count: 16
+
+15:20:29.885 - Last Batch: DoorLocks
+		 Total Time: 0.156s Frames: 3 Ticks: 147
+		 FrameTime (avg/max/ticks max): 47.5ms / 66.5ms / 67
+		 Jobs (started/looped): 13 / 3
+Next Batch: Resources - Count: 1
+
+15:20:29.885 - Last Batch: Resources
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: CustomGeomorphBuildJob - Count: 0
+
+15:20:29.885 - Last Batch: CustomGeomorphBuildJob
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: CustomObjectCollection - Count: 17
+
+15:20:29.958 - Last Batch: CustomObjectCollection
+		 Total Time: 0.081s Frames: 2 Ticks: 73
+		 FrameTime (avg/max/ticks max): 26.1ms / 42.2ms / 41
+		 Jobs (started/looped): 15 / 2
+Next Batch: SpecificSpawning - Count: 51
+
+15:20:29.995 - Last Batch: SpecificSpawning
+		 Total Time: 0.043s Frames: 1 Ticks: 37
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 20
+		 Jobs (started/looped): 50 / 1
+Next Batch: EnemiesPlacement_Scoring - Count: 17
+
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 1_Area A (LevelGeneration.LG_Area)_ZONE_135_ (LevelGeneration.LG_Area) | VoxelCoverage: 1192.063 | VoxelCoverage after Multi: 44.10631
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 2_Area B (LevelGeneration.LG_Area)_ZONE_135_ (LevelGeneration.LG_Area) | VoxelCoverage: 442.5125 | VoxelCoverage after Multi: 16.37296
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 3_Area C (LevelGeneration.LG_Area)_ZONE_135_ (LevelGeneration.LG_Area) | VoxelCoverage: 662.175 | VoxelCoverage after Multi: 24.50047
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 4_Area D (LevelGeneration.LG_Area)_ZONE_135_ (LevelGeneration.LG_Area) | VoxelCoverage: 456.575 | VoxelCoverage after Multi: 16.89328
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 5_Area E (LevelGeneration.LG_Area)_ZONE_135_ (LevelGeneration.LG_Area) | VoxelCoverage: 518.2625 | VoxelCoverage after Multi: 19.17571
+15:20:29.995 - <b>LG_PopulateZone:</b> Area 6_Area A (LevelGeneration.LG_Area)_ZONE_136_ (LevelGeneration.LG_Area) | VoxelCoverage: 1516.063 | VoxelCoverage after Multi: 56.09431
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 7_Area B (LevelGeneration.LG_Area)_ZONE_136_ (LevelGeneration.LG_Area) | VoxelCoverage: 818.925 | VoxelCoverage after Multi: 30.30022
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 8_Area C (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 194.9625 | VoxelCoverage after Multi: 7.213613
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 9_Area D (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 254.8125 | VoxelCoverage after Multi: 9.428062
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 10_Area B (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 256.325 | VoxelCoverage after Multi: 9.484026
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 11_Area A (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 1251 | VoxelCoverage after Multi: 46.287
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 12_Area E (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 96.35 | VoxelCoverage after Multi: 3.56495
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 13_Area F (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 389.675 | VoxelCoverage after Multi: 14.41797
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 14_Area B (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 540.05 | VoxelCoverage after Multi: 19.98185
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 15_Area A (LevelGeneration.LG_Area)_ZONE_137_ (LevelGeneration.LG_Area) | VoxelCoverage: 1288.45 | VoxelCoverage after Multi: 47.67265
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 16_Area C (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 491.4125 | VoxelCoverage after Multi: 18.18226
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 17_Area A (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 317.4625 | VoxelCoverage after Multi: 11.74611
+15:20:29.996 - <b>LG_PopulateZone:</b> Area 18_Area B (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 1473.113 | VoxelCoverage after Multi: 54.50517
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 19_Area C (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 187.2 | VoxelCoverage after Multi: 6.9264
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 20_Area D (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 156.3 | VoxelCoverage after Multi: 5.7831
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 21_Area E (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 89.925 | VoxelCoverage after Multi: 3.327225
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 22_Area F (LevelGeneration.LG_Area)_ZONE_138_ (LevelGeneration.LG_Area) | VoxelCoverage: 92.9 | VoxelCoverage after Multi: 3.4373
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 23_Area A (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 1755.05 | VoxelCoverage after Multi: 64.93685
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 24_Area B (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 273.2125 | VoxelCoverage after Multi: 10.10886
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 25_Area C (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 276.075 | VoxelCoverage after Multi: 10.21478
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 26_Area A (LevelGeneration.LG_Area)_ZONE_140_ (LevelGeneration.LG_Area) | VoxelCoverage: 660.2375 | VoxelCoverage after Multi: 24.42879
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 27_Area B (LevelGeneration.LG_Area)_ZONE_140_ (LevelGeneration.LG_Area) | VoxelCoverage: 714.8375 | VoxelCoverage after Multi: 26.44899
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 28_Area C (LevelGeneration.LG_Area)_ZONE_140_ (LevelGeneration.LG_Area) | VoxelCoverage: 766.9375 | VoxelCoverage after Multi: 28.37669
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 29_Area D (LevelGeneration.LG_Area)_ZONE_140_ (LevelGeneration.LG_Area) | VoxelCoverage: 130.9125 | VoxelCoverage after Multi: 4.843763
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 30_Area_A (LevelGeneration.LG_Area)_ZONE_141_ (LevelGeneration.LG_Area) | VoxelCoverage: 404.8125 | VoxelCoverage after Multi: 14.97806
+15:20:29.997 - <b>LG_PopulateZone:</b> Area 31_Area A (LevelGeneration.LG_Area)_ZONE_172_ (LevelGeneration.LG_Area) | VoxelCoverage: 1436.15 | VoxelCoverage after Multi: 53.13755
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 32_Area A (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 707.95 | VoxelCoverage after Multi: 26.19415
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 33_Area A (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 1484.012 | VoxelCoverage after Multi: 54.90846
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 34_Area C (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 254.025 | VoxelCoverage after Multi: 9.398925
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 35_Area C (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 677.875 | VoxelCoverage after Multi: 25.08138
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 36_Area B (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 1044.525 | VoxelCoverage after Multi: 38.64743
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 37_Area A (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 1115.938 | VoxelCoverage after Multi: 41.28969
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 38_Area E (LevelGeneration.LG_Area)_ZONE_173_ (LevelGeneration.LG_Area) | VoxelCoverage: 512.7 | VoxelCoverage after Multi: 18.9699
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 39_Area A (LevelGeneration.LG_Area)_ZONE_174_ (LevelGeneration.LG_Area) | VoxelCoverage: 2700.725 | VoxelCoverage after Multi: 99.92683
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 40_Area A (LevelGeneration.LG_Area)_ZONE_175_ (LevelGeneration.LG_Area) | VoxelCoverage: 1114.175 | VoxelCoverage after Multi: 41.22448
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 46_Area A (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 1752.25 | VoxelCoverage after Multi: 64.83325
+15:20:29.998 - <b>LG_PopulateZone:</b> Area 47_Area B (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 273.5375 | VoxelCoverage after Multi: 10.12089
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 48_Area C (LevelGeneration.LG_Area)_ZONE_139_ (LevelGeneration.LG_Area) | VoxelCoverage: 296.325 | VoxelCoverage after Multi: 10.96403
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 49_Area A (LevelGeneration.LG_Area)_ZONE_140_ (LevelGeneration.LG_Area) | VoxelCoverage: 1402.988 | VoxelCoverage after Multi: 51.91054
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 50_Area A (LevelGeneration.LG_Area)_ZONE_141_ (LevelGeneration.LG_Area) | VoxelCoverage: 595.2125 | VoxelCoverage after Multi: 22.02286
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 51_Area B (LevelGeneration.LG_Area)_ZONE_141_ (LevelGeneration.LG_Area) | VoxelCoverage: 727.9125 | VoxelCoverage after Multi: 26.93276
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 52_Area C (LevelGeneration.LG_Area)_ZONE_141_ (LevelGeneration.LG_Area) | VoxelCoverage: 655.9625 | VoxelCoverage after Multi: 24.27061
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 53_Area D (LevelGeneration.LG_Area)_ZONE_141_ (LevelGeneration.LG_Area) | VoxelCoverage: 128.2375 | VoxelCoverage after Multi: 4.744788
+15:20:29.999 - <b>LG_PopulateZone:</b> Area 54_Area_A (LevelGeneration.LG_Area)_Supply room, ZONE_142_ (LevelGeneration.LG_Area) | VoxelCoverage: 402.375 | VoxelCoverage after Multi: 14.88788
+15:20:29.999 - Last Batch: EnemiesPlacement_Scoring
+		 Total Time: 0.000s Frames: 0 Ticks: 5
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 107 / 0
+Next Batch: StaticEnemiesPlacement - Count: 17
+
+15:20:30.078 - Last Batch: StaticEnemiesPlacement
+		 Total Time: 0.079s Frames: 2 Ticks: 78
+		 FrameTime (avg/max/ticks max): 24.9ms / 39.8ms / 40
+		 Jobs (started/looped): 39 / 36
+Next Batch: PreCulling - Count: 17
+
+15:20:30.165 - Last Batch: PreCulling
+		 Total Time: 0.084s Frames: 2 Ticks: 87
+		 FrameTime (avg/max/ticks max): 26.5ms / 43.1ms / 45
+		 Jobs (started/looped): 15 / 2
+Next Batch: Culling_Nodes - Count: 55
+
+15:20:30.418 - Last Batch: Culling_Nodes
+		 Total Time: 0.242s Frames: 6 Ticks: 254
+		 FrameTime (avg/max/ticks max): 40.3ms / 42.2ms / 44
+		 Jobs (started/looped): 49 / 6
+Next Batch: Culling_Portals - Count: 93
+
+15:20:30.421 - Last Batch: Culling_Portals
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 93 / 0
+Next Batch: Culling_Cullers - Count: 347
+
+15:20:30.440 - Last Batch: Culling_Cullers
+		 Total Time: 0.038s Frames: 1 Ticks: 18
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 8
+		 Jobs (started/looped): 346 / 1
+Next Batch: Culling_Lights - Count: 55
+
+15:20:34.155 - Last Batch: Culling_Lights
+		 Total Time: 3.683s Frames: 44 Ticks: 3715
+		 FrameTime (avg/max/ticks max): 98.1ms / 251.5ms / 251
+		 Jobs (started/looped): 11 / 44
+Next Batch: Culling_NodeInstanceSearch - Count: 55
+
+15:20:34.537 - Last Batch: Culling_NodeInstanceSearch
+		 Total Time: 0.402s Frames: 12 Ticks: 382
+		 FrameTime (avg/max/ticks max): 33.1ms / 40.6ms / 35
+		 Jobs (started/looped): 54 / 3160
+Next Batch: Culling_NodeClusterJobs - Count: 17
+
+15:20:35.051 - Last Batch: Culling_NodeClusterJobs
+		 Total Time: 0.518s Frames: 16 Ticks: 513
+		 FrameTime (avg/max/ticks max): 32.6ms / 34.1ms / 34
+		 Jobs (started/looped): 71 / 2719928
+Next Batch: Culling_Cleanup - Count: 55
+
+15:20:35.051 - Last Batch: Culling_Cleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 55 / 0
+Next Batch: Culling_GatherLightCulling - Count: 810
+
+15:20:35.075 - Last Batch: Culling_GatherLightCulling
+		 Total Time: 0.033s Frames: 1 Ticks: 23
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 17
+		 Jobs (started/looped): 809 / 1
+Next Batch: Culling_TrimPortalLists - Count: 57
+
+15:20:35.121 - Last Batch: Culling_TrimPortalLists
+		 Total Time: 0.032s Frames: 1 Ticks: 46
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 25
+		 Jobs (started/looped): 57 / 359293
+Next Batch: PostCulling - Count: 0
+
+15:20:35.121 - Last Batch: PostCulling
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: ZoneLights - Count: 18
+
+15:20:35.375 - <color=#C84800>#### LG_BuildCustomLightHandlerJob, number of iCustomLightHandler found on the floor: 0</color>
+15:20:35.375 - Last Batch: ZoneLights
+		 Total Time: 0.165s Frames: 4 Ticks: 254
+		 FrameTime (avg/max/ticks max): 40.1ms / 48.5ms / 49
+		 Jobs (started/looped): 14 / 4
+Next Batch: GenerateNavigationInfo - Count: 3
+
+15:20:36.229 - Last Batch: GenerateNavigationInfo
+		 Total Time: 0.779s Frames: 3 Ticks: 854
+		 FrameTime (avg/max/ticks max): 197.2ms / 333.3ms / 440
+		 Jobs (started/looped): 55 / 3
+Next Batch: DisplayNavigationInfo - Count: 71
+
+15:20:36.232 - Last Batch: DisplayNavigationInfo
+		 Total Time: 0.000s Frames: 0 Ticks: 3
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 71 / 0
+Next Batch: CustomGeomorphPostCullingJob - Count: 0
+
+15:20:36.232 - Last Batch: CustomGeomorphPostCullingJob
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LateGeomorphBuildStep - Count: 22
+
+15:20:36.560 - Last Batch: LateGeomorphBuildStep
+		 Total Time: 0.324s Frames: 2 Ticks: 328
+		 FrameTime (avg/max/ticks max): 99.2ms / 188.4ms / 187
+		 Jobs (started/looped): 20 / 2
+Next Batch: LateRuntimeOptimizations - Count: 22
+
+15:20:36.783 - Last Batch: LateRuntimeOptimizations
+		 Total Time: 0.212s Frames: 5 Ticks: 223
+		 FrameTime (avg/max/ticks max): 35.9ms / 70.9ms / 66
+		 Jobs (started/looped): 22 / 198
+Next Batch: EnemiesPlacement - Count: 0
+
+15:20:36.783 - Last Batch: EnemiesPlacement
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FixColliders - Count: 0
+
+15:20:36.783 - Last Batch: FixColliders
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FinalGeomorphErrorCheck - Count: 0
+
+15:20:36.783 - Last Batch: FinalGeomorphErrorCheck
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: SpectatorJobs - Count: 0
+
+15:20:36.783 - Last Batch: SpectatorJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Enemies - Count: 1
+
+15:20:36.784 - LG_LoadPopulationShards : Disabled, handled earlier by GS_Offline
+15:20:36.784 - Last Batch: LoadResourcesShards_Enemies
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: DebugJobs - Count: 2
+
+15:20:36.784 - Last Batch: DebugJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 2 / 0
+Next Batch: Culling_LateCleanup - Count: 3
+
+15:20:36.815 - Last Batch: Culling_LateCleanup
+		 Total Time: 0.034s Frames: 1 Ticks: 32
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 8
+		 Jobs (started/looped): 57 / 1
+Next Batch: Culling_PrepForInlevel - Count: 2
+
+15:20:36.816 - Last Batch: Culling_PrepForInlevel
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 2 / 0
+Next Batch: LateCustomObjectCollection - Count: 17
+
+15:20:36.817 - Last Batch: LateCustomObjectCollection
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 17 / 0
+Next Batch: FinalLogicLinking - Count: 35
+
+15:20:36.818 - Factory Done : Last build: FinalLogicLinking
+15:20:36.819 - Factory : Built in 26.24398 seconds
+15:20:36.821 - FactoryDone :: TOTAL CHECKSUM: 17330496780790027756
+15:20:36.821 - BUILDER : BuildDone
+15:20:36.821 - >>>>>>>> GS_Generating.OnBuilderDone
+15:20:36.821 - Builder.CombinedCheckSum.Checksum: 17330496780790027756
+15:20:36.821 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide</color>
+15:20:36.829 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+15:20:36.829 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | OnLevelSetup, currently not-valid. stopping tracking.
+15:20:36.829 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+15:20:36.877 - WardenObjectiveManager.RegisterElevatorExitWinConditionItem, item: geo_32x32_elevator_shaft_lab_03(Clone)_0 (ElevatorShaftLanding)
+15:20:36.880 - WardenObjectiveManager.RegisterElevatorExitWinConditionItem, item: geo_32x32_elevator_shaft_lab_transition_03(Clone)_16 (ElevatorShaftLanding)
+15:20:36.884 - WardenObjectiveManager.RegisterCustomGeoExitWinConditionItem, item: geo_32x32_lab_exit_01(Clone)_ID_8_8 (LevelGeneration.LG_LevelExitGeo)
+15:20:36.902 - SNET : OnMasterCommand : GetReadyToStartPlaying 0 False
+15:20:36.902 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStopElevatorRide TO: StopElevatorRide</color>
+15:20:36.903 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : GeneratingLevel ReadyToStartPlaying
+15:20:36.904 - SNET : OnMasterCommand : StartPlaying 0 False
+15:20:36.904 - <color=green>OnMasterCommand : GS_StopElevatorRide has not implemented functionality for StartPlaying!</color>
+15:20:36.911 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : ReadyToStartPlaying Playing
+15:20:37.847 - Detecting that the player has entered a new layer: MainLayer in  from NULL in 
+15:20:37.847 - WardenObjectiveManager, entered a new layer: MainLayer
+15:20:37.847 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: StartObjective newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:37.848 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: NotDiscovered MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+15:20:37.849 - WardenObjectiveManager.CheckWardenObjectiveStatus, layer: MainLayer, status is diff! newStatus: Started | isRecall False
+15:20:37.849 - OBJECTIVE STARTED / ENTERED!
+15:20:59.922 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 2 trigger: None SNet.IsMaster: True Duration: 0
+15:20:59.923 - WardenObjectiveManager.ExecuteEvent BeginDelay, WardenObjectiveEventData, trigger: None type: PlaySound LocalIndex: Zone_0 Delay: 5 WardenIntel:  SNet.IsMaster: True with delay 5
+15:20:59.923 - WardenObjectiveManager.ExecuteEvent BeginDelay, WardenObjectiveEventData, trigger: None type: UpdateCustomSubObjective LocalIndex: Zone_0 Delay: 70 WardenIntel:  SNet.IsMaster: True with delay 70
+15:20:59.924 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  StartFogTransition Attempt
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:20:59.924 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  AttemptInteract Master (FoundPlayer=True)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:20:59.924 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  OnStateChange (IsRecall=False)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:20:59.924 - <b>EnvironmentStateManager:</b> fogDataId 178 duration: 1 fogblend: 0 expeditionTime: 0
+15:20:59.924 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  StartFogTransition Attempt
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:20:59.925 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  AttemptInteract Master (FoundPlayer=True)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:20:59.925 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  OnStateChange (IsRecall=False)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:20:59.925 - <b>EnvironmentStateManager:</b> fogDataId 178 duration: 1 fogblend: 0 expeditionTime: 0
+15:20:59.925 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel</color>
+15:20:59.934 - SNET : OnMasterCommand : StartPlaying 0 False
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.935 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.936 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:20:59.936 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel</color>
+15:20:59.937 - MusicManager - Setting music state to: ElevatorGoingDown
+15:20:59.937 - MusicManager - Setting music state to: Theme
+15:20:59.940 - <color=green>SNET : PlayerLocal(Clone)_32768 : AngryMaid exits PLOC_InElevator, replicator key: 32768</color>
+15:21:00.016 - Tried to trigger a SyncTrigger that wasn't valid.
+15:21:00.948 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  Going idle
+ExpeditionProgressionTime: 1.013691
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 178
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 1
+
+<b>FogSettings:</b>
+FogDensity: 0.0003
+DensityNoiseSpeed: 0.02
+DensityNoiseScale: 0.0731
+DensityHeightAltitude: -1.6
+DensityHeightRange: 1
+DensityHeightMaxBoost: 0.008
+Infection: 0
+FogColor: RGBA(0.847, 1.000, 0.957, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+15:21:02.303 - MusicManager - Setting music state to: Tension
+15:21:02.832 - Tried to trigger a SyncTrigger that wasn't valid.
+15:21:04.929 - WardenObjectiveManager.ExecuteEvent EndDelay, WardenObjectiveEventData, trigger: None type: PlaySound LocalIndex: Zone_0 Delay: 5 WardenIntel:  SNet.IsMaster: True after delay 5
+15:21:29.956 - DropServerManager: Enqueueing 'consume boosters' request
+15:21:29.956 - DropServerManager: Woke up
+15:21:29.956 - DropServerManager: Making 'consume boosters' request...
+15:21:30.178 - DropServerManager: 'consume boosters' request completed successfully
+15:21:30.178 - DropServerManager: Sleeping for 2 seconds...
+15:21:32.182 - DropServerManager: Idle
+15:21:35.162 - MusicManager - Setting music state to: EncounterHidden
+15:21:35.203 - MusicManager - Setting music state to: EncounterRegular
+15:21:39.885 - MusicManager - Setting music state to: CombatRegular
+15:21:42.836 - MusicManager - Setting music state to: CombatHidden
+15:21:44.061 - MusicManager - Setting music state to: CombatRegular
+15:21:48.602 - MusicManager - Setting music state to: Exploration
+15:21:49.131 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:22:03.605 - MusicManager - Setting music state to: Exploration
+15:22:09.924 - WardenObjectiveManager.ExecuteEvent EndDelay, WardenObjectiveEventData, trigger: None type: UpdateCustomSubObjective LocalIndex: Zone_0 Delay: 70 WardenIntel:  SNet.IsMaster: True after delay 70
+15:22:09.924 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: CustomSubObjectiveUpdate newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+15:22:09.925 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+15:22:16.930 - WARNING : replaced duplicate entry for Consumable_GlowStick_Pickup_Yellow(Clone)! 76561198056201461
+15:22:19.089 - MusicManager - Setting music state to: Tension
+15:22:33.369 - Security door, m_mapLookatRevealer.ActionOnReveal: Security LinksToLayerType: MainLayer
+15:22:34.664 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: False, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:22:34.664 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:22:36.932 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_669! 76561198056201461
+15:22:49.601 - MusicManager - Setting music state to: EncounterHidden
+15:22:49.768 - MusicManager - Setting music state to: EncounterRegular
+15:22:54.525 - MusicManager - Setting music state to: Exploration
+15:22:54.776 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:22:55.505 - MusicManager - Setting music state to: EncounterHidden
+15:22:55.532 - MusicManager - Setting music state to: EncounterRegular
+15:22:56.941 - WARNING : replaced duplicate entry for Consumable_GlowStick_Pickup_Yellow(Clone)! 76561198056201461
+15:22:57.051 - MusicManager - Setting music state to: Exploration
+15:22:57.523 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:22:58.878 - Enabled skinned mesh on door destruction
+15:23:05.105 - Security door, m_mapLookatRevealer.ActionOnReveal: Security LinksToLayerType: MainLayer
+15:23:06.027 - Terminal 541 change state to Awake
+15:23:07.670 - Terminal 541 change state to Sleeping
+15:23:09.396 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: False, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:23:09.396 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:23:10.070 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:23:10.070 - LG_SecurityDoor_Locks, activates chained puzzle from master
+15:23:10.071 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:23:12.065 - MusicManager - Setting music state to: Tension
+15:23:16.951 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_669! 76561198056201461
+15:23:19.001 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+15:23:20.957 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:23:20.957 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:23:22.071 - MusicManager - Setting music state to: TensionMax
+15:23:36.965 - WARNING : replaced duplicate entry for Consumable_GlowStick_Pickup_Yellow(Clone)! 76561198056201461
+15:23:40.769 - MusicManager - Setting music state to: EncounterHidden
+15:23:40.797 - MusicManager - Setting music state to: EncounterRegular
+15:23:43.068 - MusicManager - Setting music state to: Exploration
+15:23:43.582 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:23:58.071 - MusicManager - Setting music state to: Tension
+15:24:02.662 - MusicManager - Setting music state to: EncounterHidden
+15:24:02.704 - MusicManager - Setting music state to: EncounterRegular
+15:24:10.770 - MusicManager - Setting music state to: Exploration
+15:24:10.897 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:24:16.701 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:24:23.716 - OnDoorIsOpened, LinkedToZoneData: GameData.ExpeditionZoneData
+15:24:23.716 - OnDoorIsOpened: LinkedToZoneData: GameData.ExpeditionZoneData 
+15:24:23.716 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter: System.Collections.Generic.List`1[GameData.LevelEventData]
+15:24:23.716 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:24:24.636 - MusicManager - Setting music state to: EncounterHidden
+15:24:24.705 - MusicManager - Setting music state to: EncounterRegular
+15:24:27.347 - MusicManager - Setting music state to: Exploration
+15:24:27.890 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:24:32.995 - Enabled skinned mesh on door destruction
+15:24:41.673 - MusicManager - Setting music state to: EncounterHidden
+15:24:41.701 - MusicManager - Setting music state to: EncounterRegular
+15:24:43.972 - MusicManager - Setting music state to: Exploration
+15:24:44.374 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:24:58.976 - MusicManager - Setting music state to: Exploration
+15:25:06.269 - MusicManager - Setting music state to: Tension
+15:25:17.931 - MusicManager - Setting music state to: EncounterHidden
+15:25:18.000 - MusicManager - Setting music state to: EncounterRegular
+15:25:20.553 - MusicManager - Setting music state to: Exploration
+15:25:20.569 - MusicManager - Setting music state to: EncounterRegular
+15:25:20.580 - MusicManager - Setting music state to: Exploration
+15:25:20.580 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:25:35.587 - MusicManager - Setting music state to: Tension
+15:25:47.429 - MusicManager - Setting music state to: EncounterHidden
+15:25:47.497 - MusicManager - Setting music state to: EncounterRegular
+15:25:49.374 - MusicManager - Setting music state to: Exploration
+15:25:49.945 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:25:59.937 - GetCurrentTimeInLevelEnum, minutesElapsed: 5.000029 returning: Time_5 minutesToNext: 10
+15:26:04.375 - MusicManager - Setting music state to: Tension
+15:26:16.945 - AchievementManager | <b>Achievement_CompleteCTierWithoutUsingTools</b> :: Tool was used by AngryMaid, Ach invalid. | InventorySlot: GearClass
+15:26:28.004 - MusicManager - Setting music state to: EncounterHidden
+15:26:28.032 - MusicManager - Setting music state to: EncounterRegular
+15:26:28.241 - MusicManager - Setting music state to: Exploration
+15:26:28.880 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:26:35.732 - MusicManager - Setting music state to: EncounterHidden
+15:26:35.774 - MusicManager - Setting music state to: EncounterRegular
+15:26:37.055 - ERROR : Implement CaptureToBuffer on Enemies.ES_HibernateWakeUp Striker_Hibernate_GeneratedPrefab(Clone)_32894
+15:26:38.251 - MusicManager - Setting music state to: CombatRegular
+15:26:41.259 - MusicManager - Setting music state to: Exploration
+15:26:41.857 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:26:52.823 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+15:26:54.884 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+15:26:56.261 - MusicManager - Setting music state to: Exploration
+15:27:01.704 - Security door, m_mapLookatRevealer.ActionOnReveal: Security LinksToLayerType: MainLayer
+15:27:02.404 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: False, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:27:02.404 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:27:03.337 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+15:27:03.337 - LG_SecurityDoor_Locks, activates chained puzzle from master
+15:27:03.339 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+15:27:03.339 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+15:27:03.351 - MusicManager - Setting music state to: IntentionalCombatHidden
+15:27:06.371 - Dialog ID 53 did not return any generated alternatives for this situation!
+15:27:06.372 - SurvivalWave: TRIGGER DIALOG FOR NEW WAVE
+15:27:17.077 - WARNING : replaced duplicate entry for Consumable_GlowStick_Pickup_Yellow(Clone)! 76561198056201461
+15:27:21.426 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+15:27:36.407 - MusicManager - Setting music state to: IntentionalCombatRegular
+15:27:36.663 - MusicManager - Setting music state to: IntentionalCombatHidden
+15:27:37.079 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_121! 76561198056201461
+15:27:37.741 - MusicManager - Setting music state to: IntentionalCombatRegular
+15:27:55.359 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+15:27:57.090 - WARNING : replaced duplicate entry for Consumable_GlowStick_Pickup_Yellow(Clone)! 76561198056201461
+15:28:10.919 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:10.920 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:10.920 - Player Down: AngryMaid
+15:28:11.151 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.152 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.152 - Player Down: AngryMaid
+15:28:11.523 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.523 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.524 - Player Down: AngryMaid
+15:28:11.956 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.956 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.956 - Player Down: AngryMaid
+15:28:11.972 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.972 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | Player is dead, ach invalid. Player: AngryMaid
+15:28:11.972 - Player Down: AngryMaid
+15:28:12.947 - SNET : OnMasterCommand : EndPlaying 1 False
+15:28:12.948 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionFail</color>
+15:28:12.948 - MusicManager - Setting music state to: Silence
+15:28:12.948 - MusicManager - Setting music state to: Silence
+15:28:12.963 - Got expedition fail from master!
+15:28:12.963 - MusicManager - Setting music state to: IntentionalCombatRegular
+15:28:12.964 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : Playing InSession_DonePlaying
+15:28:17.790 - OnBtnPress, ID: 154 GO: GoToLobby OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:17.791 - SNET : OnMasterCommand : EndPlaying 0 False
+15:28:17.791 - RundownManager.SetLayerProgression, layer: Secondary progressionState: Undiscovered
+15:28:17.791 - RundownManager.SetLayerProgression, layer: Main progressionState: Entered
+15:28:17.791 - RundownManager.OnExpeditionEnded(endState: Fail, expeditionTime: 433, artifacts: [0,0,0])
+15:28:17.792 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+15:28:17.793 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+15:28:17.793 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+15:28:17.793 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+15:28:17.793 - RundownManager.EndGameSession
+15:28:17.794 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ExpeditionFail TO: AfterLevel</color>
+15:28:17.804 - CleanupAfterExpedition AfterLevel
+15:28:17.805 - Global.OnLevelCleanup
+15:28:17.805 - Global.OnLevelCleanup
+15:28:17.806 - CellSound.OnLevelCleanup. AllSoundsStoppedThisSession: True
+15:28:17.806 - MusicManager - Setting music state to: Silence
+15:28:18.083 - On despawn! PlayerLocal(Clone)_32768 : AngryMaid
+15:28:18.085 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentDeSpawned  Reason : None isPlayerMaster : True
+15:28:18.086 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentDeSpawned None
+15:28:18.088 - MusicManager - Setting music state to: ElevatorIdle
+15:28:18.096 - CarryItemWithGlobalStateManager.OnLevelCleanup
+15:28:18.096 - CarryItemWithGlobalStateManager.OnLevelCleanup, i:0 type: FogRepeller count: 0
+15:28:18.097 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | OnLevelCleanup, resetting hasBeenDowned state
+15:28:18.097 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+15:28:18.097 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+15:28:18.097 - AchievementManager | <b>Achievement_KillPMotherWithoutTakingDamageFromBabyStrikers</b> :: Reset
+15:28:18.208 - MusicManager - Setting music state to: StartUp
+15:28:18.209 - SessionGUID set to f0tOXX2ip021jbj2v3IWgg==
+15:28:18.238 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierA index: 1 EXPEDITION LOCKED
+15:28:18.239 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierA index: 3 EXPEDITION LOCKED
+15:28:18.239 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:28:18.239 - tier: TierC index: 1 EXPEDITION LOCKED
+15:28:18.240 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:28:18.240 - tier: TierC index: 3 EXPEDITION LOCKED
+15:28:18.240 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:28:18.240 - tier: TierD index: 1 EXPEDITION LOCKED
+15:28:18.240 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:28:18.241 - tier: TierD index: 3 EXPEDITION LOCKED
+15:28:18.241 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:28:18.241 - tier: TierE index: 1 EXPEDITION LOCKED
+15:28:18.241 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:28:18.241 - tier: TierE index: 3 EXPEDITION LOCKED
+15:28:18.241 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:28:18.243 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_35 TierB 0 131587319 1444817596  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_35,2,0 ActiveExpeditionUniqueKey: Local_35_TierB_0</color>
+15:28:18.243 - DropServerManager: Enqueueing 'layer progression (layer: Secondary, state: Undiscovered)' request
+15:28:18.243 - DropServerManager: Woke up
+15:28:18.243 - DropServerManager: Making 'layer progression (layer: Secondary, state: Undiscovered)' request...
+15:28:18.243 - MusicManager - Setting music state to: Silence
+15:28:18.244 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSession_DonePlaying InSessionHub_ReadyToGenerate
+15:28:18.244 - <color=green>SNET : OnSessionPlayerAction : Spawning AngryMaid's agent!  SpawnPlayerAgent</color>
+15:28:18.296 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : True
+15:28:18.298 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentSpawned None
+15:28:20.364 - DropServerManager: Enqueueing 'layer progression (layer: Main, state: Entered)' request
+15:28:20.364 - DropServerManager: 'layer progression (layer: Secondary, state: Undiscovered)' request completed successfully
+15:28:20.364 - DropServerManager: Sleeping for 2 seconds...
+15:28:20.404 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : AfterLevel TO: Lobby</color>
+15:28:20.404 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 432.961
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+15:28:20.405 - MusicManager - Setting music state to: Silence
+15:28:20.590 - DropServerManager: Making 'layer progression (layer: Main, state: Entered)' request...
+15:28:21.160 - DropServerManager: Enqueueing 'end session (success: False, boosterCurrency: 0,0,0)' request
+15:28:21.160 - DropServerManager: 'layer progression (layer: Main, state: Entered)' request completed successfully
+15:28:21.160 - DropServerManager: Sleeping for 2 seconds...
+15:28:22.342 - OnBtnPress, ID: 628 GO: CM_MenuBarItem(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:23.163 - DropServerManager: Making 'end session (success: False, boosterCurrency: 0,0,0)' request...
+15:28:23.428 - OnBtnPress, ID: 621 GO: CM_MenuBarItem(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:23.442 - Pagerundown GOT RundownTimerData from playfab.
+15:28:23.561 - DropServerGameSession: Session was COMPLETED
+15:28:23.561 - DropServerManager: 'end session (success: False, boosterCurrency: 0,0,0)' request completed successfully
+15:28:23.561 - DropServerManager: Sleeping for 2 seconds...
+15:28:23.562 - RundownManager: Drop server game session finished successfully
+15:28:23.562 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_35'...
+15:28:23.574 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_35)' request
+15:28:23.589 - DropServerManager: Enqueueing 'get player inventory' request
+15:28:23.742 - OnBtnPress, ID: 0 GO: CM_MenuBarItem(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:24.744 - OnBtnPress, ID: 640 GO: CM_MenuBarItem(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:25.566 - DropServerManager: Making 'rundown progression (rundown: Local_35)' request...
+15:28:25.788 - DropServerManager: 'rundown progression (rundown: Local_35)' request completed successfully
+15:28:25.788 - DropServerManager: Sleeping for 2 seconds...
+15:28:25.789 - RundownManager: Got rundown progression from drop server
+15:28:25.789 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+15:28:25.789 - tier: TierA index: 0 EXPEDITION UNLOCKED
+15:28:25.789 - tier: TierA index: 1 EXPEDITION LOCKED
+15:28:25.789 - tier: TierA index: 2 EXPEDITION UNLOCKED
+15:28:25.789 - tier: TierA index: 3 EXPEDITION LOCKED
+15:28:25.789 - tier: TierB index: 0 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierB index: 1 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierB index: 2 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierB index: 3 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierC index: 0 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierC index: 1 EXPEDITION LOCKED
+15:28:25.790 - tier: TierC index: 2 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierC index: 3 EXPEDITION LOCKED
+15:28:25.790 - tier: TierD index: 0 EXPEDITION UNLOCKED
+15:28:25.790 - tier: TierD index: 1 EXPEDITION LOCKED
+15:28:25.791 - tier: TierD index: 2 EXPEDITION UNLOCKED
+15:28:25.791 - tier: TierD index: 3 EXPEDITION LOCKED
+15:28:25.791 - tier: TierE index: 0 EXPEDITION UNLOCKED
+15:28:25.791 - tier: TierE index: 1 EXPEDITION LOCKED
+15:28:25.791 - tier: TierE index: 2 EXPEDITION UNLOCKED
+15:28:25.791 - tier: TierE index: 3 EXPEDITION LOCKED
+15:28:25.791 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+15:28:26.109 - OnBtnPress, ID: 636 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+15:28:26.137 - OnApplicationQuit

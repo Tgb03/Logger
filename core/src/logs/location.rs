@@ -103,23 +103,31 @@ impl LocationGenerator for KeyGenerator {
 
 #[derive(Default)]
 pub struct ObjectiveItemGenerator {
+    dimension: usize,
     buffer_names: Vec<ItemIdentifier>,
-    buffer_zones: Vec<u64>,
+    buffer_zones: Vec<(usize, u64)>,
 }
 
 impl LocationGenerator for ObjectiveItemGenerator {
     fn accept_token(&mut self, token: &Token) -> Option<Location> {
         match token {
             Token::CollectableAllocated(zone) => {
-                self.buffer_zones.push(*zone);
-                self.buffer_zones.sort();
+                self.buffer_zones.push((self.dimension, *zone));
+                
+                self.buffer_zones.sort_by(|(d1, z1), (d2, z2)| {
+                    let c = d1.cmp(d2);
+                    match c {
+                        std::cmp::Ordering::Equal => z1.cmp(z2),
+                        _ => c,
+                    }
+                });
 
                 None
             }
             // found an item that does not have a seed
             Token::ObjectiveSpawnedOverride(id, name) => {
                 // unwrap should never fail since we always know we have collectable allocated
-                let zone = self.buffer_zones.pop().unwrap_or(9999);
+                let (_, zone) = self.buffer_zones.pop().unwrap_or((9999, 9999));
 
                 Some(Location::BigObjective(name.clone(), zone, *id))
             }
@@ -129,7 +137,7 @@ impl LocationGenerator for ObjectiveItemGenerator {
                 match repr {
                     ItemIdentifier::Cryo | ItemIdentifier::Cargo => {
                         // should never fail since we have collectable zone allocated
-                        let zone = self.buffer_zones.remove(0);
+                        let (_, zone) = self.buffer_zones.remove(0);
 
                         Some(Location::BigCollectable(repr, zone))
                     }
@@ -142,9 +150,19 @@ impl LocationGenerator for ObjectiveItemGenerator {
             }
             Token::CollectableItemSeed(seed) => {
                 let id = self.buffer_names.remove(0);
-                let zone = self.buffer_zones.remove(0);
+                let (_, zone) = self.buffer_zones.remove(0);
 
                 Some(Location::Gatherable(id, zone, *seed))
+            }
+            Token::DimensionIncrease => {
+                self.dimension += 1;
+
+                None
+            }
+            Token::DimensionReset => {
+                self.dimension = 0;
+
+                None
             }
             _ => None,
         }

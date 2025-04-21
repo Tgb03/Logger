@@ -1,0 +1,1945 @@
+12:59:11.914 - InControl (version 1.6.17 build 9143)
+12:59:11.956 - <size=13><color=red>TODO : Implement m_badPacketQuestion/m_badPacketAnswer and the SNet_BadPacketCatcher</color></size>
+12:59:11.958 - > GLOBAL SetupManagers, State : Dev HasNetwork: True
+12:59:11.961 - GameDataInit.Initialize
+12:59:13.728 - ------------------------------------------------------------  MusicManager. Loading soundbank for music! ------------------------------------------------------------ 
+12:59:16.007 - CM_PageCredits Setup Credits Page
+12:59:16.131 - Setting watermark revision to 34855
+12:59:16.471 - EnemyCostManager : Costs for Normal difficulty loaded
+12:59:16.481 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Inactive TO: Startup</color>
+12:59:16.483 - MusicManager - Setting music state to: StartUp
+12:59:16.930 - Steamworks.NET initilized
+12:59:16.979 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Startup TO: Offline</color>
+12:59:16.990 - MusicManager - Setting music state to: MainMenu
+12:59:16.991 - DropServerManager: Idle
+12:59:17.003 - DEBUG : Tried to Initialize the SteamAPI twice in one session
+12:59:17.004 - DEBUG : Tried to Initialize the SteamAPI twice in one session
+12:59:17.688 - SNET is Online, Woop!
+12:59:17.689 - Waiting for network.. DONE!
+12:59:17.693 - PlayFabManager.OnSteamInitialized
+12:59:17.955 - [163 - GetAuthSessionTicketResponse] - 2 -- k_EResultOK
+12:59:19.479 - PlayFabManager.OnLoginSuccess. NewlyCreated: False
+12:59:19.481 - PlayFabManager.RefreshGlobalTitleData
+12:59:19.668 - <color=purple>PlayFab.OnGetCurrentTime Sunday, 14 July 2024</color>
+12:59:20.228 - UpdateLocalPlayerData Done, result: 2 OnSuccess: System.Action
+12:59:20.250 - TODO : Skipping icon generation for the hacking tool. It crashes later while trying to construct the tool for rendering
+12:59:22.456 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_35'...
+12:59:22.460 - PlayFabMatchMakingManager: Requesting list of QoS servers...
+12:59:22.477 - AchievementManager | <b>Achievement_ReadAllLogs</b> :: Initialized Data. Logs Read: 188 / 188 | IDs: [447164911, 2644574539, 1986026191, 1794210895, 606542306, 2831084690, 3899268189, 3847194193, 275287026, 1901056716, 1045760311, 2186934260, 779237148, 400053355, 3683555460, 3775742793, 4129196694, 2300319938, 4107631192, 3537071244, 2919353898, 2899831782, 3340509967, 3213710012, 1098021268, 1276363701, 4258872482, 649711753, 2618453398, 3124381907, 2902442685, 494690419, 2533283978, 971943816, 2844997865, 644899579, 2364096404, 1840975978, 4103690595, 2624531734, 1192257831, 3282570125, 3590505912, 3820350058, 3153164489, 2241631052, 887938260, 772314140, 314124724, 981564373, 3408451435, 3538439246, 1185765921, 3200929578, 2679426210, 3524738570, 3176992059, 1296350622, 3796032166, 517732520, 594128218, 1316842445, 799149046, 2790419951, 1695139195, 2159521601, 1985655597, 3018560530, 3889683438, 1735273668, 3527646331, 2040861153, 3570860951, 3625565585, 3140757614, 2010423636, 587510794, 3607696028, 2181231598, 2936981195, 3211309024, 190515691, 1094271245, 963101078, 1079094418, 1633079168, 2905821843, 521101963, 1678260641, 1104724433, 1948200247, 157832601, 953548732, 347493886, 2992419498, 3997759451, 2278907495, 2975106290, 3030991283, 1561986133, 193599546, 1382220608, 239801710, 3602901424, 1129659086, 3503323039, 330353654, 3306391961, 2426662631, 2882056421, 2348768522, 2631688360, 3979312916, 832966765, 1145885034, 2180421988, 1361284810, 11199380, 1704852273, 677330196, 3082519076, 1157654530, 2573146457, 2122525791, 2392728270, 699976094, 1892674022, 2897485929, 672968613, 2912524228, 296825981, 3726692377, 3404012700, 2095055332, 2601516214, 2714516313, 4115774219, 3072195836, 3526417802, 2998194090, 3537655951, 1921629421, 1786862515, 2047464033, 2660922051, 1606512465, 751637944, 2307214134, 972338481, 386604089, 1070298538, 882979268, 3919432281, 2518464736, 817633301, 294658885, 1170001647, 1784928424, 1825963506, 4016957134, 539142525, 2129465561, 2610278853, 142157049, 3992389097, 3664409843, 2550497166, 2145556797, 3263829601, 2690939055, 3464000470, 1561677308, 1704474804, 278517562, 2373894974, 333549741, 4102842342, 345796523, 3873520298, 2664070464, 2213213308, 1043032973, 3259409222, 210406149, 3421585823, 1170408647, 966839319, 2604686322]
+12:59:22.478 - Achievement Completed | LOCAL :: ACH_37
+12:59:22.478 - Achievement Completed | LOCAL :: ACH_38
+12:59:22.478 - Achievement Completed | LOCAL :: ACH_39
+12:59:22.479 - Achievement Completed | LOCAL :: ACH_40
+12:59:22.493 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_35)' request
+12:59:22.494 - DropServerManager: Woke up
+12:59:22.494 - DropServerManager: Making 'rundown progression (rundown: Local_35)' request...
+12:59:22.511 - DropServerManager: Enqueueing 'get player inventory' request
+12:59:23.055 - DropServerManager: 'rundown progression (rundown: Local_35)' request completed successfully
+12:59:23.056 - DropServerManager: Sleeping for 2 seconds...
+12:59:23.056 - RundownManager: Got rundown progression from drop server
+12:59:23.057 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:23.058 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:23.058 - tier: TierA index: 1 EXPEDITION LOCKED
+12:59:23.058 - tier: TierA index: 2 EXPEDITION UNLOCKED
+12:59:23.058 - tier: TierA index: 3 EXPEDITION LOCKED
+12:59:23.058 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:23.058 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:23.059 - tier: TierB index: 2 EXPEDITION UNLOCKED
+12:59:23.059 - tier: TierB index: 3 EXPEDITION UNLOCKED
+12:59:23.059 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:23.059 - tier: TierC index: 1 EXPEDITION LOCKED
+12:59:23.059 - tier: TierC index: 2 EXPEDITION UNLOCKED
+12:59:23.059 - tier: TierC index: 3 EXPEDITION LOCKED
+12:59:23.059 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:23.060 - tier: TierD index: 1 EXPEDITION LOCKED
+12:59:23.060 - tier: TierD index: 2 EXPEDITION UNLOCKED
+12:59:23.060 - tier: TierD index: 3 EXPEDITION LOCKED
+12:59:23.060 - tier: TierE index: 0 EXPEDITION UNLOCKED
+12:59:23.060 - tier: TierE index: 1 EXPEDITION LOCKED
+12:59:23.061 - tier: TierE index: 2 EXPEDITION UNLOCKED
+12:59:23.061 - tier: TierE index: 3 EXPEDITION LOCKED
+12:59:23.061 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:24.560 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:24.712 - DropServerManager: Making 'get player inventory' request...
+12:59:25.091 - DropServerManager: 'get player inventory' request completed successfully
+12:59:25.091 - DropServerManager: Sleeping for 2 seconds...
+12:59:27.078 - DropServerManager: Idle
+12:59:33.006 - OnBtnPress, ID: 0 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:34.625 - GS_Offline.OnLocalPlayerPressStart!
+12:59:34.639 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Offline TO: NoLobby</color>
+12:59:34.646 - MusicManager - Setting music state to: Silence
+12:59:34.669 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:34.669 - tier: TierA index: 1 EXPEDITION LOCKED
+12:59:34.669 - tier: TierA index: 2 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierA index: 3 EXPEDITION LOCKED
+12:59:34.670 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierB index: 2 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierB index: 3 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierC index: 1 EXPEDITION LOCKED
+12:59:34.670 - tier: TierC index: 2 EXPEDITION UNLOCKED
+12:59:34.670 - tier: TierC index: 3 EXPEDITION LOCKED
+12:59:34.671 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:34.671 - tier: TierD index: 1 EXPEDITION LOCKED
+12:59:34.671 - tier: TierD index: 2 EXPEDITION UNLOCKED
+12:59:34.671 - tier: TierD index: 3 EXPEDITION LOCKED
+12:59:34.671 - tier: TierE index: 0 EXPEDITION UNLOCKED
+12:59:34.671 - tier: TierE index: 1 EXPEDITION LOCKED
+12:59:34.672 - tier: TierE index: 2 EXPEDITION UNLOCKED
+12:59:34.672 - tier: TierE index: 3 EXPEDITION LOCKED
+12:59:34.672 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:34.674 - Pagerundown GOT RundownTimerData from playfab.
+12:59:40.985 - OnBtnPress, ID: 61 GO: Rundown_Surface_SelectionALT_R1 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:40.987 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_32'...
+12:59:41.010 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: False
+12:59:41.014 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_32)' request
+12:59:41.014 - DropServerManager: Woke up
+12:59:41.014 - DropServerManager: Making 'rundown progression (rundown: Local_32)' request...
+12:59:41.350 - DropServerManager: 'rundown progression (rundown: Local_32)' request completed successfully
+12:59:41.350 - DropServerManager: Sleeping for 2 seconds...
+12:59:41.351 - RundownManager: Got rundown progression from drop server
+12:59:41.351 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:41.351 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:41.352 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:41.352 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:41.352 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:41.352 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:41.352 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:41.352 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:41.354 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_31'...
+12:59:41.364 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_31)' request
+12:59:43.354 - DropServerManager: Making 'rundown progression (rundown: Local_31)' request...
+12:59:43.578 - DropServerManager: 'rundown progression (rundown: Local_31)' request completed successfully
+12:59:43.578 - DropServerManager: Sleeping for 2 seconds...
+12:59:43.579 - RundownManager: Got rundown progression from drop server
+12:59:43.579 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:43.579 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:43.580 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:43.580 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:43.580 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:43.580 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:43.580 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:43.580 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:43.581 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_33'...
+12:59:43.592 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_33)' request
+12:59:45.131 - OnBtnPress, ID: 0 GO: CM_ExpeditionIcon_New(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:45.578 - DropServerManager: Making 'rundown progression (rundown: Local_33)' request...
+12:59:45.830 - RundownManager: Got rundown progression from drop server
+12:59:45.830 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:45.830 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:45.830 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:45.830 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:45.830 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:45.830 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:45.831 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:45.831 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:45.831 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_34'...
+12:59:45.843 - DropServerManager: 'rundown progression (rundown: Local_33)' request completed successfully
+12:59:45.843 - DropServerManager: Sleeping for 2 seconds...
+12:59:45.843 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_34)' request
+12:59:46.916 - OnBtnPress, ID: 0 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:46.918 - SNet : Session reset
+12:59:46.918 - Global.OnResetSession
+12:59:46.918 - <color=purple>PlayerManager OnResetSession >  m_playerAgentsInLevel.Count : 0</color>
+12:59:46.920 - SessionGUID set to 
+12:59:46.942 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : NoLobby TO: Lobby</color>
+12:59:46.944 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+12:59:46.944 - MusicManager - Setting music state to: Silence
+12:59:46.945 - Player AngryMaid was added to session
+12:59:46.946 - DoCreateLobbyAndSelecteExpedition 1
+12:59:46.947 - waiting for lobby..
+12:59:47.194 - SNet_SessionHub : OnJoinedLobby True AngryMaid False -1
+12:59:47.194 - SNet_MasterManager : SearchingForMaster
+12:59:47.196 - Searching for master...
+12:59:47.206 - MasterManager : AngryMaid owns the lobby. IsLocal:True
+12:59:47.207 - SNet_MasterManager : Who's tha masta?! AngryMaid! AngryMaid!
+12:59:47.208 - SNET : OnFoundMaster > Master is Steam AngryMaid Session summary > Master InSessionHub -1 -1 0 0   Profile summary > AngryMaid : end
+12:59:47.208 - DoCreateLobbyAndSelecteExpedition 2
+12:59:47.208 - RundownManager.SetActiveExpedition, type:Local tier:TierA expIndex: 0
+12:59:47.209 - SessionGUID set to 953LAdEd4ki4kB6hFDwEsg==
+12:59:47.238 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:47.238 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:47.238 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:47.238 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:47.239 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:47.239 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:47.239 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:47.252 - <b>WardenObjectiveManager:</b> SetupWardenObjectiveLayer() Setting definition for MainLayer with HSU_FindTakeSample.
+12:59:47.253 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierA 0 131587319 1422798590  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,1,0 ActiveExpeditionUniqueKey: Local_32_TierA_0</color>
+12:59:47.253 - DoCreateLobbyAndSelecteExpedition 3
+12:59:47.275 - DoCreateLobbyAndSelecteExpedition 4
+12:59:47.300 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : Unassigned InSessionHub
+12:59:47.300 - SNET : OnMasterCommand : AssignSlot 0 False
+12:59:47.301 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerInSession  Reason : None isPlayerMaster : True
+12:59:47.380 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSessionHub OutOfSync
+12:59:47.380 - SNET : OnMasterCommand : PickAvatar 0 False
+12:59:47.380 - <color=green>SNET : We got character 0 assigned</color>
+12:59:47.380 - IsReadyToSync : PickAvatar agent sent to AngryMaid
+12:59:47.386 - SNET : OnMasterCommand : InSessionHub_ReadyToGenerate 0 False
+12:59:47.386 - <color=green>SNET : Added AngryMaid to PlayersInGame</color>
+12:59:47.386 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerIsSynced  Reason : None isPlayerMaster : True
+12:59:47.386 - SpawnPlayerModel, index: 0
+12:59:47.493 - <color=green>SNET : GS_Lobby has not implemented functionality for InSessionHub_ReadyToGenerate!</color>
+12:59:47.507 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : OutOfSync InSessionHub_ReadyToGenerate
+12:59:47.507 - <color=green>SNET : OnSessionPlayerAction : Spawning AngryMaid's agent!  SpawnPlayerAgent</color>
+12:59:47.595 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : True
+12:59:47.598 - <color=green>GS_Lobby, player spawned but I'm in the hub/rundown page  so I won't care..</color>
+12:59:47.839 - DropServerManager: Making 'rundown progression (rundown: Local_34)' request...
+12:59:48.076 - DropServerManager: 'rundown progression (rundown: Local_34)' request completed successfully
+12:59:48.076 - DropServerManager: Sleeping for 2 seconds...
+12:59:48.078 - RundownManager: Got rundown progression from drop server
+12:59:48.078 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:48.078 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:48.078 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:48.079 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:48.079 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:48.079 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:48.079 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:48.079 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:48.079 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_37'...
+12:59:48.090 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_37)' request
+12:59:48.428 - OnBtnPress, ID: 542 GO: PermissionButton OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:49.798 - OnBtnPress, ID: 0 GO: CM_TimedSingleRowButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:49.800 - CellSettingsManager: Saving settings to C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:49.800 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:49.813 - Player Dauda was added to session
+12:59:49.814 - OnPlayerEvent : Dauda  PlayerEvent : PlayerChangedNickName  Reason : None isPlayerMaster : False
+12:59:49.814 - OnPlayerEvent : GS_Lobby has not implemented PlayerChangedNickName None
+12:59:49.814 - [PlayerManager.SpawnBot] 0, Dauda
+12:59:49.814 - SNET : MasterReplicationUpdate_Player : Dauda mode change : Unassigned InSessionHub
+12:59:49.814 - MasterBotCommand! Dauda AssignSlot 1 IsInSessionHub:True
+12:59:49.814 - Dauda session.mode change to OutOfSync
+12:59:50.076 - DropServerManager: Making 'rundown progression (rundown: Local_37)' request...
+12:59:50.203 - OnBtnPress, ID: 567 GO: PermissionButton OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:50.300 - DropServerManager: 'rundown progression (rundown: Local_37)' request completed successfully
+12:59:50.300 - DropServerManager: Sleeping for 2 seconds...
+12:59:50.301 - RundownManager: Got rundown progression from drop server
+12:59:50.301 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:50.302 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:50.302 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:50.302 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:50.302 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:50.302 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:50.302 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:50.302 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:50.303 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_38'...
+12:59:50.314 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_38)' request
+12:59:50.818 - SNET : MasterReplicationUpdate_Player : Dauda mode change : InSessionHub OutOfSync
+12:59:50.818 - MasterBotCommand! Dauda PickAvatar 1 IsInSessionHub:True
+12:59:50.818 - Dauda session.mode change to OutOfSync
+12:59:50.818 - IsReadyToSync : PickAvatar agent sent to Dauda
+12:59:51.013 - OnBtnPress, ID: 0 GO: CM_TimedSingleRowButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:51.013 - CellSettingsManager: Saving settings to C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:51.014 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:51.376 - OnBtnPress, ID: 592 GO: PermissionButton OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:51.821 - Dauda : OutOfSync > Initiated
+12:59:51.821 - MasterBotCommand! Dauda InSessionHub_ReadyToGenerate 0 IsInSessionHub:True
+12:59:51.821 - Dauda session.mode change to InSessionHub_ReadyToGenerate
+12:59:52.210 - OnBtnPress, ID: 0 GO: CM_TimedSingleRowButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:52.211 - CellSettingsManager: Saving settings to C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:52.212 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Settings.txt
+12:59:52.308 - DropServerManager: Making 'rundown progression (rundown: Local_38)' request...
+12:59:52.629 - DropServerManager: 'rundown progression (rundown: Local_38)' request completed successfully
+12:59:52.629 - DropServerManager: Sleeping for 2 seconds...
+12:59:52.630 - RundownManager: Got rundown progression from drop server
+12:59:52.630 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:52.631 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:52.631 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:52.631 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:52.631 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:52.631 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:52.632 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:52.632 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:52.632 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_41'...
+12:59:52.643 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_41)' request
+12:59:52.824 - SNET : MasterReplicationUpdate_Player : Dauda mode change : OutOfSync InSessionHub_ReadyToGenerate
+12:59:52.824 - <color=green>SNET : OnSessionPlayerAction : Spawning Dauda's agent!  SpawnPlayerAgent</color>
+12:59:52.836 - SpawnPlayerModel, index: 1
+12:59:52.843 - OnPlayerEvent : Dauda  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+12:59:52.858 - Player Hackett was added to session
+12:59:52.858 - OnPlayerEvent : Hackett  PlayerEvent : PlayerChangedNickName  Reason : None isPlayerMaster : False
+12:59:52.859 - OnPlayerEvent : GS_Lobby has not implemented PlayerChangedNickName None
+12:59:52.859 - [PlayerManager.SpawnBot] 1, Hackett
+12:59:52.859 - SNET : MasterReplicationUpdate_Player : Hackett mode change : Unassigned InSessionHub
+12:59:52.859 - MasterBotCommand! Hackett AssignSlot 2 IsInSessionHub:True
+12:59:52.859 - Hackett session.mode change to OutOfSync
+12:59:53.356 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:53.865 - SNET : MasterReplicationUpdate_Player : Hackett mode change : InSessionHub OutOfSync
+12:59:53.866 - MasterBotCommand! Hackett PickAvatar 2 IsInSessionHub:True
+12:59:53.866 - Hackett session.mode change to OutOfSync
+12:59:53.866 - IsReadyToSync : PickAvatar agent sent to Hackett
+12:59:54.093 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+12:59:54.342 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:54.344 - SpawnPlayerModel, index: 2
+12:59:54.633 - DropServerManager: Making 'rundown progression (rundown: Local_41)' request...
+12:59:54.871 - DropServerManager: 'rundown progression (rundown: Local_41)' request completed successfully
+12:59:54.871 - DropServerManager: Sleeping for 2 seconds...
+12:59:54.871 - Hackett : OutOfSync > Initiated
+12:59:54.872 - MasterBotCommand! Hackett InSessionHub_ReadyToGenerate 0 IsInSessionHub:True
+12:59:54.872 - Hackett session.mode change to InSessionHub_ReadyToGenerate
+12:59:54.872 - RundownManager: Got rundown progression from drop server
+12:59:54.872 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+12:59:54.872 - tier: TierA index: 0 EXPEDITION UNLOCKED
+12:59:54.873 - tier: TierB index: 0 EXPEDITION UNLOCKED
+12:59:54.873 - tier: TierB index: 1 EXPEDITION UNLOCKED
+12:59:54.873 - tier: TierC index: 0 EXPEDITION UNLOCKED
+12:59:54.874 - tier: TierC index: 1 EXPEDITION UNLOCKED
+12:59:54.874 - tier: TierD index: 0 EXPEDITION UNLOCKED
+12:59:54.874 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+12:59:55.080 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+12:59:55.083 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+12:59:55.265 - TryGetMaterialGroup : Missing material on Cylinder
+12:59:55.265 - TryGetMaterialGroup : Missing material on Cylinder (1)
+12:59:55.265 - TryGetMaterialGroup : Missing material on cone_1x1m
+12:59:55.266 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:55.266 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:55.878 - SNET : MasterReplicationUpdate_Player : Hackett mode change : OutOfSync InSessionHub_ReadyToGenerate
+12:59:55.878 - <color=green>SNET : OnSessionPlayerAction : Spawning Hackett's agent!  SpawnPlayerAgent</color>
+12:59:55.889 - OnPlayerEvent : Hackett  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+12:59:55.909 - Player Bishop was added to session
+12:59:55.910 - OnPlayerEvent : Bishop  PlayerEvent : PlayerChangedNickName  Reason : None isPlayerMaster : False
+12:59:55.910 - OnPlayerEvent : GS_Lobby has not implemented PlayerChangedNickName None
+12:59:55.910 - [PlayerManager.SpawnBot] 2, Bishop
+12:59:55.910 - SNET : MasterReplicationUpdate_Player : Bishop mode change : Unassigned InSessionHub
+12:59:55.911 - MasterBotCommand! Bishop AssignSlot 3 IsInSessionHub:True
+12:59:55.911 - Bishop session.mode change to OutOfSync
+12:59:56.417 - TryGetMaterialGroup : Missing material on TextMeshPro
+12:59:56.615 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+12:59:56.865 - DropServerManager: Idle
+12:59:56.921 - SNET : MasterReplicationUpdate_Player : Bishop mode change : InSessionHub OutOfSync
+12:59:56.921 - MasterBotCommand! Bishop PickAvatar 3 IsInSessionHub:True
+12:59:56.921 - Bishop session.mode change to OutOfSync
+12:59:56.921 - IsReadyToSync : PickAvatar agent sent to Bishop
+12:59:56.997 - SpawnPlayerModel, index: 3
+12:59:57.930 - Bishop : OutOfSync > Initiated
+12:59:57.931 - MasterBotCommand! Bishop InSessionHub_ReadyToGenerate 0 IsInSessionHub:True
+12:59:57.931 - Bishop session.mode change to InSessionHub_ReadyToGenerate
+12:59:58.934 - SNET : MasterReplicationUpdate_Player : Bishop mode change : OutOfSync InSessionHub_ReadyToGenerate
+12:59:58.934 - <color=green>SNET : OnSessionPlayerAction : Spawning Bishop's agent!  SpawnPlayerAgent</color>
+12:59:58.945 - OnPlayerEvent : Bishop  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+12:59:59.495 - TryGetMaterialGroup : Missing material on TextMeshPro
+13:00:00.873 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:00.876 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+13:00:01.496 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+13:00:11.667 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:11.673 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+13:00:12.297 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+13:00:13.908 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:13.918 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_Favorites.txt
+13:00:14.826 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:17.213 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:17.226 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:18.524 - OnBtnPress, ID: 657 GO: Header2 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:18.534 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:22.426 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:22.428 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:23.171 - OnBtnPress, ID: 658 GO: Header3 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:23.174 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:23.346 - TryGetMaterialGroup : Missing material on TextMeshPro
+13:00:26.795 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:26.798 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:27.722 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:27.897 - TryGetMaterialGroup : Missing material on TextMeshPro
+13:00:29.211 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:29.214 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:30.366 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:31.152 - OnBtnPress, ID: 668 GO: Header2 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:31.164 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:32.828 - OnBtnPress, ID: 667 GO: Header OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:32.837 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:36.930 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:36.932 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:37.647 - OnBtnPress, ID: 668 GO: Header2 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:37.662 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:44.484 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:44.488 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:48.597 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:51.986 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:51.995 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:52.367 - OnBtnPress, ID: 679 GO: Header2 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:52.377 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:55.216 - OnBtnPress, ID: 0 GO: CM_LobbyScrolItem_Weapon(Clone) OnBtnPressCallback:  m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:55.219 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:56.249 - OnBtnPress, ID: 680 GO: Header3 OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:00:56.252 - CellJSON - SaveToDisk: C:/Users/User/AppData/LocalLow/10 Chambers Collective/GTFO\GTFO_BotFavorites.txt
+13:00:56.424 - TryGetMaterialGroup : Missing material on TextMeshPro
+13:01:00.898 - OnBtnPress, ID: 617 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:01:02.197 - OnBtnPress, ID: 618 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:01:02.197 - SNET : OnMasterCommand : StartGeneration 0 False
+13:01:02.197 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating</color>
+13:01:02.208 - RundownManager: Starting new game session
+13:01:02.209 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+13:01:02.222 - MasterBotCommand! Dauda StartGeneration 0 IsInSessionHub:True
+13:01:02.222 - Dauda session.mode change to ReadyToStartPlaying_Dropin
+13:01:02.223 - <color=green>SNET : Added Dauda to PlayersInGame</color>
+13:01:02.223 - OnPlayerEvent : Dauda  PlayerEvent : PlayerIsSynced  Reason : None isPlayerMaster : False
+13:01:02.226 - WARNING : OnPlayerEvent : GS_Generating has not implemented PlayerIsSynced None
+13:01:02.226 - MasterBotCommand! Hackett StartGeneration 0 IsInSessionHub:True
+13:01:02.226 - Hackett session.mode change to ReadyToStartPlaying_Dropin
+13:01:02.226 - <color=green>SNET : Added Hackett to PlayersInGame</color>
+13:01:02.227 - OnPlayerEvent : Hackett  PlayerEvent : PlayerIsSynced  Reason : None isPlayerMaster : False
+13:01:02.229 - WARNING : OnPlayerEvent : GS_Generating has not implemented PlayerIsSynced None
+13:01:02.229 - MasterBotCommand! Bishop StartGeneration 0 IsInSessionHub:True
+13:01:02.229 - Bishop session.mode change to ReadyToStartPlaying_Dropin
+13:01:02.230 - <color=green>SNET : Added Bishop to PlayersInGame</color>
+13:01:02.230 - OnPlayerEvent : Bishop  PlayerEvent : PlayerIsSynced  Reason : None isPlayerMaster : False
+13:01:02.233 - WARNING : OnPlayerEvent : GS_Generating has not implemented PlayerIsSynced None
+13:01:02.251 - DropServerManager: Enqueueing 'new session (sessionId: 953LAdEd4ki4kB6hFDwEsg==, rundown: Local_32, expedition: A1, boosters: [])' request
+13:01:02.251 - DropServerManager: Woke up
+13:01:02.251 - DropServerManager: Making 'new session (sessionId: 953LAdEd4ki4kB6hFDwEsg==, rundown: Local_32, expedition: A1, boosters: [])' request...
+13:01:02.275 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSessionHub_ReadyToGenerate GeneratingLevel
+13:01:02.276 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+13:01:02.310 - SNET : MasterReplicationUpdate_Player : Dauda mode change : InSessionHub_ReadyToGenerate ReadyToStartPlaying_Dropin
+13:01:02.353 - SNET : MasterReplicationUpdate_Player : Hackett mode change : InSessionHub_ReadyToGenerate ReadyToStartPlaying_Dropin
+13:01:02.380 - SNET : MasterReplicationUpdate_Player : Bishop mode change : InSessionHub_ReadyToGenerate ReadyToStartPlaying_Dropin
+13:01:02.450 - DropServerManager: 'new session (sessionId: 953LAdEd4ki4kB6hFDwEsg==, rundown: Local_32, expedition: A1, boosters: [])' request completed successfully
+13:01:02.450 - DropServerManager: Sleeping for 2 seconds...
+13:01:03.665 - <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 333 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 333</color>
+13:01:03.665 - <color=#C84800>>>>>>>>>>>>>> SetHostIDSeed, forcedSeed: 131587319 exp: GameData.ExpeditionInTierData HostIDRandom.Seed: 131587319</color>
+13:01:03.666 - <color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: 1422798590 exp: GameData.ExpeditionInTierData SessionRandom.Seed: 1422798590</color>
+13:01:03.666 - Builder.Build, settings seeds, activeExp: GameData.ExpeditionInTierData buildSeed: 333 hostIDSeed: 131587319 sessionSeed: 1422798590
+13:01:03.668 - <color=#C84800>Builder.Build, Start Building using BuildSeed: 333 HostIDSeed: 131587319 SessionSeed: 1422798590</color>
+13:01:03.668 - <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 333 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 333</color>
+13:01:03.669 - <color=#C84800>SerialGenerator GENERATE! SessionRandom.seed: 1422798590</color>
+13:01:03.670 - >>>>>>>>>>>>> BuildFloor
+13:01:03.673 - <color=#C84800>LoadComplexResources complexResourceDataID: 30</color>
+13:01:03.673 - <color=#C84800>LG_LoadComplexDataSetResourcesJob.ComplexAssetBundleLoaded, ComplexResourceSetBlock: Storage_A1_EA</color>
+13:01:03.674 - DIMENSION: Setting sound ENVIRONMENT state to ORGANIC!
+13:01:03.684 - Last Batch: Setup
+		 Total Time: 0.019s Frames: 0 Ticks: 15
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: StaticLevel - Count: 0
+
+13:01:03.684 - Last Batch: StaticLevel
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Level - Count: 1
+
+13:01:04.448 - DropServerManager: Idle
+13:01:07.985 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+13:01:11.667 - Engine Started
+13:01:11.975 - Last Batch: LoadResourcesShards_Level
+		 Total Time: 8.292s Frames: 586 Ticks: 8291
+		 FrameTime (avg/max/ticks max): 14.2ms / 66.5ms / 72
+		 Jobs (started/looped): 1 / 586
+Next Batch: SetupFloor - Count: 1
+
+13:01:11.976 - <color=#C84800>LG_SetupFloor.Build</color>
+13:01:11.983 - <b>LG_Floor:</b> Setup() Setting up Base Dimension (0).
+13:01:11.989 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 49 with BuildFromZoneAlias49 zoneAliasStart: 49 aliasOffset: Zone_0</color>
+13:01:11.990 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 139 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 5 (Defined)
+13:01:11.990 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 50 with BuildFromZoneAlias49 zoneAliasStart: 49 aliasOffset: Zone_1</color>
+13:01:11.990 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 2 (Defined), <b>MarkerSubSeed:</b> 1 (Defined), <b>LightSubSeed:</b> 5 (Defined)
+13:01:11.991 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 51 with BuildFromZoneAlias50 zoneAliasStart: 49 aliasOffset: Zone_2</color>
+13:01:11.991 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 1 (Defined), <b>MarkerSubSeed:</b> 1 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+13:01:11.991 - <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 52 with BuildFromZoneAlias49 zoneAliasStart: 49 aliasOffset: Zone_3</color>
+13:01:11.991 - <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 4 (Defined), <b>MarkerSubSeed:</b> 1 (Defined), <b>LightSubSeed:</b> 4 (Defined)
+13:01:11.992 - Last Batch: SetupFloor
+		 Total Time: 0.000s Frames: 0 Ticks: 17
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: GenerateZones - Count: 4
+
+13:01:11.993 - <color=#C84800> ---- MainLayer ---- Picked build from area : Area_A</color>
+13:01:11.994 - ComplexResourceSetDataBlock.GetGeomorphTileFromArray, no geomorph found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.010 - ComplexResourceSetDataBlock.GetGeomorphTileFromArray, no geomorph found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.022 - ComplexResourceSetDataBlock.GetGeomorphTileFromArray, no geomorph found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.034 - BlockAndCleanFailedAreasFromZone >  ZoneAlias: 51 dim:Reality  AreaCount: 1  ZoneCoverageOnFail:3  ZoneMinCoverage:5  CoverageStatus:NotEnough
+13:01:12.034 - ComplexResourceSetDataBlock.GetGeomorphTileFromArray, no geomorph found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.063 - ComplexResourceSetDataBlock.GetGeomorphTileFromArray, no geomorph found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.075 - Last Batch: GenerateZones
+		 Total Time: 0.089s Frames: 2 Ticks: 83
+		 FrameTime (avg/max/ticks max): 22.9ms / 35.8ms / 53
+		 Jobs (started/looped): 4 / 82
+Next Batch: PlaceAddonZones - Count: 0
+
+13:01:12.075 - Last Batch: PlaceAddonZones
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: PrepareZones - Count: 3
+
+13:01:12.078 - Adding culling jobs for zone New Game Object[SubSeed:139(139)] from dimension Reality
+13:01:12.082 - Adding culling jobs for zone New Game Object[SubSeed:2(2)] from dimension Reality
+13:01:12.082 - Adding culling jobs for zone New Game Object[SubSeed:1(1)] from dimension Reality
+13:01:12.082 - Adding culling jobs for zone New Game Object[SubSeed:4(4)] from dimension Reality
+13:01:12.082 - Last Batch: PrepareZones
+		 Total Time: 0.000s Frames: 0 Ticks: 7
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 3 / 3
+Next Batch: BuildFloors - Count: 1
+
+13:01:12.083 - LG_BuildNodeVolumes() bulding NodeClusterData array with length of dimension count (1).
+13:01:12.109 - Last Batch: BuildFloors
+		 Total Time: 0.000s Frames: 0 Ticks: 26
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: Geomorphs - Count: 6
+
+13:01:12.121 - Last Batch: Geomorphs
+		 Total Time: 0.052s Frames: 1 Ticks: 13
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 0
+		 Jobs (started/looped): 5 / 1
+Next Batch: Areas - Count: 19
+
+13:01:12.132 - Last Batch: Areas
+		 Total Time: 0.000s Frames: 0 Ticks: 11
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 19 / 0
+Next Batch: Plugs - Count: 18
+
+13:01:12.134 - ComplexResourceSetDataBlock.GetRandomPrefab, no prefab found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.137 - ComplexResourceSetDataBlock.GetRandomPrefab, no prefab found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.151 - ComplexResourceSetDataBlock.GetRandomPrefab, no prefab found with subcomplex Storage in resourceArray, defaulting to ALL
+13:01:12.156 - Last Batch: Plugs
+		 Total Time: 0.035s Frames: 1 Ticks: 24
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 9
+		 Jobs (started/looped): 17 / 1
+Next Batch: Gates - Count: 69
+
+13:01:12.258 - Last Batch: Gates
+		 Total Time: 0.108s Frames: 3 Ticks: 101
+		 FrameTime (avg/max/ticks max): 29.9ms / 37.7ms / 37
+		 Jobs (started/looped): 66 / 3
+Next Batch: AreaNames - Count: 1
+
+13:01:12.258 - Last Batch: AreaNames
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: WardenObjectivePrep - Count: 0
+
+13:01:12.258 - Last Batch: WardenObjectivePrep
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: DistributionSetup - Count: 1
+
+13:01:12.258 - Last Batch: DistributionSetup
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: TerminalDistribution - Count: 8
+
+13:01:12.258 - Last Batch: TerminalDistribution
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 8 / 0
+Next Batch: Distribution - Count: 1
+
+13:01:12.258 - <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+13:01:12.258 - <b>Artifacts:</b> Allocated 9 basic artifacts, 5 advanced artifacts and 1 specialized artifacts.
+13:01:12.260 - <b>Artifacts:</b> Zone 0 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+13:01:12.262 - <b>Artifacts:</b> Zone 1 has 3 basic artifacts, 2 advanced artifacts and 1 specialized artifacts.
+13:01:12.262 - <b>Artifacts:</b> Zone 2 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+13:01:12.262 - <b>Artifacts:</b> Zone 3 has 2 basic artifacts, 1 advanced artifacts and 0 specialized artifacts.
+13:01:12.266 - <color=purple>CreateKeyItemDistribution, keyItem: PublicName: KEY_GREEN_352 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_GREEN_352_terminalKey: KEY_GREEN_352 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_1 ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000</color>
+13:01:12.266 - <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: KEY_GREEN_352 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_GREEN_352_terminalKey: KEY_GREEN_352 (KeyItemPickup_Core) --- Zone: ZONE50, AreaCount: 8 half: 4 even: True ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000</color>
+13:01:12.266 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 1 MiddleMul: 0 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 1</color>
+13:01:12.266 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 1 StartMul: 0.75 MiddleMul: 0.25 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 626</color>
+13:01:12.266 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 2 StartMul: 0.5 MiddleMul: 0.5 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 1251</color>
+13:01:12.267 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 3 StartMul: 0.25 MiddleMul: 0.75 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 1876</color>
+13:01:12.267 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 4 StartMul: 0 MiddleMul: 0.75 EndMul: 0.25 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 4376</color>
+13:01:12.267 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 5 StartMul: 0 MiddleMul: 0.5 EndMul: 0.5 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 6251</color>
+13:01:12.267 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 6 StartMul: 0 MiddleMul: 0.25 EndMul: 0.75 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 8126</color>
+13:01:12.267 - <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 7 StartMul: 0 MiddleMul: 0 EndMul: 1 --- ZonePlacementWeights, Start: 0 Middle: 2500 End: 10000 Total area weight: 10001</color>
+13:01:12.267 - <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE50 function: ResourceContainerWeak available: 58 randomValue: 0.1093853 ri: 24 had weight: 1876</color>
+13:01:12.270 - <color=#C84800>------------------- LG_Distribute_WardenObjective, got objective for layer MainLayer: Rundown001_A1_HSU_DNA_Core_1</color>
+13:01:12.270 - <color=#C84800>>>>> TryGetRandomPlacementZone.  Determine wardenobjective zone. Found zone with LocalIndex Zone_3, seleced from: [Count: 1] System.Collections.Generic.List`1[GameData.ZonePlacementData] placementData: DimensionIndex: Reality LocalIndex: Zone_3 ZonePlacementWeights, Start: 0 Middle: 0 End: 50</color>
+13:01:12.271 - <color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function HydroStatisUnit for wardenObjectiveType: HSU_FindTakeSample in zone: 52, Area: 17_Area C (LevelGeneration.LG_Area)</color>
+13:01:12.271 - Last Batch: Distribution
+		 Total Time: 0.000s Frames: 0 Ticks: 12
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 57 / 0
+Next Batch: FunctionMarkers - Count: 4
+
+13:01:12.504 - <color=#C84800>Spawning KEYCARD (PublicName: KEY_GREEN_352 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_GREEN_352_terminalKey: KEY_GREEN_352 (KeyItemPickup_Core)) in countainer: LockerWeakLock(Clone)_terminalKey: LOCKER_211</color>
+13:01:12.868 - WardenObjectiveManager.RegisterObjectiveItemForCollection 0 item: HSU_815
+13:01:12.872 - Last Batch: FunctionMarkers
+		 Total Time: 0.603s Frames: 16 Ticks: 602
+		 FrameTime (avg/max/ticks max): 38.4ms / 41.5ms / 43
+		 Jobs (started/looped): 4 / 332
+Next Batch: FunctionMarkerLeftovers - Count: 4
+
+13:01:12.890 - Last Batch: FunctionMarkerLeftovers
+		 Total Time: 0.000s Frames: 0 Ticks: 18
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 4 / 0
+Next Batch: Markers - Count: 1
+
+13:01:13.079 - Last Batch: Markers
+		 Total Time: 0.212s Frames: 6 Ticks: 189
+		 FrameTime (avg/max/ticks max): 33.1ms / 42.7ms / 39
+		 Jobs (started/looped): 0 / 213
+Next Batch: PrefabSpawners - Count: 14658
+
+13:01:13.732 - Last Batch: PrefabSpawners
+		 Total Time: 0.648s Frames: 18 Ticks: 652
+		 FrameTime (avg/max/ticks max): 35.6ms / 38.1ms / 38
+		 Jobs (started/looped): 14657 / 13955
+Next Batch: LateMarkerCleanup - Count: 0
+
+13:01:13.732 - Last Batch: LateMarkerCleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: MarkerLoop - Count: 1
+
+13:01:13.732 - Last Batch: MarkerLoop
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: LateGeomorphScan - Count: 6
+
+13:01:14.354 - Last Batch: LateGeomorphScan
+		 Total Time: 0.624s Frames: 6 Ticks: 622
+		 FrameTime (avg/max/ticks max): 102.0ms / 106.8ms / 110
+		 Jobs (started/looped): 6 / 24
+Next Batch: Pillars - Count: 0
+
+13:01:14.354 - Last Batch: Pillars
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGraph_UnityAIGraph - Count: 1
+
+13:01:14.459 - CollectNavMeshSources : From 6 roots and 103252 possible sources, 26129 vas valid
+13:01:14.459 - CollectNavMeshSources : NotStatic:0 NotActive:1394
+13:01:14.459 - CollectNavMeshSources : WrongLayer:3106 NoCollider:74017 WasTrigger:0 MissingMesh:0 BadColliderType:0
+13:01:14.459 - NavmeshUtils.NavMeshSourceCollector : 26129 valid NavMesh sources found!
+13:01:15.095 - ---------------------------------------------------------
+13:01:15.095 - Navmesh done! time: 0.7309036
+13:01:15.095 - ---------------------------------------------------------
+13:01:15.095 - Last Batch: AIGraph_UnityAIGraph
+		 Total Time: 0.735s Frames: 14 Ticks: 741
+		 FrameTime (avg/max/ticks max): 36.9ms / 130.1ms / 109
+		 Jobs (started/looped): 1 / 2920444
+Next Batch: AIGraph_Prepare - Count: 6
+
+13:01:15.128 - Last Batch: AIGraph_Prepare
+		 Total Time: 0.036s Frames: 1 Ticks: 33
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 13
+		 Jobs (started/looped): 5 / 1
+Next Batch: AIGraph_NodeVolumeJobs - Count: 1
+
+13:01:15.243 - Last Batch: AIGraph_NodeVolumeJobs
+		 Total Time: 0.118s Frames: 3 Ticks: 115
+		 FrameTime (avg/max/ticks max): 33.6ms / 45.2ms / 45
+		 Jobs (started/looped): 1 / 178477
+Next Batch: LadderAIGNodes - Count: 57
+
+13:01:15.256 - Last Batch: LadderAIGNodes
+		 Total Time: 0.000s Frames: 0 Ticks: 12
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 57 / 0
+Next Batch: AIGraph_LinkGates - Count: 24
+
+13:01:15.273 - Last Batch: AIGraph_LinkGates
+		 Total Time: 0.035s Frames: 1 Ticks: 17
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 5
+		 Jobs (started/looped): 23 / 1
+Next Batch: AIGraph_LinkPlugs - Count: 0
+
+13:01:15.273 - Last Batch: AIGraph_LinkPlugs
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGRaph_SpecialNodesFindSource - Count: 12
+
+13:01:15.273 - Last Batch: AIGRaph_SpecialNodesFindSource
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 12 / 0
+Next Batch: AIGRaph_SpecialNodesLinkIntoVolume - Count: 12
+
+13:01:15.273 - Last Batch: AIGRaph_SpecialNodesLinkIntoVolume
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 12 / 0
+Next Batch: AIGraph_Start - Count: 6
+
+13:01:15.274 - Last Batch: AIGraph_Start
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 6 / 0
+Next Batch: AIGraph_CreateNodeClusters - Count: 19
+
+13:01:15.290 - Last Batch: AIGraph_CreateNodeClusters
+		 Total Time: 0.000s Frames: 0 Ticks: 16
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 19 / 111
+Next Batch: AIGraph_ScoreNodeClusters - Count: 19
+
+13:01:15.294 - Last Batch: AIGraph_ScoreNodeClusters
+		 Total Time: 0.000s Frames: 0 Ticks: 4
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 19 / 0
+Next Batch: AIGraph_End - Count: 6
+
+13:01:15.302 - Last Batch: AIGraph_End
+		 Total Time: 0.034s Frames: 1 Ticks: 8
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 1
+		 Jobs (started/looped): 5 / 1
+Next Batch: AIGraph_AirGraph - Count: 6
+
+13:01:15.357 - Populate grid created 32768 compound nodes and took ~128 KB and 52 ms
+13:01:15.439 - Populate grid created 32768 compound nodes and took ~128 KB and 44 ms
+13:01:15.547 - Populate grid created 32768 compound nodes and took ~128 KB and 76 ms
+13:01:15.603 - Populate grid created 32768 compound nodes and took ~128 KB and 24 ms
+13:01:15.674 - Populate grid created 32768 compound nodes and took ~128 KB and 43 ms
+13:01:15.766 - Populate grid created 32768 compound nodes and took ~128 KB and 63 ms
+13:01:15.787 - Last Batch: AIGraph_AirGraph
+		 Total Time: 0.395s Frames: 5 Ticks: 484
+		 FrameTime (avg/max/ticks max): 68.1ms / 111.4ms / 112
+		 Jobs (started/looped): 1 / 5
+Next Batch: AIGraph_AirGraph_PostProcess - Count: 6
+
+13:01:15.795 - Last Batch: AIGraph_AirGraph_PostProcess
+		 Total Time: 0.097s Frames: 1 Ticks: 9
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 0
+		 Jobs (started/looped): 5 / 1
+Next Batch: SetGateAlwaysTraversable - Count: 24
+
+13:01:15.795 - Last Batch: SetGateAlwaysTraversable
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 24 / 24
+Next Batch: FunctionMarkerFallback - Count: 4
+
+13:01:15.796 - Last Batch: FunctionMarkerFallback
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 4 / 0
+Next Batch: SetGateTraversableFromStart - Count: 24
+
+13:01:15.796 - Last Batch: SetGateTraversableFromStart
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 24 / 24
+Next Batch: Ladders - Count: 57
+
+13:01:15.819 - Last Batch: Ladders
+		 Total Time: 0.000s Frames: 0 Ticks: 23
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 57 / 0
+Next Batch: DoorLocks - Count: 16
+
+13:01:15.864 - Last Batch: DoorLocks
+		 Total Time: 0.047s Frames: 1 Ticks: 46
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 15
+		 Jobs (started/looped): 15 / 1
+Next Batch: Resources - Count: 1
+
+13:01:15.865 - Last Batch: Resources
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: CustomGeomorphBuildJob - Count: 0
+
+13:01:15.866 - Last Batch: CustomGeomorphBuildJob
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: CustomObjectCollection - Count: 4
+
+13:01:15.895 - Last Batch: CustomObjectCollection
+		 Total Time: 0.037s Frames: 1 Ticks: 29
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 5
+		 Jobs (started/looped): 3 / 1
+Next Batch: SpecificSpawning - Count: 12
+
+13:01:15.895 - Last Batch: SpecificSpawning
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 12 / 0
+Next Batch: EnemiesPlacement_Scoring - Count: 4
+
+13:01:15.895 - <b>LG_PopulateZone:</b> Area 1_Area A (LevelGeneration.LG_Area)_ZONE_49_ (LevelGeneration.LG_Area) | VoxelCoverage: 748.375 | VoxelCoverage after Multi: 27.68987
+13:01:15.895 - <b>LG_PopulateZone:</b> Area 2_Area D (LevelGeneration.LG_Area)_ZONE_49_ (LevelGeneration.LG_Area) | VoxelCoverage: 187.175 | VoxelCoverage after Multi: 6.925475
+13:01:15.895 - <b>LG_PopulateZone:</b> Area 3_Area H (LevelGeneration.LG_Area)_ZONE_49_ (LevelGeneration.LG_Area) | VoxelCoverage: 375.2625 | VoxelCoverage after Multi: 13.88471
+13:01:15.895 - <b>LG_PopulateZone:</b> Area 4_Area I (LevelGeneration.LG_Area)_ZONE_49_ (LevelGeneration.LG_Area) | VoxelCoverage: 233.25 | VoxelCoverage after Multi: 8.63025
+13:01:15.896 - <b>LG_PopulateZone:</b> Area 5_Area F (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 139.5875 | VoxelCoverage after Multi: 5.164737
+13:01:15.896 - <b>LG_PopulateZone:</b> Area 6_Area E (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 87.775 | VoxelCoverage after Multi: 3.247675
+13:01:15.896 - <b>LG_PopulateZone:</b> Area 7_Area A (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 1312.6 | VoxelCoverage after Multi: 48.5662
+13:01:15.896 - <b>LG_PopulateZone:</b> Area 8_Area D (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 489.6875 | VoxelCoverage after Multi: 18.11844
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 9_Area C (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 405.375 | VoxelCoverage after Multi: 14.99888
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 10_Area C (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 177.0125 | VoxelCoverage after Multi: 6.549462
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 11_Area B (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 732.4625 | VoxelCoverage after Multi: 27.10111
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 12_Area C (LevelGeneration.LG_Area)_ZONE_50_ (LevelGeneration.LG_Area) | VoxelCoverage: 565.175 | VoxelCoverage after Multi: 20.91147
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 14_Area A (LevelGeneration.LG_Area)_ZONE_52_ (LevelGeneration.LG_Area) | VoxelCoverage: 560.5875 | VoxelCoverage after Multi: 20.74174
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 15_Area B (LevelGeneration.LG_Area)_ZONE_52_ (LevelGeneration.LG_Area) | VoxelCoverage: 671.15 | VoxelCoverage after Multi: 24.83255
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 16_Area D (LevelGeneration.LG_Area)_ZONE_52_ (LevelGeneration.LG_Area) | VoxelCoverage: 486.7 | VoxelCoverage after Multi: 18.0079
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 17_Area C (LevelGeneration.LG_Area)_ZONE_52_ (LevelGeneration.LG_Area) | VoxelCoverage: 527.5125 | VoxelCoverage after Multi: 19.51796
+13:01:15.897 - <b>LG_PopulateZone:</b> Area 18_Area A (LevelGeneration.LG_Area)_ZONE_52_ (LevelGeneration.LG_Area) | VoxelCoverage: 1330.613 | VoxelCoverage after Multi: 49.23267
+13:01:15.898 - Last Batch: EnemiesPlacement_Scoring
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 34 / 0
+Next Batch: StaticEnemiesPlacement - Count: 4
+
+13:01:15.898 - Last Batch: StaticEnemiesPlacement
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 4 / 0
+Next Batch: PreCulling - Count: 4
+
+13:01:15.926 - Last Batch: PreCulling
+		 Total Time: 0.040s Frames: 1 Ticks: 28
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 12
+		 Jobs (started/looped): 3 / 1
+Next Batch: Culling_Nodes - Count: 19
+
+13:01:16.014 - Last Batch: Culling_Nodes
+		 Total Time: 0.076s Frames: 2 Ticks: 87
+		 FrameTime (avg/max/ticks max): 25.2ms / 40.4ms / 36
+		 Jobs (started/looped): 17 / 2
+Next Batch: Culling_Portals - Count: 29
+
+13:01:16.014 - Last Batch: Culling_Portals
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 29 / 0
+Next Batch: Culling_Cullers - Count: 90
+
+13:01:16.016 - Last Batch: Culling_Cullers
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 90 / 0
+Next Batch: Culling_Lights - Count: 19
+
+13:01:17.595 - Last Batch: Culling_Lights
+		 Total Time: 1.548s Frames: 17 Ticks: 1578
+		 FrameTime (avg/max/ticks max): 82.1ms / 173.4ms / 174
+		 Jobs (started/looped): 2 / 17
+Next Batch: Culling_NodeInstanceSearch - Count: 19
+
+13:01:17.757 - Last Batch: Culling_NodeInstanceSearch
+		 Total Time: 0.189s Frames: 5 Ticks: 161
+		 FrameTime (avg/max/ticks max): 32.6ms / 59.6ms / 34
+		 Jobs (started/looped): 18 / 1177
+Next Batch: Culling_NodeClusterJobs - Count: 4
+
+13:01:17.972 - Last Batch: Culling_NodeClusterJobs
+		 Total Time: 0.226s Frames: 7 Ticks: 216
+		 FrameTime (avg/max/ticks max): 31.8ms / 33.1ms / 33
+		 Jobs (started/looped): 22 / 1067961
+Next Batch: Culling_Cleanup - Count: 19
+
+13:01:17.972 - Last Batch: Culling_Cleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 19 / 0
+Next Batch: Culling_GatherLightCulling - Count: 270
+
+13:01:17.981 - Last Batch: Culling_GatherLightCulling
+		 Total Time: 0.000s Frames: 0 Ticks: 7
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 270 / 0
+Next Batch: Culling_TrimPortalLists - Count: 20
+
+13:01:17.999 - Last Batch: Culling_TrimPortalLists
+		 Total Time: 0.034s Frames: 1 Ticks: 18
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 3
+		 Jobs (started/looped): 20 / 73317
+Next Batch: PostCulling - Count: 0
+
+13:01:17.999 - Last Batch: PostCulling
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: ZoneLights - Count: 5
+
+13:01:18.087 - <color=#C84800>#### LG_BuildCustomLightHandlerJob, number of iCustomLightHandler found on the floor: 0</color>
+13:01:18.087 - Last Batch: ZoneLights
+		 Total Time: 0.040s Frames: 1 Ticks: 89
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 26
+		 Jobs (started/looped): 4 / 1
+Next Batch: GenerateNavigationInfo - Count: 1
+
+13:01:18.487 - Last Batch: GenerateNavigationInfo
+		 Total Time: 0.353s Frames: 2 Ticks: 399
+		 FrameTime (avg/max/ticks max): 37.2ms / 64.4ms / 289
+		 Jobs (started/looped): 18 / 2
+Next Batch: DisplayNavigationInfo - Count: 22
+
+13:01:18.488 - Last Batch: DisplayNavigationInfo
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: CustomGeomorphPostCullingJob - Count: 0
+
+13:01:18.488 - Last Batch: CustomGeomorphPostCullingJob
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LateGeomorphBuildStep - Count: 6
+
+13:01:18.513 - Last Batch: LateGeomorphBuildStep
+		 Total Time: 0.000s Frames: 0 Ticks: 24
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 6 / 0
+Next Batch: LateRuntimeOptimizations - Count: 6
+
+13:01:18.592 - Last Batch: LateRuntimeOptimizations
+		 Total Time: 0.189s Frames: 2 Ticks: 79
+		 FrameTime (avg/max/ticks max): 81.2ms / 152.4ms / 51
+		 Jobs (started/looped): 5 / 55
+Next Batch: EnemiesPlacement - Count: 0
+
+13:01:18.592 - Last Batch: EnemiesPlacement
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FixColliders - Count: 0
+
+13:01:18.592 - Last Batch: FixColliders
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FinalGeomorphErrorCheck - Count: 0
+
+13:01:18.593 - Last Batch: FinalGeomorphErrorCheck
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: SpectatorJobs - Count: 0
+
+13:01:18.593 - Last Batch: SpectatorJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Enemies - Count: 1
+
+13:01:18.593 - LG_LoadPopulationShards : Disabled, handled earlier by GS_Offline
+13:01:18.593 - Last Batch: LoadResourcesShards_Enemies
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: DebugJobs - Count: 1
+
+13:01:18.593 - Last Batch: DebugJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: Culling_LateCleanup - Count: 1
+
+13:01:18.597 - Last Batch: Culling_LateCleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 3
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: Culling_PrepForInlevel - Count: 1
+
+13:01:18.597 - Last Batch: Culling_PrepForInlevel
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: LateCustomObjectCollection - Count: 4
+
+13:01:18.597 - Last Batch: LateCustomObjectCollection
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 4 / 0
+Next Batch: FinalLogicLinking - Count: 7
+
+13:01:18.598 - Factory Done : Last build: FinalLogicLinking
+13:01:18.598 - Factory : Built in 14.9099 seconds
+13:01:18.600 - FactoryDone :: TOTAL CHECKSUM: 1474156353729793962
+13:01:18.600 - BUILDER : BuildDone
+13:01:18.600 - >>>>>>>> GS_Generating.OnBuilderDone
+13:01:18.600 - Builder.CombinedCheckSum.Checksum: 1474156353729793962
+13:01:18.601 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Generating TO: ReadyToStopElevatorRide</color>
+13:01:18.603 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Had a bot in lobby, not valid anymore.
+13:01:18.603 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+13:01:18.603 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | OnLevelSetup, currently not-valid. stopping tracking.
+13:01:18.603 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+13:01:18.626 - WardenObjectiveManager.RegisterElevatorExitWinConditionItem, item: geo_32x32_elevator_shaft_mining_03(Clone)_0 (ElevatorShaftLanding)
+13:01:18.645 - SNET : OnMasterCommand : GetReadyToStartPlaying 0 False
+13:01:18.645 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStopElevatorRide TO: StopElevatorRide</color>
+13:01:18.645 - MasterBotCommand! Dauda GetReadyToStartPlaying 0 IsInSessionHub:True
+13:01:18.645 - Dauda session.mode change to ReadyToStartPlaying
+13:01:18.645 - MasterBotCommand! Hackett GetReadyToStartPlaying 0 IsInSessionHub:True
+13:01:18.645 - Hackett session.mode change to ReadyToStartPlaying
+13:01:18.645 - MasterBotCommand! Bishop GetReadyToStartPlaying 0 IsInSessionHub:True
+13:01:18.645 - Bishop session.mode change to ReadyToStartPlaying
+13:01:18.646 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : GeneratingLevel ReadyToStartPlaying
+13:01:18.646 - SNET : OnMasterCommand : StartPlaying 0 False
+13:01:18.648 - <color=green>OnMasterCommand : GS_StopElevatorRide has not implemented functionality for StartPlaying!</color>
+13:01:18.648 - MasterBotCommand! Dauda StartPlaying 0 IsInSessionHub:True
+13:01:18.648 - Dauda session.mode change to Playing
+13:01:18.648 - MasterBotCommand! Hackett StartPlaying 0 IsInSessionHub:True
+13:01:18.648 - Hackett session.mode change to Playing
+13:01:18.648 - MasterBotCommand! Bishop StartPlaying 0 IsInSessionHub:True
+13:01:18.649 - Bishop session.mode change to Playing
+13:01:18.659 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : ReadyToStartPlaying Playing
+13:01:18.765 - SNET : MasterReplicationUpdate_Player : Dauda mode change : ReadyToStartPlaying_Dropin Playing
+13:01:18.766 - SNET : MasterReplicationUpdate_Player : Hackett mode change : ReadyToStartPlaying_Dropin Playing
+13:01:18.766 - SNET : MasterReplicationUpdate_Player : Bishop mode change : ReadyToStartPlaying_Dropin Playing
+13:01:19.452 - Detecting that the player has entered a new layer: MainLayer in  from NULL in 
+13:01:19.452 - WardenObjectiveManager, entered a new layer: MainLayer
+13:01:19.453 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: StartObjective newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:19.455 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: NotDiscovered MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:01:19.456 - WardenObjectiveManager.CheckWardenObjectiveStatus, layer: MainLayer, status is diff! newStatus: Started | isRecall False
+13:01:19.456 - OBJECTIVE STARTED / ENTERED!
+13:01:41.503 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:01:41.504 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  StartFogTransition Attempt
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+13:01:41.504 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  AttemptInteract Master (FoundPlayer=True)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 139
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0004
+DensityNoiseSpeed: 0.0372
+DensityNoiseScale: 0.08
+DensityHeightAltitude: -5.2
+DensityHeightRange: 0.6
+DensityHeightMaxBoost: 0.002
+Infection: 0
+FogColor: RGBA(0.524, 0.682, 1.000, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+13:01:41.504 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  OnStateChange (IsRecall=False)
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 139
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0.0004
+DensityNoiseSpeed: 0.0372
+DensityNoiseScale: 0.08
+DensityHeightAltitude: -5.2
+DensityHeightRange: 0.6
+DensityHeightMaxBoost: 0.002
+Infection: 0
+FogColor: RGBA(0.524, 0.682, 1.000, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+13:01:41.505 - <b>EnvironmentStateManager:</b> fogDataId 139 duration: 1 fogblend: 0 expeditionTime: 0
+13:01:41.505 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : StopElevatorRide TO: ReadyToStartLevel</color>
+13:01:41.516 - SNET : OnMasterCommand : StartPlaying 0 False
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: AddRequiredItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:01:41.519 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ReadyToStartLevel TO: InLevel</color>
+13:01:41.520 - MusicManager - Setting music state to: ElevatorGoingDown
+13:01:41.521 - MusicManager - Setting music state to: Theme
+13:01:41.526 - <color=green>SNET : PlayerLocal(Clone)_32768 : AngryMaid exits PLOC_InElevator, replicator key: 32768</color>
+13:01:41.532 - <color=green>SNET : PlayerSynced(Clone)_32769 : Dauda exits PLOC_InElevator, replicator key: 32769</color>
+13:01:41.532 - <color=green>SNET : PlayerSynced(Clone)_32770 : Hackett exits PLOC_InElevator, replicator key: 32770</color>
+13:01:41.532 - <color=green>SNET : PlayerSynced(Clone)_32771 : Bishop exits PLOC_InElevator, replicator key: 32771</color>
+13:01:41.534 - MasterBotCommand! Dauda StartPlaying 0 IsInSessionHub:True
+13:01:41.534 - MasterBotCommand! Hackett StartPlaying 0 IsInSessionHub:True
+13:01:41.534 - MasterBotCommand! Bishop StartPlaying 0 IsInSessionHub:True
+13:01:42.116 - Wielding new item in slot GearMelee
+13:01:42.118 - Wielding new item in slot GearMelee
+13:01:42.147 - Wielding new item in slot GearClass
+13:01:42.377 - MusicManager - Setting music state to: Tension
+13:01:42.524 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  Going idle
+ExpeditionProgressionTime: 1.002001
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 139
+nFogStartTime: 0
+FogDuration: 1
+FogBlend: 1
+
+<b>FogSettings:</b>
+FogDensity: 0.0004
+DensityNoiseSpeed: 0.0372
+DensityNoiseScale: 0.08
+DensityHeightAltitude: -5.2
+DensityHeightRange: 0.6
+DensityHeightMaxBoost: 0.002
+Infection: 0
+FogColor: RGBA(0.524, 0.682, 1.000, 0.000)
+DensityNoiseDirection: (1.0, 1.0, 1.0)
+
+13:01:50.121 - Wielding new item in slot GearMelee
+13:01:58.566 - Wielding new item in slot GearClass
+13:02:05.586 - MusicManager - Setting music state to: EncounterHidden
+13:02:05.626 - MusicManager - Setting music state to: EncounterRegular
+13:02:05.658 - Wielding new item in slot GearMelee
+13:02:06.157 - Wielding new item in slot GearClass
+13:02:06.255 - MusicManager - Setting music state to: Exploration
+13:02:06.629 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:02:11.532 - DropServerManager: Enqueueing 'consume boosters' request
+13:02:11.532 - DropServerManager: Woke up
+13:02:11.532 - DropServerManager: Making 'consume boosters' request...
+13:02:11.784 - DropServerManager: 'consume boosters' request completed successfully
+13:02:11.784 - DropServerManager: Sleeping for 2 seconds...
+13:02:13.781 - DropServerManager: Idle
+13:02:13.798 - Wielding new item in slot GearMelee
+13:02:14.136 - Wielding new item in slot ResourcePack
+13:02:15.771 - Wielding new item in slot GearMelee
+13:02:16.135 - Wielding new item in slot ResourcePack
+13:02:18.954 - MusicManager - Setting music state to: EncounterHidden
+13:02:18.982 - MusicManager - Setting music state to: EncounterRegular
+13:02:19.795 - Wielding new item in slot ResourcePack
+13:02:21.804 - MusicManager - Setting music state to: Exploration
+13:02:21.807 - Wielding new item in slot GearStandard
+13:02:21.834 - Wielding new item in slot GearMelee
+13:02:22.355 - Wielding new item in slot GearClass
+13:02:22.396 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:02:25.162 - Enabled skinned mesh on door destruction
+13:02:36.811 - MusicManager - Setting music state to: Tension
+13:02:40.829 - Wielding new item in slot GearMelee
+13:02:44.499 - Wielding new item in slot GearClass
+13:02:45.266 - Wielding new item in slot GearMelee
+13:02:47.124 - Security door, m_mapLookatRevealer.ActionOnReveal: Security LinksToLayerType: MainLayer
+13:02:50.961 - ArtifactPickup_Core.OnInteractionPickUp by: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+13:02:54.480 - Wielding new item in slot GearMelee
+13:02:57.924 - MusicManager - Setting music state to: EncounterHidden
+13:02:57.952 - MusicManager - Setting music state to: EncounterRegular
+13:02:58.080 - Wielding new item in slot GearSpecial
+13:02:58.472 - Wielding new item in slot GearStandard
+13:02:58.665 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 76561198056201461
+13:02:59.728 - Wielding new item in slot GearStandard
+13:03:00.019 - MusicManager - Setting music state to: Exploration
+13:03:00.130 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:03:03.663 - Wielding new item in slot GearSpecial
+13:03:08.146 - Wielding new item in slot GearMelee
+13:03:08.998 - Wielding new item in slot GearMelee
+13:03:10.199 - Wielding new item in slot GearMelee
+13:03:15.031 - MusicManager - Setting music state to: Exploration
+13:03:15.033 - Wielding new item in slot GearMelee
+13:03:15.996 - Wielding new item in slot Consumable
+13:03:18.667 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 76561198056201461
+13:03:20.643 - AchievementManager | <b>Achievement_CompleteCTierWithoutUsingTools</b> :: Tool was used by AngryMaid, Ach invalid. | InventorySlot: GearClass
+13:03:22.505 - Wielding new item in slot GearMelee
+13:03:22.589 - Security door, m_mapLookatRevealer.ActionOnReveal: Security LinksToLayerType: MainLayer
+13:03:23.410 - Wielding new item in slot GearClass
+13:03:28.984 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: False, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:03:28.984 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:03:30.118 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:03:30.119 - LG_SecurityDoor_Locks, activates chained puzzle from master
+13:03:30.121 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+13:03:30.121 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:03:30.132 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:33.150 - SurvivalWave: TRIGGER DIALOG FOR NEW WAVE
+13:03:36.643 - Wielding new item in slot GearStandard
+13:03:36.645 - Wielding new item in slot GearStandard
+13:03:38.668 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:03:43.416 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:03:43.561 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:43.759 - Wielding new item in slot GearStandard
+13:03:43.981 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:03:44.102 - Wielding new item in slot GearClass
+13:03:44.260 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:44.584 - Wielding new item in slot GearStandard
+13:03:44.952 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:03:45.093 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:45.096 - Wielding new item in slot GearClass
+13:03:45.281 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:03:45.518 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:45.657 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:03:45.790 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:03:47.056 - Wielding new item in slot GearStandard
+13:03:48.215 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+13:03:48.572 - DEBUG : Wave SurvivalWave(Clone)_32887 Stopped!
+13:03:48.572 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+13:03:48.573 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:03:48.573 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:03:50.656 - Wielding new item in slot GearClass
+13:03:52.230 - Wielding new item in slot GearStandard
+13:03:53.079 - Wielding new item in slot GearClass
+13:03:54.252 - Wielding new item in slot GearClass
+13:03:56.455 - Wielding new item in slot GearStandard
+13:03:57.632 - Wielding new item in slot GearStandard
+13:03:58.682 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 76561198056201461
+13:04:01.485 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:04:04.772 - Wielding new item in slot GearMelee
+13:04:05.107 - Wielding new item in slot GearMelee
+13:04:06.111 - Wielding new item in slot GearMelee
+13:04:06.506 - Wielding new item in slot GearSpecial
+13:04:06.707 - Wielding new item in slot GearStandard
+13:04:07.089 - Wielding new item in slot GearMelee
+13:04:07.223 - Wielding new item in slot GearMelee
+13:04:07.888 - Wielding new item in slot GearMelee
+13:04:08.401 - Wielding new item in slot GearSpecial
+13:04:08.778 - Wielding new item in slot GearStandard
+13:04:10.057 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:04:11.323 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:04:11.784 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:04:12.122 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:04:12.210 - MusicManager - Setting music state to: CombatRegular
+13:04:12.211 - MusicManager - Setting music state to: Exploration
+13:04:12.384 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:04:14.933 - Wielding new item in slot GearStandard
+13:04:16.943 - Wielding new item in slot GearClass
+13:04:17.226 - Wielding new item in slot GearStandard
+13:04:18.689 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:04:19.234 - Wielding new item in slot GearClass
+13:04:20.842 - Wielding new item in slot GearStandard
+13:04:21.063 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:04:26.838 - Wielding new item in slot GearMelee
+13:04:26.840 - Wielding new item in slot GearMelee
+13:04:27.224 - MusicManager - Setting music state to: Tension
+13:04:27.955 - MusicManager - Setting music state to: EncounterHidden
+13:04:28.025 - MusicManager - Setting music state to: EncounterRegular
+13:04:28.040 - Wielding new item in slot GearSpecial
+13:04:28.089 - OnDoorIsOpened, LinkedToZoneData: GameData.ExpeditionZoneData
+13:04:28.089 - OnDoorIsOpened: LinkedToZoneData: GameData.ExpeditionZoneData 
+13:04:28.090 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter: System.Collections.Generic.List`1[GameData.LevelEventData]
+13:04:28.090 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:04:28.500 - Wielding new item in slot GearSpecial
+13:04:29.082 - Wielding new item in slot GearClass
+13:04:30.663 - Wielding new item in slot GearStandard
+13:04:34.156 - Wielding new item in slot GearSpecial
+13:04:34.463 - MusicManager - Setting music state to: Exploration
+13:04:34.688 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:04:37.435 - Wielding new item in slot GearSpecial
+13:04:37.576 - Wielding new item in slot GearClass
+13:04:38.765 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 76561198056201461
+13:04:41.589 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: UpdateSubObjective newSubObj: FindLocationInfoHelp forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:04:41.589 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfo MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfoHelp MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:04:43.982 - Wielding new item in slot GearMelee
+13:04:45.133 - Wielding new item in slot GearMelee
+13:04:49.526 - MusicManager - Setting music state to: Tension
+13:04:49.639 - Wielding new item in slot Consumable
+13:04:51.247 - MusicManager - Setting music state to: EncounterHidden
+13:04:51.288 - MusicManager - Setting music state to: EncounterRegular
+13:04:51.620 - MusicManager - Setting music state to: Exploration
+13:04:51.623 - Wielding new item in slot GearStandard
+13:04:51.801 - Wielding new item in slot GearMelee
+13:04:52.301 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:04:58.139 - Wielding new item in slot GearMelee
+13:04:58.780 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:04:58.985 - Wielding new item in slot GearMelee
+13:05:00.433 - Wielding new item in slot GearMelee
+13:05:00.934 - Wielding new item in slot ResourcePack
+13:05:02.988 - Wielding new item in slot GearMelee
+13:05:03.020 - Wielding new item in slot ResourcePack
+13:05:04.754 - Wielding new item in slot ResourcePack
+13:05:06.567 - Wielding new item in slot ResourcePack
+13:05:06.622 - MusicManager - Setting music state to: Exploration
+13:05:06.623 - Wielding new item in slot ResourcePack
+13:05:08.608 - Wielding new item in slot GearMelee
+13:05:18.785 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 76561198056201461
+13:05:23.265 - Wielding new item in slot GearMelee
+13:05:24.022 - Wielding new item in slot ResourcePack
+13:05:26.676 - Wielding new item in slot GearClass
+13:05:30.527 - Wielding new item in slot GearMelee
+13:05:34.220 - Wielding new item in slot GearMelee
+13:05:36.936 - MusicManager - Setting music state to: Tension
+13:05:38.787 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:05:38.787 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:05:44.686 - Wielding new item in slot GearClass
+13:05:46.986 - MusicManager - Setting music state to: EncounterHidden
+13:05:47.014 - MusicManager - Setting music state to: EncounterRegular
+13:05:47.041 - MusicManager - Setting music state to: Exploration
+13:05:47.456 - Wielding new item in slot GearMelee
+13:05:49.360 - Terminal 622 change state to Awake
+13:05:49.420 - Wielding new item in slot GearMelee
+13:05:50.270 - Terminal 622 change state to PlayerInteracting
+13:05:52.856 - Sending m_terminal.SyncID: 2 command: ShowList inputString: LIST KEY_GREEN
+13:05:52.857 - ShowInventory, param1: key_green param2: 
+13:05:55.196 - Wielding new item in slot GearMelee
+13:05:58.799 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_248! 76561198056201461
+13:05:58.799 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 1
+13:05:59.483 - Sending m_terminal.SyncID: 2 command: Ping inputString: PING KEY_GREEN_352
+13:05:59.484 - Terminal 622 change state to Ping
+13:06:02.055 - MusicManager - Setting music state to: Tension
+13:06:03.285 - Terminal 622 change state to PlayerInteracting
+13:06:11.029 - Sending m_terminal.SyncID: 2 command: Ping inputString: PING KEY_GREEN_352
+13:06:11.029 - Terminal 622 change state to Ping
+13:06:11.183 - ToggleMenu, currentState: ComputerTerminal Current.m_previousToggleState: FPS
+13:06:11.495 - Terminal 622 change state to Awake
+13:06:18.334 - Wielding new item in slot GearMelee
+13:06:18.803 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:06:18.803 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:06:19.693 - Wielding new item in slot GearMelee
+13:06:19.763 - Wielding new item in slot GearClass
+13:06:21.079 - MusicManager - Setting music state to: EncounterHidden
+13:06:21.149 - MusicManager - Setting music state to: EncounterRegular
+13:06:22.895 - Wielding new item in slot GearMelee
+13:06:25.654 - MusicManager - Setting music state to: Exploration
+13:06:25.849 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:06:30.184 - Wielding new item in slot GearClass
+13:06:38.570 - Wielding new item in slot Consumable
+13:06:38.806 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_248! 76561198056201461
+13:06:38.806 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:06:40.660 - MusicManager - Setting music state to: Tension
+13:06:41.587 - GetCurrentTimeInLevelEnum, minutesElapsed: 5.000084 returning: Time_5 minutesToNext: 10
+13:06:49.249 - Wielding new item in slot GearMelee
+13:06:50.658 - MusicManager - Setting music state to: TensionMax
+13:06:50.926 - Wielding new item in slot Consumable
+13:06:56.048 - Wielding new item in slot GearMelee
+13:06:56.555 - Wielding new item in slot ResourcePack
+13:06:58.812 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:06:58.812 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:06:59.343 - Wielding new item in slot GearMelee
+13:07:02.159 - Wielding new item in slot GearMelee
+13:07:03.584 - Wielding new item in slot GearMelee
+13:07:04.818 - Wielding new item in slot GearMelee
+13:07:05.322 - Wielding new item in slot Consumable
+13:07:06.368 - Wielding new item in slot Consumable
+13:07:06.955 - MusicManager - Setting music state to: EncounterHidden
+13:07:07.054 - MusicManager - Setting music state to: EncounterRegular
+13:07:07.501 - Wielding new item in slot GearMelee
+13:07:07.503 - Wielding new item in slot GearMelee
+13:07:08.394 - Wielding new item in slot GearClass
+13:07:09.705 - MusicManager - Setting music state to: Exploration
+13:07:09.859 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:07:09.989 - Wielding new item in slot GearMelee
+13:07:13.632 - Wielding new item in slot GearClass
+13:07:17.516 - Wielding new item in slot GearClass
+13:07:18.816 - WARNING : replaced duplicate entry for AmmoPackWeaponPickup(Clone)_terminalKey: AMMOPACK_533! 76561198056201461
+13:07:18.816 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:07:18.816 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:07:21.191 - Wielding new item in slot GearMelee
+13:07:24.710 - MusicManager - Setting music state to: Tension
+13:07:38.817 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:07:38.818 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:07:38.818 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:07:42.157 - Wielding new item in slot GearClass
+13:07:42.227 - Wielding new item in slot Consumable
+13:07:47.690 - MusicManager - Setting music state to: EncounterHidden
+13:07:47.717 - MusicManager - Setting music state to: EncounterRegular
+13:07:48.671 - Wielding new item in slot GearSpecial
+13:07:48.673 - Wielding new item in slot GearStandard
+13:07:49.497 - Wielding new item in slot GearSpecial
+13:07:50.724 - MusicManager - Setting music state to: EncounterHidden
+13:07:51.229 - Wielding new item in slot GearClass
+13:07:51.816 - MusicManager - Setting music state to: EncounterRegular
+13:07:52.152 - MusicManager - Setting music state to: Exploration
+13:07:52.156 - Wielding new item in slot GearSpecial
+13:07:52.425 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:07:52.706 - Wielding new item in slot GearClass
+13:07:58.672 - Wielding new item in slot GearMelee
+13:07:58.673 - Wielding new item in slot GearMelee
+13:07:58.825 - WARNING : replaced duplicate entry for AmmoPackWeaponPickup(Clone)_terminalKey: AMMOPACK_533! 76561198056201461
+13:07:58.826 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:07:58.826 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:08:03.033 - Wielding new item in slot GearMelee
+13:08:05.564 - Wielding new item in slot Consumable
+13:08:07.152 - MusicManager - Setting music state to: Tension
+13:08:07.782 - Wielding new item in slot Consumable
+13:08:08.285 - Wielding new item in slot GearClass
+13:08:09.432 - Wielding new item in slot GearClass
+13:08:13.180 - Wielding new item in slot GearMelee
+13:08:13.831 - Wielding new item in slot GearMelee
+13:08:15.953 - MusicManager - Setting music state to: Exploration
+13:08:18.831 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:08:18.831 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:08:18.831 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:08:20.518 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: False, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:08:20.518 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:08:22.321 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:08:22.321 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:08:30.957 - MusicManager - Setting music state to: Exploration
+13:08:38.838 - WARNING : replaced duplicate entry for AmmoPackWeaponPickup(Clone)_terminalKey: AMMOPACK_533! 76561198056201461
+13:08:38.838 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:08:38.838 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:08:38.841 - Wielding new item in slot GearClass
+13:08:41.894 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:08:41.894 - LG_SecurityDoor_Locks, activates chained puzzle from master
+13:08:41.895 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+13:08:41.895 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:08:41.908 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:08:44.925 - SurvivalWave: TRIGGER DIALOG FOR NEW WAVE
+13:08:48.423 - Wielding new item in slot GearStandard
+13:08:48.429 - Wielding new item in slot GearStandard
+13:08:58.849 - WARNING : replaced duplicate entry for Consumable_GlueGrenade_Pickup(Clone)! 76561198056201461
+13:08:58.849 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:08:58.850 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 1
+13:08:58.850 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:09:00.003 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+13:09:08.722 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:08.882 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:09.548 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:09.715 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:11.191 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:11.348 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:11.620 - Wielding new item in slot GearSpecial
+13:09:11.886 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:12.149 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:12.288 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:12.526 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:18.863 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_248! 2
+13:09:18.864 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:09:23.383 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:23.554 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:24.761 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:24.921 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:25.424 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:25.594 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:25.794 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:26.119 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:26.418 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:26.555 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:26.846 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:26.982 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:27.091 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:27.288 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:34.298 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+13:09:34.865 - Wielding new item in slot GearClass
+13:09:38.879 - WARNING : replaced duplicate entry for MediPackPickup(Clone)_terminalKey: MEDIPACK_455! 1
+13:09:38.879 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:09:40.228 - DEBUG : Wave SurvivalWave(Clone)_32913 Stopped!
+13:09:40.228 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+13:09:40.229 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:09:40.229 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:09:46.707 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:46.830 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:47.290 - Wielding new item in slot GearSpecial
+13:09:50.125 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:50.318 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:51.024 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:51.150 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:52.754 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:53.256 - MusicManager - Setting music state to: IntentionalCombatHidden
+13:09:55.746 - MusicManager - Setting music state to: IntentionalCombatRegular
+13:09:56.869 - MusicManager - Setting music state to: CombatRegular
+13:09:56.869 - MusicManager - Setting music state to: Exploration
+13:09:57.340 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:09:58.894 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:09:58.894 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:10:02.058 - Wielding new item in slot GearStandard
+13:10:02.803 - Wielding new item in slot GearStandard
+13:10:04.072 - Wielding new item in slot GearClass
+13:10:04.797 - Wielding new item in slot GearClass
+13:10:06.956 - Wielding new item in slot GearMelee
+13:10:10.167 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:10:11.125 - Wielding new item in slot GearMelee
+13:10:11.839 - Wielding new item in slot GearMelee
+13:10:11.880 - MusicManager - Setting music state to: Tension
+13:10:18.386 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:10:18.386 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:10:18.388 - <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData 
+13:10:24.472 - Wielding new item in slot GearMelee
+13:10:24.745 - WardenObjectiveManager. Player Entered the warden objective zone
+13:10:24.746 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: UpdateSubObjective newSubObj: InZoneFindItem forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:10:24.746 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: FindLocationInfoHelp MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: InZoneFindItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:10:25.403 - OnDoorIsOpened, LinkedToZoneData: GameData.ExpeditionZoneData
+13:10:25.403 - OnDoorIsOpened: LinkedToZoneData: GameData.ExpeditionZoneData 
+13:10:25.403 - OnDoorIsOpened, LinkedToZoneData.EventsOnEnter: System.Collections.Generic.List`1[GameData.LevelEventData]
+13:10:25.403 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:10:27.525 - MusicManager - Setting music state to: EncounterHidden
+13:10:27.614 - MusicManager - Setting music state to: EncounterRegular
+13:10:27.924 - MusicManager - Setting music state to: Exploration
+13:10:27.927 - Wielding new item in slot GearSpecial
+13:10:27.929 - Wielding new item in slot GearClass
+13:10:28.353 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:10:30.983 - Wielding new item in slot Consumable
+13:10:34.434 - Wielding new item in slot GearMelee
+13:10:38.391 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:10:38.392 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:10:40.711 - Wielding new item in slot GearMelee
+13:10:41.117 - Wielding new item in slot Consumable
+13:10:42.927 - MusicManager - Setting music state to: Tension
+13:10:46.758 - Wielding new item in slot GearClass
+13:10:48.126 - Wielding new item in slot GearMelee
+13:10:52.918 - MusicManager - Setting music state to: TensionMax
+13:10:54.304 - Wielding new item in slot GearMelee
+13:10:55.868 - Wielding new item in slot GearClass
+13:10:58.401 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:10:58.401 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:11:03.403 - Wielding new item in slot GearMelee
+13:11:06.265 - Wielding new item in slot GearClass
+13:11:12.216 - MusicManager - Setting music state to: EncounterHidden
+13:11:12.285 - MusicManager - Setting music state to: EncounterRegular
+13:11:12.581 - Wielding new item in slot GearMelee
+13:11:13.086 - Wielding new item in slot GearClass
+13:11:14.665 - Wielding new item in slot GearMelee
+13:11:16.060 - MusicManager - Setting music state to: Exploration
+13:11:16.458 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:11:18.415 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:11:18.415 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:11:19.906 - Wielding new item in slot GearClass
+13:11:24.099 - Terminal 476 change state to Awake
+13:11:24.673 - Terminal 476 change state to PlayerInteracting
+13:11:26.951 - Sending m_terminal.SyncID: 3 command: ShowList inputString: LIST HSU
+13:11:26.951 - ShowInventory, param1: hsu param2: 
+13:11:27.048 - ToggleMenu, currentState: ComputerTerminal Current.m_previousToggleState: FPS
+13:11:27.360 - Terminal 476 change state to Awake
+13:11:30.204 - Terminal 476 change state to PlayerInteracting
+13:11:31.067 - MusicManager - Setting music state to: Tension
+13:11:31.068 - MusicManager - Setting music state to: TensionMax
+13:11:31.722 - Wielding new item in slot GearMelee
+13:11:33.461 - Sending m_terminal.SyncID: 3 command: Ping inputString: PING HSU_815
+13:11:33.461 - Terminal 476 change state to Ping
+13:11:34.394 - Wielding new item in slot GearMelee
+13:11:35.898 - ToggleMenu, currentState: ComputerTerminal Current.m_previousToggleState: FPS
+13:11:36.038 - Terminal 476 change state to PlayerInteracting
+13:11:36.208 - Terminal 476 change state to Awake
+13:11:37.191 - Terminal 476 change state to Sleeping
+13:11:38.422 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:11:38.423 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:11:41.836 - Wielding new item in slot Consumable
+13:11:43.468 - Wielding new item in slot GearMelee
+13:11:44.916 - OnInteractionSelected
+13:11:44.916 - WardenObjectiveManager.OnLocalPlayerFoundObjectiveItem CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: InZoneFindItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:44.916 - OnLocalPlayerFoundObjectiveItem attempting interact, itemIndexPlusOne: 1
+13:11:44.917 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: UpdateSubObjective newSubObj: SolveItem forceUpdate: False itemIndexPlusOne: 1 inLayer: MainLayer
+13:11:44.917 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: InZoneFindItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 1 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:44.917 - HSU DeactivateWardenObjectiveItem
+13:11:44.917 - HSU ActivateWardenObjectiveItem
+13:11:44.918 - OnInteractionSelected
+13:11:44.918 - WardenObjectiveManager.OnLocalPlayerFoundObjectiveItem CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 1 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:44.918 - OnLocalPlayerFoundObjectiveItem attempting interact, itemIndexPlusOne: 1
+13:11:44.918 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: UpdateSubObjective newSubObj: SolveItem forceUpdate: False itemIndexPlusOne: 1 inLayer: MainLayer
+13:11:45.838 - OnInteractionTriggered
+13:11:45.838 - LG_SecurityDoor_Locks, activates chained puzzle from master, puzzle instance: ChainedPuzzleInstance(Clone) (ChainedPuzzles.ChainedPuzzleInstance)
+13:11:45.839 - WardenObjectiveManager.OnLocalPlayerSolvedObjectiveItem layer: MainLayer CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 1 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 ObjectiveType: HSU_FindTakeSample item: Hydrostasis_unit(Clone)_terminalKey: HSU_423_terminalKey: HSU_815 (LG_HSU)
+13:11:45.839 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: PartiallySolveWardenObjectiveItem newSubObj: FindLocationInfo forceUpdate: True itemIndexPlusOne: 0 inLayer: MainLayer
+13:11:45.839 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: Started MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 1 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectivePartiallySolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:45.839 - WardenObjectiveManager.CheckWardenObjectiveStatus, layer: MainLayer, status is diff! newStatus: WardenObjectivePartiallySolved | isRecall False
+13:11:45.840 - OnInteractionTriggered
+13:11:45.841 - LG_SecurityDoor_Locks, activates chained puzzle from master, puzzle instance: ChainedPuzzleInstance(Clone) (ChainedPuzzles.ChainedPuzzleInstance)
+13:11:45.841 - WardenObjectiveManager.OnLocalPlayerSolvedObjectiveItem layer: MainLayer CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectivePartiallySolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 ObjectiveType: HSU_FindTakeSample item: Hydrostasis_unit(Clone)_terminalKey: HSU_423_terminalKey: HSU_815 (LG_HSU)
+13:11:45.852 - OnInteractionSelected
+13:11:45.852 - WardenObjectiveManager.OnLocalPlayerFoundObjectiveItem CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectivePartiallySolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:45.852 - OnInteractionSelected
+13:11:45.853 - WardenObjectiveManager.OnLocalPlayerFoundObjectiveItem CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectivePartiallySolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:11:50.704 - Wielding new item in slot GearMelee
+13:11:58.424 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:11:58.424 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:12:11.188 - Wielding new item in slot GearMelee
+13:12:11.691 - Wielding new item in slot GearClass
+13:12:18.436 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:12:18.436 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:12:20.863 - Wielding new item in slot GearMelee
+13:12:31.520 - MusicManager - Setting music state to: EncounterHidden
+13:12:31.685 - MusicManager - Setting music state to: EncounterRegular
+13:12:33.898 - Wielding new item in slot ResourcePack
+13:12:33.900 - Wielding new item in slot ResourcePack
+13:12:36.128 - MusicManager - Setting music state to: CombatRegular
+13:12:38.342 - Wielding new item in slot GearClass
+13:12:38.443 - ERROR : Implement CaptureToBuffer on Enemies.ES_HibernateWakeUp Striker_Hibernate_GeneratedPrefab(Clone)_32852
+13:12:38.443 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:12:38.443 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:12:39.442 - Wielding new item in slot GearSpecial
+13:12:39.686 - Wielding new item in slot ResourcePack
+13:12:39.747 - Wielding new item in slot ResourcePack
+13:12:41.040 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+13:12:41.059 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+13:12:41.627 - Wielding new item in slot GearSpecial
+13:12:42.074 - Wielding new item in slot ResourcePack
+13:12:43.276 - PlayerBackpack picking up health rel: 0.2 targetPlayer: PlayerLocal(Clone)_32768 : AngryMaid (Player.LocalPlayerAgent)
+13:12:43.837 - Wielding new item in slot GearSpecial
+13:12:46.980 - MusicManager - Setting music state to: Exploration
+13:12:47.531 - Wielding new item in slot GearClass
+13:12:47.641 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:12:49.074 - Wielding new item in slot GearSpecial
+13:12:57.551 - Wielding new item in slot GearMelee
+13:12:57.553 - Wielding new item in slot GearMelee
+13:12:58.155 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: SolveWardenObjectiveItem newSubObj: FindLocationInfo forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:12:58.155 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectivePartiallySolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectiveItemSolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:12:58.155 - WardenObjectiveManager.CheckWardenObjectiveStatus, layer: MainLayer, status is diff! newStatus: WardenObjectiveItemSolved | isRecall False
+13:12:58.155 - HSU DeactivateWardenObjectiveItem
+13:12:58.156 - ElevatorShaftLanding, activates chained puzzle from master
+13:12:58.156 - WardenObjectiveManager.OnStateChange, GoToWinCondition, WaveOnGotoWinTrigger: OnObjectiveCompleted
+13:12:58.156 - WardenObjectiveManager.HasValidWaveSettings return TRUE
+13:12:58.156 - WaveSettings: 5 WavePop: 1
+13:12:58.156 - WardenObjectiveManager.TriggerEnemyWaveData Data: WaveSettings: 5 WavePopulation: 1 SpawnDelay: 4 TriggerAlarm: True IntelMessage:  spawnNode: AIGraph.AIG_CourseNode waveSpawnType: InRelationToClosestAlivePlayer
+13:12:58.156 - WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+13:12:58.156 - WardenObjectiveManager.AttemptInteract, interaction: pWardenObjectiveInteraction, 
+type: UpdateSubObjective newSubObj: GoToWinCondition forceUpdate: False itemIndexPlusOne: 0 inLayer: MainLayer
+13:12:58.156 - WardenObjectiveManager.OnStateChange 
+----- OLD STATE: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectiveItemSolved MAIN_SUBOJ: SolveItem MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 
+----- NEW STATE: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectiveItemSolved MAIN_SUBOJ: GoToWinCondition MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0
+13:12:58.456 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 1
+13:12:58.456 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:13:00.168 - Wielding new item in slot GearMelee
+13:13:01.985 - MusicManager - Setting music state to: Tension
+13:13:02.170 - WardenObjectiveManager.TriggerEnemyWaveData - Enemy wave spawned (InRelationToClosestAlivePlayer) with edventID 5
+13:13:02.170 - WardenObjectiveManager.TriggerEnemyWaveData - Alarm
+13:13:02.184 - MusicManager - Setting music state to: SurvivalHidden
+13:13:02.187 - Wielding new item in slot GearClass
+13:13:06.319 - MusicManager - Setting music state to: SurvivalRegular
+13:13:07.164 - Wielding new item in slot GearSpecial
+13:13:07.167 - Wielding new item in slot GearSpecial
+13:13:07.208 - SurvivalWave: TRIGGER DIALOG FOR NEW WAVE
+13:13:08.059 - Wielding new item in slot GearStandard
+13:13:10.418 - MusicManager - Setting music state to: SurvivalHidden
+13:13:12.028 - Wielding new item in slot GearClass
+13:13:13.232 - Wielding new item in slot GearStandard
+13:13:13.717 - Wielding new item in slot GearSpecial
+13:13:13.955 - MusicManager - Setting music state to: SurvivalRegular
+13:13:14.083 - MusicManager - Setting music state to: SurvivalHidden
+13:13:14.180 - MusicManager - Setting music state to: SurvivalRegular
+13:13:14.446 - MusicManager - Setting music state to: SurvivalHidden
+13:13:15.026 - MusicManager - Setting music state to: SurvivalRegular
+13:13:16.451 - MusicManager - Setting music state to: SurvivalHidden
+13:13:18.460 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:13:22.692 - Enabled skinned mesh on door destruction
+13:13:23.249 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+13:13:26.487 - MusicManager - Setting music state to: SurvivalRegular
+13:13:26.582 - MusicManager - Setting music state to: SurvivalHidden
+13:13:26.802 - Wielding new item in slot GearClass
+13:13:28.796 - Wielding new item in slot GearSpecial
+13:13:32.409 - Wielding new item in slot GearClass
+13:13:34.154 - MusicManager - Setting music state to: SurvivalRegular
+13:13:34.436 - Wielding new item in slot GearStandard
+13:13:38.473 - WARNING : replaced duplicate entry for Consumable_LockMelter_Pickup(Clone)! 2
+13:13:39.288 - SurvivalWave: TRIGGER DIALOG FOR EXISTING WAVE
+13:13:39.842 - Wielding new item in slot GearClass
+13:13:41.468 - Wielding new item in slot GearSpecial
+13:13:47.874 - Wielding new item in slot GearClass
+13:13:49.359 - GlueGunProjectile landing on an enemy collider with no IGlueTarget. (should be damageLimb or weakspotDamageBase) GO: RightLowerLeg
+13:13:49.486 - Wielding new item in slot GearSpecial
+13:13:52.030 - Wielding new item in slot GearMelee
+13:13:53.345 - Wielding new item in slot GearMelee
+13:13:53.504 - WardenObjectiveManager.OnWinConditionSolved layer: MainLayer CurrentState: STATE pWardenObjectiveState, MAIN_STATUS: WardenObjectiveItemSolved MAIN_SUBOJ: GoToWinCondition MAIN_ITEM+1: 0 SECOND_STATUS: NotDiscovered SECOND_SUBOBJ: FindLocationInfo SECOND_ITEM+1: 0 THIRD_STATUS: NotDiscovered THIRD_SUBOBJ: FindLocationInfo main_itemIndexPlusOne: 0 WinCondition: GoToElevator
+13:13:53.504 - WardenObjectiveManager.OnWinConditionSolved SetLocalCustomData for WinConditionSolved
+13:13:53.520 - Everyone has either won or died, expedition is done and a success!
+13:13:53.536 - Everyone has either won or died, expedition is done and a success!
+13:13:53.554 - Everyone has either won or died, expedition is done and a success!
+13:13:53.569 - Everyone has either won or died, expedition is done and a success!
+13:13:53.587 - Everyone has either won or died, expedition is done and a success!
+13:13:53.601 - Everyone has either won or died, expedition is done and a success!
+13:13:53.618 - Everyone has either won or died, expedition is done and a success!
+13:13:53.634 - Everyone has either won or died, expedition is done and a success!
+13:13:53.651 - Everyone has either won or died, expedition is done and a success!
+13:13:53.668 - Everyone has either won or died, expedition is done and a success!
+13:13:53.686 - Everyone has either won or died, expedition is done and a success!
+13:13:53.699 - Everyone has either won or died, expedition is done and a success!
+13:13:53.717 - Everyone has either won or died, expedition is done and a success!
+13:13:53.731 - Everyone has either won or died, expedition is done and a success!
+13:13:53.747 - Everyone has either won or died, expedition is done and a success!
+13:13:53.763 - Everyone has either won or died, expedition is done and a success!
+13:13:53.778 - Everyone has either won or died, expedition is done and a success!
+13:13:53.793 - Everyone has either won or died, expedition is done and a success!
+13:13:53.808 - Everyone has either won or died, expedition is done and a success!
+13:13:53.824 - Everyone has either won or died, expedition is done and a success!
+13:13:53.838 - Everyone has either won or died, expedition is done and a success!
+13:13:53.856 - Everyone has either won or died, expedition is done and a success!
+13:13:53.869 - Everyone has either won or died, expedition is done and a success!
+13:13:53.886 - Everyone has either won or died, expedition is done and a success!
+13:13:53.900 - Everyone has either won or died, expedition is done and a success!
+13:13:53.919 - Everyone has either won or died, expedition is done and a success!
+13:13:53.935 - Everyone has either won or died, expedition is done and a success!
+13:13:53.955 - Everyone has either won or died, expedition is done and a success!
+13:13:53.971 - Everyone has either won or died, expedition is done and a success!
+13:13:53.990 - Everyone has either won or died, expedition is done and a success!
+13:13:54.004 - Everyone has either won or died, expedition is done and a success!
+13:13:54.020 - Everyone has either won or died, expedition is done and a success!
+13:13:54.037 - Everyone has either won or died, expedition is done and a success!
+13:13:54.053 - Everyone has either won or died, expedition is done and a success!
+13:13:54.066 - Everyone has either won or died, expedition is done and a success!
+13:13:54.085 - Everyone has either won or died, expedition is done and a success!
+13:13:54.098 - Everyone has either won or died, expedition is done and a success!
+13:13:54.114 - Everyone has either won or died, expedition is done and a success!
+13:13:54.128 - Everyone has either won or died, expedition is done and a success!
+13:13:54.146 - Everyone has either won or died, expedition is done and a success!
+13:13:54.159 - Everyone has either won or died, expedition is done and a success!
+13:13:54.174 - Everyone has either won or died, expedition is done and a success!
+13:13:54.192 - Everyone has either won or died, expedition is done and a success!
+13:13:54.206 - Everyone has either won or died, expedition is done and a success!
+13:13:54.224 - Everyone has either won or died, expedition is done and a success!
+13:13:54.241 - Everyone has either won or died, expedition is done and a success!
+13:13:54.260 - Everyone has either won or died, expedition is done and a success!
+13:13:54.278 - Everyone has either won or died, expedition is done and a success!
+13:13:54.293 - Everyone has either won or died, expedition is done and a success!
+13:13:54.309 - Everyone has either won or died, expedition is done and a success!
+13:13:54.328 - Everyone has either won or died, expedition is done and a success!
+13:13:54.347 - Everyone has either won or died, expedition is done and a success!
+13:13:54.362 - Everyone has either won or died, expedition is done and a success!
+13:13:54.379 - Everyone has either won or died, expedition is done and a success!
+13:13:54.393 - Everyone has either won or died, expedition is done and a success!
+13:13:54.407 - Everyone has either won or died, expedition is done and a success!
+13:13:54.424 - Everyone has either won or died, expedition is done and a success!
+13:13:54.439 - Everyone has either won or died, expedition is done and a success!
+13:13:54.456 - Everyone has either won or died, expedition is done and a success!
+13:13:54.470 - Everyone has either won or died, expedition is done and a success!
+13:13:54.486 - Everyone has either won or died, expedition is done and a success!
+13:13:54.501 - Everyone has either won or died, expedition is done and a success!
+13:13:54.520 - Everyone has either won or died, expedition is done and a success!
+13:13:54.520 - MasterBotCommand! Dauda EndPlaying 2 IsInSessionHub:True
+13:13:54.520 - Dauda session.mode change to InSessionHub_ReadyToGenerate
+13:13:54.520 - MasterBotCommand! Hackett EndPlaying 2 IsInSessionHub:True
+13:13:54.521 - Hackett session.mode change to InSessionHub_ReadyToGenerate
+13:13:54.521 - MasterBotCommand! Bishop EndPlaying 2 IsInSessionHub:True
+13:13:54.521 - Bishop session.mode change to InSessionHub_ReadyToGenerate
+13:13:54.521 - SNET : OnMasterCommand : EndPlaying 2 False
+13:13:54.521 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : InLevel TO: ExpeditionSuccess</color>
+13:13:54.522 - MusicManager - Setting music state to: Silence
+13:13:54.522 - MusicManager - Setting music state to: Silence
+13:13:54.539 - CM_PageExpeditionSuccess, name: R1A1:"The Admin"<color=#ccc><size=70%> - 00:12:13</size></color>
+13:13:54.539 - Slot 0: SNetwork.SNet_Slot player: AngryMaid (SNetwork.SNet_Player)
+13:13:54.540 - Slot 1: SNetwork.SNet_Slot player: SNet_Player_Dauda (SNetwork.SNet_Player)
+13:13:54.540 - Slot 2: SNetwork.SNet_Slot player: SNet_Player_Hackett (SNetwork.SNet_Player)
+13:13:54.540 - Slot 3: SNetwork.SNet_Slot player: SNet_Player_Bishop (SNetwork.SNet_Player)
+13:13:54.540 - Everyone has either won or died, expedition is done and a success!
+13:13:54.540 - CM_PageExpeditionSuccess.OnEnable, hasMain: True hasSecond: False hasThird: False clearMain: True clearSecond: False clearThird: False
+13:13:54.546 - RundownManager.SetLayerProgression, layer: Main progressionState: Completed
+13:13:54.546 - RundownManager.OnExpeditionEnded(endState: Success, expeditionTime: 733, artifacts: [0,1,0])
+13:13:54.546 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Had a bot in lobby, not valid anymore.
+13:13:54.547 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+13:13:54.548 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+13:13:54.548 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Had a bot in lobby, not valid anymore.
+13:13:54.548 - AchievementManager | <b>Achievement_CompleteNoDownedTeam</b> :: Achievement_CompleteNoDownedTeam | Too few players (need 4), not valid anymore.
+13:13:54.548 - AchievementManager | <b>Achievement_CompleteOnlyShotguns</b> :: Had some non-shotgun item, not valid anymore.
+13:13:54.549 - RundownManager.EndGameSession
+13:13:54.549 - Got expedition success from master!
+13:13:54.549 - MusicManager - Setting music state to: SurvivalRegular
+13:13:54.549 - DropServerManager: Enqueueing 'layer progression (layer: Main, state: Completed)' request
+13:13:54.549 - DropServerManager: Woke up
+13:13:54.549 - DropServerManager: Making 'layer progression (layer: Main, state: Completed)' request...
+13:13:54.550 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : Playing InSession_DonePlaying
+13:13:55.333 - DropServerManager: Enqueueing 'end session (success: True, boosterCurrency: 0,149,0)' request
+13:13:55.333 - DropServerManager: 'layer progression (layer: Main, state: Completed)' request completed successfully
+13:13:55.333 - DropServerManager: Sleeping for 2 seconds...
+13:13:55.334 - SNET : MasterReplicationUpdate_Player : Dauda mode change : Playing InSessionHub_ReadyToGenerate
+13:13:55.334 - SNET : MasterReplicationUpdate_Player : Hackett mode change : Playing InSessionHub_ReadyToGenerate
+13:13:55.334 - SNET : MasterReplicationUpdate_Player : Bishop mode change : Playing InSessionHub_ReadyToGenerate
+13:13:57.329 - DropServerManager: Making 'end session (success: True, boosterCurrency: 0,149,0)' request...
+13:13:57.580 - DropServerGameSession: Session was COMPLETED
+13:13:57.580 - DropServerManager: 'end session (success: True, boosterCurrency: 0,149,0)' request completed successfully
+13:13:57.580 - DropServerManager: Sleeping for 2 seconds...
+13:13:57.581 - RundownManager: Drop server game session finished successfully
+13:13:57.582 - RundownManager: Requesting rundown progression from drop server for rundown key 'Local_32'...
+13:13:57.593 - DropServerManager: Enqueueing 'rundown progression (rundown: Local_32)' request
+13:13:57.607 - DropServerManager: Enqueueing 'get player inventory' request
+13:13:59.575 - DropServerManager: Making 'rundown progression (rundown: Local_32)' request...
+13:13:59.813 - DropServerManager: 'rundown progression (rundown: Local_32)' request completed successfully
+13:13:59.813 - DropServerManager: Sleeping for 2 seconds...
+13:13:59.815 - RundownManager: Got rundown progression from drop server
+13:13:59.815 - CM_PageRundown_New.OnRundownProgressionFileUpdated
+13:13:59.815 - tier: TierA index: 0 EXPEDITION UNLOCKED
+13:13:59.815 - tier: TierB index: 0 EXPEDITION UNLOCKED
+13:13:59.816 - tier: TierB index: 1 EXPEDITION UNLOCKED
+13:13:59.816 - tier: TierC index: 0 EXPEDITION UNLOCKED
+13:13:59.816 - tier: TierC index: 1 EXPEDITION UNLOCKED
+13:13:59.816 - tier: TierD index: 0 EXPEDITION UNLOCKED
+13:13:59.816 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+13:14:01.812 - DropServerManager: Making 'get player inventory' request...
+13:14:02.050 - DropServerManager: 'get player inventory' request completed successfully
+13:14:02.050 - DropServerManager: Sleeping for 2 seconds...
+13:14:03.223 - Show lobby button!
+13:14:04.047 - DropServerManager: Idle
+13:14:15.963 - OnBtnPress, ID: 150 GO: CM_ButtonFramed OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:14:15.963 - MasterBotCommand! Dauda EndPlaying 0 IsInSessionHub:True
+13:14:15.963 - MasterBotCommand! Hackett EndPlaying 0 IsInSessionHub:True
+13:14:15.963 - MasterBotCommand! Bishop EndPlaying 0 IsInSessionHub:True
+13:14:15.963 - SNET : OnMasterCommand : EndPlaying 0 False
+13:14:15.963 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : ExpeditionSuccess TO: AfterLevel</color>
+13:14:15.963 - Everyone has either won or died, expedition is done and a success!
+13:14:15.975 - CleanupAfterExpedition AfterLevel
+13:14:15.975 - Global.OnLevelCleanup
+13:14:15.977 - Global.OnLevelCleanup
+13:14:15.977 - CellSound.OnLevelCleanup. AllSoundsStoppedThisSession: True
+13:14:15.977 - MusicManager - Setting music state to: Silence
+13:14:16.256 - On despawn! PlayerSynced(Clone)_32771 : Bishop
+13:14:16.259 - OnPlayerEvent : Bishop  PlayerEvent : PlayerAgentDeSpawned  Reason : None isPlayerMaster : False
+13:14:16.260 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentDeSpawned None
+13:14:16.260 - On despawn! PlayerSynced(Clone)_32770 : Hackett
+13:14:16.262 - OnPlayerEvent : Hackett  PlayerEvent : PlayerAgentDeSpawned  Reason : None isPlayerMaster : False
+13:14:16.264 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentDeSpawned None
+13:14:16.264 - On despawn! PlayerSynced(Clone)_32769 : Dauda
+13:14:16.266 - OnPlayerEvent : Dauda  PlayerEvent : PlayerAgentDeSpawned  Reason : None isPlayerMaster : False
+13:14:16.267 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentDeSpawned None
+13:14:16.267 - On despawn! PlayerLocal(Clone)_32768 : AngryMaid
+13:14:16.268 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentDeSpawned  Reason : None isPlayerMaster : True
+13:14:16.269 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentDeSpawned None
+13:14:16.271 - MusicManager - Setting music state to: ElevatorIdle
+13:14:16.278 - CarryItemWithGlobalStateManager.OnLevelCleanup
+13:14:16.278 - CarryItemWithGlobalStateManager.OnLevelCleanup, i:0 type: FogRepeller count: 0
+13:14:16.279 - <b>AchievementManager:</b> Achievement_CompleteNoDownedTeam | OnLevelCleanup, resetting hasBeenDowned state
+13:14:16.279 - AchievementManager | <b>Achievement_KillTankTakeNoDamage</b> :: Reset
+13:14:16.279 - AchievementManager | <b>Achievement_SurviveAlarmNoDamage</b> :: Reset
+13:14:16.279 - AchievementManager | <b>Achievement_KillPMotherWithoutTakingDamageFromBabyStrikers</b> :: Reset
+13:14:16.399 - MusicManager - Setting music state to: StartUp
+13:14:16.399 - SessionGUID set to zBrStXxreUy5BGEOzso55w==
+13:14:16.427 - tier: TierA index: 0 EXPEDITION UNLOCKED
+13:14:16.427 - tier: TierB index: 0 EXPEDITION UNLOCKED
+13:14:16.427 - tier: TierB index: 1 EXPEDITION UNLOCKED
+13:14:16.427 - tier: TierC index: 0 EXPEDITION UNLOCKED
+13:14:16.428 - tier: TierC index: 1 EXPEDITION UNLOCKED
+13:14:16.428 - tier: TierD index: 0 EXPEDITION UNLOCKED
+13:14:16.428 - CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+13:14:16.429 - <b>WardenObjectiveManager:</b> SetupWardenObjectiveLayer() Setting definition for MainLayer with HSU_FindTakeSample.
+13:14:16.430 - <color=#C84800>SelectActiveExpedition : Selected! Local Local_32 TierA 0 131587319 407802857  sessionGUID:SNetwork.SNetStructs+pSessionGUID FriendsData expID set to: Local_32,1,0 ActiveExpeditionUniqueKey: Local_32_TierA_0</color>
+13:14:16.430 - MusicManager - Setting music state to: Silence
+13:14:16.431 - ERROR : PlayerSynced(Clone)_32770 : Hackett
+13:14:16.431 - SNET : MasterReplicationUpdate_Player : AngryMaid mode change : InSession_DonePlaying InSessionHub_ReadyToGenerate
+13:14:16.431 - <color=green>SNET : OnSessionPlayerAction : Spawning AngryMaid's agent!  SpawnPlayerAgent</color>
+13:14:16.474 - OnPlayerEvent : AngryMaid  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : True
+13:14:16.477 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentSpawned None
+13:14:16.477 - <color=green>SNET : OnSessionPlayerAction : Spawning Dauda's agent!  SpawnPlayerAgent</color>
+13:14:16.513 - OnPlayerEvent : Dauda  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+13:14:16.515 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentSpawned None
+13:14:16.525 - <color=green>SNET : OnSessionPlayerAction : Spawning Hackett's agent!  SpawnPlayerAgent</color>
+13:14:16.555 - ERROR : PlayerSynced(Clone)_32770 : Hackett
+13:14:16.558 - OnPlayerEvent : Hackett  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+13:14:16.559 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentSpawned None
+13:14:16.565 - <color=green>SNET : OnSessionPlayerAction : Spawning Bishop's agent!  SpawnPlayerAgent</color>
+13:14:16.599 - OnPlayerEvent : Bishop  PlayerEvent : PlayerAgentSpawned  Reason : None isPlayerMaster : False
+13:14:16.601 - WARNING : OnPlayerEvent : GS_AfterLevel has not implemented PlayerAgentSpawned None
+13:14:18.401 - <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : AfterLevel TO: Lobby</color>
+13:14:18.401 - <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 733.0974
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+13:14:18.401 - MusicManager - Setting music state to: Silence
+13:14:19.879 - OnBtnPress, ID: 640 GO: CM_MenuBarItem(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:14:20.145 - TryGetMaterialGroup : Missing material on TextMeshPro
+13:14:35.591 - OnBtnPress, ID: 636 GO: CM_TimedExpeditionButton(Clone) OnBtnPressCallback: System.Action`1[System.Int32] m_onBtnPress: UnityEngine.Events.UnityEvent UnityEngine.Events.UnityEvent
+13:14:35.789 - OnApplicationQuit
