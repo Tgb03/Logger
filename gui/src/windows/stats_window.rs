@@ -167,6 +167,7 @@ pub struct StatsWindow {
     run_vec: Vec<LevelRun>,
 
     name_filter: String,
+    negative_name_filter: String,
     min_time_filter: Time,
     max_time_filter: Time,
     min_stamp_filter: usize,
@@ -184,6 +185,7 @@ impl StatsWindow {
             stats_shown: Stats::default(),
             run_vec,
             name_filter: "".to_owned(),
+            negative_name_filter: "".to_owned(),
             min_time_filter: Time::default(),
             max_time_filter: Time::from("99:59:59.999").unwrap(),
             min_stamp_filter: 0,
@@ -204,10 +206,30 @@ impl StatsWindow {
     }
 
     pub fn update(&mut self) {
+
         self.stats_shown = Stats::build(
             self.run_vec
                 .iter()
-                .filter(|r| r.get_name().contains(&self.name_filter))
+                .filter(|r| 
+                    self.name_filter
+                        .split('|')
+                        .any(|filter| 
+                            r
+                                .get_name()
+                                .contains(filter)
+                        )
+                )
+                .filter(|r|
+                    self.negative_name_filter
+                        .split('|')
+                        .all(|filter| {
+                            if filter == "" { return true }
+
+                            !r
+                                .get_name()
+                                .contains(filter)
+                        })
+                )
                 .filter(|r| {
                     self.min_time_filter <= r.get_time() && r.get_time() <= self.max_time_filter
                 })
@@ -230,13 +252,30 @@ impl Render for StatsWindow {
             if ui
                 .add(
                     egui::TextEdit::singleline(&mut self.name_filter)
-                        .desired_width(64.0)
+                        .desired_width(128.0)
                         .background_color(Color32::from_rgb(32, 32, 32))
                         .text_color(Color32::WHITE),
                 )
                 .changed()
             {
                 self.name_filter = self.name_filter.to_uppercase();
+                changed = true;
+            }
+        });
+
+        ui.horizontal(|ui| {
+            ui.add_space(5.0);
+            ui.monospace("Negative name filter: ");
+            if ui
+                .add(
+                    egui::TextEdit::singleline(&mut self.negative_name_filter)
+                        .desired_width(128.0)
+                        .background_color(Color32::from_rgb(32, 32, 32))
+                        .text_color(Color32::WHITE),
+                )
+                .changed()
+            {
+                self.negative_name_filter = self.negative_name_filter.to_uppercase();
                 changed = true;
             }
         });
