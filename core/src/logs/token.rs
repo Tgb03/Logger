@@ -108,7 +108,7 @@ impl Token {
             val => val.to_owned(),
         };
 
-        if let Some(first) = words[18].split('_').collect::<Vec<&str>>().get(0) {
+        if let Some(first) = words[18].split('_').nth(0) {
             match first.parse::<u64>() {
                 Ok(i) => return Token::ObjectiveSpawnedOverride(i, name),
                 Err(_) => return Token::Invalid,
