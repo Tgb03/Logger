@@ -1,3 +1,5 @@
+use super::data::{LevelDescriptor, Rundown};
+
 #[derive(Debug, PartialEq)]
 pub enum Token {
     GeneratingLevel,
@@ -16,7 +18,7 @@ pub enum Token {
     CollectableItemSeed(u64),              // item seed
     DimensionIncrease,
     DimensionReset,
-    SelectExpedition(String),
+    SelectExpedition(LevelDescriptor),
     GameStarting,
     GameStarted,
     PlayerDroppedInLevel(u32),
@@ -174,37 +176,20 @@ impl Token {
         }
 
         let rundown_id = &words[6][6..];
-        let tier = &words[7][4..5];
-        let level = match words[8].parse::<i32>() {
-            Ok(val) => val + 1,
+        let tier = match words[7].bytes().nth(4) {
+            Some(val) => val - 'A' as u8,
+            None => return Token::Invalid,
+        }.into();
+        let level = match words[8].parse::<u8>() {
+            Ok(val) => val,
             Err(_) => return Token::Invalid,
-        };
+        }.into();
 
-        let rundown_name = match rundown_id {
-            "17" => "Og.R1",
-            "19" => "Og.R2",
-            "22" => "Og.R3",
-            "25" => "Og.R4",
-            "26" => "Og.R5",
-            "29" => "Og.R6",
-            "31" => "R7",
-            "32" => "R1",
-            "33" => "R2",
-            "34" => "R3",
-            "35" => "R8",
-            "37" => "R4",
-            "38" => "R5",
-            "39" => "training",
-            "41" => "R6",
-            _ => "$R",
-        };
+        let rundown: Rundown = rundown_id.parse::<u8>()
+            .unwrap_or_default()
+            .into();
 
-        if rundown_name == "training" {
-            return Token::SelectExpedition("TRAINING".to_string());
-        }
-        let result = format!("{}{}{}", rundown_name, tier, level);
-
-        Token::SelectExpedition(result)
+        Token::SelectExpedition(LevelDescriptor::new(rundown, tier, level))
     }
 
     pub fn create_player(line: &str) -> Token {
