@@ -1,4 +1,4 @@
-use super::data::{KeyDescriptor, LevelDescriptor, Rundown};
+use super::data::{KeyDescriptor, LevelDescriptor, ObjectiveFunction, Rundown};
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -11,9 +11,9 @@ pub enum Token {
     SessionSeed(u64),
     GeneratingFinished,
     ItemAllocated(KeyDescriptor),           // name
-    ItemSpawn(u64, u64),                   // zone, id
+    ItemSpawn(u64, u32),                   // zone, id
     CollectableAllocated(u64),             // zone
-    ObjectiveSpawnedOverride(u64, String), // id, name of objective
+    ObjectiveSpawnedOverride(u64, ObjectiveFunction), // id, name of objective
     CollectableItemID(u8),                 // item id
     CollectableItemSeed(u64),              // item seed
     DimensionIncrease,
@@ -75,7 +75,7 @@ impl Token {
         }
 
         let zone = words[6][4..].parse().ok();
-        let id = words[14].parse::<u64>();
+        let id = words[14].parse::<u32>();
 
         match (zone, id) {
             (Some(zone), Ok(id)) => Token::ItemSpawn(zone, id),
@@ -106,11 +106,7 @@ impl Token {
             return Token::Invalid;
         }
 
-        let name = match words[13] {
-            "HSU_FindTakeSample" => "HSU".to_owned(),
-            "TerminalUplink" => "Uplink".to_owned(),
-            val => val.to_owned(),
-        };
+        let name = words[13].into();
 
         if let Some(first) = words[18].split('_').nth(0) {
             match first.parse::<u64>() {

@@ -134,3 +134,25 @@ impl Display for KeyDescriptor {
         }
     }
 }
+
+#[allow(non_camel_case_types)]
+#[derive(PartialEq, Eq, Debug, Clone, strum::IntoStaticStr)]
+pub enum ObjectiveFunction {
+
+    #[strum(to_string="HSU")] HSU_FindTakeSample,
+    #[strum(to_string="Uplink")] TerminalUplink,
+    #[strum(to_string="Command")] SpecialTerminalCommand,
+    Unknown,
+
+}
+
+impl From<&str> for ObjectiveFunction {
+    fn from(value: &str) -> Self {
+        match value {
+            "HSU_FindTakeSample" => ObjectiveFunction::HSU_FindTakeSample,
+            "TerminalUplink" => ObjectiveFunction::TerminalUplink,
+            "SpecialTerminalCommand" => ObjectiveFunction::SpecialTerminalCommand,
+            _ => ObjectiveFunction::Unknown,
+        }
+    }
+}

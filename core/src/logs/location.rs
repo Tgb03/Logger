@@ -90,7 +90,7 @@ impl LocationGenerator for KeyGenerator {
                 None
             }
             Token::ItemSpawn(zone, id) => match self.first_iteration.take() {
-                Some(key_descriptor) => Some(key_descriptor.into_location(*zone, *id)),
+                Some(key_descriptor) => Some(key_descriptor.into_location(*zone, *id as u64)),
                 None => None,
             },
             _ => None,
@@ -126,7 +126,7 @@ impl LocationGenerator for ObjectiveItemGenerator {
                 // unwrap should never fail since we always know we have collectable allocated
                 let (_, zone) = self.buffer_zones.pop().unwrap_or((9999, 9999));
 
-                Some(Location::BigObjective(name.clone(), zone, *id))
+                Some(Location::BigObjective(Into::<&str>::into(name).to_owned(), zone, *id))
             }
             Token::CollectableItemID(id) => {
                 let repr = ItemIdentifier::from_repr(*id).unwrap_or(ItemIdentifier::Unknown(*id));

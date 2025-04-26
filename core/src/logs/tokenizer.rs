@@ -260,6 +260,8 @@ impl GenericTokenizer {
 mod tests {
     use std::{env, fs::File, io::Read};
 
+    use crate::logs::data::ObjectiveFunction;
+
     use super::*;
 
     fn create_tokenizer() -> GenericTokenizer {
@@ -324,7 +326,7 @@ mod tests {
                 Token::ItemAllocated("KEY_GREEN_245".try_into().unwrap()),
                 Token::ItemSpawn(50, 48),
                 Token::CollectableAllocated(3),
-                Token::ObjectiveSpawnedOverride(18, "HSU".to_string()),
+                Token::ObjectiveSpawnedOverride(18, ObjectiveFunction::HSU_FindTakeSample),
                 Token::GeneratingFinished,
                 Token::GameStarting,
                 Token::GameStarted,
@@ -356,7 +358,7 @@ mod tests {
                 Token::ItemAllocated("KEY_YELLOW_990".try_into().unwrap()),
                 Token::ItemSpawn(23, 37),
                 Token::CollectableAllocated(5),
-                Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
+                Token::ObjectiveSpawnedOverride(16, ObjectiveFunction::HSU_FindTakeSample),
                 Token::GeneratingFinished,
                 Token::GameStarting,
                 Token::GameStarted,
@@ -374,7 +376,7 @@ mod tests {
                 Token::ItemAllocated("KEY_ORANGE_338".try_into().unwrap()),
                 Token::ItemSpawn(22, 14),
                 Token::CollectableAllocated(5),
-                Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
+                Token::ObjectiveSpawnedOverride(16, ObjectiveFunction::HSU_FindTakeSample),
                 Token::GeneratingFinished,
                 Token::GameStarting,
                 Token::GameStarted,
