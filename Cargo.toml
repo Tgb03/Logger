@@ -10,7 +10,7 @@ authors = ["Tgb03<tgb03.dev@gmail.com>"]
 [workspace.dependencies]
 serde = { version = "1.0.217", features = ["derive"] }
 ron = "0.10.1"
-strum = { version = "0.26.3", features = ["derive"] }
+strum = "0.26.3"
 strum_macros = "0.26.4"
 
 [profile.release]
