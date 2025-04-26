@@ -140,7 +140,7 @@ impl TokenParserT<ParserResult> for Parser {
                         self.result.locations.clear();
                         self.generation_parser = Some(GenerationParser::default());
                     }
-                    Token::SelectExpedition(name) => self.result.level_name = name.to_string(),
+                    Token::SelectExpedition(name) => self.result.level_name = name,
                     Token::GameStarting => {
                         // #[cfg(debug_assertions)]
                         // eprintln!("Started game.");
