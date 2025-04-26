@@ -11,6 +11,7 @@ pub trait LookUpColor {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 enum MapperColor {
+    White,
     Blue,
     Green,
     Yellow,
@@ -21,6 +22,7 @@ enum MapperColor {
 impl From<&MapperColor> for Color32 {
     fn from(value: &MapperColor) -> Self {
         match value {
+            MapperColor::White => Color32::from_rgb(255, 255, 255),
             MapperColor::Blue => Color32::from_rgb(30, 155, 255),
             MapperColor::Green => Color32::from_rgb(45, 255, 30),
             MapperColor::Yellow => Color32::from_rgb(255, 255, 30),
