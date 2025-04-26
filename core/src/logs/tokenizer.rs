@@ -389,5 +389,29 @@ mod tests {
             ]);
         }   
     }
+
+    #[test]
+    fn test_r6c2() {
+        let tokenizer = create_tokenizer();
+
+        let tokens = tokenize_file("R6C2_host_hisec.txt", &tokenizer);
+
+        assert_eq!(tokens, vec![
+            Token::GeneratingLevel,
+            Token::ItemAllocated("BULKHEAD_KEY_538".try_into().unwrap()),
+            Token::ItemSpawn(123, 1),
+            Token::ItemAllocated("BULKHEAD_KEY_585".try_into().unwrap()),
+            Token::ItemSpawn(247, 5),
+            Token::CollectableAllocated(246),
+            Token::CollectableItemID(154),
+            Token::DimensionReset,
+            Token::GeneratingFinished,
+            Token::GameStarting,
+            Token::GameStarted,
+            Token::DoorOpen,
+            Token::GameEndAbort,
+            Token::GameEndAbort,
+        ]);
+    }
     
 }
