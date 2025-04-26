@@ -1,4 +1,4 @@
-use super::data::{LevelDescriptor, Rundown};
+use super::data::{KeyDescriptor, LevelDescriptor, Rundown};
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -10,7 +10,7 @@ pub enum Token {
 
     SessionSeed(u64),
     GeneratingFinished,
-    ItemAllocated(String, bool),           // name
+    ItemAllocated(KeyDescriptor),           // name
     ItemSpawn(u64, u64),                   // zone, id
     CollectableAllocated(u64),             // zone
     ObjectiveSpawnedOverride(u64, String), // id, name of objective
@@ -55,9 +55,13 @@ impl Token {
             return Token::Invalid;
         }
 
-        let name = words[5];
+        let name = words[5]
+            .try_into();
 
-        Token::ItemAllocated(name.to_owned(), name.contains("BULKHEAD"))
+        match name {
+            Ok(key) => Token::ItemAllocated(key),
+            Err(_) => Token::Invalid,
+        }
     }
 
     pub fn create_item_spawn(line: &str) -> Token {

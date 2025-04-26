@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use strum_macros::{Display, FromRepr};
 
-use super::token::Token;
+use super::{data::KeyDescriptor, token::Token};
 
 /// taken from https://github.com/Angry-Maid/rusted-mapper
 #[derive(FromRepr, Display, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
@@ -78,22 +78,19 @@ pub trait LocationGenerator {
 /// generates ColoredKey & BulkheadKey
 #[derive(Default)]
 pub struct KeyGenerator {
-    first_iteration: Option<(String, bool)>,
+    first_iteration: Option<KeyDescriptor>,
 }
 
 impl LocationGenerator for KeyGenerator {
     fn accept_token(&mut self, token: &Token) -> Option<Location> {
         match token {
-            Token::ItemAllocated(name, key_type) => {
-                self.first_iteration = Some((name.clone(), *key_type));
+            Token::ItemAllocated(key_descriptor) => {
+                self.first_iteration = Some(key_descriptor.clone());
 
                 None
             }
             Token::ItemSpawn(zone, id) => match self.first_iteration.take() {
-                Some((name, key_type)) => match key_type {
-                    true => Some(Location::BulkheadKey(name.clone(), *zone, *id)),
-                    false => Some(Location::ColoredKey(name.clone(), *zone, *id)),
-                },
+                Some(key_descriptor) => Some(key_descriptor.into_location(*zone, *id)),
                 None => None,
             },
             _ => None,

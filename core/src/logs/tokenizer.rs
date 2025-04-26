@@ -321,7 +321,7 @@ mod tests {
         for tokens in tokens_v {
             assert_eq!(tokens, vec![
                 Token::GeneratingLevel,
-                Token::ItemAllocated("KEY_GREEN_245".to_string(), false),
+                Token::ItemAllocated("KEY_GREEN_245".try_into().unwrap()),
                 Token::ItemSpawn(50, 48),
                 Token::CollectableAllocated(3),
                 Token::ObjectiveSpawnedOverride(18, "HSU".to_string()),
@@ -349,11 +349,11 @@ mod tests {
         for tokens in tokens_v {
             assert_eq!(tokens, vec![
                 Token::GeneratingLevel,
-                Token::ItemAllocated("KEY_BLUE_184".to_string(), false),
+                Token::ItemAllocated("KEY_BLUE_184".try_into().unwrap()),
                 Token::ItemSpawn(18, 8),
-                Token::ItemAllocated("KEY_PURPLE_421".to_string(), false),
+                Token::ItemAllocated("KEY_PURPLE_421".try_into().unwrap()),
                 Token::ItemSpawn(23, 20),
-                Token::ItemAllocated("KEY_YELLOW_990".to_string(), false),
+                Token::ItemAllocated("KEY_YELLOW_990".try_into().unwrap()),
                 Token::ItemSpawn(23, 37),
                 Token::CollectableAllocated(5),
                 Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
@@ -367,11 +367,11 @@ mod tests {
                 Token::GameEndLost,
                 Token::GameEndAbort,
                 Token::GeneratingLevel,
-                Token::ItemAllocated("KEY_PURPLE_389".to_string(), false),
+                Token::ItemAllocated("KEY_PURPLE_389".try_into().unwrap()),
                 Token::ItemSpawn(18, 1),
-                Token::ItemAllocated("KEY_GREY_560".to_string(), false),
+                Token::ItemAllocated("KEY_GREY_560".try_into().unwrap()),
                 Token::ItemSpawn(23, 21),
-                Token::ItemAllocated("KEY_ORANGE_338".to_string(), false),
+                Token::ItemAllocated("KEY_ORANGE_338".try_into().unwrap()),
                 Token::ItemSpawn(22, 14),
                 Token::CollectableAllocated(5),
                 Token::ObjectiveSpawnedOverride(16, "HSU".to_string()),
