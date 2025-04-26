@@ -6,7 +6,7 @@ use core::{
 };
 use std::{collections::{HashMap, HashSet}, fmt::Display, usize};
 
-use egui::Color32;
+use egui::{Color32, Ui};
 use itertools::Itertools;
 
 use crate::render::Render;
@@ -167,29 +167,51 @@ pub struct StatsWindow {
     run_vec: Vec<LevelRun>,
 
     name_filter: String,
+    negative_name_filter: String,
     min_time_filter: Time,
     max_time_filter: Time,
     min_stamp_filter: usize,
     max_stamp_filter: usize,
 
-    win_filter: bool,
-    loss_filter: bool,
+    win_filter: Option<bool>,
+
+    secondary_filter: Option<bool>,
+    overload_filter: Option<bool>,
 
     string_inputs: [String; 4],
 }
 
 impl StatsWindow {
+    fn make_combo_box(bool: &mut Option<bool>, name: &str, ui: &mut Ui) -> bool {
+        let mut changed = false;
+
+        egui::ComboBox::from_label(name)
+            .selected_text(format!("{:?}", bool))
+            .height(300.0)
+            .show_ui(ui, |ui| {
+
+                changed = changed || ui.selectable_value(bool, None, "None").clicked();
+                changed = changed || ui.selectable_value(bool, Some(false), "False").clicked();
+                changed = changed || ui.selectable_value(bool, Some(true), "True").clicked();
+            
+            });
+
+        changed
+    }
+
     pub fn new(run_vec: Vec<LevelRun>) -> Self {
         let mut s = Self {
             stats_shown: Stats::default(),
             run_vec,
             name_filter: "".to_owned(),
+            negative_name_filter: "".to_owned(),
             min_time_filter: Time::default(),
             max_time_filter: Time::from("99:59:59.999").unwrap(),
             min_stamp_filter: 0,
             max_stamp_filter: usize::MAX,
-            win_filter: false,
-            loss_filter: false,
+            win_filter: None,
+            secondary_filter: None,
+            overload_filter: None,
             string_inputs: [
                 "00:00:00.000".to_owned(),
                 "99:59:59.999".to_owned(),
@@ -204,16 +226,37 @@ impl StatsWindow {
     }
 
     pub fn update(&mut self) {
+
         self.stats_shown = Stats::build(
             self.run_vec
                 .iter()
-                .filter(|r| r.get_name().contains(&self.name_filter))
+                .filter(|r| 
+                    self.name_filter
+                        .split('|')
+                        .any(|filter| 
+                            r
+                                .get_name()
+                                .contains(filter)
+                        )
+                )
+                .filter(|r|
+                    self.negative_name_filter
+                        .split('|')
+                        .all(|filter| {
+                            if filter == "" { return true }
+
+                            !r
+                                .get_name()
+                                .contains(filter)
+                        })
+                )
                 .filter(|r| {
                     self.min_time_filter <= r.get_time() && r.get_time() <= self.max_time_filter
                 })
                 .filter(|r| self.min_stamp_filter <= r.len() && r.len() <= self.max_stamp_filter)
-                .filter(|r| !self.win_filter || r.is_win())
-                .filter(|r| !self.loss_filter || !r.is_win()),
+                .filter(|r| self.win_filter.is_none_or(|f| f == r.is_win()))
+                .filter(|r| self.secondary_filter.is_none_or(|f| f == r.get_objective_str().contains("_sec")))
+                .filter(|r| self.overload_filter.is_none_or(|f| f == r.get_objective_str().contains("_ovrl")))
         )
     }
 }
@@ -230,13 +273,30 @@ impl Render for StatsWindow {
             if ui
                 .add(
                     egui::TextEdit::singleline(&mut self.name_filter)
-                        .desired_width(64.0)
+                        .desired_width(128.0)
                         .background_color(Color32::from_rgb(32, 32, 32))
                         .text_color(Color32::WHITE),
                 )
                 .changed()
             {
                 self.name_filter = self.name_filter.to_uppercase();
+                changed = true;
+            }
+        });
+
+        ui.horizontal(|ui| {
+            ui.add_space(5.0);
+            ui.monospace("Negative name filter: ");
+            if ui
+                .add(
+                    egui::TextEdit::singleline(&mut self.negative_name_filter)
+                        .desired_width(128.0)
+                        .background_color(Color32::from_rgb(32, 32, 32))
+                        .text_color(Color32::WHITE),
+                )
+                .changed()
+            {
+                self.negative_name_filter = self.negative_name_filter.to_uppercase();
                 changed = true;
             }
         });
@@ -317,17 +377,15 @@ impl Render for StatsWindow {
             }
         });
 
-        if ui
-            .checkbox(&mut self.win_filter, "Win filter")
-            .clicked() 
-        {
+        if Self::make_combo_box(&mut self.win_filter, "Win filter", ui) {
             changed = true;
         }
 
-        if ui
-            .checkbox(&mut self.loss_filter, "Loss filter")
-            .clicked()
-        {
+        if Self::make_combo_box(&mut self.secondary_filter, "Secondary filter", ui) {
+            changed = true;
+        }
+
+        if Self::make_combo_box(&mut self.overload_filter, "Overload filter", ui) {
             changed = true;
         }
 
