@@ -110,14 +110,8 @@ impl LocationGenerator for ObjectiveItemGenerator {
         match token {
             Token::CollectableAllocated(zone) => {
                 self.buffer_zones.push((self.dimension, *zone));
-                
-                self.buffer_zones.sort_by(|(d1, z1), (d2, z2)| {
-                    let c = d1.cmp(d2);
-                    match c {
-                        std::cmp::Ordering::Equal => z1.cmp(z2),
-                        _ => c,
-                    }
-                });
+
+                println!("Pushed d{} z{}", self.dimension, zone);
 
                 None
             }
@@ -146,17 +140,27 @@ impl LocationGenerator for ObjectiveItemGenerator {
                 }
             }
             Token::CollectableItemSeed(seed) => {
+                
                 let id = self.buffer_names.remove(0);
+                if id != ItemIdentifier::DataCube && id != ItemIdentifier::DataCubeR8 {
+                    self.buffer_zones.sort_by(|(d1, z1), (d2, z2)| {
+                        let c = d1.cmp(d2);
+                        match c {
+                            std::cmp::Ordering::Equal => z1.cmp(z2),
+                            _ => c,
+                        }
+                    });
+                }
                 let (_, zone) = self.buffer_zones.remove(0);
 
                 Some(Location::Gatherable(id, zone, *seed))
             }
-            Token::DimensionIncrease => {
+            Token::DimensionReset => {
                 self.dimension += 1;
 
                 None
             }
-            Token::DimensionReset => {
+            Token::DimensionIncrease => {
                 self.dimension = 0;
 
                 None
