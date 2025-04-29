@@ -6,6 +6,8 @@ use std::{
     time::Duration,
 };
 
+use might_sleep::prelude::CpuLimiter;
+
 use eframe::CreationContext;
 use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2};
 
@@ -37,6 +39,7 @@ pub struct BaseApp<'a> {
     settings_window: SettingsWindow,
     save_manager: SaveManager,
     collectable_mapper: Option<&'a CollectableMapper>,
+    limiter: CpuLimiter,
 }
 
 impl<'a> BaseApp<'a> {
@@ -91,7 +94,10 @@ impl<'a> BaseApp<'a> {
             save_manager.load_all_runs();
         }
 
+        let limiter = CpuLimiter::new(Duration::from_micros(16667));
+
         Self {
+            limiter,
             app_state: AppState::None,
 
             save_manager,
@@ -231,5 +237,7 @@ impl<'a> eframe::App for BaseApp<'a> {
         // if let Some(path) = self.file_dialog.update(ctx).selected() {
         //   println!("Selected file: {:?}", path);
         // }
+
+        self.limiter.might_sleep();
     }
 }
