@@ -269,11 +269,7 @@ impl<'a> BufferedRender for Mapper<'a> {
         update_data
             .get_run_parser()
             .map(|rp| rp.into_result().get_objective_str())
-            .or(update_data
-                .into_result()
-                .get_runs()
-                .last()
-                .map(|r| r.get_objective_str()))
+            .or(Some(update_data.into_result().get_objective_str()))
             .map(|v| {
                 if &self.compare_obj != v {
                     let mut s = v.trim_end_matches(".save").to_owned();
@@ -281,6 +277,8 @@ impl<'a> BufferedRender for Mapper<'a> {
                     self.load_level_info(&s);
                     self.compare_obj = v.clone();
                     self.level_objective = s;
+
+                    println!("Loaded level info")
                 }
             });
 

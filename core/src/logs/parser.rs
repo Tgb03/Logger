@@ -18,6 +18,8 @@ pub struct ParserResult {
     total_counter: u64,
     locations: Vec<Location>,
 
+    objective_str: String,
+
     player_count: u8,
 
     run_counter: u64,
@@ -60,6 +62,10 @@ impl ParserResult {
 
     pub fn get_level_name(&self) -> &String {
         &self.level_name
+    }
+
+    pub fn get_objective_str(&self) -> &String {
+        &self.objective_str
     }
 }
 
@@ -121,10 +127,12 @@ impl TokenParserT<ParserResult> for Parser {
     fn parse_one_token(&mut self, (time, token): (Time, Token)) -> bool {
         match token {
             Token::PlayerJoinedLobby => {
-                self.result.player_count = self.result.player_count.saturating_add(1)
+                self.result.player_count = self.result.player_count.saturating_add(1);
+                self.result.objective_str = format!("{}_{}.save", self.result.level_name, self.result.player_count);
             }
             Token::PlayerLeftLobby => {
-                self.result.player_count = self.result.player_count.saturating_sub(1)
+                self.result.player_count = self.result.player_count.saturating_sub(1);
+                self.result.objective_str = format!("{}_{}.save", self.result.level_name, self.result.player_count);
             }
             Token::UserExitLobby => self.result.player_count = 0,
             _ => {}
@@ -140,7 +148,10 @@ impl TokenParserT<ParserResult> for Parser {
                         self.result.locations.clear();
                         self.generation_parser = Some(GenerationParser::default());
                     }
-                    Token::SelectExpedition(name) => self.result.level_name = name.to_string(),
+                    Token::SelectExpedition(name) => { 
+                        self.result.level_name = name.to_string();
+                        self.result.objective_str = format!("{}_{}.save", self.result.level_name, self.result.player_count);
+                    }
                     Token::GameStarting => {
                         // #[cfg(debug_assertions)]
                         // eprintln!("Started game.");
