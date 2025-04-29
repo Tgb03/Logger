@@ -77,6 +77,39 @@ pub enum LocationRender {
     Objective(KeyLocationRender),
 }
 
+impl PartialEq for LocationRender {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Key(_), Self::Key(_)) => true,
+            (Self::Collectable(_), Self::Collectable(_)) => true,
+            (Self::Objective(_), Self::Objective(_)) => true,
+            _ => false,
+        }
+    }
+}
+
+impl Eq for LocationRender {}
+
+impl Ord for LocationRender {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        match (self, other) {
+            (LocationRender::Key(_), LocationRender::Key(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Key(_), _) => std::cmp::Ordering::Greater,
+            (LocationRender::Collectable(_), LocationRender::Key(_)) => std::cmp::Ordering::Less,
+            (LocationRender::Collectable(_), LocationRender::Collectable(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Collectable(_), LocationRender::Objective(_)) => std::cmp::Ordering::Greater,
+            (LocationRender::Objective(_), LocationRender::Objective(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Objective(_), _) => std::cmp::Ordering::Less,
+        }
+    }
+}
+
+impl PartialOrd for LocationRender {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Render for LocationRender {
     type Response = ();
 
@@ -193,7 +226,9 @@ impl<'a> Mapper<'a> {
                 self.locations.push(LocationRender::Key(KeyLocationRender {
                     location_text: location.to_string(),
                     color: level_view.lookup(self.locations_len, location),
-                }))
+                }));
+
+                self.locations.sort_by(|a, b| b.cmp(a));
             }
             Location::BigObjective(_, _, _) | Location::BigCollectable(_, _) => {
                 if self.show_objectives == false {
@@ -205,6 +240,8 @@ impl<'a> Mapper<'a> {
                         location_text: location.to_string(),
                         color: level_view.lookup(0, location),
                     }));
+
+                self.locations.sort_by(|a, b| b.cmp(a));
             }
             Location::Gatherable(item_identifier, zone, id) => {
                 if self.show_objectives == false {
@@ -250,6 +287,8 @@ impl<'a> Mapper<'a> {
                                 .lookup(0, &Location::Gatherable(*item_identifier, *zone, id)),
                         )],
                     }));
+
+                self.locations.sort_by(|a, b| b.cmp(a));
             }
         }
     }
@@ -277,8 +316,6 @@ impl<'a> BufferedRender for Mapper<'a> {
                     self.load_level_info(&s);
                     self.compare_obj = v.clone();
                     self.level_objective = s;
-
-                    println!("Loaded level info")
                 }
             });
 
