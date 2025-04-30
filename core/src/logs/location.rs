@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use strum_macros::{Display, FromRepr};
 
-use super::token::Token;
+use super::{data::KeyDescriptor, token::Token};
 
 /// taken from https://github.com/Angry-Maid/rusted-mapper
 #[derive(FromRepr, Display, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
@@ -78,22 +78,19 @@ pub trait LocationGenerator {
 /// generates ColoredKey & BulkheadKey
 #[derive(Default)]
 pub struct KeyGenerator {
-    first_iteration: Option<(String, bool)>,
+    first_iteration: Option<KeyDescriptor>,
 }
 
 impl LocationGenerator for KeyGenerator {
     fn accept_token(&mut self, token: &Token) -> Option<Location> {
         match token {
-            Token::ItemAllocated(name, key_type) => {
-                self.first_iteration = Some((name.clone(), *key_type));
+            Token::ItemAllocated(key_descriptor) => {
+                self.first_iteration = Some(key_descriptor.clone());
 
                 None
             }
             Token::ItemSpawn(zone, id) => match self.first_iteration.take() {
-                Some((name, key_type)) => match key_type {
-                    true => Some(Location::BulkheadKey(name.clone(), *zone, *id)),
-                    false => Some(Location::ColoredKey(name.clone(), *zone, *id)),
-                },
+                Some(key_descriptor) => Some(key_descriptor.into_location(*zone, *id as u64)),
                 None => None,
             },
             _ => None,
@@ -113,14 +110,8 @@ impl LocationGenerator for ObjectiveItemGenerator {
         match token {
             Token::CollectableAllocated(zone) => {
                 self.buffer_zones.push((self.dimension, *zone));
-                
-                self.buffer_zones.sort_by(|(d1, z1), (d2, z2)| {
-                    let c = d1.cmp(d2);
-                    match c {
-                        std::cmp::Ordering::Equal => z1.cmp(z2),
-                        _ => c,
-                    }
-                });
+
+                println!("Pushed d{} z{}", self.dimension, zone);
 
                 None
             }
@@ -129,7 +120,7 @@ impl LocationGenerator for ObjectiveItemGenerator {
                 // unwrap should never fail since we always know we have collectable allocated
                 let (_, zone) = self.buffer_zones.pop().unwrap_or((9999, 9999));
 
-                Some(Location::BigObjective(name.clone(), zone, *id))
+                Some(Location::BigObjective(Into::<&str>::into(name).to_owned(), zone, *id))
             }
             Token::CollectableItemID(id) => {
                 let repr = ItemIdentifier::from_repr(*id).unwrap_or(ItemIdentifier::Unknown(*id));
@@ -149,17 +140,27 @@ impl LocationGenerator for ObjectiveItemGenerator {
                 }
             }
             Token::CollectableItemSeed(seed) => {
+                
                 let id = self.buffer_names.remove(0);
+                if id != ItemIdentifier::DataCube && id != ItemIdentifier::DataCubeR8 {
+                    self.buffer_zones.sort_by(|(d1, z1), (d2, z2)| {
+                        let c = d1.cmp(d2);
+                        match c {
+                            std::cmp::Ordering::Equal => z1.cmp(z2),
+                            _ => c,
+                        }
+                    });
+                }
                 let (_, zone) = self.buffer_zones.remove(0);
 
                 Some(Location::Gatherable(id, zone, *seed))
             }
-            Token::DimensionIncrease => {
+            Token::DimensionReset => {
                 self.dimension += 1;
 
                 None
             }
-            Token::DimensionReset => {
+            Token::DimensionIncrease => {
                 self.dimension = 0;
 
                 None

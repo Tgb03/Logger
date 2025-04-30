@@ -221,7 +221,14 @@ impl<'a> Mapper<'a> {
                 };
 
                 let name_text = format!("{}: ZONE {} at", item_identifier.to_string(), zone);
-                if let Some(LocationRender::Collectable(last_loc)) = self.locations.last_mut() {
+                if let Some(LocationRender::Collectable(last_loc)) = self.locations.iter_mut()
+                    .find(|v| {
+                        if let LocationRender::Collectable(t) = v {
+                            return t.name_text == name_text;
+                        }
+
+                        false
+                    }) {
                     if last_loc.name_text == name_text {
                         last_loc.ids.push((
                             id,
