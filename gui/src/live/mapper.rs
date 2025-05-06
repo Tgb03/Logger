@@ -273,6 +273,8 @@ impl<'a> Mapper<'a> {
                                 .lookup(0, &Location::Gatherable(*item_identifier, *zone, id)),
                         ));
 
+                        last_loc.ids.sort_by_key(|(a, _)| { *a });
+
                         return;
                     }
                 }
