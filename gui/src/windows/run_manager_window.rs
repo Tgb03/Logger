@@ -11,6 +11,7 @@ pub struct RunManagerWindow {
     show_split_times: bool,
 
     bottom_range: usize,
+    merge_splits_string: String,
 }
 
 impl RunManagerWindow {
@@ -36,6 +37,8 @@ impl RunManagerWindow {
                             .clicked()
                         {
                             self.bottom_range = 0;
+                            self.merge_splits_string = save_manager.get_level_merge_split_str(&self.objective)
+                                .unwrap_or_default();
                         };
                     }
                 });
@@ -81,6 +84,21 @@ impl RunManagerWindow {
                 save_manager.load_all_runs();
             }
         });
+
+        ui.horizontal(|ui| {
+            ui.add_space(5.0);
+            ui.monospace("Merge splits: ");
+            if ui.add(
+                egui::TextEdit::singleline(&mut self.merge_splits_string)
+                    .desired_width(512.0)
+                    .background_color(Color32::from_rgb(32, 32, 32))
+                    .text_color(Color32::WHITE),
+            ).changed() {
+                save_manager.set_merge_splits(&self.objective, &self.merge_splits_string);
+            };
+        });
+
+        ui.separator();
 
         if let Some(runs) = save_manager.get_runs_mut(&self.objective) {
             // handles all sorters

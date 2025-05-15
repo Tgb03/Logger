@@ -7,8 +7,7 @@ use std::{
 use directories::ProjectDirs;
 
 use crate::run::{
-    run_enum::RunEnum,
-    traits::{Run, Timed},
+    merge_splits::{LevelsMergeSplits, MergeSplits}, run_enum::RunEnum, traits::{Run, Timed}
 };
 use crate::{
     message::{Message, MessageAcceptor},
@@ -19,12 +18,39 @@ use crate::{
 /// Save manager struct
 ///
 /// This handles loading runs into memory and then ultimately saving them
-#[derive(Default)]
 pub struct SaveManager {
     loaded_runs: HashMap<String, Vec<RunEnum>>,
 
     best_splits: HashMap<String, HashMap<String, Time>>,
     split_names: HashMap<String, Vec<String>>,
+
+    split_merges: LevelsMergeSplits,
+    reversed_merges: HashMap<String, HashMap<String, Vec<String>>>,
+}
+
+impl Default for SaveManager {
+    fn default() -> Self {
+        let split_merges: LevelsMergeSplits = Self::get_directory()
+            .map(|v| v.join("merge_data.bin"))
+            .map(|path| {
+                    std::fs::read(&path).map(|data| {
+                        bincode::deserialize(&data)
+                            .ok()
+                })
+                .ok()
+                .flatten()
+            })
+            .flatten()
+            .unwrap_or_default();
+
+        Self { 
+            loaded_runs: Default::default(), 
+            best_splits: Default::default(), 
+            split_names: Default::default(), 
+            reversed_merges: split_merges.reversed(),
+            split_merges, 
+        }
+    }
 }
 
 impl SaveManager {
@@ -103,14 +129,22 @@ impl SaveManager {
     pub fn calculate_best_splits(&mut self, objective_id: &String) {
         let empty = Vec::new();
         let runs = self.loaded_runs.get(objective_id).unwrap_or(&empty);
+        let merge_splits = self.split_merges.get_level(objective_id);
 
         let mut build_vec: Vec<String> = Vec::new();
-        let mut build_hash: HashMap<String, Time> = HashMap::new();
+        let mut build_hash: HashMap<String, (Time, u32)> = HashMap::new();
         let mut set: HashSet<String> = HashSet::new();
 
         for run in runs {
+            let mut times = HashMap::new();
+
             for split in run.get_splits() {
-                let name: &String = split.get_name();
+                let name = split.get_name();
+
+                let name = merge_splits
+                    .map(|ms| ms.get_split(name))
+                    .flatten()
+                    .unwrap_or(name);
 
                 if name != "LOSS" && !set.contains(name) {
                     //println!("SET: {:?}", set);
@@ -118,16 +152,38 @@ impl SaveManager {
                     set.insert(name.clone());
                 }
 
-                if build_hash.get(name).is_none_or(|v| v > &split.get_time()) {
-                    build_hash.insert(name.clone(), split.get_time());
+                match times.get_mut(name) {
+                    Some((time, count)) => {
+                        *time += split.get_time();
+                        *count += 1;
+                    },
+                    None => { times.insert(name.clone(), (split.get_time(), 1)); },
+                };
+            }
+
+            for (name, (time, count)) in times {
+                match build_hash.get(&name) {
+                    Some((b_time, b_count)) => {
+                        if count < *b_count { continue; }
+
+                        if time < *b_time || count > *b_count { 
+                            build_hash.insert(name, (time, count)); 
+                        }
+                    },
+                    None => { build_hash.insert(name, (time, count)); },
                 }
             }
+        }
+
+        let mut bh = HashMap::new();
+        for (key, (value, _)) in build_hash {
+            bh.insert(key, value);
         }
 
         // println!("Inserted: {:?}", build_vec);
         // println!("Hashed: {:?}", build_hash);
         self.split_names.insert(objective_id.clone(), build_vec);
-        self.best_splits.insert(objective_id.clone(), build_hash);
+        self.best_splits.insert(objective_id.clone(), bh);
     }
 
     /// save multiple runs into the RAM memory.
@@ -329,6 +385,25 @@ impl SaveManager {
         v.sort_by_key(|a| Into::<String>::into(a.to_string()));
         v
     }
+
+    pub fn set_merge_splits(&mut self, objective: &String, data: &str) {
+        let merged: MergeSplits = data.into();
+
+        self.reversed_merges.insert(objective.clone(), merged.reverse());
+        self.split_merges.add_level(objective, merged);
+
+        self.calculate_best_splits(objective);
+    }
+
+    pub fn get_splits_req(&self, objective: &String, split_name: &String) -> Option<&Vec<String>> {
+        self.reversed_merges.get(objective)?
+            .get(split_name)
+    }
+
+    pub fn get_level_merge_split_str(&self, objective: &String) -> Option<String> {
+        self.split_merges.get_level(objective)
+            .map(|v| v.into())
+    }
 }
 
 impl Sortable<RunEnum> for SaveManager {
@@ -360,6 +435,17 @@ impl MessageAcceptor for SaveManager {
                 SaveMessage::SortByObjective(objective) => self.sort_by_objective(&objective),
                 SaveMessage::SortByTime(objective) => self.sort_by_time(&objective),
                 SaveMessage::SortByStamps(objective) => self.sort_by_stamps(&objective),
+            }
+        }
+    }
+}
+
+impl Drop for SaveManager {
+    // save the merge splits automatically
+    fn drop(&mut self) {
+        if let Some(file_path) = Self::get_directory().map(|v| v.join("merge_data.bin")) {
+            if let Ok(bin) = bincode::serialize(&self.split_merges) {
+                let _ = std::fs::write(file_path, bin);
             }
         }
     }
