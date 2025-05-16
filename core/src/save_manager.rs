@@ -85,6 +85,12 @@ impl SaveManager {
         return Some(objective);
     }
 
+    pub fn get_split_merge(&self, objective: &String, split_name: &String) -> Option<&String> {
+        self.split_merges.get_level(objective)
+            .map(|v| v.get_split(split_name))
+            .flatten()
+    }
+
     pub fn get_split_names(&self, objective: &String) -> Option<&Vec<String>> {
         self.split_names.get(objective)
     }
@@ -396,7 +402,8 @@ impl SaveManager {
     }
 
     pub fn get_splits_req(&self, objective: &String, split_name: &String) -> Option<&Vec<String>> {
-        self.reversed_merges.get(objective)?
+        self.reversed_merges
+            .get(objective)?
             .get(split_name)
     }
 
