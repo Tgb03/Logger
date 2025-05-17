@@ -123,7 +123,7 @@ impl RunManagerWindow {
             if ui.button(" > ").clicked() {
                 self.bottom_range = (self.bottom_range + 1).min(split_names.len() - 1);
             }
-            for (id, name) in split_names[self.bottom_range..].iter().enumerate() {
+            for (id, name) in split_names.iter().skip(self.bottom_range).enumerate() {
                 ui.label(format!("{: ^12}", name));
 
                 min_size[id] = min_size[id].max(name.len());
@@ -132,7 +132,7 @@ impl RunManagerWindow {
 
         ui.horizontal(|ui| {
             ui.label("Best split for each part:           ");
-            for (id, name) in split_names[self.bottom_range..].iter().enumerate() {
+            for (id, name) in split_names.iter().skip(self.bottom_range).enumerate() {
                 ui.label(format!(
                     "{: ^fill$}",
                     best_splits

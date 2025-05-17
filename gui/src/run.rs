@@ -66,12 +66,12 @@ where
             ui.label(format!("{:03}", self.len()));
 
             let mut running_total = Time::default();
-            for id in 0..range.start {
+            for id in 0..range.start.min(split_names.len()) {
                 running_total += grab_time(self, objective_str, &split_names[id], save_manager)
                     .unwrap_or_default();
             }
 
-            let first = range.start;
+            let first = range.start.min(split_names.len());
 
             for id in range {
                 if let Some(time) = grab_time(self, objective_str, &split_names[id], save_manager) {
