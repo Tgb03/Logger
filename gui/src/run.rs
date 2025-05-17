@@ -1,6 +1,6 @@
 use core::{
     run::{
-        objectives::{Objective, objective_enum::ObjectiveEnum},
+        objectives::{objective_enum::ObjectiveEnum, Objective},
         traits::Run,
     },
     save_manager::SaveManager,
@@ -66,16 +66,15 @@ where
             ui.label(format!("{:03}", self.len()));
 
             let mut running_total = Time::default();
-            for id in 0..range.start {
-                if let Some(time) = self.get_time_for_split(&split_names[id]) {
-                    running_total += time;
-                }
+            for id in 0..range.start.min(split_names.len()) {
+                running_total += grab_time(self, objective_str, &split_names[id], save_manager)
+                    .unwrap_or_default();
             }
 
-            let first = range.start;
+            let first = range.start.min(split_names.len());
 
             for id in range {
-                if let Some(time) = self.get_time_for_split(&split_names[id]) {
+                if let Some(time) = grab_time(self, objective_str, &split_names[id], save_manager) {
                     if show_split_times {
                         let color = match save_manager
                             .get_best_split(&objective_str, &split_names[id])
@@ -108,4 +107,35 @@ where
 
         result
     }
+}
+
+fn grab_time<R: Run>(
+    run: &R,
+    objective_str: &String,
+    split_name: &String,
+    save_manager: &SaveManager,
+) -> Option<Time> {
+    let splits_vec = save_manager.get_splits_req(objective_str, split_name);
+    match splits_vec {
+        Some(splits_vec) => {
+            let mut result = Time::default();
+            for it in splits_vec
+                .iter()
+                .map(|v| run.get_time_for_split(v)) {
+                
+                if let Some(it) = it {
+                    result += it;
+                } else {
+                    return None;
+                }
+            }
+            return Some(result)
+        },
+        None => {
+            if let Some(time) = run.get_time_for_split(split_name) {
+                return Some(time)
+            }
+        },
+    };
+    None
 }

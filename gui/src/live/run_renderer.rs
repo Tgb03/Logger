@@ -141,12 +141,6 @@ where
             Some(_) => save_manager.get_best_run(&objective),
             None => None,
         };
-        let best_splits = self
-            .render_obj
-            .compared_best
-            .as_ref()
-            .map(|_| save_manager.get_best_splits(&objective))
-            .flatten();
 
         for split in current_run.get_splits().skip(self.splits_added_count) {
             let time = split.get_time();
@@ -183,18 +177,44 @@ where
                 _ => {}
             }
 
-            let best_split = best_splits.map(|m| m.get(name)).flatten().cloned();
+            let best_split = save_manager.get_best_split(
+                &objective, 
+                save_manager.get_split_merge(&objective, name)
+                    .unwrap_or(name)
+            ).cloned();
+            let req_splits = save_manager.get_split_merge(&objective, name)
+                .map(|v| save_manager.get_splits_req(&objective, v))
+                .flatten();
+            let split_time_total = req_splits
+                .map(|v| {
+                    v
+                        .iter()
+                        .map(|s| current_run.get_time_for_split(s))
+                        .fold(Some(Time::default()), |a, b| {
+                            match (a, b) {
+                                (Some(t1), Some(t2)) => Some(t1 + t2),
+                                _ => None
+                            }
+                        })
+                })
+                .unwrap_or(Some(time));
+            println!("OBJ: {}", objective);
+            println!("BRUK: {:?} vs {:?} and {:?}", split_time_total, best_split, req_splits);
             match (best_split, &mut self.render_obj.compared_best) {
                 (Some(best_split), Some(buffer)) => {
-                    buffer.push_back(match time.cmp(&best_split) {
-                        std::cmp::Ordering::Less => {
-                            ((best_split - time).to_string_no_hours(), Color32::GREEN)
-                        }
-                        std::cmp::Ordering::Equal => ("00:00.000".to_string(), Color32::WHITE),
-                        std::cmp::Ordering::Greater => {
-                            ((time - best_split).to_string_no_hours(), Color32::RED)
-                        }
-                    });
+                    if let Some(time) = split_time_total {
+                        buffer.push_back(match time.cmp(&best_split) {
+                            std::cmp::Ordering::Less => {
+                                ((best_split - time).to_string_no_hours(), Color32::GREEN)
+                            }
+                            std::cmp::Ordering::Equal => ("00:00.000".to_string(), Color32::WHITE),
+                            std::cmp::Ordering::Greater => {
+                                ((time - best_split).to_string_no_hours(), Color32::RED)
+                            }
+                        });
+                    } else {
+                        buffer.push_back(("         ".to_string(), Color32::WHITE));
+                    }
                 }
                 (None, Some(buffer)) => {
                     buffer.push_back(("         ".to_string(), Color32::WHITE));
