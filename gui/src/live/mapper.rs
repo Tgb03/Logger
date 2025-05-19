@@ -18,9 +18,23 @@ use crate::{
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
 
+#[derive(Clone)]
 pub enum MapperColorError {
     SpannedError(SpannedError),
     FileNotFound,
+}
+
+impl Render for MapperColorError {
+    type Response = ();
+
+    fn render(&mut self, ui: &mut Ui) -> Self::Response {
+        match self {
+            MapperColorError::SpannedError(spanned_error) => {
+                ui.colored_label(Color32::RED, format!("{:?}", spanned_error));
+            },
+            MapperColorError::FileNotFound => {},
+        }
+    }
 }
 
 struct KeyLocationRender {
@@ -75,6 +89,8 @@ pub enum LocationRender {
     Collectable(ObjectiveLocationRender),
     #[allow(private_interfaces)]
     Objective(KeyLocationRender),
+    #[allow(private_interfaces)]
+    Error(MapperColorError),
 }
 
 impl PartialEq for LocationRender {
@@ -90,6 +106,12 @@ impl PartialEq for LocationRender {
 
 impl Eq for LocationRender {}
 
+impl PartialOrd for LocationRender {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Ord for LocationRender {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         match (self, other) {
@@ -100,13 +122,10 @@ impl Ord for LocationRender {
             (LocationRender::Collectable(_), LocationRender::Objective(_)) => std::cmp::Ordering::Greater,
             (LocationRender::Objective(_), LocationRender::Objective(_)) => std::cmp::Ordering::Equal,
             (LocationRender::Objective(_), _) => std::cmp::Ordering::Less,
+            (LocationRender::Error(_), LocationRender::Error(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Error(_), _) => std::cmp::Ordering::Greater,
+            (_, LocationRender::Error(_)) => std::cmp::Ordering::Less,
         }
-    }
-}
-
-impl PartialOrd for LocationRender {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
     }
 }
 
@@ -122,6 +141,9 @@ impl Render for LocationRender {
             LocationRender::Collectable(objective_location_render) => {
                 objective_location_render.render(ui)
             }
+            LocationRender::Error(mapper_color_error) => {
+                mapper_color_error.render(ui)
+            },
         }
     }
 }
@@ -214,7 +236,20 @@ impl<'a> Mapper<'a> {
         let level_view = self
             .location_colors
             .get(&self.level_objective)
-            .map(|v| v.as_ref().ok())
+            .map(|v| {
+                if let Err(e) = v {
+                    if !self.locations.iter().any(|v| {
+                        match (v, e) {
+                            (LocationRender::Error(_), MapperColorError::SpannedError(_)) => true,
+                            _ => false
+                        }
+                    }) {
+                        self.locations.push(LocationRender::Error(e.clone()));
+                    }
+                }
+
+                v.as_ref().ok()
+            })
             .flatten();
 
         if level_view.is_some_and(|v| !v.is_valid_zone(&location.get_zone())) {
