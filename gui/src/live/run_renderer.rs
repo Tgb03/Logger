@@ -198,8 +198,6 @@ where
                         })
                 })
                 .unwrap_or(Some(time));
-            println!("OBJ: {}", objective);
-            println!("BRUK: {:?} vs {:?} and {:?}", split_time_total, best_split, req_splits);
             match (best_split, &mut self.render_obj.compared_best) {
                 (Some(best_split), Some(buffer)) => {
                     if let Some(time) = split_time_total {

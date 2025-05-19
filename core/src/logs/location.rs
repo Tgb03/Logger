@@ -111,8 +111,6 @@ impl LocationGenerator for ObjectiveItemGenerator {
             Token::CollectableAllocated(zone) => {
                 self.buffer_zones.push((self.dimension, *zone));
 
-                println!("Pushed d{} z{}", self.dimension, zone);
-
                 None
             }
             // found an item that does not have a seed
