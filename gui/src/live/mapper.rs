@@ -167,6 +167,7 @@ pub struct Mapper<'a> {
 
     locations: Vec<LocationRender>,
     locations_len: usize,
+    key_len: usize,
     run_counter: u64,
 
     show_objectives: bool,
@@ -186,6 +187,7 @@ impl<'a> Mapper<'a> {
             location_colors: Default::default(),
             locations: Default::default(),
             locations_len: 0,
+            key_len: 0,
             run_counter: 0,
             show_objectives: settings_window.get_show_objective_items(),
             level_name: "".to_owned(),
@@ -260,10 +262,11 @@ impl<'a> Mapper<'a> {
             Location::ColoredKey(_, _, _) | Location::BulkheadKey(_, _, _) => {
                 self.locations.push(LocationRender::Key(KeyLocationRender {
                     location_text: location.to_string(),
-                    color: level_view.lookup(self.locations_len, location),
+                    color: level_view.lookup(self.key_len, location),
                 }));
 
                 self.locations.sort_by(|a, b| b.cmp(a));
+                self.key_len += 1;
             }
             Location::BigObjective(_, _, _) | Location::BigCollectable(_, _) => {
                 if self.show_objectives == false {
@@ -378,5 +381,6 @@ impl<'a> BufferedRender for Mapper<'a> {
     fn reset(&mut self) {
         self.locations.clear();
         self.locations_len = 0;
+        self.key_len = 0;
     }
 }
