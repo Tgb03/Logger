@@ -15,7 +15,10 @@ enum MapperColor {
     Blue,
     Green,
     Yellow,
+    Orange,
     Red,
+    Purple,
+    Grey,
     RGB(u8, u8, u8),
 }
 
@@ -26,8 +29,11 @@ impl From<&MapperColor> for Color32 {
             MapperColor::Blue => Color32::from_rgb(30, 155, 255),
             MapperColor::Green => Color32::from_rgb(45, 255, 30),
             MapperColor::Yellow => Color32::from_rgb(255, 255, 30),
+            MapperColor::Orange => Color32::from_rgb(255, 69, 0),
             MapperColor::Red => Color32::from_rgb(255, 15, 15),
             MapperColor::RGB(r, g, b) => Color32::from_rgb(*r, *g, *b),
+            MapperColor::Purple => Color32::from_rgb(160, 32, 240),
+            MapperColor::Grey => Color32::from_rgb(100, 100, 100),
         }
     }
 }
