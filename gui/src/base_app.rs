@@ -89,6 +89,7 @@ impl<'a> BaseApp<'a> {
 
         let settings_window = SettingsWindow::default();
         let mut save_manager = SaveManager::default();
+        save_manager.set_automatic_saving(settings_window.get_automatic_saving());
 
         if settings_window.get_automatic_loading() {
             save_manager.load_all_runs();
@@ -146,6 +147,7 @@ impl<'a> eframe::App for BaseApp<'a> {
                             self.app_state = AppState::None;
 
                             self.settings_window.save_settings();
+                            self.save_manager.set_automatic_saving(self.settings_window.get_automatic_saving());
                         }
 
                         return;

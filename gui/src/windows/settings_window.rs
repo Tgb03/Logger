@@ -14,6 +14,7 @@ pub struct SettingsWindow {
 
     live_rectangle: Rect,
     automatic_loading: bool,
+    automatic_saving: bool,
     compare_to_record: bool,
     compare_to_theoretical: bool,
 
@@ -68,6 +69,10 @@ impl Default for SettingsWindow {
         let automatic_loading = match props.get("automatic_loading") {
             Some(s) => s.parse::<bool>().unwrap_or(true),
             None => true,
+        };
+        let automatic_saving = match props.get("automatic_saving") {
+            Some(s) => s.parse::<bool>().unwrap_or(false),
+            None => false,
         };
         let compare_to_record = match props.get("compare_to_record") {
             Some(s) => s.parse::<bool>().unwrap_or(true),
@@ -141,6 +146,7 @@ impl Default for SettingsWindow {
             splitter_length,
             live_rectangle,
             automatic_loading,
+            automatic_saving,
             compare_to_record,
             compare_to_theoretical,
             show_warden_mapper,
@@ -208,6 +214,10 @@ impl SettingsWindow {
 
     pub fn get_automatic_loading(&self) -> bool {
         self.automatic_loading
+    }
+
+    pub fn get_automatic_saving(&self) -> bool {
+        self.automatic_saving
     }
 
     pub fn get_compare_to_record(&self) -> bool {
@@ -507,6 +517,11 @@ impl SettingsWindow {
                     ui.add_space(5.0);
                     ui.checkbox(&mut self.automatic_loading, "Automatic Loading of Runs");
                 });
+
+                ui.horizontal(|ui| {
+                    ui.add_space(5.0);
+                    ui.checkbox(&mut self.automatic_saving, "Automatic Saving of Runs");
+                });
             });
 
         ui.separator();
@@ -523,6 +538,7 @@ impl SettingsWindow {
         s.push_str(&format!("y_pos: {}\n", self.live_rectangle.top()));
         s.push_str(&format!("x_size: {}\n", self.live_rectangle.width()));
         s.push_str(&format!("automatic_loading: {}\n", self.automatic_loading));
+        s.push_str(&format!("automatic_saving: {}\n", self.automatic_saving));
         s.push_str(&format!("compare_to_record: {}\n", self.compare_to_record));
         s.push_str(&format!("transparency: {}\n", self.transparency));
         s.push_str(&format!("show_timer: {}\n", self.show_timer));

@@ -33,6 +33,8 @@ pub struct SaveManager {
 
     split_merges: LevelsMergeSplits,
     reversed_merges: HashMap<String, HashMap<String, Vec<String>>>,
+
+    automatic_saving: bool,
 }
 
 impl Default for SaveManager {
@@ -55,6 +57,7 @@ impl Default for SaveManager {
             best_splits: Default::default(), 
             split_names: Default::default(), 
             reversed_merges: split_merges.reversed(),
+            automatic_saving: false,
             split_merges, 
         }
     }
@@ -90,6 +93,10 @@ impl SaveManager {
         self.calculate_best_splits(&objective);
 
         return Some(objective);
+    }
+
+    pub fn set_automatic_saving(&mut self, automatic_saving: bool) {
+        self.automatic_saving = automatic_saving;
     }
 
     pub fn get_split_merge(&self, objective: &String, split_name: &String) -> Option<&String> {
@@ -380,6 +387,7 @@ impl SaveManager {
 
     /// save all loaded runs to files
     pub fn save_to_files(&self) {
+        println!("SAVED UWU");
         for (key, vec) in &self.loaded_runs {
             let file_path =
                 Self::get_directory().map(|path| path.join(Into::<String>::into(key.to_string())));
@@ -433,6 +441,9 @@ impl Drop for SaveManager {
             if let Ok(bin) = bincode::serialize(&self.split_merges) {
                 let _ = std::fs::write(file_path, bin);
             }
+        }
+        if self.automatic_saving {
+            self.save_to_files();
         }
     }
 }
