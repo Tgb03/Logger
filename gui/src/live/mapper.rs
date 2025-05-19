@@ -18,9 +18,23 @@ use crate::{
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
 
+#[derive(Clone)]
 pub enum MapperColorError {
     SpannedError(SpannedError),
     FileNotFound,
+}
+
+impl Render for MapperColorError {
+    type Response = ();
+
+    fn render(&mut self, ui: &mut Ui) -> Self::Response {
+        match self {
+            MapperColorError::SpannedError(spanned_error) => {
+                ui.colored_label(Color32::RED, format!("{:?}", spanned_error));
+            },
+            MapperColorError::FileNotFound => {},
+        }
+    }
 }
 
 struct KeyLocationRender {
@@ -75,6 +89,8 @@ pub enum LocationRender {
     Collectable(ObjectiveLocationRender),
     #[allow(private_interfaces)]
     Objective(KeyLocationRender),
+    #[allow(private_interfaces)]
+    Error(MapperColorError),
 }
 
 impl PartialEq for LocationRender {
@@ -90,6 +106,12 @@ impl PartialEq for LocationRender {
 
 impl Eq for LocationRender {}
 
+impl PartialOrd for LocationRender {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Ord for LocationRender {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         match (self, other) {
@@ -100,13 +122,10 @@ impl Ord for LocationRender {
             (LocationRender::Collectable(_), LocationRender::Objective(_)) => std::cmp::Ordering::Greater,
             (LocationRender::Objective(_), LocationRender::Objective(_)) => std::cmp::Ordering::Equal,
             (LocationRender::Objective(_), _) => std::cmp::Ordering::Less,
+            (LocationRender::Error(_), LocationRender::Error(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Error(_), _) => std::cmp::Ordering::Greater,
+            (_, LocationRender::Error(_)) => std::cmp::Ordering::Less,
         }
-    }
-}
-
-impl PartialOrd for LocationRender {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
     }
 }
 
@@ -122,6 +141,9 @@ impl Render for LocationRender {
             LocationRender::Collectable(objective_location_render) => {
                 objective_location_render.render(ui)
             }
+            LocationRender::Error(mapper_color_error) => {
+                mapper_color_error.render(ui)
+            },
         }
     }
 }
@@ -145,6 +167,7 @@ pub struct Mapper<'a> {
 
     locations: Vec<LocationRender>,
     locations_len: usize,
+    key_len: usize,
     run_counter: u64,
 
     show_objectives: bool,
@@ -164,6 +187,7 @@ impl<'a> Mapper<'a> {
             location_colors: Default::default(),
             locations: Default::default(),
             locations_len: 0,
+            key_len: 0,
             run_counter: 0,
             show_objectives: settings_window.get_show_objective_items(),
             level_name: "".to_owned(),
@@ -214,7 +238,20 @@ impl<'a> Mapper<'a> {
         let level_view = self
             .location_colors
             .get(&self.level_objective)
-            .map(|v| v.as_ref().ok())
+            .map(|v| {
+                if let Err(e) = v {
+                    if !self.locations.iter().any(|v| {
+                        match (v, e) {
+                            (LocationRender::Error(_), MapperColorError::SpannedError(_)) => true,
+                            _ => false
+                        }
+                    }) {
+                        self.locations.push(LocationRender::Error(e.clone()));
+                    }
+                }
+
+                v.as_ref().ok()
+            })
             .flatten();
 
         if level_view.is_some_and(|v| !v.is_valid_zone(&location.get_zone())) {
@@ -225,10 +262,11 @@ impl<'a> Mapper<'a> {
             Location::ColoredKey(_, _, _) | Location::BulkheadKey(_, _, _) => {
                 self.locations.push(LocationRender::Key(KeyLocationRender {
                     location_text: location.to_string(),
-                    color: level_view.lookup(self.locations_len, location),
+                    color: level_view.lookup(self.key_len, location),
                 }));
 
                 self.locations.sort_by(|a, b| b.cmp(a));
+                self.key_len += 1;
             }
             Location::BigObjective(_, _, _) | Location::BigCollectable(_, _) => {
                 if self.show_objectives == false {
@@ -343,5 +381,6 @@ impl<'a> BufferedRender for Mapper<'a> {
     fn reset(&mut self) {
         self.locations.clear();
         self.locations_len = 0;
+        self.key_len = 0;
     }
 }

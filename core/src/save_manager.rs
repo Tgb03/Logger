@@ -6,11 +6,18 @@ use std::{
 
 use directories::ProjectDirs;
 
-use crate::run::{
-    merge_splits::{LevelsMergeSplits, MergeSplits}, run_enum::RunEnum, traits::{Run, Timed}
-};
 use crate::{
-    message::{Message, MessageAcceptor},
+    run::{
+        merge_splits::{
+            LevelsMergeSplits, 
+            MergeSplits
+        }, 
+        run_enum::RunEnum, 
+        traits::{
+            Run, 
+            Timed
+        }
+    },
     sort::Sortable,
     time::Time,
 };
@@ -26,6 +33,8 @@ pub struct SaveManager {
 
     split_merges: LevelsMergeSplits,
     reversed_merges: HashMap<String, HashMap<String, Vec<String>>>,
+
+    automatic_saving: bool,
 }
 
 impl Default for SaveManager {
@@ -48,6 +57,7 @@ impl Default for SaveManager {
             best_splits: Default::default(), 
             split_names: Default::default(), 
             reversed_merges: split_merges.reversed(),
+            automatic_saving: false,
             split_merges, 
         }
     }
@@ -83,6 +93,10 @@ impl SaveManager {
         self.calculate_best_splits(&objective);
 
         return Some(objective);
+    }
+
+    pub fn set_automatic_saving(&mut self, automatic_saving: bool) {
+        self.automatic_saving = automatic_saving;
     }
 
     pub fn get_split_merge(&self, objective: &String, split_name: &String) -> Option<&String> {
@@ -419,34 +433,6 @@ impl Sortable<RunEnum> for SaveManager {
     }
 }
 
-pub enum SaveMessage {
-    SaveRun(RunEnum),
-    SaveMultipleRuns(Vec<RunEnum>),
-    SaveToFile(String),
-    SaveToFilesALL,
-    SortByWin(String),
-    SortByObjective(String),
-    SortByTime(String),
-    SortByStamps(String),
-}
-
-impl MessageAcceptor for SaveManager {
-    fn accept_message(&mut self, message: &Message) {
-        if let Message::SaveManager(message) = message {
-            match message {
-                SaveMessage::SaveRun(run_enum) => self.save(run_enum.clone()),
-                SaveMessage::SaveMultipleRuns(run_enums) => self.save_multiple(run_enums.clone()),
-                SaveMessage::SaveToFile(objective) => self.save_to_file(&objective),
-                SaveMessage::SaveToFilesALL => self.save_to_files(),
-                SaveMessage::SortByWin(objective) => self.sort_by_win(&objective),
-                SaveMessage::SortByObjective(objective) => self.sort_by_objective(&objective),
-                SaveMessage::SortByTime(objective) => self.sort_by_time(&objective),
-                SaveMessage::SortByStamps(objective) => self.sort_by_stamps(&objective),
-            }
-        }
-    }
-}
-
 impl Drop for SaveManager {
     // save the merge splits automatically
     fn drop(&mut self) {
@@ -454,6 +440,9 @@ impl Drop for SaveManager {
             if let Ok(bin) = bincode::serialize(&self.split_merges) {
                 let _ = std::fs::write(file_path, bin);
             }
+        }
+        if self.automatic_saving {
+            self.save_to_files();
         }
     }
 }
