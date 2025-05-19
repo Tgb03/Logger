@@ -6,11 +6,18 @@ use std::{
 
 use directories::ProjectDirs;
 
-use crate::run::{
-    merge_splits::{LevelsMergeSplits, MergeSplits}, run_enum::RunEnum, traits::{Run, Timed}
-};
 use crate::{
-    message::{Message, MessageAcceptor},
+    run::{
+        merge_splits::{
+            LevelsMergeSplits, 
+            MergeSplits
+        }, 
+        run_enum::RunEnum, 
+        traits::{
+            Run, 
+            Timed
+        }
+    },
     sort::Sortable,
     time::Time,
 };
@@ -416,34 +423,6 @@ impl SaveManager {
 impl Sortable<RunEnum> for SaveManager {
     fn get_vec(&mut self, objective: &String) -> Option<&mut Vec<RunEnum>> {
         self.loaded_runs.get_mut(objective)
-    }
-}
-
-pub enum SaveMessage {
-    SaveRun(RunEnum),
-    SaveMultipleRuns(Vec<RunEnum>),
-    SaveToFile(String),
-    SaveToFilesALL,
-    SortByWin(String),
-    SortByObjective(String),
-    SortByTime(String),
-    SortByStamps(String),
-}
-
-impl MessageAcceptor for SaveManager {
-    fn accept_message(&mut self, message: &Message) {
-        if let Message::SaveManager(message) = message {
-            match message {
-                SaveMessage::SaveRun(run_enum) => self.save(run_enum.clone()),
-                SaveMessage::SaveMultipleRuns(run_enums) => self.save_multiple(run_enums.clone()),
-                SaveMessage::SaveToFile(objective) => self.save_to_file(&objective),
-                SaveMessage::SaveToFilesALL => self.save_to_files(),
-                SaveMessage::SortByWin(objective) => self.sort_by_win(&objective),
-                SaveMessage::SortByObjective(objective) => self.sort_by_objective(&objective),
-                SaveMessage::SortByTime(objective) => self.sort_by_time(&objective),
-                SaveMessage::SortByStamps(objective) => self.sort_by_stamps(&objective),
-            }
-        }
     }
 }
 
