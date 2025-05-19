@@ -1,8 +1,8 @@
 use core::logs::location::Location;
-use std::collections::{HashMap, HashSet};
+use std::{collections::{HashMap, HashSet}, fmt, ops::RangeInclusive};
 
 use egui::Color32;
-use serde::{Deserialize, Serialize};
+use serde::{de::{self, SeqAccess, Visitor}, Deserialize, Deserializer, Serialize};
 
 pub trait LookUpColor {
     fn lookup(&self, location_vec_id: usize, location: &Location) -> Option<Color32>;
@@ -32,10 +32,65 @@ impl From<&MapperColor> for Color32 {
     }
 }
 
+#[derive(Serialize, Debug)]
+enum KeyID {
+    VecID(u64),
+    RangeID(RangeInclusive<u64>)
+}
+
+impl KeyID {
+    pub fn add_to_set(self, set: &mut HashSet<u64>) {
+        match self {
+            KeyID::VecID(id) => { set.insert(id); },
+            KeyID::RangeID(range) => {
+                for id in range {
+                    set.insert(id);
+                }
+            },
+        };
+    }
+}
+
+impl<'de> Deserialize<'de> for KeyID {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct KeyIDVisitor;
+
+        impl<'de> Visitor<'de> for KeyIDVisitor {
+            type Value = KeyID;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a u64 or a two-element array representing a range")
+            }
+
+            fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+                Ok(KeyID::VecID(value))
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: SeqAccess<'de>,
+            {
+                let start: u64 = seq
+                    .next_element()?
+                    .ok_or_else(|| de::Error::invalid_length(0, &self))?;
+                let end: u64 = seq
+                    .next_element()?
+                    .ok_or_else(|| de::Error::invalid_length(1, &self))?;
+                Ok(KeyID::RangeID(start..=end))
+            }
+        }
+
+        deserializer.deserialize_any(KeyIDVisitor)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LevelView {
-    key_colors: Vec<HashMap<u64, HashMap<MapperColor, Vec<u64>>>>,
-    objective_colors: HashMap<String, HashMap<u64, HashMap<MapperColor, Vec<u64>>>>,
+    key_colors: Vec<HashMap<u64, HashMap<MapperColor, Vec<KeyID>>>>,
+    objective_colors: HashMap<String, HashMap<u64, HashMap<MapperColor, Vec<KeyID>>>>,
     ignore_zones: Vec<u64>,
     default_color: MapperColor,
 }
@@ -57,7 +112,15 @@ impl Into<OptimizedLevelView> for LevelView {
                     .map(|(key, inner_map)| {
                         let transformed_vec: Vec<(Color32, HashSet<u64>)> = inner_map
                             .into_iter()
-                            .map(|(color, values)| ((&color).into(), values.into_iter().collect()))
+                            .map(|(color, values)| (
+                                (&color).into(), 
+                                values.into_iter()
+                                    .fold(HashSet::new(), |mut set, id| {
+                                        id.add_to_set(&mut set);
+
+                                        set
+                                    })
+                            ))
                             .collect();
                         (key, transformed_vec)
                     })
@@ -76,7 +139,12 @@ impl Into<OptimizedLevelView> for LevelView {
                             let transformed_vec: Vec<(Color32, HashSet<u64>)> = map
                                 .into_iter()
                                 .map(|(color, values)| {
-                                    ((&color).into(), values.into_iter().collect())
+                                    ((&color).into(), values.into_iter()
+                                    .fold(HashSet::new(), |mut set, id| {
+                                        id.add_to_set(&mut set);
+
+                                        set
+                                    }))
                                 })
                                 .collect();
                             (key, transformed_vec)
