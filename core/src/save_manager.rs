@@ -387,7 +387,6 @@ impl SaveManager {
 
     /// save all loaded runs to files
     pub fn save_to_files(&self) {
-        println!("SAVED UWU");
         for (key, vec) in &self.loaded_runs {
             let file_path =
                 Self::get_directory().map(|path| path.join(Into::<String>::into(key.to_string())));
