@@ -10,7 +10,7 @@ pub trait Tokenizer {
 
         for line in lines.split('\n').map(|v| v.trim_start()) {
             if let Some(token) = self.tokenize_single(line) {
-                if let Ok(time) = Time::from(line) {
+                if let Some(time) = Time::from(line) {
                     // #[cfg(debug_assertions)]
                     // eprintln!("{} Token parsed:{:?}", time.to_string(), token);
                     result.push((time, token));
@@ -21,6 +21,54 @@ pub trait Tokenizer {
         result
     }
 }
+
+pub struct TokenizeIter<'a, I, T>
+where
+    I: Iterator<Item = &'a str>,
+    T: Tokenizer, {
+
+    iter: I,
+    tokenizer: &'a T
+
+}
+
+impl<'a, I, T> Iterator for TokenizeIter<'a, I, T> 
+where
+    I: Iterator<Item = &'a str>,
+    T: Tokenizer, {
+    
+    type Item = (Time, Token);
+    
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            let line = self.iter
+                .next()?
+                .trim_start();
+
+            match (
+                self.tokenizer.tokenize_single(line),
+                Time::from(line)
+            ) {
+                (Some(token), Some(time)) => return Some((time, token)),
+                _ => {}
+            }
+        }
+    }
+}
+
+impl<'a, I, T> TokenizeIter<'a, I, T> 
+where
+    I: Iterator<Item = &'a str>,
+    T: Tokenizer, {
+
+    pub fn new(iter: I, tokenizer: &'a T) -> Self {
+        Self {
+            iter,
+            tokenizer,
+        }
+    }
+
+} 
 
 impl Tokenizer for Box<dyn Tokenizer> {
     fn tokenize_single(&self, line: &str) -> Option<Token> {
