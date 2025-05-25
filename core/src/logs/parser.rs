@@ -67,6 +67,10 @@ impl ParserResult {
     pub fn get_objective_str(&self) -> &String {
         &self.objective_str
     }
+
+    pub fn set_objective_str(&mut self, objective_str: String) {
+        self.objective_str = objective_str;
+    }
 }
 
 #[derive(Default, PartialEq)]
