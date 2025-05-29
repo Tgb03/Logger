@@ -16,7 +16,7 @@ impl<'a> Default for KeyGuess<'a> {
 
         Self {
             values,
-            current_key: [b'-', b'-', b'-', b'-'],
+            current_key: *b"----",
         }
     }
 }

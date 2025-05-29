@@ -61,6 +61,7 @@ impl<'a> BaseApp<'a> {
         fonts.families.append(&mut newfam);
 
         cc.egui_ctx.set_fonts(fonts);
+        cc.egui_ctx.set_theme(egui::Theme::Dark);
 
         let mut style = (*cc.egui_ctx.style()).clone();
         style.text_styles = <BTreeMap<egui::TextStyle, FontId>>::from([
