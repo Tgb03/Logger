@@ -122,6 +122,8 @@ impl<'a> Render for LiveRender<'a> {
             self.last_y_size = result.0;
         }
 
+        // println!("{:?}", result);
+
         result
     }
 }

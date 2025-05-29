@@ -18,7 +18,7 @@ use crate::{
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum MapperColorError {
     SpannedError(SpannedError),
     FileNotFound,
@@ -30,13 +30,22 @@ impl Render for MapperColorError {
     fn render(&mut self, ui: &mut Ui) -> Self::Response {
         match self {
             MapperColorError::SpannedError(spanned_error) => {
-                ui.colored_label(Color32::RED, format!("{:?}", spanned_error));
+                spanned_error.render(ui)
             },
             MapperColorError::FileNotFound => {},
         }
     }
 }
 
+impl Render for SpannedError {
+    type Response = ();
+
+    fn render(&mut self, ui: &mut Ui) -> Self::Response {
+        ui.colored_label(Color32::RED, format!("{:?}", self));
+    }
+}
+
+#[derive(Debug)]
 struct KeyLocationRender {
     location_text: String,
     color: Option<Color32>,
@@ -55,6 +64,7 @@ impl Render for KeyLocationRender {
     }
 }
 
+#[derive(Debug)]
 struct ObjectiveLocationRender {
     name_color: Option<Color32>,
     name_text: String,
@@ -82,6 +92,7 @@ impl Render for ObjectiveLocationRender {
     }
 }
 
+#[derive(Debug)]
 pub enum LocationRender {
     #[allow(private_interfaces)]
     Key(KeyLocationRender),
@@ -89,8 +100,6 @@ pub enum LocationRender {
     Collectable(ObjectiveLocationRender),
     #[allow(private_interfaces)]
     Objective(KeyLocationRender),
-    #[allow(private_interfaces)]
-    Error(MapperColorError),
 }
 
 impl PartialEq for LocationRender {
@@ -122,9 +131,6 @@ impl Ord for LocationRender {
             (LocationRender::Collectable(_), LocationRender::Objective(_)) => std::cmp::Ordering::Greater,
             (LocationRender::Objective(_), LocationRender::Objective(_)) => std::cmp::Ordering::Equal,
             (LocationRender::Objective(_), _) => std::cmp::Ordering::Less,
-            (LocationRender::Error(_), LocationRender::Error(_)) => std::cmp::Ordering::Equal,
-            (LocationRender::Error(_), _) => std::cmp::Ordering::Greater,
-            (_, LocationRender::Error(_)) => std::cmp::Ordering::Less,
         }
     }
 }
@@ -141,31 +147,41 @@ impl Render for LocationRender {
             LocationRender::Collectable(objective_location_render) => {
                 objective_location_render.render(ui)
             }
-            LocationRender::Error(mapper_color_error) => {
-                mapper_color_error.render(ui)
-            },
         }
     }
 }
 
-impl Render for Vec<LocationRender> {
+#[derive(Default)]
+pub struct LocationRenderVec {
+
+    vec: Vec<LocationRender>,
+    error_found: Option<MapperColorError>,
+
+}
+
+impl Render for LocationRenderVec {
     type Response = usize;
 
     fn render(&mut self, ui: &mut Ui) -> Self::Response {
-        for it in self.iter_mut() {
+        for it in self.vec.iter_mut() {
             it.render(ui)
+        }
+        if let Some(MapperColorError::SpannedError(error)) = &mut self.error_found {
+            error.render(ui);
+
+            return 1000;
         }
 
         ui.separator();
 
-        self.len() * 22 + 6
+        self.vec.len() * 22 + 6
     }
 }
 
 pub struct Mapper<'a> {
     location_colors: HashMap<String, Result<OptimizedLevelView, MapperColorError>>,
 
-    locations: Vec<LocationRender>,
+    locations: LocationRenderVec,
     locations_len: usize,
     key_len: usize,
     run_counter: u64,
@@ -240,14 +256,7 @@ impl<'a> Mapper<'a> {
             .get(&self.level_objective)
             .map(|v| {
                 if let Err(e) = v {
-                    if !self.locations.iter().any(|v| {
-                        match (v, e) {
-                            (LocationRender::Error(_), MapperColorError::SpannedError(_)) => true,
-                            _ => false
-                        }
-                    }) {
-                        self.locations.push(LocationRender::Error(e.clone()));
-                    }
+                    self.locations.error_found = Some(e.clone());
                 }
 
                 v.as_ref().ok()
@@ -260,12 +269,12 @@ impl<'a> Mapper<'a> {
 
         match location {
             Location::ColoredKey(_, _, _) | Location::BulkheadKey(_, _, _) => {
-                self.locations.push(LocationRender::Key(KeyLocationRender {
+                self.locations.vec.push(LocationRender::Key(KeyLocationRender {
                     location_text: location.to_string(),
                     color: level_view.lookup(self.key_len, location),
                 }));
 
-                self.locations.sort_by(|a, b| b.cmp(a));
+                self.locations.vec.sort_by(|a, b| b.cmp(a));
                 self.key_len += 1;
             }
             Location::BigObjective(_, _, _) | Location::BigCollectable(_, _) => {
@@ -274,12 +283,13 @@ impl<'a> Mapper<'a> {
                 }
 
                 self.locations
+                    .vec
                     .push(LocationRender::Objective(KeyLocationRender {
                         location_text: location.to_string(),
                         color: level_view.lookup(0, location),
                     }));
 
-                self.locations.sort_by(|a, b| b.cmp(a));
+                self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
             Location::Gatherable(item_identifier, zone, id) => {
                 if self.show_objectives == false {
@@ -296,7 +306,7 @@ impl<'a> Mapper<'a> {
                 };
 
                 let name_text = format!("{}: ZONE {} at", item_identifier.to_string(), zone);
-                if let Some(LocationRender::Collectable(last_loc)) = self.locations.iter_mut()
+                if let Some(LocationRender::Collectable(last_loc)) = self.locations.vec.iter_mut()
                     .find(|v| {
                         if let LocationRender::Collectable(t) = v {
                             return t.name_text == name_text;
@@ -318,6 +328,7 @@ impl<'a> Mapper<'a> {
                 }
 
                 self.locations
+                    .vec
                     .push(LocationRender::Collectable(ObjectiveLocationRender {
                         name_color: None,
                         name_text,
@@ -328,7 +339,7 @@ impl<'a> Mapper<'a> {
                         )],
                     }));
 
-                self.locations.sort_by(|a, b| b.cmp(a));
+                self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
         }
     }
@@ -337,7 +348,7 @@ impl<'a> Mapper<'a> {
 impl<'a> BufferedRender for Mapper<'a> {
     type Response = usize;
     type UpdateData = LiveParser;
-    type Render = Vec<LocationRender>;
+    type Render = LocationRenderVec;
 
     fn update(&mut self, update_data: &LiveParser) {
         let locations = update_data
@@ -379,7 +390,8 @@ impl<'a> BufferedRender for Mapper<'a> {
     }
 
     fn reset(&mut self) {
-        self.locations.clear();
+        self.locations.vec.clear();
+        self.locations.error_found = None;
         self.locations_len = 0;
         self.key_len = 0;
     }
