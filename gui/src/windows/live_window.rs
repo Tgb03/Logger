@@ -3,7 +3,7 @@ use core::{
         collectable_mapper::CollectableMapper,
         live_parser::LiveParser,
         token_parser::TokenParserT,
-        tokenizer::{GenerationTokenizer, GenericTokenizer, RunTokenizer, Tokenizer},
+        tokenizer::{GenerationTokenizer, GenericTokenizer, RunTokenizer, TokenizeIter},
     },
     run::{objectives::run_objective::RunObjective, run_enum::RunEnum, timed_run::LevelRun},
     save_manager::SaveManager,
@@ -11,7 +11,7 @@ use core::{
 
 use crate::{
     live::{
-        key_guess::KeyGuesserVisual, mapper::Mapper, objective_reader::LevelObjectiveReader,
+        key_guess::KeyGuesserVisual, mapper::Mapper, objective_reader::{LevelObjectiveReader, ObjectiveUpdate},
         run_counter::RunCounterBuffer, run_renderer::RunRendererBuffer, timer::BufferedTimer,
     },
     render::{BufferedRender, Render},
@@ -67,7 +67,11 @@ impl<'a> LiveRender<'a> {
         self.level_renderer = Some(level_renderer);
     }
 
-    pub fn update(&mut self, parser: &LiveParser, save_manager: &SaveManager) {
+    pub fn update(&mut self, parser: &mut LiveParser, save_manager: &SaveManager) {
+        if let Some(level_obj_reader) = &self.level_obj_reader {
+            parser.override_obj(&level_obj_reader);
+        }
+
         self.mapper.as_mut().map(|v| v.update(parser));
         self.run_counter
             .as_mut()
@@ -95,7 +99,20 @@ impl<'a> Render for LiveRender<'a> {
 
         result.0 += self.run_counter.render(ui).unwrap_or_default();
         result.0 += self.mapper.render(ui).unwrap_or_default();
-        result.0 += self.level_obj_reader.render(ui).unwrap_or_default();
+        let (obj_num, obj_id) = self.level_obj_reader.render(ui).unwrap_or_default();
+        result.0 += obj_num;
+        if obj_id {
+            self.level_renderer
+                .as_mut()
+                .map(|v| { 
+                    v.reset();
+                });
+            self.mapper
+                .as_mut()
+                .map(|v| {
+                    v.reset();
+                });
+        }
         result.0 += self.key_guess.render(ui).unwrap_or_default();
         result.0 += self.timer.render(ui).unwrap_or_default();
         result.0 += self.level_renderer.render(ui).unwrap_or_default();
@@ -104,6 +121,8 @@ impl<'a> Render for LiveRender<'a> {
             result.1 = true;
             self.last_y_size = result.0;
         }
+
+        // println!("{:?}", result);
 
         result
     }
@@ -189,10 +208,12 @@ impl<'a> BufferedRender for LiveWindow<'a> {
             }
             let new_lines = self.parser.load_text();
 
-            let tokens = self.tokenizer.tokenize(&new_lines);
-            self.parser.parse_continously(tokens.into_iter());
+            self.parser.parse_continously(TokenizeIter::new(
+                new_lines.split('\n'),
+                &self.tokenizer
+            ));
 
-            self.render.update(&self.parser, save_manager);
+            self.render.update(&mut self.parser, save_manager);
             for run in self
                 .parser
                 .into_result()

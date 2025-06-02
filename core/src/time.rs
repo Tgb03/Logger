@@ -1,5 +1,4 @@
 use std::{
-    num::ParseIntError,
     ops::{Add, AddAssign, Sub, SubAssign},
 };
 
@@ -32,13 +31,13 @@ impl Time {
     /// Creates a Time from a String
     /// String format: {Hours}:{Minutes}:{Seconds}.{Milliseconds}
     ///
-    pub fn from(time: &str) -> Result<Time, ParseIntError> {
-        let hours: u64 = time[0..2].parse::<u64>()?;
-        let minutes: u64 = time[3..5].parse::<u64>()?;
-        let seconds: u64 = time[6..8].parse::<u64>()?;
-        let milliseconds: u64 = time[9..12].parse::<u64>()?;
+    pub fn from(time: &str) -> Option<Time> {
+        let hours: u64 = time.get(0..2)?.parse::<u64>().ok()?;
+        let minutes: u64 = time.get(3..5)?.parse::<u64>().ok()?;
+        let seconds: u64 = time.get(6..8)?.parse::<u64>().ok()?;
+        let milliseconds: u64 = time.get(9..12)?.parse::<u64>().ok()?;
 
-        Ok(Time {
+        Some(Time {
             stamp: (((hours * 60 + minutes) * 60) + seconds) * 1000 + milliseconds,
         })
     }

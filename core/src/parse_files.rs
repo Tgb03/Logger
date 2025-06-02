@@ -13,7 +13,7 @@ pub mod file_parse {
 
     use crate::logs::parser::{Parser, ParserResult};
     use crate::logs::token_parser::TokenParserT;
-    use crate::logs::tokenizer::{GenericTokenizer, RunTokenizer, Tokenizer};
+    use crate::logs::tokenizer::{GenericTokenizer, RunTokenizer, TokenizeIter, Tokenizer};
 
     pub struct AwaitParseFiles<T>
     where 
@@ -224,8 +224,12 @@ pub mod file_parse {
             }
         }
 
-        let tokens = tokenizer.tokenize(&data);
-        Parser::parse_all_tokens_default(tokens.into_iter())
+        Parser::parse_all_tokens_default(
+            TokenizeIter::new(
+                data.split('\n'), 
+                tokenizer
+            )
+        )
     }
 }
 

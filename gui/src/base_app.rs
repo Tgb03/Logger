@@ -1,15 +1,24 @@
 use core::{
-    logs::{collectable_mapper::CollectableMapper, parser::ParserResult}, parse_files::file_parse::AwaitParseFiles, save_manager::SaveManager,
+    logs::{
+        collectable_mapper::CollectableMapper, 
+        parser::ParserResult
+    }, 
+    parse_files::file_parse::AwaitParseFiles, 
+    save_manager::SaveManager, 
+    version::{
+        get_latest_version, 
+        is_there_new_version
+    },
 };
 use std::{
-    collections::BTreeMap,
-    time::Duration,
+    collections::BTreeMap, path::PathBuf, time::Duration
 };
 
 use might_sleep::prelude::CpuLimiter;
 
 use eframe::CreationContext;
-use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2};
+use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2, WidgetText};
+use opener::open;
 
 use crate::{
     render::{BufferedRender, Render},
@@ -40,6 +49,9 @@ pub struct BaseApp<'a> {
     save_manager: SaveManager,
     collectable_mapper: Option<&'a CollectableMapper>,
     limiter: CpuLimiter,
+
+    latest_version: Option<String>,
+    new_version_warning: bool,
 }
 
 impl<'a> BaseApp<'a> {
@@ -61,6 +73,7 @@ impl<'a> BaseApp<'a> {
         fonts.families.append(&mut newfam);
 
         cc.egui_ctx.set_fonts(fonts);
+        cc.egui_ctx.set_theme(egui::Theme::Dark);
 
         let mut style = (*cc.egui_ctx.style()).clone();
         style.text_styles = <BTreeMap<egui::TextStyle, FontId>>::from([
@@ -97,6 +110,13 @@ impl<'a> BaseApp<'a> {
 
         let limiter = CpuLimiter::new(Duration::from_micros(16667));
 
+        let latest_version = get_latest_version();
+        let new_version_warning = match &latest_version {
+            Some(ver) => is_there_new_version(ver)
+                .unwrap_or(false),
+            None => false,
+        };
+
         Self {
             limiter,
             app_state: AppState::None,
@@ -104,6 +124,8 @@ impl<'a> BaseApp<'a> {
             save_manager,
             settings_window,
             collectable_mapper,
+            latest_version,
+            new_version_warning,
         }
     }
 }
@@ -119,7 +141,8 @@ impl<'a> eframe::App for BaseApp<'a> {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint_after(Duration::from_millis(50));
 
-        let frame = Frame::none().fill(Color32::TRANSPARENT);
+        let frame = Frame::none()
+            .fill(Color32::TRANSPARENT);
 
         egui::TopBottomPanel::top("TopPanel")
             .frame(frame)
@@ -187,6 +210,22 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     if ui.button("Settings").clicked() {
                         self.app_state = AppState::SettingsWindow;
+                    }
+
+                    if self.new_version_warning {
+                        if let Some(version) = &self.latest_version {
+                            if ui.button(
+                                WidgetText::from("NEW VERSION DETECTED")
+                                    .color(Color32::ORANGE)
+                            ).clicked() {
+                                let mut path: PathBuf = "https://github.com/Tgb03/Logger/releases/tag/"
+                                    .into();
+                                path.push(version);
+                                let _ = open(path);
+                            }
+                        } else {
+                            ui.colored_label(Color32::ORANGE, "NEW VERSION DETECTED");
+                        }
                     }
                 })
             });

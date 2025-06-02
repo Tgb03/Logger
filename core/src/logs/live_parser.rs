@@ -60,6 +60,10 @@ impl LiveParser {
         self.parser.get_generation_parser()
     }
 
+    pub fn get_parser_mut(&mut self) -> &mut Parser {
+        &mut self.parser
+    }
+
     pub fn reset(&mut self) {
         self.parser = Parser::default();
         self.last_position = 0;

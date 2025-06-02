@@ -314,7 +314,7 @@ impl Render for StatsWindow {
                 .changed()
             {
                 changed = true;
-                if let Ok(time) = Time::from(&self.string_inputs[0]) {
+                if let Some(time) = Time::from(&self.string_inputs[0]) {
                     self.min_time_filter = time;
                 }
             }
@@ -333,7 +333,7 @@ impl Render for StatsWindow {
                 .changed()
             {
                 changed = true;
-                if let Ok(time) = Time::from(&self.string_inputs[1]) {
+                if let Some(time) = Time::from(&self.string_inputs[1]) {
                     self.max_time_filter = time;
                 }
             }
