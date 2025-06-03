@@ -89,6 +89,7 @@ where
 struct BaseTokenizer;
 pub struct RunTokenizer;
 pub struct GenerationTokenizer;
+pub struct CheckpointTokenizer;
 
 impl Tokenizer for BaseTokenizer {
     fn tokenize_single(&self, line: &str) -> Option<Token> {
@@ -200,6 +201,19 @@ impl Tokenizer for RunTokenizer {
             .is_some_and(|v| v == "InLevel TO: ExpeditionFail")
         {
             return Some(Token::GameEndLost);
+        }
+
+        None
+    }
+}
+
+impl Tokenizer for CheckpointTokenizer {
+    fn tokenize_single(&self, line: &str) -> Option<Token> {
+        if line
+            .get(71..97)
+            .is_some_and(|v| v == "ExpeditionFail TO: InLevel")
+        {
+            return Some(Token::CheckpointReset);
         }
 
         None

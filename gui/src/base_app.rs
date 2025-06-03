@@ -194,13 +194,13 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     if ui.button("Input Speedrun Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths)));
+                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths, false)));
                         }
                     }
 
                     if ui.button("Grab stats from Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths)));
+                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths, true)));
                         }
                     }
 

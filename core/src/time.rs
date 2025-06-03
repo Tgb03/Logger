@@ -23,8 +23,18 @@ impl Time {
     ///
     /// Creates a Time with stamp 0
     ///
-    pub fn new() -> Time {
+    pub const fn new() -> Time {
         return Time { stamp: 0 };
+    }
+
+    pub const fn from_stamp(stamp: u64) -> Time {
+        return Time { stamp };
+    }
+
+    pub const fn from_min_secs(min: u64, sec: u64) -> Time {
+        return Time { 
+            stamp: (min * 60 + sec) * 1000
+        }
     }
 
     ///
@@ -42,7 +52,7 @@ impl Time {
         })
     }
 
-    pub fn max() -> Time {
+    pub const fn max() -> Time {
         Time {
             stamp: 24 * 60 * 60 * 1000,
         }

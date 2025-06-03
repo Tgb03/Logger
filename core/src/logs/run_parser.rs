@@ -2,7 +2,7 @@ use crate::run::{
     named_time::NamedTime,
     objectives::run_objective::RunObjective,
     timed_run::LevelRun,
-    traits::{Run, Timed},
+    traits::Run,
 };
 use crate::time::Time;
 
@@ -39,6 +39,18 @@ impl RunParser {
         }
     }
 
+    pub fn checkpointed(old_run: LevelRun, time: Time) -> RunParser {
+        RunParser { 
+            start_time: time, 
+            run_started: true, 
+            is_done: false, 
+            run_objective: old_run.get_objective::<RunObjective>().unwrap(), 
+            timed_run: old_run, 
+            door_count: 1, 
+            bulk_count: 1 
+        }
+    }
+
     /// check whether or not the run parser finished.
     pub fn is_done(&self) -> bool {
         self.is_done
@@ -69,7 +81,7 @@ impl TokenParserT<LevelRun> for RunParser {
             return true;
         }
 
-        // println!("parsed: {:?}", token);
+        // println!("parsed: ({:?}; {:?})", time, token);
 
         match token {
             Token::GameStarted => {
@@ -78,16 +90,18 @@ impl TokenParserT<LevelRun> for RunParser {
             }
             Token::DoorOpen => {
                 self.timed_run.add_split(NamedTime::new(
-                    time - self.start_time - self.timed_run.get_time(),
+                    time - self.start_time,
                     format!("D_{:02}", self.door_count),
                 ));
+                self.start_time = time;
                 self.door_count += 1;
             }
             Token::BulkheadScanDone => {
                 self.timed_run.add_split(NamedTime::new(
-                    time - self.start_time - self.timed_run.get_time(),
+                    time - self.start_time,
                     format!("B_{:02}", self.bulk_count),
                 ));
+                self.start_time = time;
                 self.bulk_count += 1;
             }
             Token::SecondaryDone => {
@@ -102,9 +116,10 @@ impl TokenParserT<LevelRun> for RunParser {
                 self.timed_run.set_win(true);
                 self.is_done = true;
                 self.timed_run.add_split(NamedTime::new(
-                    time - self.start_time - self.timed_run.get_time(),
+                    time - self.start_time,
                     "WIN ".to_owned(),
                 ));
+                self.start_time = time;
                 self.timed_run.set_objective(&self.run_objective);
 
                 return true;
@@ -112,9 +127,10 @@ impl TokenParserT<LevelRun> for RunParser {
             Token::GameEndLost | Token::GameEndAbort | Token::LogFileEnd => {
                 self.is_done = true;
                 self.timed_run.add_split(NamedTime::new(
-                    time - self.start_time - self.timed_run.get_time(),
+                    time - self.start_time,
                     "LOSS".to_owned(),
                 ));
+                self.start_time = time;
                 self.timed_run.set_objective(&self.run_objective);
 
                 return true;

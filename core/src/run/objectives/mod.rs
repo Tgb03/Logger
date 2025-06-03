@@ -10,6 +10,7 @@ pub mod game_run_objective;
 pub mod game_run_rundown;
 
 pub mod objective_enum;
+pub mod medals;
 
 pub trait Objective: for<'a> TryFrom<&'a str> + ToString + Display + Hash {
     fn get_player_count(&self) -> u8;

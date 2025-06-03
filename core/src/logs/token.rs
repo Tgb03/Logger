@@ -23,6 +23,7 @@ pub enum Token {
     GameStarted,
     PlayerDroppedInLevel(u32),
     DoorOpen,
+    CheckpointReset,
     BulkheadScanDone,
     SecondaryDone,
     OverloadDone,

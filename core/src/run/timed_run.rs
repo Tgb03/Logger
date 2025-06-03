@@ -53,6 +53,15 @@ where
             is_win: false,
         }
     }
+
+    pub fn extend<O: Objective>(other_run: Self) -> Self {
+        Self {
+            splits: other_run.splits,
+            total_time: other_run.total_time,
+            objective: other_run.objective,
+            is_win: other_run.is_win,
+        }
+    }
 }
 
 impl<T> Run for TimedRun<T>
