@@ -129,6 +129,8 @@ impl TokenParserT<ParserResult> for Parser {
     }
 
     fn parse_one_token(&mut self, (time, token): (Time, Token)) -> bool {
+        println!("parsed: ({:?}; {:?})", time, token);
+
         match token {
             Token::PlayerJoinedLobby => {
                 self.result.player_count = self.result.player_count.saturating_add(1);
@@ -179,6 +181,14 @@ impl TokenParserT<ParserResult> for Parser {
                       self.run_parser = Some(parser);
                     },
                     */
+                    Token::CheckpointReset => {
+                        self.state = ParserState::InGame;
+                        let len = self.result.get_runs().len();
+                        self.run_parser = Some(RunParser::checkpointed(
+                            self.result.get_runs_mut().remove(len - 1), 
+                            time
+                        ))
+                    }
                     Token::LogFileEnd => {
                         self.state = ParserState::Finished;
 

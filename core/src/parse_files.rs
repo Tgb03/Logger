@@ -13,7 +13,7 @@ pub mod file_parse {
 
     use crate::logs::parser::{Parser, ParserResult};
     use crate::logs::token_parser::TokenParserT;
-    use crate::logs::tokenizer::{GenericTokenizer, RunTokenizer, TokenizeIter, Tokenizer};
+    use crate::logs::tokenizer::{CheckpointTokenizer, GenericTokenizer, RunTokenizer, TokenizeIter, Tokenizer};
 
     pub struct AwaitParseFiles<T>
     where 
@@ -35,7 +35,7 @@ pub mod file_parse {
     where
         T: From<ParserResult> {
         
-        pub fn new(paths: Vec<PathBuf>) -> Self {
+        pub fn new(paths: Vec<PathBuf>, parse_checkpoints: bool) -> Self {
 
             let (sender, recv) = mpsc::channel();
             let length = paths.len();
@@ -50,7 +50,12 @@ pub mod file_parse {
                     let sender_clone = sender.clone();
 
                     threads.push(thread::spawn(move || {
-                        let tokenizer = GenericTokenizer::default().add_tokenizer(RunTokenizer);
+                        let mut tokenizer = GenericTokenizer::default()
+                            .add_tokenizer(RunTokenizer);
+
+                        if parse_checkpoints {
+                            tokenizer = tokenizer.add_tokenizer(CheckpointTokenizer);
+                        }
                         
                         loop {
                             let mut result = ParserResult::default();
@@ -243,16 +248,13 @@ mod tests {
         logs::{
             parser::ParserResult, 
             tokenizer::{
-                GenerationTokenizer, 
-                GenericTokenizer, 
-                RunTokenizer, 
-                Tokenizer
+                CheckpointTokenizer, GenerationTokenizer, GenericTokenizer, RunTokenizer, Tokenizer
             }
         }, 
         run::traits::{
             Run, 
             Timed
-        }
+        }, time::Time
     };
     use super::*;
 
@@ -260,6 +262,7 @@ mod tests {
         GenericTokenizer::default()
             .add_tokenizer(RunTokenizer)
             .add_tokenizer(GenerationTokenizer)
+            .add_tokenizer(CheckpointTokenizer)
     }
 
     fn get_path(name: &str) -> Option<PathBuf> {
@@ -301,6 +304,27 @@ mod tests {
             assert_eq!(result.get_runs()[0].get_name(), "R1A1_2.save");
             assert_eq!(result.get_level_name(), "R1A1");
             assert_eq!(result.get_set().len(), 1);
+        }
+    }
+
+    #[test]
+    fn test_kenny_tech() {
+        let tokenizer = create_tokenizer();
+        let result = vec![
+            "R6A1_host_checkpoint_reset.txt",
+            "R6A1_client_checkpoint_reset.txt"
+        ];
+
+        let iter = result
+            .into_iter()
+            .map(|v| parse_file_t(v, &tokenizer).unwrap());
+
+        for result in iter {
+            assert_eq!(result.get_runs().len(), 1);
+            assert_eq!(result.get_runs()[0].get_objective_str(), "R6A1_2.save");
+            println!("UWU: {:?}", result.get_runs()[0].get_time());
+            assert!(result.get_runs()[0].get_time() > Time::from("00:06:00.000").unwrap());
+            assert_eq!(result.get_level_name(), "R6A1");
         }
     }
 }
