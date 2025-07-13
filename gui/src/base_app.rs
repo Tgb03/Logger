@@ -1,9 +1,4 @@
-use core::{
-    logs::{
-        collectable_mapper::CollectableMapper, 
-        parser::ParserResult
-    }, 
-    parse_files::file_parse::AwaitParseFiles, 
+use core::{ 
     save_manager::SaveManager, 
     version::{
         get_latest_version, 
@@ -21,25 +16,15 @@ use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2, 
 use opener::open;
 
 use crate::{
-    render::{BufferedRender, Render},
-    windows::{
-        live_window::LiveWindow, log_parser_window::LogParserWindow,
-        run_manager_window::RunManagerWindow, settings_window::SettingsWindow,
-        stats_window::StatsWindow,
-    },
+    render::Render,
 };
 
 use crate::egui::TextStyle::{Body, Button, Heading, Monospace, Small};
 
 enum AppState<'a> {
     None,
-    AwaitParseLogWindow(Option<AwaitParseFiles<LogParserWindow>>),
-    AwaitParseStatWindow(Option<AwaitParseFiles<StatsWindow>>),
-    LogParserWindow(LogParserWindow),
-    ManagingRuns(RunManagerWindow),
-    LiveWindow(LiveWindow<'a>),
-    StatsWindow(StatsWindow),
-    SettingsWindow,
+    LiveWindow(u8),
+    Useless(&'a str),
 }
 
 pub struct BaseApp<'a> {
@@ -47,7 +32,6 @@ pub struct BaseApp<'a> {
 
     settings_window: SettingsWindow,
     save_manager: SaveManager,
-    collectable_mapper: Option<&'a CollectableMapper>,
     limiter: CpuLimiter,
 
     latest_version: Option<String>,
@@ -55,7 +39,7 @@ pub struct BaseApp<'a> {
 }
 
 impl<'a> BaseApp<'a> {
-    pub fn new(cc: &CreationContext, collectable_mapper: Option<&'a CollectableMapper>) -> Self {
+    pub fn new(cc: &CreationContext) -> Self {
         let mut fonts = FontDefinitions::default();
 
         fonts.font_data.insert(
@@ -123,7 +107,6 @@ impl<'a> BaseApp<'a> {
 
             save_manager,
             settings_window,
-            collectable_mapper,
             latest_version,
             new_version_warning,
         }
@@ -187,7 +170,6 @@ impl<'a> eframe::App for BaseApp<'a> {
                             self.settings_window.get_live_rectangle().size(),
                         ));
                         self.app_state = AppState::LiveWindow(LiveWindow::new(
-                            self.collectable_mapper,
                             &self.settings_window,
                         ));
                     }

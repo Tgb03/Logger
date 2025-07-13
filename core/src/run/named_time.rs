@@ -6,24 +6,24 @@ use super::traits::Timed;
 use crate::time::Time;
 
 #[derive(Default, Clone, Hash, Serialize, Deserialize, PartialEq, Eq, Debug)]
-pub struct NamedTime {
+pub struct NamedSplit {
     time: Time,
     name: String,
 }
 
-impl NamedTime {
-    pub fn new(time: Time, name: String) -> NamedTime {
+impl NamedSplit {
+    pub fn new(time: Time, name: String) -> NamedSplit {
         Self { time, name }
     }
 }
 
-impl Display for NamedTime {
+impl Display for NamedSplit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.time.to_string())
     }
 }
 
-impl Timed for NamedTime {
+impl Timed for NamedSplit {
     fn get_time(&self) -> Time {
         self.time
     }

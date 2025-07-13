@@ -3,13 +3,13 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    named_time::NamedTime,
+    named_time::NamedSplit,
     objectives::{Objective, game_objective::GameObjective, run_objective::RunObjective},
     traits::{Run, Timed},
 };
 use crate::time::Time;
 
-pub type LevelRun = TimedRun<NamedTime>;
+pub type LevelRun = TimedRun<NamedSplit>;
 pub type GameRun = TimedRun<LevelRun>;
 
 #[derive(PartialEq, Eq, Hash, Serialize, Deserialize, Clone, Default, Debug)]
@@ -196,7 +196,7 @@ mod tests {
     use super::TimedRun;
     use crate::{
         run::{
-            named_time::NamedTime,
+            named_time::NamedSplit,
             objectives::run_objective::RunObjective,
             traits::{Run, Timed},
         },
@@ -205,17 +205,17 @@ mod tests {
 
     #[test]
     pub fn test_basic() {
-        let mut run = TimedRun::<NamedTime>::new(RunObjective::default());
+        let mut run = TimedRun::<NamedSplit>::new(RunObjective::default());
 
-        run.add_split(NamedTime::new(
+        run.add_split(NamedSplit::new(
             Time::from("00:01:10.000").unwrap(),
             "D1".to_owned(),
         ));
-        run.add_split(NamedTime::new(
+        run.add_split(NamedSplit::new(
             Time::from("00:01:10.000").unwrap(),
             "D1".to_owned(),
         ));
-        run.add_split(NamedTime::new(
+        run.add_split(NamedSplit::new(
             Time::from("00:01:10.000").unwrap(),
             "D1".to_owned(),
         ));
@@ -225,7 +225,7 @@ mod tests {
         for split in run.get_splits() {
             assert_eq!(
                 *split,
-                NamedTime::new(Time::from("00:01:10.000").unwrap(), "D1".to_owned())
+                NamedSplit::new(Time::from("00:01:10.000").unwrap(), "D1".to_owned())
             );
         }
     }
