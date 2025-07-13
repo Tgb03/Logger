@@ -60,6 +60,10 @@ impl LiveParser {
         self.parser.get_generation_parser()
     }
 
+    pub fn get_parser(&self) -> &Parser {
+        &self.parser
+    }
+
     pub fn get_parser_mut(&mut self) -> &mut Parser {
         &mut self.parser
     }

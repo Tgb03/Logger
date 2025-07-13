@@ -18,7 +18,7 @@ pub enum Token {
     CollectableItemSeed(u64),              // item seed
     DimensionIncrease,
     DimensionReset,
-    SelectExpedition(LevelDescriptor),
+    SelectExpedition(LevelDescriptor, i32), // level name, seed
     GameStarting,
     GameStarted,
     PlayerDroppedInLevel(u32),
@@ -185,12 +185,17 @@ impl Token {
             Ok(val) => val,
             Err(_) => return Token::Invalid,
         }.into();
+        let seed = match words[10].parse::<i32>() {
+            Ok(val) => val,
+            Err(_) => return Token::Invalid,
+        }
+        .into();
 
         let rundown: Rundown = rundown_id.parse::<u8>()
             .unwrap_or_default()
             .into();
 
-        Token::SelectExpedition(LevelDescriptor::new(rundown, tier, level))
+        Token::SelectExpedition(LevelDescriptor::new(rundown, tier, level), seed)
     }
 
     pub fn create_player(line: &str) -> Token {

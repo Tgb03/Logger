@@ -11,8 +11,7 @@ use core::{
 
 use crate::{
     live::{
-        key_guess::KeyGuesserVisual, mapper::Mapper, objective_reader::{LevelObjectiveReader, ObjectiveUpdate},
-        run_counter::RunCounterBuffer, run_renderer::RunRendererBuffer, timer::BufferedTimer,
+        key_guess::KeyGuesserVisual, mapper::Mapper, objective_reader::{LevelObjectiveReader, ObjectiveUpdate}, run_counter::RunCounterBuffer, run_renderer::RunRendererBuffer, seed_indexer::SeedIndexer, timer::BufferedTimer
     },
     render::{BufferedRender, Render},
     windows::settings_window::SettingsWindow,
@@ -20,6 +19,7 @@ use crate::{
 
 #[derive(Default)]
 pub struct LiveRender<'a> {
+    seed_indexer: Option<SeedIndexer>,
     mapper: Option<Mapper<'a>>,
     run_counter: Option<RunCounterBuffer>,
     key_guess: Option<KeyGuesserVisual<'a>>,
@@ -38,6 +38,10 @@ impl<'a> LiveRender<'a> {
             Some(run_p) => Some(run_p.into_result()),
             None => parser.into_result().get_runs().last(),
         }
+    }
+
+    pub fn add_seed_indexer(&mut self, seed_indexer: SeedIndexer) {
+        self.seed_indexer = Some(seed_indexer);
     }
 
     pub fn add_mapper(&mut self, mapper: Mapper<'a>) {
@@ -77,6 +81,7 @@ impl<'a> LiveRender<'a> {
             .as_mut()
             .map(|v| v.update(parser.into_result()));
         self.timer.as_mut().map(|v| v.update(parser));
+        self.seed_indexer.as_mut().map(|v| v.update(parser));
 
         if let Some(run) = Self::get_run_from_parser(parser) {
             self.level_renderer.as_mut().map(|v| {
@@ -97,6 +102,7 @@ impl<'a> Render for LiveRender<'a> {
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
         let mut result = (20, false);
 
+        result.0 += self.seed_indexer.render(ui).unwrap_or_default();
         result.0 += self.run_counter.render(ui).unwrap_or_default();
         result.0 += self.mapper.render(ui).unwrap_or_default();
         let (obj_num, obj_id) = self.level_obj_reader.render(ui).unwrap_or_default();
@@ -152,6 +158,9 @@ impl<'a> LiveWindow<'a> {
     ) -> Self {
         let mut live_render = LiveRender::default();
 
+        if settings.get_show_seed_indexer() {
+            live_render.add_seed_indexer(SeedIndexer::default());
+        }
         if settings.get_show_warden_mapper() {
             live_render.add_mapper(Mapper::new(collectable_mapper, settings))
         }

@@ -365,7 +365,7 @@ mod tests {
                     Token::UserExitLobby |
                     Token::SessionSeed(_) |
                     Token::PlayerDroppedInLevel(_) |
-                    Token::SelectExpedition(_) |
+                    Token::SelectExpedition(_, _) |
                     Token::LogFileEnd => None,
                     _ => Some(v),
                 }

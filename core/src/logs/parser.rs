@@ -17,6 +17,7 @@ pub struct ParserResult {
     seed_set: HashSet<u64>,
     total_counter: u64,
     locations: Vec<Location>,
+    last_seed: i32,
 
     objective_str: String,
 
@@ -34,6 +35,10 @@ impl Into<Vec<LevelRun>> for ParserResult {
 impl ParserResult {
     pub fn merge_result(&mut self, other: ParserResult) {
         self.runs.extend(other.runs);
+    }
+
+    pub fn get_last_seed(&self) -> i32 {
+        self.last_seed
     }
 
     pub fn get_runs(&self) -> &Vec<LevelRun> {
@@ -154,8 +159,9 @@ impl TokenParserT<ParserResult> for Parser {
                         self.result.locations.clear();
                         self.generation_parser = Some(GenerationParser::default());
                     }
-                    Token::SelectExpedition(name) => { 
+                    Token::SelectExpedition(name, last_seed) => { 
                         self.result.level_name = name.to_string();
+                        self.result.last_seed = last_seed;
                         self.result.objective_str = format!("{}_{}.save", self.result.level_name, self.result.player_count);
                     }
                     Token::GameStarting => {

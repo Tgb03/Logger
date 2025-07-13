@@ -7,4 +7,6 @@ pub mod save_manager;
 pub mod version;
 pub mod sort;
 
+pub mod seed_gen;
+
 pub mod time;

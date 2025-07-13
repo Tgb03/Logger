@@ -19,6 +19,7 @@ pub struct SettingsWindow {
     compare_to_theoretical: bool,
 
     show_run_counter: bool,
+    show_seed_indexer: bool,
     show_warden_mapper: bool,
     show_objective_items: bool,
 
@@ -82,6 +83,10 @@ impl Default for SettingsWindow {
             Some(s) => s.parse::<bool>().unwrap_or(true),
             None => true,
         };
+        let show_seed_indexer = match props.get("show_seed_indexer") {
+            Some(s) => s.parse::<bool>().unwrap_or(false),
+            None => false,
+        };
         let show_warden_mapper = match props.get("show_warden_mapper") {
             Some(s) => s.parse::<bool>().unwrap_or(true),
             None => true,
@@ -140,6 +145,7 @@ impl Default for SettingsWindow {
         };
 
         Self {
+            show_seed_indexer,
             show_run_counter,
             show_splitter,
             show_game_splitter,
@@ -186,6 +192,10 @@ impl SettingsWindow {
         }
 
         None
+    }
+
+    pub fn get_show_seed_indexer(&self) -> bool {
+        self.show_seed_indexer
     }
 
     pub fn get_show_run_counter(&self) -> bool {
@@ -458,6 +468,11 @@ impl SettingsWindow {
 
                 ui.horizontal(|ui| {
                     ui.add_space(5.0);
+                    ui.checkbox(&mut self.show_seed_indexer, "Show Seed Indexer in live splitter");
+                });
+
+                ui.horizontal(|ui| {
+                    ui.add_space(5.0);
                     ui.checkbox(&mut self.show_warden_mapper, "Show Mapper in live splitter");
                 });
 
@@ -568,6 +583,7 @@ impl SettingsWindow {
             self.logs_folder.to_str().unwrap_or_default()
         ));
         s.push_str(&format!("show_splitter: {}\n", self.show_splitter));
+        s.push_str(&format!("show_seed_indexer: {}\n", self.show_seed_indexer));
         s.push_str(&format!("splitter_length: {}\n", self.splitter_length));
         s.push_str(&format!(
             "show_game_splitter: {}\n",

@@ -135,7 +135,7 @@ impl TokenParserT<LevelRun> for RunParser {
 
                 return true;
             }
-            Token::SelectExpedition(_) => { /* IGNORE TOKEN FOR EARLY DROP */ }
+            Token::SelectExpedition(_, _) => { /* IGNORE TOKEN FOR EARLY DROP */ }
             _ => {} //eprintln!("Failed to parse token {:?} in RunParser", token),
         }
 
