@@ -11,14 +11,20 @@ This app aims to streamline using logs to get all the data from them automatical
 - [ ] Remove broken splits or splits that are supposed to be ignored
 - [x] Saving runs
 
+## SeedIndexer:
+
+- [x] Key/Objective item support
+- [x] Consumable support
+- [ ] Resource Support
+
 ## WardenMapper:
 - [x] Automatically find keys.
 - [x] Automatically find objective items.
 
 ## Full game/rundown speedruns:
-- [x] Automatically give time.
+- [ ] Automatically give time.
 - [ ] Automatically check if run is complete.
-- [x] Calculate splits.
+- [ ] Calculate splits.
 - [ ] Calculate theoretical best.
 
 # What each setting does:

@@ -1,5 +1,5 @@
 
-use core::run::default_dirs;
+use core::run::default_dirs::{self, get_config_directory};
 use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
 use egui::{Color32, Label, RichText};
@@ -354,6 +354,26 @@ impl Render for SettingsWindow {
                     .get_mut(id)
                     .map(|v| v.render(ui));
             }
+
+            ui.horizontal(|ui| {
+                    if ui.button("Open LevelView folder").clicked() {
+                        if let Some(mut path) = get_config_directory() {
+                            path = path.join("levels");
+
+                            if !path.exists() {
+                                let _ = std::fs::create_dir_all(&path);
+                            }
+
+                            let _ = opener::open(path);
+                        }
+                    }
+
+                    if ui.button("Open examples for LevelView").clicked() {
+                        let _ = opener::open_browser(
+                            "https://github.com/Tgb03/Logger/tree/master/examples/level_view",
+                        );
+                    }
+            });
         });
 
         ui.separator();
