@@ -1,4 +1,4 @@
-use core::{run::{objectives::run_objective::RunObjective, split::{NamedSplit, Split}, timed_run::LevelRun, traits::Run}, save_manager::SaveManager, time::Time};
+use core::{run::{objectives::run_objective::RunObjective, split::{NamedSplit, Split}, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager, time::Time};
 use std::collections::VecDeque;
 
 use egui::{Color32, Ui};
@@ -184,7 +184,7 @@ impl LevelRunRenderer {
 
     pub fn render(
         &mut self, 
-        save_manager: &SaveManager, 
+        save_manager: &mut SaveManager, 
         settings: &SettingsWindow, 
         reader: &impl ObjectiveReader<Objective = RunObjective>, 
         ui: &mut Ui
@@ -209,6 +209,7 @@ impl LevelRunRenderer {
                 },
                 RunGeneratorResult::LevelRun(timed_run) => {
                     let level_run: LevelRun = timed_run.into();
+                    save_manager.save(RunEnum::Level(level_run.clone()));
                     if let Some(split) = level_run.get_split_by_name("WIN") {
                         let split: NamedSplit = split.into();
                         self.run_render.add_split(&split, save_manager);

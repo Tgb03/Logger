@@ -237,7 +237,7 @@ impl eframe::App for BaseApp {
                 }
                 AppState::SettingsWindow => self.settings_window.render(ui),
                 AppState::LiveWindow(live_window) => {
-                    let size = live_window.render(ui, &self.save_manager, &self.settings_window);
+                    let size = live_window.render(ui, &mut self.save_manager, &self.settings_window);
 
                     if self.live_window_size.is_none_or(|v| v != size) {
                         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 {

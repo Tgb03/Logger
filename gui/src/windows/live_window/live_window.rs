@@ -89,7 +89,7 @@ impl LiveWindow {
         result
     }
 
-    pub fn render(&mut self, ui: &mut egui::Ui, save_manager: &SaveManager, settings: &SettingsWindow) -> usize {
+    pub fn render(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager, settings: &SettingsWindow) -> usize {
         let mut result = 20;
 
         result += self.run_counter.render(ui).unwrap_or_default();
