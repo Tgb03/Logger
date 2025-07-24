@@ -3,6 +3,9 @@ use libloading::os::windows::{Library, Symbol};
 
 use once_cell::sync::Lazy;
 
+#[cfg(not(debug_assertions))]
+static MY_DLL: &[u8] = include_bytes!("../../../resources/gtfo_log_reader.dll");
+
 // Define the function pointer types
 pub type EventCallback = extern "C" fn(context: *const c_void, message: *const c_char);
 
@@ -50,7 +53,23 @@ impl GtfoLogReader {
 }
 
 pub static GTFO_API: Lazy<GtfoLogReader> = Lazy::new(|| {
-    let lib = unsafe { Library::new("gtfo_log_reader/gtfo_log_reader.dll") }.expect("Failed to load DLL");
+
+    #[cfg(debug_assertions)]
+    let lib = unsafe { Library::new("resources/gtfo_log_reader.dll") }.expect("Failed to load DLL");
+
+    #[cfg(not(debug_assertions))]
+    let lib = unsafe {
+        use std::{env, fs::File, io::Write};
+
+        let mut path = env::temp_dir();
+        path.push("gtfo_log_reader.dll");
+
+        let mut file = File::create(&path).unwrap();
+        let _ = file.write_all(MY_DLL);
+        drop(file);
+
+        Library::new(path).expect("Failed to load DLL")
+    };
 
     // SAFETY: we store lib in a `Box` to keep it alive
     Box::leak(Box::new(lib));
