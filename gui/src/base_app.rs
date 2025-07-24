@@ -1,9 +1,8 @@
 use core::{ 
-    save_manager::SaveManager, 
-    version::{
+    run::timed_run::LevelRun, save_manager::SaveManager, version::{
         get_latest_version, 
         is_there_new_version
-    },
+    }
 };
 use std::{
     collections::BTreeMap, path::PathBuf, time::Duration
@@ -16,19 +15,25 @@ use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2, 
 use opener::open;
 
 use crate::{
-    render::Render,
+    render::Render, windows::{await_parse_files::AwaitParseFiles, live_window::live_window::LiveWindow, log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow, settings_window::SettingsWindow, stats_window::StatsWindow},
 };
 
 use crate::egui::TextStyle::{Body, Button, Heading, Monospace, Small};
 
-enum AppState<'a> {
+enum AppState {
     None,
-    LiveWindow(u8),
-    Useless(&'a str),
+    SettingsWindow,
+    AwaitParseLogWindow(Option<AwaitParseFiles>),
+    AwaitParseStatWindow(Option<AwaitParseFiles>),
+    LogParserWindow(LogParserWindow),
+    ManagingRuns(RunManagerWindow),
+    StatsWindow(StatsWindow),
+    LiveWindow(LiveWindow),
 }
 
-pub struct BaseApp<'a> {
-    app_state: AppState<'a>,
+pub struct BaseApp {
+    app_state: AppState,
+    live_window_size: Option<usize>,
 
     settings_window: SettingsWindow,
     save_manager: SaveManager,
@@ -38,7 +43,7 @@ pub struct BaseApp<'a> {
     new_version_warning: bool,
 }
 
-impl<'a> BaseApp<'a> {
+impl BaseApp {
     pub fn new(cc: &CreationContext) -> Self {
         let mut fonts = FontDefinitions::default();
 
@@ -86,9 +91,9 @@ impl<'a> BaseApp<'a> {
 
         let settings_window = SettingsWindow::default();
         let mut save_manager = SaveManager::default();
-        save_manager.set_automatic_saving(settings_window.get_automatic_saving());
+        save_manager.set_automatic_saving(settings_window.get_def("automatic_saving"));
 
-        if settings_window.get_automatic_loading() {
+        if settings_window.get_def("automatic_loading") {
             save_manager.load_all_runs();
         }
 
@@ -103,6 +108,7 @@ impl<'a> BaseApp<'a> {
 
         Self {
             limiter,
+            live_window_size: None,
             app_state: AppState::None,
 
             save_manager,
@@ -113,10 +119,10 @@ impl<'a> BaseApp<'a> {
     }
 }
 
-impl<'a> eframe::App for BaseApp<'a> {
+impl eframe::App for BaseApp {
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         match self.app_state {
-            AppState::LiveWindow(_) => [0.0, 0.0, 0.0, self.settings_window.get_transparency()],
+            AppState::LiveWindow(_) => [0.0, 0.0, 0.0, self.settings_window.get_def("window_transparency")],
             _ => [0.0, 0.0, 0.0, 1.0],
         }
     }
@@ -143,6 +149,7 @@ impl<'a> eframe::App for BaseApp<'a> {
                                 x: 1024.0,
                                 y: 512.0,
                             }));
+                            self.live_window_size = None;
                         }
 
                         return;
@@ -153,7 +160,7 @@ impl<'a> eframe::App for BaseApp<'a> {
                             self.app_state = AppState::None;
 
                             self.settings_window.save_settings();
-                            self.save_manager.set_automatic_saving(self.settings_window.get_automatic_saving());
+                            self.save_manager.set_automatic_saving(self.settings_window.get_def("automatic_saving"));
                         }
 
                         return;
@@ -163,12 +170,18 @@ impl<'a> eframe::App for BaseApp<'a> {
                         ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(
                             egui::WindowLevel::AlwaysOnTop,
                         ));
+                        let x = self.settings_window.get_def("x_position");
+                        let y = self.settings_window.get_def("y_position");
                         ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(
-                            self.settings_window.get_live_rectangle().min,
+                            egui::Pos2 { x, y }
                         ));
                         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(
-                            self.settings_window.get_live_rectangle().size(),
+                            egui::Vec2 {
+                                x: self.settings_window.get_def("x_size"),
+                                y: 80f32,
+                            }
                         ));
+                        self.live_window_size = Some(80);
                         self.app_state = AppState::LiveWindow(LiveWindow::new(
                             &self.settings_window,
                         ));
@@ -176,18 +189,18 @@ impl<'a> eframe::App for BaseApp<'a> {
 
                     if ui.button("Input Speedrun Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths, false)));
+                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths)));
                         }
                     }
 
                     if ui.button("Grab stats from Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths, true)));
+                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths)));
                         }
                     }
 
                     if ui.button("Check Saved Runs").clicked() {
-                        self.app_state = AppState::ManagingRuns(RunManagerWindow::default());
+                        self.app_state = AppState::ManagingRuns(RunManagerWindow::new());
                     }
 
                     if ui.button("Settings").clicked() {
@@ -222,20 +235,16 @@ impl<'a> eframe::App for BaseApp<'a> {
                 AppState::ManagingRuns(run_manager_window) => {
                     run_manager_window.render(ui, &mut self.save_manager)
                 }
-                AppState::SettingsWindow => self.settings_window.show(ui),
+                AppState::SettingsWindow => self.settings_window.render(ui),
                 AppState::LiveWindow(live_window) => {
-                    live_window.update(&self.save_manager);
-                    let (size, resize) = live_window.render(ui);
+                    let size = live_window.render(ui, &self.save_manager, &self.settings_window);
 
-                    if resize {
+                    if self.live_window_size.is_none_or(|v| v != size) {
                         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 {
-                            x: self.settings_window.get_live_rectangle().width(),
+                            x: self.settings_window.get_def("x_size"),
                             y: size as f32,
                         }));
-                    }
-
-                    while let Some(run) = live_window.get_vec_list().pop() {
-                        self.save_manager.save(run);
+                        self.live_window_size = Some(size);
                     }
                 }
                 AppState::StatsWindow(stats_window) => {
@@ -244,15 +253,14 @@ impl<'a> eframe::App for BaseApp<'a> {
                 AppState::AwaitParseLogWindow(awaiter) => {
                     if awaiter.render(ui).is_some_and(|v| v == true) {
                         let awaiter = awaiter.take().unwrap();
-                        let r: ParserResult = awaiter.into();
-                        self.app_state = AppState::LogParserWindow(LogParserWindow::new(r.into()));
+                        self.app_state = AppState::LogParserWindow(LogParserWindow::new(awaiter.into()));
                     }
                 }
                 AppState::AwaitParseStatWindow(awaiter) => {
                     if awaiter.render(ui).is_some_and(|v| v == true) {
                         let awaiter = awaiter.take().unwrap();
-                        let r: ParserResult = awaiter.into();
-                        self.app_state = AppState::StatsWindow(StatsWindow::new(r.into()));
+                        let runs: Vec<LevelRun> = awaiter.into();
+                        self.app_state = AppState::StatsWindow(StatsWindow::new(runs));
                     }
                 }
             });

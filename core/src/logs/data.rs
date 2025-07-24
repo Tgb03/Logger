@@ -2,10 +2,11 @@
 use std::fmt::Display;
 
 use num_enum::{FromPrimitive, IntoPrimitive};
+use serde::{Deserialize, Serialize};
 
 use super::location::Location;
 
-#[derive(Default, Debug, PartialEq, Eq, FromPrimitive, IntoPrimitive, strum::IntoStaticStr)]
+#[derive(Default, Clone, Debug, PartialEq, Eq, FromPrimitive, IntoPrimitive, strum::IntoStaticStr, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
 #[repr(u8)]
 pub enum Rundown {
@@ -30,7 +31,7 @@ pub enum Rundown {
     #[strum(to_string="OG.R6")] OG_R6 = 29,
 }
 
-#[derive(Default, Debug, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LevelDescriptor {
 
     rundown: Rundown,
@@ -56,7 +57,7 @@ impl Display for LevelDescriptor {
 }
 
 
-#[derive(Default, Debug, PartialEq, Eq, strum::IntoStaticStr, Clone)]
+#[derive(Default, Debug, PartialEq, Eq, strum::IntoStaticStr, Clone, Deserialize, Serialize)]
 enum KeyColor {
 
     PURPLE,
@@ -74,7 +75,7 @@ enum KeyColor {
 
 }
 
-#[derive(Default, Debug, PartialEq, Eq, Clone)]
+#[derive(Default, Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub struct KeyDescriptor {
 
     color: Option<KeyColor>,
@@ -136,7 +137,7 @@ impl Display for KeyDescriptor {
 }
 
 #[allow(non_camel_case_types)]
-#[derive(PartialEq, Eq, Debug, Clone, strum::IntoStaticStr)]
+#[derive(PartialEq, Eq, Debug, Clone, strum::IntoStaticStr, Serialize, Deserialize)]
 pub enum ObjectiveFunction {
 
     #[strum(to_string="HSU")] HSU_FindTakeSample,

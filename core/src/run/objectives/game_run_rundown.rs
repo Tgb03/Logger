@@ -5,7 +5,7 @@ use strum_macros::EnumIter;
 
 use super::{constants::LEVELS_ALL, error::ObjectiveParseError};
 
-#[derive(Debug, Clone, PartialEq, Eq, EnumIter, Hash, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, Hash, Serialize, Deserialize, Default, PartialOrd, Ord)]
 pub enum GameRunRundown {
     #[default]
     Rundown1,

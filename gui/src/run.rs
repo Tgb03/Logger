@@ -1,6 +1,6 @@
 use core::{
     run::{
-        objectives::{objective_enum::ObjectiveEnum, Objective},
+        objectives::Objective,
         traits::Run,
     },
     save_manager::SaveManager,
@@ -41,8 +41,8 @@ where
     ) -> RenderResult {
         let mut result = RenderResult::default();
         let empty_vec = Vec::new();
-        let objective_str = self.get_objective_str();
-        let objective = self.get_objective::<ObjectiveEnum>().unwrap();
+        let objective = self.get_objective();
+        let objective_str = objective.to_string();
         let split_names = save_manager
             .get_split_names(&objective_str)
             .unwrap_or(&empty_vec);
@@ -67,14 +67,14 @@ where
 
             let mut running_total = Time::default();
             for id in 0..range.start.min(split_names.len()) {
-                running_total += grab_time(self, objective_str, &split_names[id], save_manager)
+                running_total += grab_time(self, &objective_str, &split_names[id], save_manager)
                     .unwrap_or_default();
             }
 
             let first = range.start.min(split_names.len());
 
             for id in range {
-                if let Some(time) = grab_time(self, objective_str, &split_names[id], save_manager) {
+                if let Some(time) = grab_time(self, &objective_str, &split_names[id], save_manager) {
                     if show_split_times {
                         let color = match save_manager
                             .get_best_split(&objective_str, &split_names[id])

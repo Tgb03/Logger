@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{Objective, error::ObjectiveParseError};
 
-#[derive(Default, Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct RunObjective {
     pub level_name: String,
     pub secondary: bool,

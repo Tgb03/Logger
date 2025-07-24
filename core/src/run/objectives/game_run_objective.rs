@@ -5,7 +5,7 @@ use strum_macros::EnumIter;
 
 use super::error::ObjectiveParseError;
 
-#[derive(Clone, Debug, PartialEq, Eq, EnumIter, Hash, Serialize, Deserialize, Default)]
+#[derive(Clone, Debug, PartialEq, Eq, EnumIter, Hash, Serialize, Deserialize, Default, PartialOrd, Ord)]
 pub enum GameRunObjective {
     #[default]
     AnyPercent,
