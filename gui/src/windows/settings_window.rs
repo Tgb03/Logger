@@ -259,7 +259,7 @@ impl SettingsWindow {
         let mut file_str = String::new();
         file.read_to_string(&mut file_str).ok()?;
 
-        let p = serde_json::from_str(&file_str).ok();
+        let p = serde_yaml::from_str(&file_str).ok();
 
         p
     }
@@ -270,7 +270,7 @@ impl SettingsWindow {
             let _ = std::fs::create_dir_all(&path);
         }
 
-        let text = serde_json::to_string(self).ok()?;
+        let text = serde_yaml::to_string(self).ok()?;
         let _ = std::fs::write(path, text).ok()?;
 
         Some(())
