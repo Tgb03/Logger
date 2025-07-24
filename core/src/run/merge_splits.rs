@@ -3,10 +3,11 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct MergeSplits {
 
     merged: HashMap<String, String>,
+    reversed: HashMap<String, Vec<String>>,
 
 }
 
@@ -31,7 +32,8 @@ impl From<&str> for MergeSplits {
         // println!("{:?}", result);
 
         Self {
-            merged: result
+            reversed: Self::reverse(&result), 
+            merged: result,
         }
     }
 }
@@ -72,10 +74,14 @@ impl MergeSplits {
         self.merged.get(split_name)
     }
 
-    pub fn reverse(&self) -> HashMap<String, Vec<String>> {
+    pub fn get_req_splits(&self, split_name: &str) -> Option<&Vec<String>> {
+        self.reversed.get(split_name)
+    }
+
+    fn reverse(merged: &HashMap<String, String>) -> HashMap<String, Vec<String>> {
         let mut result: HashMap<String, Vec<String>> = HashMap::new();
 
-        for (key, value) in &self.merged {
+        for (key, value) in merged {
             match result.get_mut(value) {
                 Some(vec) => vec.push(key.clone()),
                 None => { result.insert(value.clone(), vec![key.clone()]); },
@@ -103,16 +109,6 @@ impl LevelsMergeSplits {
 
     pub fn add_level(&mut self, level_obj: &str, data: impl Into<MergeSplits>) {
         self.levels.insert(level_obj.to_owned(), data.into());
-    }
-
-    pub fn reversed(&self) -> HashMap<String, HashMap<String, Vec<String>>> {
-        let mut result = HashMap::new();
-
-        for (level_name, data) in &self.levels {
-            result.insert(level_name.clone(), data.reverse());
-        }
-
-        result
     }
 
 }

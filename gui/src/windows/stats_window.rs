@@ -1,15 +1,12 @@
-use core::{
-    logs::parser::ParserResult, run::{
-        timed_run::LevelRun,
-        traits::{Run, Timed},
-    }, time::Time
-};
-use std::{collections::{HashMap, HashSet}, fmt::Display, usize};
+use core::{run::{split::Split, timed_run::LevelRun, traits::Run}, time::Time};
+use std::{collections::HashMap, fmt::Display};
 
 use egui::{Color32, Ui};
 use itertools::Itertools;
 
 use crate::render::Render;
+
+
 
 pub struct LevelStat {
     run_count: usize,
@@ -255,8 +252,16 @@ impl StatsWindow {
                 })
                 .filter(|r| self.min_stamp_filter <= r.len() && r.len() <= self.max_stamp_filter)
                 .filter(|r| self.win_filter.is_none_or(|f| f == r.is_win()))
-                .filter(|r| self.secondary_filter.is_none_or(|f| f == r.get_objective_str().contains("_sec")))
-                .filter(|r| self.overload_filter.is_none_or(|f| f == r.get_objective_str().contains("_ovrl")))
+                .filter(|r| self.secondary_filter.is_none_or(|f| 
+                    f == r.get_objective().as_level_run()
+                        .map(|v| v.secondary)
+                        .unwrap()
+                ))
+                .filter(|r| self.overload_filter.is_none_or(|f| 
+                    f == r.get_objective().as_level_run()
+                        .map(|v| v.overload)
+                        .unwrap()
+                ))
         )
     }
 }
@@ -394,14 +399,5 @@ impl Render for StatsWindow {
         }
 
         self.stats_shown.render(ui);
-    }
-}
-
-impl From<ParserResult> for StatsWindow {
-    fn from(value: ParserResult) -> Self {
-        let hash: HashSet<LevelRun> =
-            HashSet::from_iter(Into::<Vec<LevelRun>>::into(value));
-        let runs = hash.into_iter().collect();
-        Self::new(runs)
     }
 }

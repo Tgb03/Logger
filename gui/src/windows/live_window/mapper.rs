@@ -1,19 +1,11 @@
-use core::{
-    logs::{
-        collectable_mapper::CollectableMapper, live_parser::LiveParser, location::Location,
-        token_parser::TokenParserT,
-    },
-    run::traits::Run,
-    save_manager::SaveManager,
-};
-use std::{collections::HashMap, fs, u64};
+use core::{logs::location::Location, run::objectives::run_objective::RunObjective, save_manager::SaveManager};
+use std::{collections::{HashMap, VecDeque}, fs, u64};
 
 use egui::{Color32, Ui};
 use ron::de::SpannedError;
 
 use crate::{
-    render::{BufferedRender, Render},
-    windows::settings_window::SettingsWindow,
+    dll::{callback::Code, parse_continously::ContinousParser}, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}
 };
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
@@ -178,38 +170,31 @@ impl Render for LocationRenderVec {
     }
 }
 
-pub struct Mapper<'a> {
+pub struct Mapper {
     location_colors: HashMap<String, Result<OptimizedLevelView, MapperColorError>>,
+    level_objective: String,
+    key_len: usize,
+    show_objectives: bool,
+
+    continous_parser: ContinousParser<Location>,
+    locations_copy: VecDeque<Location>,
 
     locations: LocationRenderVec,
-    locations_len: usize,
-    key_len: usize,
-    run_counter: u64,
-
-    show_objectives: bool,
-    level_name: String,
-    level_objective: String,
-    compare_obj: String,
-
-    collectable_mapper: Option<&'a CollectableMapper>,
 }
 
-impl<'a> Mapper<'a> {
+impl Mapper {
     pub fn new(
-        collectable_mapper: Option<&'a CollectableMapper>,
         settings_window: &SettingsWindow,
+        objective: String,
     ) -> Self {
         Self {
+            continous_parser: ContinousParser::new(Code::Mapper as u8),
+            level_objective: objective,
             location_colors: Default::default(),
             locations: Default::default(),
-            locations_len: 0,
+            locations_copy: VecDeque::new(),
+            show_objectives: settings_window.get_def("show_objectives"),
             key_len: 0,
-            run_counter: 0,
-            show_objectives: settings_window.get_show_objective_items(),
-            level_name: "".to_owned(),
-            compare_obj: "".to_owned(),
-            level_objective: "".to_owned(),
-            collectable_mapper,
         }
     }
 
@@ -228,29 +213,31 @@ impl<'a> Mapper<'a> {
             m
         });
 
-        println!("Attempting load with: {:?}", path);
+        println!("<MapperView> Attempting load with: {:?}", path);
 
         if let Some(data) = path.map(|p| fs::read_to_string(p).ok()).flatten() {
             match ron::from_str::<LevelView>(&data) {
                 Ok(level_view) => {
                     self.location_colors
                         .insert(level.to_owned(), Ok(level_view.into()));
-                    println!("Loaded correctly: {}", level);
+                    println!("<MapperView> Loaded correctly: {}", level);
                 }
                 Err(e) => {
                     self.location_colors
                         .insert(level.to_owned(), Err(MapperColorError::SpannedError(e)));
-                    println!("Spanned Error: {}", level);
+                    println!("<MapperView> Spanned Error: {}", level);
                 }
             }
         } else {
             self.location_colors
                 .insert(level.to_owned(), Err(MapperColorError::FileNotFound));
-            println!("File not found: {}", level);
+            println!("<MapperView> File not found: {}", level);
         }
     }
 
     fn add_location(&mut self, location: &Location) {
+        self.locations_copy.push_back(location.clone());
+
         let level_view = self
             .location_colors
             .get(&self.level_objective)
@@ -288,22 +275,13 @@ impl<'a> Mapper<'a> {
                         location_text: location.to_string(),
                         color: level_view.lookup(0, location),
                     }));
-
+                
                 self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
             Location::Gatherable(item_identifier, zone, id) => {
                 if self.show_objectives == false {
                     return;
                 }
-
-                let id = match self
-                    .collectable_mapper
-                    .map(|v| v.get_id(&self.level_name, *zone, *id))
-                    .flatten()
-                {
-                    Some(new_id) => new_id,
-                    None => *id,
-                };
 
                 let name_text = format!("{}: ZONE {} at", item_identifier.to_string(), zone);
                 if let Some(LocationRender::Collectable(last_loc)) = self.locations.vec.iter_mut()
@@ -316,13 +294,12 @@ impl<'a> Mapper<'a> {
                     }) {
                     if last_loc.name_text == name_text {
                         last_loc.ids.push((
-                            id,
+                            *id,
                             level_view
-                                .lookup(0, &Location::Gatherable(*item_identifier, *zone, id)),
+                                .lookup(0, &Location::Gatherable(*item_identifier, *zone, *id)),
                         ));
 
                         last_loc.ids.sort_by_key(|(a, _)| { *a });
-
                         return;
                     }
                 }
@@ -333,66 +310,56 @@ impl<'a> Mapper<'a> {
                         name_color: None,
                         name_text,
                         ids: vec![(
-                            id,
+                            *id,
                             level_view
-                                .lookup(0, &Location::Gatherable(*item_identifier, *zone, id)),
+                                .lookup(0, &Location::Gatherable(*item_identifier, *zone, *id)),
                         )],
                     }));
 
                 self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
+            Location::GenerationStarted(_) => {},
         }
+    }
+
+    pub fn render(&mut self, reader: &impl ObjectiveReader<Objective = RunObjective>, ui: &mut Ui) -> usize {
+        while let Some(location) = self.continous_parser.try_recv() {
+            match location {
+                Location::GenerationStarted(level) => {
+                    self.key_len = 0;
+                    self.locations.vec.clear();
+                    self.locations_copy.clear();
+                    if let Some(ro) = format!("{}.save", level).as_str().try_into().ok() {
+                        let level = reader.override_obj(ro).to_string();
+                        self.load_level_info(&level);
+                        self.level_objective = level;
+                    }
+                },
+                v => self.add_location(&v),
+            }
+        }
+
+        self.locations.render(ui)
     }
 }
 
-impl<'a> BufferedRender for Mapper<'a> {
-    type Response = usize;
-    type UpdateData = LiveParser;
-    type Render = LocationRenderVec;
+impl UpdateObjective for Mapper {
+    type Objective = RunObjective;
+    
+    fn update(&mut self, reader: &impl ObjectiveReader<Objective = Self::Objective>) {
+        if let Ok(obj) = TryInto::<RunObjective>::try_into(self.level_objective.as_str()) {
+            let obj = reader.override_obj(obj);
+            self.level_objective = obj.to_string();
+            
+            self.key_len = 0;
+            self.locations.vec.clear();
+            self.load_level_info(&self.level_objective.clone());
+            let mut clone = self.locations_copy.clone();
+            self.locations_copy.clear();
 
-    fn update(&mut self, update_data: &LiveParser) {
-        let locations = update_data
-            .get_generation_parser()
-            .map(|gp| gp.into_result())
-            .unwrap_or(update_data.into_result().get_locations());
-
-        update_data
-            .get_run_parser()
-            .map(|rp| rp.into_result().get_objective_str())
-            .or(Some(update_data.into_result().get_objective_str()))
-            .map(|v| {
-                if &self.compare_obj != v {
-                    let mut s = v.trim_end_matches(".save").to_owned();
-                    s.push_str(".ron");
-                    self.load_level_info(&s);
-                    self.compare_obj = v.clone();
-                    self.level_objective = s;
-                }
-            });
-
-        if &self.level_name != update_data.into_result().get_level_name() {
-            self.level_name = update_data.into_result().get_level_name().clone();
+            while let Some(l) = clone.pop_front() {
+                self.add_location(&l);
+            }
         }
-
-        if update_data.into_result().get_counter() != self.run_counter {
-            self.reset();
-            self.run_counter = update_data.into_result().get_counter();
-        }
-
-        for location in locations.iter().skip(self.locations_len) {
-            self.add_location(location);
-            self.locations_len += 1;
-        }
-    }
-
-    fn get_renderer(&mut self) -> &mut Self::Render {
-        &mut self.locations
-    }
-
-    fn reset(&mut self) {
-        self.locations.vec.clear();
-        self.locations.error_found = None;
-        self.locations_len = 0;
-        self.key_len = 0;
     }
 }

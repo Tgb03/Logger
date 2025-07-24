@@ -199,7 +199,7 @@ impl LookUpColor for OptimizedLevelView {
                     .next()?
                     .0,
             ),
-            Location::BigCollectable(_, _) => None,
+            _ => None,
         }
     }
 

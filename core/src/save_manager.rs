@@ -11,12 +11,7 @@ use crate::{
         merge_splits::{
             LevelsMergeSplits, 
             MergeSplits
-        }, 
-        run_enum::RunEnum, 
-        traits::{
-            Run, 
-            Timed
-        }
+        }, split::Split, timed_run::RunEnum, traits::Run
     },
     sort::Sortable,
     time::Time,
@@ -32,7 +27,6 @@ pub struct SaveManager {
     split_names: HashMap<String, Vec<String>>,
 
     split_merges: LevelsMergeSplits,
-    reversed_merges: HashMap<String, HashMap<String, Vec<String>>>,
 
     automatic_saving: bool,
 }
@@ -56,7 +50,6 @@ impl Default for SaveManager {
             loaded_runs: Default::default(), 
             best_splits: Default::default(), 
             split_names: Default::default(), 
-            reversed_merges: split_merges.reversed(),
             automatic_saving: false,
             split_merges, 
         }
@@ -78,7 +71,7 @@ impl SaveManager {
             return None;
         }
 
-        let objective = timed_run.get_objective_str().clone();
+        let objective = timed_run.get_objective().to_string();
 
         match self.loaded_runs.get_mut(&objective) {
             Some(vec) => {
@@ -99,7 +92,7 @@ impl SaveManager {
         self.automatic_saving = automatic_saving;
     }
 
-    pub fn get_split_merge(&self, objective: &String, split_name: &String) -> Option<&String> {
+    pub fn get_split_merge(&self, objective: &String, split_name: &str) -> Option<&String> {
         self.split_merges.get_level(objective)
             .map(|v| v.get_split(split_name))
             .flatten()
@@ -164,12 +157,12 @@ impl SaveManager {
                 let name = merge_splits
                     .map(|ms| ms.get_split(name))
                     .flatten()
-                    .unwrap_or(name);
+                    .map_or(name, |v| v);
 
-                if name != "LOSS" && !set.contains(name) {
+                if name != "LOSS" && name != "STOP" && !set.contains(name) {
                     //println!("SET: {:?}", set);
-                    build_vec.push(name.clone());
-                    set.insert(name.clone());
+                    build_vec.push(name.to_owned());
+                    set.insert(name.to_owned());
                 }
 
                 match times.get_mut(name) {
@@ -177,20 +170,20 @@ impl SaveManager {
                         *time += split.get_time();
                         *count += 1;
                     },
-                    None => { times.insert(name.clone(), (split.get_time(), 1)); },
+                    None => { times.insert(name, (split.get_time(), 1)); },
                 };
             }
 
             for (name, (time, count)) in times {
-                match build_hash.get(&name) {
+                match build_hash.get(name) {
                     Some((b_time, b_count)) => {
                         if count < *b_count { continue; }
 
                         if time < *b_time || count > *b_count { 
-                            build_hash.insert(name, (time, count)); 
+                            build_hash.insert(name.to_owned(), (time, count)); 
                         }
                     },
-                    None => { build_hash.insert(name, (time, count)); },
+                    None => { build_hash.insert(name.to_owned(), (time, count)); },
                 }
             }
         }
@@ -256,11 +249,21 @@ impl SaveManager {
         self.loaded_runs.get_mut(objective_data)
     }
 
-    pub fn get_best_split(&self, objective: &String, name: &String) -> Option<&Time> {
+    pub fn get_best_split(&self, objective: &String, name: &str) -> Option<&Time> {
         self.best_splits
             .get(objective)
             .map(|h| h.get(name))
             .flatten()
+    }
+
+    pub fn get_best_split_with_merge(&self, objective: &String, name: &str) -> Option<&Time> {
+        let new_name = self.split_merges.get_level(&objective)
+            .map(|m| m.get_split(name))
+            .flatten()
+            .map(|v| v.as_str())
+            .unwrap_or(name);
+
+        self.get_best_split(objective, new_name)
     }
 
     /// returns all best splits for the objective.
@@ -350,7 +353,7 @@ impl SaveManager {
                     };
 
                     for it in &mut vec {
-                        it.set_objective_str(objective_data.clone());
+                        it.set_objective_str(objective_data);
                     }
 
                     //println!("Added vec with size for obj: {}, {}, {}", vec.len(), binary_data.len(), objective_data);
@@ -409,21 +412,28 @@ impl SaveManager {
     pub fn set_merge_splits(&mut self, objective: &String, data: &str) {
         let merged: MergeSplits = data.into();
 
-        self.reversed_merges.insert(objective.clone(), merged.reverse());
         self.split_merges.add_level(objective, merged);
 
         self.calculate_best_splits(objective);
     }
 
-    pub fn get_splits_req(&self, objective: &String, split_name: &String) -> Option<&Vec<String>> {
-        self.reversed_merges
-            .get(objective)?
-            .get(split_name)
+    pub fn get_splits_req(&self, objective: &String, split_name: &str) -> Option<&Vec<String>> {
+        self.split_merges
+            .get_level(objective.as_str())?
+            .get_req_splits(
+                self.get_split_merge(objective, split_name)
+                    .map(|v| v.as_str())
+                    .unwrap_or(split_name)
+            )
     }
 
     pub fn get_level_merge_split_str(&self, objective: &String) -> Option<String> {
         self.split_merges.get_level(objective)
             .map(|v| v.into())
+    }
+
+    pub fn get_level_merge(&self, objective: &str) -> Option<&MergeSplits> {
+        self.split_merges.get_level(objective)
     }
 }
 

@@ -504,7 +504,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "2.1.19"
+version = "3.0.0"
 dependencies = [
  "bincode",
  "directories",
@@ -1208,18 +1208,21 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "2.1.19"
+version = "3.0.0"
 dependencies = [
  "core",
  "directories",
  "eframe",
  "egui",
  "itertools",
+ "libloading",
  "might_sleep",
+ "once_cell",
  "opener",
  "rfd",
  "ron",
  "serde",
+ "serde_json",
  "serde_yaml",
  "strum",
  "strum_macros",

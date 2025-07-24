@@ -19,22 +19,21 @@ where
 
 pub trait BufferedRender {
     type Response;
-    type UpdateData;
-    type Render: Render<Response = Self::Response>;
+    type Renderer: Render;
+    
+    fn get_renderer(&mut self) -> &mut Self::Renderer;
+    fn update(&mut self);
 
-    fn update(&mut self, update_data: &Self::UpdateData);
-    fn reset(&mut self);
-
-    fn get_renderer(&mut self) -> &mut Self::Render;
 }
 
-impl<BR, Resp> Render for BR
-where
-    BR: BufferedRender<Response = Resp>,
-{
+impl<BR, R, Resp> Render for BR
+where 
+    R: Render<Response = Resp>,
+    BR: BufferedRender<Response = Resp, Renderer = R> {
+    
     type Response = Resp;
 
-    fn render(&mut self, ui: &mut Ui) -> Resp {
+    fn render(&mut self, ui: &mut Ui) -> Self::Response {
         self.get_renderer().render(ui)
     }
 }

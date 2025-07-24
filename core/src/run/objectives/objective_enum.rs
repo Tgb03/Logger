@@ -7,7 +7,7 @@ use super::{
     run_objective::RunObjective,
 };
 
-#[derive(Hash, Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Hash, Clone, Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ObjectiveEnum {
     Run(RunObjective),
     Game(GameObjective),
@@ -75,6 +75,15 @@ impl Objective for ObjectiveEnum {
         match self {
             ObjectiveEnum::Run(run_objective) => run_objective.get_name(),
             ObjectiveEnum::Game(game_objective) => game_objective.get_name(),
+        }
+    }
+}
+
+impl ObjectiveEnum {
+    pub fn as_level_run(&self) -> Option<&RunObjective> {
+        match self {
+            ObjectiveEnum::Run(run_objective) => Some(run_objective),
+            _ => None,
         }
     }
 }

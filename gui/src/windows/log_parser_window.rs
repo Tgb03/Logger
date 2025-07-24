@@ -1,24 +1,13 @@
-use core::{
-    export::Export, logs::parser::ParserResult, run::{
-        objectives::{
-            game_objective::GameObjective, game_run_objective::GameRunObjective, game_run_rundown::GameRunRundown, run_objective::RunObjective, Objective
-        },
-        run_enum::RunEnum,
-        timed_run::{GameRun, LevelRun},
-        traits::{Run, Timed},
-    }, save_manager::SaveManager
-};
+use core::{export::Export, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, split::Split, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager};
+use std::fs::File;
 
-use egui::{Color32, Ui};
-use std::{collections::HashSet, fs::File};
-use strum::IntoEnumIterator;
+use egui::Color32;
 
-use crate::{
-    run::RenderResult,
-    sorter_buttons::{OptionalVisualSorterButtons, VisualSorterButtons},
-};
+use crate::{run::RenderResult, sorter_buttons::{OptionalVisualSorterButtons, VisualSorterButtons}};
+
 
 pub struct LogParserWindow {
+    
     timed_runs: Vec<LevelRun>,
 
     set_all_secondary: bool,
@@ -26,11 +15,13 @@ pub struct LogParserWindow {
     set_all_glitched: bool,
     set_all_early_drop: bool,
 
-    game_obj: GameObjective,
-    player_count_input: String,
+    // game_obj: GameObjective,
+    // player_count_input: String,
+
 }
 
 impl LogParserWindow {
+
     pub fn new(runs: Vec<LevelRun>) -> Self {
         Self {
             timed_runs: runs,
@@ -38,12 +29,12 @@ impl LogParserWindow {
             set_all_overload: false,
             set_all_glitched: false,
             set_all_early_drop: false,
-            game_obj: GameObjective::default(),
-            player_count_input: "0".to_string(),
+            // game_obj: GameObjective::default(),
+            // player_count_input: "0".to_string(),
         }
     }
 
-    pub fn render(&mut self, ui: &mut Ui, save_manager: &mut SaveManager) {
+    pub fn render(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager) {
         self.render_buttons(ui);
 
         // handles all the set all buttons.
@@ -56,45 +47,45 @@ impl LogParserWindow {
 
             if secondary_checkbox.clicked() {
                 for timed_run in &mut self.timed_runs {
-                    timed_run.set_objective(
-                        &timed_run
-                            .get_objective::<RunObjective>()
-                            .unwrap()
-                            .with_secondary(self.set_all_secondary),
-                    );
+                    timed_run.set_objective({
+                        let ObjectiveEnum::Run(obj) = timed_run
+                            .get_objective()
+                            .clone() else { unreachable!() };
+                        ObjectiveEnum::Run(obj.with_secondary(self.set_all_secondary))
+                    });
                 }
             }
 
             if overload_checkbox.clicked() {
                 for timed_run in &mut self.timed_runs {
-                    timed_run.set_objective(
-                        &timed_run
-                            .get_objective::<RunObjective>()
-                            .unwrap()
-                            .with_overload(self.set_all_overload),
-                    );
+                    timed_run.set_objective({
+                        let ObjectiveEnum::Run(obj) = timed_run
+                            .get_objective()
+                            .clone() else { unreachable!() };
+                        ObjectiveEnum::Run(obj.with_overload(self.set_all_overload))
+                    });
                 }
             }
 
             if glitched_checkbox.clicked() {
                 for timed_run in &mut self.timed_runs {
-                    timed_run.set_objective(
-                        &timed_run
-                            .get_objective::<RunObjective>()
-                            .unwrap()
-                            .with_glitched(self.set_all_glitched),
-                    );
+                    timed_run.set_objective({
+                        let ObjectiveEnum::Run(obj) = timed_run
+                            .get_objective()
+                            .clone() else { unreachable!() };
+                        ObjectiveEnum::Run(obj.with_glitched(self.set_all_glitched))
+                    });
                 }
             }
 
             if early_drop_checkbox.clicked() {
                 for timed_run in &mut self.timed_runs {
-                    timed_run.set_objective(
-                        &timed_run
-                            .get_objective::<RunObjective>()
-                            .unwrap()
-                            .with_early_drop(self.set_all_early_drop),
-                    );
+                    timed_run.set_objective({
+                        let ObjectiveEnum::Run(obj) = timed_run
+                            .get_objective()
+                            .clone() else { unreachable!() };
+                        ObjectiveEnum::Run(obj.with_early_drop(self.set_all_early_drop))
+                    });
                 }
             }
         });
@@ -109,6 +100,7 @@ impl LogParserWindow {
                 );
                 self.timed_runs.clear();
             }
+            /* 
             if ui.button("Save ALL as FULL GAME RUN").clicked() {
                 let mut game_run = GameRun::new(self.game_obj.clone());
 
@@ -120,8 +112,9 @@ impl LogParserWindow {
 
                 game_run.validate();
 
-                save_manager.save(RunEnum::Game(game_run));
+                self.save_manager.save(RunEnum::Game(game_run));
             }
+            */
             if ui.button("Export to CSV").clicked() {
                 if let Some(path) = rfd::FileDialog::new()
                     .set_title("Export to file")
@@ -134,45 +127,6 @@ impl LogParserWindow {
                         }
                         Err(_) => {}
                     }
-                }
-            }
-        });
-
-        ui.horizontal(|ui| {
-            egui::ComboBox::from_label("")
-                .selected_text(format!("{}", self.game_obj.get_rundown()))
-                .height(256.0)
-                .show_ui(ui, |ui| {
-                    for key in GameRunRundown::iter() {
-                        ui.selectable_value(
-                            self.game_obj.get_mut_rundown(),
-                            key.clone(),
-                            key.to_string(),
-                        );
-                    }
-                });
-
-            egui::ComboBox::from_label(" ")
-                .selected_text(format!("{}", self.game_obj.get_objectives()))
-                .height(256.0)
-                .show_ui(ui, |ui| {
-                    for key in GameRunObjective::iter() {
-                        ui.selectable_value(
-                            self.game_obj.get_mut_objectives(),
-                            key.clone(),
-                            key.to_string(),
-                        );
-                    }
-                });
-
-            if ui
-                .add(egui::TextEdit::singleline(&mut self.player_count_input).desired_width(100.0))
-                .changed()
-            {
-                let player_count = self.player_count_input.parse::<u8>().ok();
-
-                if let Some(player_count) = player_count {
-                    self.game_obj = self.game_obj.clone().with_player_count(player_count);
                 }
             }
         });
@@ -194,7 +148,11 @@ impl LogParserWindow {
                         true => Color32::GREEN,
                         false => Color32::RED,
                     };
-                    let mut objective = timed_run.get_objective::<RunObjective>().unwrap();
+                    let mut objective = timed_run
+                        .get_objective()
+                        .as_level_run()
+                        .unwrap()
+                        .clone();
 
                     ui.horizontal(|ui| {
                         ui.label(&objective.level_name);
@@ -212,7 +170,7 @@ impl LogParserWindow {
                         ui.checkbox(&mut objective.glitched, "Glitched");
                         ui.checkbox(&mut objective.early_drop, "Early Drop");
 
-                        timed_run.set_objective(&objective);
+                        timed_run.set_objective(ObjectiveEnum::Run(objective.clone()));
 
                         if ui.button("SAVE RUN").clicked() {
                             result.save = true;
@@ -242,12 +200,8 @@ impl LogParserWindow {
             },
         );
     }
-}
 
-impl LogParserWindow {
-    pub fn set_times(&mut self, times: Vec<LevelRun>) {
-        self.timed_runs = times;
-    }
+
 }
 
 impl VisualSorterButtons<LevelRun> for LogParserWindow {
@@ -256,11 +210,3 @@ impl VisualSorterButtons<LevelRun> for LogParserWindow {
     }
 }
 
-impl From<ParserResult> for LogParserWindow {
-    fn from(value: ParserResult) -> Self {
-        let hash: HashSet<LevelRun> =
-            HashSet::from_iter(Into::<Vec<LevelRun>>::into(value));
-        let runs = hash.into_iter().collect();
-        Self::new(runs)
-    }
-}

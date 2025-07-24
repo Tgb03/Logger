@@ -1,17 +1,19 @@
 use core::{save_manager::SaveManager, time::Time};
 use std::collections::HashMap;
 
-use egui::{Color32, Ui};
+use egui::Color32;
 
 use crate::{run::RenderRun, sorter_buttons::render_buttons};
 
-#[derive(Default)]
+
 pub struct RunManagerWindow {
+    
     objective: String,
     show_split_times: bool,
 
     bottom_range: usize,
     merge_splits_string: String,
+
 }
 
 impl RunManagerWindow {
@@ -25,7 +27,16 @@ impl RunManagerWindow {
         result
     }
 
-    pub fn render(&mut self, ui: &mut Ui, save_manager: &mut SaveManager) {
+    pub fn new() -> Self {
+        Self {
+            objective: "".to_owned(),
+            show_split_times: false,
+            bottom_range: 0,
+            merge_splits_string: "".to_owned(),
+        }
+    }
+
+    pub fn render(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager) {
         ui.horizontal(|ui| {
             egui::ComboBox::from_label("Select loaded objective")
                 .selected_text(self.objective.to_string())

@@ -1,11 +1,11 @@
 use core::{
-    run::traits::{Run, Timed},
+    run::{split::Split, traits::Run},
     time::Time,
 };
 
 use egui::Ui;
 
-fn get_total_times<T: Timed>(timed_runs: &Vec<T>) -> Time {
+fn get_total_times<T: Split>(timed_runs: &Vec<T>) -> Time {
     let mut total: Time = Time::new();
 
     for timed_run in timed_runs {
@@ -27,7 +27,7 @@ pub fn render_buttons<T: Run>(timed_runs: &mut Vec<T>, ui: &mut Ui) {
         }
 
         if ui.button("Sort by objective").clicked() {
-            timed_runs.sort_by(|d, e| d.get_objective_str().cmp(&e.get_objective_str()));
+            timed_runs.sort_by(|d, e| d.get_objective().cmp(&e.get_objective()));
         }
 
         if ui.button("Sort by time").clicked() {

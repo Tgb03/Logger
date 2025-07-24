@@ -9,7 +9,7 @@ use super::{
     game_run_rundown::GameRunRundown, run_objective::RunObjective,
 };
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default, PartialOrd, Ord)]
 pub struct GameObjective {
     pub rundown: GameRunRundown,
     pub objective: GameRunObjective,
