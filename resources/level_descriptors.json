@@ -88,6 +88,196 @@
             }
         }
     ],
+    "R1B1": [
+        {
+            "Ignore": {
+                "count": 5
+            }
+        },
+        {
+            "KeyConsumer": {
+                "key_type": "ColoredKey",
+                "zones": [
+                    {
+                        "name": "Key",
+                        "zone": 50,
+                        "start_weight": 0,
+                        "middle_weight": 2500,
+                        "end_weight": 10000,
+                        "spawns_per_room": [4, 4, 14, 9, 6, 6, 9, 6]
+                    }
+                ]
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 0,
+                "shown_number": 38,
+                "medi": 0.2,
+                "ammo": 0.2,
+                "tool": 0.2,
+                "disi": 0.0,
+                "artifact_count": 2,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 1,
+                "shown_number": 39,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 2,
+                "shown_number": 40,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 2,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 3,
+                "shown_number": 41,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 4,
+                "shown_number": 42,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 1,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 5,
+                "shown_number": 43,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 6,
+                "shown_number": 44,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 2,
+                "consumable_in_container": 5,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 7,
+                "shown_number": 45,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 2,
+                "consumable_in_container": 5,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ObjectiveConsumer": {
+                "objectives_in_zones": [
+                    [
+                        {
+                            "name": "ID",
+                            "zone": 39,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [14, 9]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 40,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [9, 9, 14]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 41,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [14, 4, 4, 6, 9]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 42,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [9, 9]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 43,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [14, 9]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 44,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [9, 14]
+                        },
+                        {
+                            "name": "ID",
+                            "zone": 45,
+                            "start_weight": 0,
+                            "middle_weight": 0,
+                            "end_weight": 10000,
+                            "spawns_per_room": [6, 6, 6, 9, 14]
+                        }
+                    ]
+                ]
+            }
+        }
+    ],
     "R2A1": [
         {
             "Ignore": {
@@ -202,6 +392,241 @@
                 "middle_weight": 0,
                 "end_weight": 0,
                 "spawns_per_room": [6]
+            }
+        }
+    ],
+    "R3A2": [
+        {
+            "Ignore": {
+                "count": 5
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 0,
+                "shown_number": 124,
+                "medi": 0.4,
+                "ammo": 0.4,
+                "tool": 0.4,
+                "disi": 0.0,
+                "artifact_count": 7,
+                "consumable_in_container": 4,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 1,
+                "shown_number": 125,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.5,
+                "artifact_count": 5,
+                "consumable_in_container": 4,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 2,
+                "shown_number": 126,
+                "medi": 0.75,
+                "ammo": 0.75,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 6,
+                "consumable_in_container": 4,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 3,
+                "shown_number": 127,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.5,
+                "artifact_count": 5,
+                "consumable_in_container": 3,
+                "consumable_in_worldspawn": 1
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 4,
+                "shown_number": 128,
+                "medi": 0.6,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.5,
+                "artifact_count": 7,
+                "consumable_in_container": 4,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "Ignore": {
+                "count": 4
+            }
+        },
+        {
+            "KeyIDConsumer": {       
+                "name": "Cell",
+                "zone": 124,
+                "start_weight": 0,
+                "middle_weight": 0,
+                "end_weight": 0,
+                "spawns_per_room": [1, 5, 3]
+            }
+        },
+        {
+            "KeyIDConsumer": {       
+                "name": "Cell",
+                "zone": 126,
+                "start_weight": 0,
+                "middle_weight": 100,
+                "end_weight": 300,
+                "spawns_per_room": [2, 3, 1, 3, 1, 1, 3]
+            }
+        },
+        {
+            "KeyIDConsumer": {       
+                "name": "Cell",
+                "zone": 127,
+                "start_weight": 0,
+                "middle_weight": 100,
+                "end_weight": 300,
+                "spawns_per_room": [3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1]
+            }
+        },
+        {
+            "KeyIDConsumer": {       
+                "name": "Cell",
+                "zone": 128,
+                "start_weight": 0,
+                "middle_weight": 0,
+                "end_weight": 500,
+                "spawns_per_room": [2, 1, 1, 1, 1, 3, 3, 1, 1, 2]
+            }
+        }
+    ],
+    "R3B2": [
+        {
+            "Ignore": {
+                "count": 9
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 0,
+                "shown_number": 506,
+                "medi": 0.75,
+                "ammo": 0.3,
+                "tool": 0.0,
+                "disi": 1.75,
+                "artifact_count": 3,
+                "consumable_in_container": 3,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 1,
+                "shown_number": 507,
+                "medi": 0.3,
+                "ammo": 0.3,
+                "tool": 0.3,
+                "disi": 0.0,
+                "artifact_count": 5,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 2,
+                "shown_number": 508,
+                "medi": 0.0,
+                "ammo": 0.0,
+                "tool": 0.0,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 7,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "Ignore": {
+                "count": 1
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 3,
+                "shown_number": 509,
+                "medi": 0.3,
+                "ammo": 0.7,
+                "tool": 0.3,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 3,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "KeyIDConsumer": {
+                "name": "Cell",
+                "zone": 541,
+                "start_weight": 0,
+                "middle_weight": 0,
+                "end_weight": 0,
+                "spawns_per_room": [1, 3, 2, 2]
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 4,
+                "shown_number": 510,
+                "medi": 0.3,
+                "ammo": 0.3,
+                "tool": 0.3,
+                "disi": 1.0,
+                "artifact_count": 5,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 5,
+                "shown_number": 511,
+                "medi": 1.0,
+                "ammo": 1.5,
+                "tool": 1.0,
+                "disi": 0.0,
+                "artifact_count": 3,
+                "consumable_in_container": 1,
+                "consumable_in_worldspawn": 0
+            }
+        },
+        {
+            "Ignore": {
+                "count": 3
+            }
+        },
+        {
+            "ZoneConsumer": {
+                "zone_index": 6,
+                "shown_number": 512,
+                "medi": 0.5,
+                "ammo": 0.5,
+                "tool": 0.5,
+                "disi": 0.0,
+                "artifact_count": 2,
+                "consumable_in_container": 0,
+                "consumable_in_worldspawn": 0
             }
         }
     ],
