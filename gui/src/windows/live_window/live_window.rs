@@ -85,7 +85,7 @@ impl LiveWindow {
         let c_str = CString::new(file_path.to_string_lossy().as_bytes()).ok().unwrap();
         
         unsafe { (GTFO_API.start_listener)(c_str.as_ptr()) }
-        
+
         result
     }
 
