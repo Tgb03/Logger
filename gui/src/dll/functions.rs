@@ -4,7 +4,12 @@ use libloading::os::windows::{Library, Symbol};
 use once_cell::sync::Lazy;
 
 #[cfg(not(debug_assertions))]
-static MY_DLL: &[u8] = include_bytes!("../../../resources/gtfo_log_reader.dll");
+#[cfg(target_arch="x86_64")]
+static MY_DLL: &[u8] = include_bytes!("../../../resources/gtfo_log_reader_core_64bit.dll");
+
+#[cfg(not(debug_assertions))]
+#[cfg(target_arch="x86")]
+static MY_DLL: &[u8] = include_bytes!("../../../resources/gtfo_log_reader_core_32bit.dll");
 
 // Define the function pointer types
 pub type EventCallback = extern "C" fn(context: *const c_void, message: *const c_char);
@@ -66,6 +71,7 @@ pub static GTFO_API: Lazy<GtfoLogReader> = Lazy::new(|| {
 
         let mut file = File::create(&path).unwrap();
         let _ = file.write_all(MY_DLL);
+        let _ = file.flush();
         drop(file);
 
         Library::new(path).expect("Failed to load DLL")

@@ -169,6 +169,7 @@ pub struct LevelRunRenderer {
     run_buffer: Option<Vec<NamedSplit>>,
 
     continous_parser: ContinousParser<RunGeneratorResult>,
+    no_save_for_frames: usize,
 
 }
 
@@ -179,6 +180,7 @@ impl LevelRunRenderer {
             run_render: RunRender::new("".to_owned(), settings),
             continous_parser: ContinousParser::new(Code::RunInfo as u8),
             run_buffer: None,
+            no_save_for_frames: 5,
         }
     }
 
@@ -189,6 +191,7 @@ impl LevelRunRenderer {
         reader: &impl ObjectiveReader<Objective = RunObjective>, 
         ui: &mut Ui
     ) -> usize {
+        self.no_save_for_frames = self.no_save_for_frames.saturating_sub(1);
         if let Some(buffer) = self.run_buffer.take() {
             self.run_render = RunRender::new(self.run_render.objective_str.clone(), settings);
 
@@ -209,7 +212,11 @@ impl LevelRunRenderer {
                 },
                 RunGeneratorResult::LevelRun(timed_run) => {
                     let level_run: LevelRun = timed_run.into();
-                    save_manager.save(RunEnum::Level(level_run.clone()));
+                    
+                    if self.no_save_for_frames == 0 {
+                        save_manager.save(RunEnum::Level(level_run.clone()));
+                    }
+
                     if let Some(split) = level_run.get_split_by_name("WIN") {
                         let split: NamedSplit = split.into();
                         self.run_render.add_split(&split, save_manager);
