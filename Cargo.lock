@@ -505,7 +505,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "3.0.4"
+version = "3.0.5"
 dependencies = [
  "bincode",
  "directories",
@@ -1147,8 +1147,8 @@ dependencies = [
 
 [[package]]
 name = "glr_core"
-version = "1.0.0"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#f1eebe4850809e490f9b0032b5140861b7822f4f"
+version = "1.0.1"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#071de4e3579cf835f5acdeaef086534247b2fb76"
 dependencies = [
  "num_enum",
  "serde",
@@ -1158,8 +1158,8 @@ dependencies = [
 
 [[package]]
 name = "glr_lib"
-version = "1.0.0"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#f1eebe4850809e490f9b0032b5140861b7822f4f"
+version = "1.0.1"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#071de4e3579cf835f5acdeaef086534247b2fb76"
 dependencies = [
  "bincode",
  "enum_dispatch",
@@ -1229,7 +1229,7 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "3.0.4"
+version = "3.0.5"
 dependencies = [
  "core",
  "directories",
@@ -4147,9 +4147,9 @@ dependencies = [
 
 [[package]]
 name = "zerovec"
-version = "0.11.2"
+version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a05eb080e015ba39cc9e23bbe5e7fb04d5fb040350f99f34e338d5fdd294428"
+checksum = "bdbb9122ea75b11bf96e7492afb723e8a7fbe12c67417aa95e7e3d18144d37cd"
 dependencies = [
  "yoke",
  "zerofrom",
