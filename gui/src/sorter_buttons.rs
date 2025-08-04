@@ -1,9 +1,9 @@
-use core::{
-    run::{split::Split, traits::Run},
-    time::Time,
-};
+
+
+use core::run::traits::Run;
 
 use egui::Ui;
+use glr_core::{split::Split, time::Time};
 
 fn get_total_times<T: Split>(timed_runs: &Vec<T>) -> Time {
     let mut total: Time = Time::new();

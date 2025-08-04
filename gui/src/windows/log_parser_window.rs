@@ -1,8 +1,9 @@
-use core::{export::Export, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, split::Split, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager};
+use core::{export::Export, run::{objectives::{objective_enum::ObjectiveEnum, Objective}, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager};
 use std::fs::File;
 
 use egui::Color32;
 
+use glr_core::split::Split;
 use crate::{run::RenderResult, sorter_buttons::{OptionalVisualSorterButtons, VisualSorterButtons}};
 
 

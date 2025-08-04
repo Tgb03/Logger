@@ -1,6 +1,8 @@
 use egui::Label;
+use glr_core::seed_indexer_result::OutputSeedIndexer;
+use glr_lib::dll_exports::enums::SubscribeCode;
 
-use crate::{dll::{callback::Code, exported_data::OutputSeedIndexer, parse_continously::ContinousParser}, render::Render};
+use crate::{dll::parse_continously::ContinousParser, render::Render};
 
 
 pub struct SeedIndexer {
@@ -14,7 +16,7 @@ impl SeedIndexer {
     pub fn new() -> Self {
         Self {
             data_found: Vec::new(),
-            continous_parser: ContinousParser::new(Code::SeedIndexer as u8)
+            continous_parser: ContinousParser::new(SubscribeCode::SeedIndexer)
         }
     }
 }
@@ -36,6 +38,9 @@ impl Render for OutputSeedIndexer {
                     }
                 )));
             },
+            OutputSeedIndexer::ResourcePack(t, id, size) => {
+                ui.add(Label::new(format!("{:?} at {id} of size {size}", t)));
+            }
             _ => {},
         }
     }
@@ -49,7 +54,7 @@ impl Render for SeedIndexer {
             match res {
                 OutputSeedIndexer::GenerationStart => { self.data_found.clear(); },
                 OutputSeedIndexer::GenerationEnd | OutputSeedIndexer::Seed(_) | 
-                OutputSeedIndexer::ZoneGenEnded(_) | OutputSeedIndexer::ResourcePack(_, _) => {},
+                OutputSeedIndexer::ZoneGenEnded(_) => {},
                 v => { 
                     self.data_found.push(v); 
                 }

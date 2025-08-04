@@ -1,8 +1,10 @@
 use std::time::Instant;
 
 use egui::{Color32, RichText};
+use glr_core::run_gen_result::RunGeneratorResult;
+use glr_lib::dll_exports::enums::SubscribeCode;
 
-use crate::{dll::{callback::Code, exported_data::RunGeneratorResult, parse_continously::ContinousParser}, render::Render};
+use crate::{dll::parse_continously::ContinousParser, render::Render};
 
 
 pub struct Timer {
@@ -18,7 +20,7 @@ impl Default for Timer {
         Self {
             start: Instant::now(),
             active: false,
-            continous_parser: ContinousParser::new(Code::RunInfo as u8)
+            continous_parser: ContinousParser::new(SubscribeCode::RunInfo)
         }
     }
 }

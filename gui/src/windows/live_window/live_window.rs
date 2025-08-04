@@ -1,9 +1,8 @@
 
 
 use core::save_manager::SaveManager;
-use std::ffi::CString;
 
-use crate::{dll::functions::GTFO_API, render::Render, windows::{live_window::{mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer}, settings_window::SettingsWindow}};
+use crate::{render::Render, windows::{live_window::{mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer}, settings_window::SettingsWindow}};
 
 #[derive(Default)]
 pub struct LiveWindow {
@@ -82,9 +81,8 @@ impl LiveWindow {
         }
 
         let file_path = settings.get_path("logs_path").unwrap().clone();
-        let c_str = CString::new(file_path.to_string_lossy().as_bytes()).ok().unwrap();
         
-        unsafe { (GTFO_API.start_listener)(c_str.as_ptr()) }
+        glr_lib::dll_exports::functions::start_listener(file_path);
 
         result
     }

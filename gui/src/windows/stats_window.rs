@@ -1,11 +1,12 @@
-use core::{run::{split::Split, timed_run::LevelRun, traits::Run}, time::Time};
+use core::run::{timed_run::LevelRun, traits::Run};
 use std::{collections::HashMap, fmt::Display};
 
 use egui::{Color32, Ui};
+use glr_core::time::Time;
 use itertools::Itertools;
 
 use crate::render::Render;
-
+use glr_core::split::Split;
 
 
 pub struct LevelStat {

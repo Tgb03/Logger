@@ -15,7 +15,7 @@ This app aims to streamline using logs to get all the data from them automatical
 
 - [x] Key/Objective item support
 - [x] Consumable support
-- [ ] Resource Support
+- [x] Resource Support
 
 ## WardenMapper:
 - [x] Automatically find keys.

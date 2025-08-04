@@ -3,7 +3,7 @@ members = ["core", "gui"]
 resolver = "2"
 
 [workspace.package]
-version = "3.0.3"
+version = "3.0.4"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
@@ -21,4 +21,3 @@ opt-level = 3
 lto = true
 strip = "symbols"
 overflow-checks = false
-panic = "abort"

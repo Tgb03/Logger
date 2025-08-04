@@ -1,7 +1,10 @@
-use core::logs::token::Token;
+
 use std::collections::HashSet;
 
-use crate::{dll::{callback::Code, parse_continously::ContinousParser}, render::Render};
+use glr_core::token::Token;
+use glr_lib::dll_exports::enums::SubscribeCode;
+
+use crate::{dll::{parse_continously::ContinousParser}, render::Render};
 
 
 pub struct RunCounter {
@@ -18,7 +21,7 @@ impl Default for RunCounter {
             run_counter: 0,
             seed_counter: 0,
             seeds: HashSet::new(),
-            continous_parser: ContinousParser::new(Code::Tokenizer as u8),
+            continous_parser: ContinousParser::new(SubscribeCode::Tokenizer),
         }
     }
 }

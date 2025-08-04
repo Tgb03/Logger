@@ -1,11 +1,13 @@
-use core::{logs::location::Location, run::objectives::run_objective::RunObjective, save_manager::SaveManager};
+use core::{run::objectives::run_objective::RunObjective, save_manager::SaveManager};
 use std::{collections::{HashMap, VecDeque}, fs, u64};
 
 use egui::{Color32, Ui};
+use glr_core::location::Location;
+use glr_lib::dll_exports::enums::SubscribeCode;
 use ron::de::SpannedError;
 
 use crate::{
-    dll::{callback::Code, parse_continously::ContinousParser}, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}
+    dll::{parse_continously::ContinousParser}, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}
 };
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
@@ -188,7 +190,7 @@ impl Mapper {
         objective: String,
     ) -> Self {
         Self {
-            continous_parser: ContinousParser::new(Code::Mapper as u8),
+            continous_parser: ContinousParser::new(SubscribeCode::Mapper),
             level_objective: objective,
             location_colors: Default::default(),
             locations: Default::default(),

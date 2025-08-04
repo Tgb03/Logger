@@ -1,8 +1,7 @@
 use std::{ffi::{c_char, c_void, CStr}, sync::{atomic::AtomicU32, mpsc::{self, Receiver, Sender}, Arc}};
 
+use glr_lib::dll_exports::{enums::{SubscribeCode, SubscriptionType}, structs::CallbackInfo};
 use serde::Deserialize;
-
-use crate::dll::functions::GTFO_API;
 
 static CHANNEL_ID_COUNT: AtomicU32 = AtomicU32::new(1);
 
@@ -14,7 +13,7 @@ where
     recv: Receiver<T>,
 
     channel_id: u32,
-    code: u8,
+    code: SubscribeCode,
 
 }
 
@@ -22,15 +21,21 @@ impl<T> ContinousParser<T>
 where 
     T: for<'a> Deserialize<'a> {
 
-    pub fn new(code: u8) -> Self {
+    pub fn new(code: SubscribeCode) -> Self {
         let (sender, recv) = mpsc::channel();
         let channel_id = CHANNEL_ID_COUNT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
         let arc_sender: Arc<Sender<T>> = Arc::new(sender.clone());
         let context = Arc::into_raw(arc_sender) as *const c_void;
 
-        unsafe {
-            (GTFO_API.add_callback)(code, 1, channel_id, context, callback::<T>)
-        }
+        glr_lib::dll_exports::functions::add_callback(
+            CallbackInfo::new(
+                code as SubscribeCode, 
+                SubscriptionType::JSON, 
+                channel_id, 
+                context.into(), 
+                Some(callback::<T>)
+            )
+        );
 
         Self {
             recv,
@@ -50,7 +55,7 @@ where
     T: for<'a> Deserialize<'a> {
     
     fn drop(&mut self) {
-        unsafe { (GTFO_API.remove_callback)(self.code, self.channel_id); }
+        glr_lib::dll_exports::functions::remove_callback(self.code, self.channel_id);
     }
 }
 

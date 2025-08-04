@@ -1,6 +1,13 @@
 use enum_dispatch::enum_dispatch;
+use glr_core::{split::Split, time::Time};
+use crate::run::timed_run::{LevelRun, GameRun};
 
-use crate::{run::{objectives::objective_enum::ObjectiveEnum, split::Split, timed_run::RunEnum}, time::Time};
+use crate::{
+    run::{
+        objectives::objective_enum::ObjectiveEnum, 
+        timed_run::RunEnum
+    }
+};
 
 #[enum_dispatch]
 pub trait Run: Split {
@@ -21,46 +28,3 @@ pub trait Run: Split {
             .find(|s| s.get_name() == split_name)
     }
 }
-
-impl<S: Split> Split for Vec<S> {
-    fn get_name(&self) ->  &str {
-        ""
-    }
-
-    fn get_time(&self) -> Time {
-        self.iter()
-            .map(|v| v.get_time())
-            .fold(Time::new(), |a, b| a + b)
-    }
-}
-
-
-impl<S: Split> Run for Vec<S> {
-    fn get_splits<'a>(&'a self) -> Box<dyn Iterator<Item =  &'a dyn Split> +'a> {
-        Box::new(self.iter().map(|v| v as &dyn Split))
-    }
-
-    fn get_time_for_split(&self, split_name: &str) -> Option<Time> {
-        self.iter()
-            .find(|s| s.get_name() == split_name)
-            .map(|v| v.get_time())
-    }
-
-    fn is_win(&self) -> bool {
-        false
-    }
-
-    fn len(&self) -> usize {
-        self.len()
-    }
-
-    
-    fn get_objective(&self) ->  &ObjectiveEnum {
-        panic!()
-    }
-    
-    fn set_win(&mut self, _: bool) {}
-    fn set_objective(&mut self, _: ObjectiveEnum) {}
-    fn set_objective_str(&mut self, _: &str) {}
-}
-
