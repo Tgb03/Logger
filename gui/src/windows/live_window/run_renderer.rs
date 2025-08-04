@@ -1,9 +1,11 @@
-use core::{run::{objectives::run_objective::RunObjective, split::{NamedSplit, Split}, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager, time::Time};
+use core::{run::{objectives::run_objective::RunObjective, timed_run::{LevelRun, RunEnum}, traits::Run}, save_manager::SaveManager};
 use std::collections::VecDeque;
 
 use egui::{Color32, Ui};
+use glr_core::{run_gen_result::RunGeneratorResult, split::{NamedSplit, Split}, time::Time};
+use glr_lib::dll_exports::enums::SubscribeCode;
 
-use crate::{dll::{callback::Code, exported_data::RunGeneratorResult, parse_continously::ContinousParser}, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}};
+use crate::{dll::parse_continously::ContinousParser, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}};
 
 
 struct RunRender {
@@ -129,9 +131,13 @@ impl RunRender {
         }
     }
 
-    fn get_time(&mut self, split: &impl Split) -> Time {
+    fn get_time<S: Split>(&mut self, split: &S) -> Time {
         self.total_time += split.get_time();
-        self.run_buffer.push(split.into());
+        let split = NamedSplit::new(
+            split.get_time(), 
+            split.get_name().to_owned()
+        );
+        self.run_buffer.push(split);
 
         self.total_time
     }
@@ -147,7 +153,13 @@ impl RunRender {
         save_manager.get_splits_req(&self.objective_str, split.get_name())
             .unwrap_or(&vec![split.get_name().to_owned()])
             .iter()
-            .map(|v| self.run_buffer.get_time_for_split(v))
+            .map(|v| 
+                self.run_buffer.iter()
+                    .find(|ns| 
+                        ns.get_name() == v
+                    )
+                    .map(|v| v.get_time())
+            )
             .fold(Some(Time::new()), |a, b| {
                 match (a, b) {
                     (Some(a), Some(b)) => Some(a + b),
@@ -178,7 +190,7 @@ impl LevelRunRenderer {
     pub fn new(settings: &SettingsWindow) -> Self {
         Self {
             run_render: RunRender::new("".to_owned(), settings),
-            continous_parser: ContinousParser::new(Code::RunInfo as u8),
+            continous_parser: ContinousParser::new(SubscribeCode::RunInfo),
             run_buffer: None,
             no_save_for_frames: 5,
         }
@@ -218,7 +230,10 @@ impl LevelRunRenderer {
                     }
 
                     if let Some(split) = level_run.get_split_by_name("WIN") {
-                        let split: NamedSplit = split.into();
+                        let split = NamedSplit::new(
+                            split.get_time(), 
+                            split.get_name().to_owned()
+                        );
                         self.run_render.add_split(&split, save_manager);
                         self.run_render.objective_str = level_run.get_objective().to_string();
                     }

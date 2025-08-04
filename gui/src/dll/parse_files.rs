@@ -1,26 +1,24 @@
 use core::run::timed_run::LevelRun;
-use std::{ffi::{c_char, c_void, CStr, CString}, path::PathBuf, sync::{mpsc::Sender, Arc}};
+use std::{ffi::{c_char, c_void, CStr}, path::PathBuf, sync::{mpsc::Sender, Arc}};
 
-
-use crate::dll::{callback::Code, exported_data::RunGeneratorResult, functions::GTFO_API};
-
+use glr_core::run_gen_result::RunGeneratorResult;
+use glr_lib::dll_exports::{
+    enums::{SubscribeCode, SubscriptionType}, structs::CallbackInfo
+};
 
 pub fn parse_runs(file_paths: Vec<PathBuf>, sender: &Sender<LevelRun>) {
     let arc_sender: Arc<Sender<LevelRun>> = Arc::new(sender.clone());
     let context = Arc::into_raw(arc_sender) as *const c_void;
-        
-    let paths: Vec<CString> = file_paths.iter()
-        .map(|v| v.to_string_lossy())
-        .filter_map(|v| CString::new(v.as_ref()).ok())
-        .collect();
 
-    let paths_ptr: Vec<*const i8> = paths.iter()
-        .map(|v| v.as_ptr())
-        .collect();
-
-    unsafe {
-        (GTFO_API.process_paths)(paths_ptr.as_ptr(), paths.len() as u32, Code::RunInfo as u8, 1, context, callback);
-    }
+    let callback_info = CallbackInfo::new(
+        SubscribeCode::RunInfo, 
+        SubscriptionType::JSON, 
+        0, 
+        context.into(), 
+        Some(callback)
+    );
+    
+    glr_lib::dll_exports::functions::process_paths(file_paths, callback_info); 
 }
 
 

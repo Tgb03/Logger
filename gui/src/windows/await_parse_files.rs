@@ -4,7 +4,7 @@ use std::{path::PathBuf, sync::{atomic::AtomicUsize, mpsc::{self, Receiver}, Arc
 
 use egui::ProgressBar;
 
-use crate::{dll::parse_files, render::Render};
+use crate::{dll::parse_files::parse_runs, render::Render};
 
 const MAX_THREAD: usize = 8;
 
@@ -56,7 +56,7 @@ impl AwaitParseFiles {
                     if files.is_empty() { return }
                     
                     let len_parsed = files.len();
-                    parse_files::parse_runs(files, &sender_clone);
+                    parse_runs(files, &sender_clone);
                     left_clone.fetch_sub(len_parsed, std::sync::atomic::Ordering::Relaxed);
                 }
             }));

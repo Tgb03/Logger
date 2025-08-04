@@ -5,16 +5,16 @@ use std::{
 };
 
 use directories::ProjectDirs;
+use glr_core::{split::Split, time::Time};
 
 use crate::{
     run::{
         merge_splits::{
             LevelsMergeSplits, 
             MergeSplits
-        }, split::Split, timed_run::RunEnum, traits::Run
+        }, timed_run::RunEnum, traits::Run
     },
     sort::Sortable,
-    time::Time,
 };
 
 /// Save manager struct

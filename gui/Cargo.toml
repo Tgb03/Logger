@@ -10,6 +10,8 @@ strum.workspace = true
 strum_macros.workspace = true
 might_sleep.workspace = true
 itertools = "0.14.0"
+glr_lib = { git = "https://github.com/Tgb03/GTFO_LogReader", package = "glr_lib" }
+glr_core = { git = "https://github.com/Tgb03/GTFO_LogReader", package = "glr_core" }
 eframe = { version = "0.30.0", default-features = false, features = [
   "glow", "default_fonts" 
 ] }

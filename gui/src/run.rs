@@ -4,11 +4,11 @@ use core::{
         traits::Run,
     },
     save_manager::SaveManager,
-    time::Time,
 };
 use std::ops::Range;
 
 use egui::{Color32, Ui};
+use glr_core::time::Time;
 
 #[derive(Default)]
 pub struct RenderResult {

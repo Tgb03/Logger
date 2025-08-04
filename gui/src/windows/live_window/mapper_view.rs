@@ -1,7 +1,8 @@
-use core::logs::location::Location;
+
 use std::{collections::{HashMap, HashSet}, fmt, ops::RangeInclusive};
 
 use egui::Color32;
+use glr_core::location::Location;
 use serde::{de::{self, SeqAccess, Visitor}, Deserialize, Deserializer, Serialize};
 
 pub trait LookUpColor {

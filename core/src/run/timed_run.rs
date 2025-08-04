@@ -1,17 +1,34 @@
 
 use enum_dispatch::enum_dispatch;
+use glr_core::{split::{NamedSplit, Split}, time::Time};
 use serde::{Deserialize, Serialize};
 
-use crate::{run::{objectives::objective_enum::ObjectiveEnum, split::{NamedSplit, Split}, traits::Run}, time::Time};
+use crate::{run::{objectives::{objective_enum::ObjectiveEnum, run_objective::RunObjective}, traits::Run}};
 
 pub type LevelRun = TimedRun<NamedSplit>;
 pub type GameRun = TimedRun<LevelRun>;
 
-#[enum_dispatch(Run, Split)]
+#[enum_dispatch(Run)]
 #[derive(PartialEq, Eq, Hash, Debug, Serialize, Deserialize, Clone)]
 pub enum RunEnum {
     Level(LevelRun),
     Game(GameRun),
+}
+
+impl Split for RunEnum {
+    fn get_name(&self) -> &str {
+        match self {
+            RunEnum::Level(timed_run) => timed_run.get_name(),
+            RunEnum::Game(timed_run) => timed_run.get_name(),
+        }
+    }
+
+    fn get_time(&self) -> Time {
+        match self {
+            RunEnum::Level(timed_run) => timed_run.get_time(),
+            RunEnum::Game(timed_run) => timed_run.get_time(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
@@ -115,4 +132,24 @@ where
         self.splits.push(split);
     }
 
+}
+
+
+impl From<glr_core::run::TimedRun<glr_core::split::NamedSplit>> for LevelRun {
+    fn from(value: glr_core::run::TimedRun<glr_core::split::NamedSplit>) -> Self {
+        let mut lr = LevelRun::default();
+        let objective = RunObjective::from_name(format!("{}", value.get_name()))
+            .with_secondary(value.get_secondary())
+            .with_overload(value.get_overload())
+            .with_player_count(value.get_player_count());
+
+        lr.set_objective(ObjectiveEnum::Run(objective));
+        lr.set_win(value.get_is_win());
+
+        for split in value.iter_splits() {
+            lr.add_split(split.clone());
+        }
+
+        lr
+    }
 }

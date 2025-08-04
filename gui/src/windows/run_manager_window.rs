@@ -1,7 +1,8 @@
-use core::{save_manager::SaveManager, time::Time};
+use core::save_manager::SaveManager;
 use std::collections::HashMap;
 
 use egui::Color32;
+use glr_core::time::Time;
 
 use crate::{run::RenderRun, sorter_buttons::render_buttons};
 
