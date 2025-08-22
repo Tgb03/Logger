@@ -38,8 +38,8 @@ impl Render for OutputSeedIndexer {
                     }
                 )));
             },
-            OutputSeedIndexer::ResourcePack(t, id, size) => {
-                ui.add(Label::new(format!("{:?} at {id} of size {size}", t)));
+            OutputSeedIndexer::ResourcePack(t, zone, id, size) => {
+                ui.add(Label::new(format!("{:?} in {zone} at {id} of size {size}", t)));
             }
             _ => {},
         }
