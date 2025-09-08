@@ -171,6 +171,7 @@ pub struct SettingsWindow {
     general: Vec<String>,
     splitter: Vec<String>,
     mapper: Vec<String>,
+    foresight: Vec<String>,
 
 }
 
@@ -180,63 +181,86 @@ impl Default for SettingsWindow {
             return s;
         }
 
-        let log_path = Self::logs_path()
-                .unwrap_or_default();
-
-        let mut s = Self {
+        let s = Self {
             setting_hash: HashMap::new(),
             general: Vec::new(),
             splitter: Vec::new(),
             mapper: Vec::new(),
+            foresight: Vec::new(),
         };
 
-        s.add_to_general("automatic_loading".into(), Field::new("Automatic Loading of Runs".into(), FieldValue::Boolean(true)));
-        s.add_to_general("automatic_saving".into(), Field::new("Automatic Saving of Runs".into(), FieldValue::Boolean(false)));
-        s.add_to_general("show_real_timer".into(), Field::new("Show real timer   Warning: this timer may not be accurate. Use the in game timer for that.".into(), FieldValue::Boolean(false)));
-        s.add_to_general("show_game_splitter".into(), Field::new("Show game splitter".into(), FieldValue::Boolean(false)));
-        s.add_to_general("show_run_splitter".into(), Field::new("Show run splitter".into(), FieldValue::Boolean(true)));
-        s.add_to_general("show_run_counter".into(), Field::new("Show run counter".into(), FieldValue::Boolean(true)));
-
-        s.add_to_splitter("window_transparency".into(), Field::new("LiveWindow Transparency".into(), FieldValue::Float(0.6f32, "0.6f".to_owned())));
-        s.add_to_splitter("logs_path".into(), Field::new("Path to logs folder: ".into(), FieldValue::Path(
-            log_path.clone(),
-            log_path.into_os_string().into_string().unwrap_or_default()
-                // unfortunately there is no nicer way of doing this
-                // as it is required
-        )));
-        s.add_to_splitter("compare_record".into(), Field::new("Compare to saved record".into(), FieldValue::Boolean(true)));
-        s.add_to_splitter("compare_best_splits".into(), Field::new("Compare to best splits".into(), FieldValue::Boolean(true)));
-        s.add_to_splitter("run_splitter_length".into(), Field::new("Run Splitter max length".into(), FieldValue::Integer(100, "100".into())));
-        s.add_to_splitter("game_splitter_length".into(), Field::new("Game Splitter max length".into(), FieldValue::Integer(5, "5".into())));
-        s.add_to_splitter("x_position".into(), Field::new("X position".into(), FieldValue::Float(0f32, "0".into())));
-        s.add_to_splitter("y_position".into(), Field::new("Y position".into(), FieldValue::Float(250f32, "250".into())));
-        s.add_to_splitter("x_size".into(), Field::new("X size    ".into(), FieldValue::Float(250f32, "250".into())));
-
-        s.add_to_mapper("show_mapper".into(), Field::new("Show mapper in live splitter".into(), FieldValue::Boolean(true)));
-        s.add_to_mapper("show_foresight".into(), Field::new("Show Foresight in live splitter".into(), FieldValue::Boolean(true)));
-        s.add_to_mapper("show_objectives".into(), Field::new("Show objectives items in live splitter".into(), FieldValue::Boolean(true)));
-        s.add_to_mapper("show_code_guess".into(), Field::new("Show code guess".into(), FieldValue::Boolean(false)));
-        s.add_to_mapper("code_guess_line_count".into(), Field::new("Code guess number of lines: ".into(), FieldValue::Integer(3, "3".into())));
-        s.add_to_mapper("code_guess_word_count".into(), Field::new("Code guess number of words per line: ".into(), FieldValue::Integer(7, "7".into())));
-
-        s
+        s.add_all()
     }
 }
 
 impl SettingsWindow {
 
+    fn add_all(mut self) -> Self {
+        let log_path = Self::logs_path()
+            .unwrap_or_default();
+
+        self.add_to_general("automatic_loading".into(), Field::new("Automatic Loading of Runs".into(), FieldValue::Boolean(true)));
+        self.add_to_general("automatic_saving".into(), Field::new("Automatic Saving of Runs".into(), FieldValue::Boolean(false)));
+        self.add_to_general("show_real_timer".into(), Field::new("Show real timer   Warning: this timer may not be accurate. Use the in game timer for that.".into(), FieldValue::Boolean(false)));
+        self.add_to_general("show_game_splitter".into(), Field::new("Show game splitter".into(), FieldValue::Boolean(false)));
+        self.add_to_general("show_run_splitter".into(), Field::new("Show run splitter".into(), FieldValue::Boolean(true)));
+        self.add_to_general("show_run_counter".into(), Field::new("Show run counter".into(), FieldValue::Boolean(true)));
+
+        self.add_to_splitter("window_transparency".into(), Field::new("LiveWindow Transparency".into(), FieldValue::Float(0.6f32, "0.6f".to_owned())));
+        self.add_to_splitter("logs_path".into(), Field::new("Path to logs folder: ".into(), FieldValue::Path(
+            log_path.clone(),
+            log_path.into_os_string().into_string().unwrap_or_default()
+                // unfortunately there is no nicer way of doing this
+                // as it is required
+        )));
+        self.add_to_splitter("compare_record".into(), Field::new("Compare to saved record".into(), FieldValue::Boolean(true)));
+        self.add_to_splitter("compare_best_splits".into(), Field::new("Compare to best splits".into(), FieldValue::Boolean(true)));
+        self.add_to_splitter("run_splitter_length".into(), Field::new("Run Splitter max length".into(), FieldValue::Integer(100, "100".into())));
+        self.add_to_splitter("game_splitter_length".into(), Field::new("Game Splitter max length".into(), FieldValue::Integer(5, "5".into())));
+        self.add_to_splitter("x_position".into(), Field::new("X position".into(), FieldValue::Float(0f32, "0".into())));
+        self.add_to_splitter("y_position".into(), Field::new("Y position".into(), FieldValue::Float(250f32, "250".into())));
+        self.add_to_splitter("x_size".into(), Field::new("X size    ".into(), FieldValue::Float(250f32, "250".into())));
+
+        self.add_to_mapper("show_mapper".into(), Field::new("Show mapper in live splitter".into(), FieldValue::Boolean(true)));
+        self.add_to_mapper("show_objectives".into(), Field::new("Show objectives items in live splitter".into(), FieldValue::Boolean(true)));
+        self.add_to_mapper("show_code_guess".into(), Field::new("Show code guess".into(), FieldValue::Boolean(false)));
+        self.add_to_mapper("code_guess_line_count".into(), Field::new("Code guess number of lines: ".into(), FieldValue::Integer(3, "3".into())));
+        self.add_to_mapper("code_guess_word_count".into(), Field::new("Code guess number of words per line: ".into(), FieldValue::Integer(7, "7".into())));
+
+        self.add_to_foresight("show_foresight".into(), Field::new("Show Foresight in live splitter".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_resources".into(), Field::new("Show resources in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_consumables".into(), Field::new("Show consumables in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_artifacts".into(), Field::new("Show artifacts in foresight".into(), FieldValue::Boolean(false)));
+        self.add_to_foresight("seed_indexer_length".into(), Field::new("Size of Foresight".into(), FieldValue::Integer(10, "10".into())));
+
+        self
+    }
+
     fn add_to_general(&mut self, id: String, field: Field) {
+        if self.setting_hash.contains_key(&id) { return }
+
         self.general.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
     fn add_to_splitter(&mut self, id: String, field: Field) {
+        if self.setting_hash.contains_key(&id) { return }
+
         self.splitter.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
     fn add_to_mapper(&mut self, id: String, field: Field) {
+        if self.setting_hash.contains_key(&id) { return }
+        
         self.mapper.push(id.clone());
+        self.setting_hash.insert(id, field);
+    }
+
+    fn add_to_foresight(&mut self, id: String, field: Field) {
+        if self.setting_hash.contains_key(&id) { return }
+
+        self.foresight.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
@@ -259,7 +283,8 @@ impl SettingsWindow {
         let mut file_str = String::new();
         file.read_to_string(&mut file_str).ok()?;
 
-        let p = serde_yaml::from_str(&file_str).ok();
+        let p = serde_yaml::from_str(&file_str).ok()
+            .map(|v: SettingsWindow| v.add_all());
 
         p
     }
@@ -374,6 +399,20 @@ impl Render for SettingsWindow {
                         );
                     }
             });
+            
+            ui.separator();
+
+            ui.add(Label::new(
+                Into::<RichText>::into("Foresight settings: ").size(14.0),
+            ));
+
+            ui.add_space(10.0);
+
+            for id in &self.foresight {
+                self.setting_hash
+                    .get_mut(id)
+                    .map(|v| v.render(ui));
+            }
         });
 
         ui.separator();

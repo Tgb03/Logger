@@ -72,7 +72,7 @@ impl LiveWindow {
         };
 
         if settings.get_def("show_foresight") {
-            result = result.with_indexer(SeedIndexer::new());
+            result = result.with_indexer(SeedIndexer::new(&settings));
         }
 
         if settings.get_def("show_run_splitter") {

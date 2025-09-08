@@ -3,7 +3,7 @@ members = ["core", "gui"]
 resolver = "2"
 
 [workspace.package]
-version = "3.0.6"
+version = "3.0.7"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
@@ -18,6 +18,7 @@ might_sleep = "0.2.0"
 [profile.release]
 codegen-units = 1
 opt-level = 3
+incremental = true
 lto = true
 strip = "symbols"
 overflow-checks = false
