@@ -1156,7 +1156,7 @@ dependencies = [
 [[package]]
 name = "glr_core"
 version = "1.0.1"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#e618d7564a70a2cb32d9fab99516179331ee133e"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#544c1f276512d50fa075a721d447084e2a7cc70e"
 dependencies = [
  "num_enum",
  "serde",
@@ -1167,7 +1167,7 @@ dependencies = [
 [[package]]
 name = "glr_lib"
 version = "1.0.1"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#e618d7564a70a2cb32d9fab99516179331ee133e"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#544c1f276512d50fa075a721d447084e2a7cc70e"
 dependencies = [
  "bincode",
  "enum_dispatch",
