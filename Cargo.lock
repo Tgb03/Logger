@@ -507,7 +507,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "3.0.7"
+version = "3.0.8"
 dependencies = [
  "bincode",
  "directories",
@@ -1237,7 +1237,7 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "3.0.7"
+version = "3.0.8"
 dependencies = [
  "core",
  "directories",
