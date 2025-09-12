@@ -78,7 +78,7 @@ impl Render for SeedIndexer {
                                 if self.show_fog_turbine == false && name.as_str() == "FOG_TURBINE" { continue; }
                                 if self.show_cell == false && name.as_str() == "Cell" { continue; }
                                 if self.show_bulkhead_key == false && name.as_str() == "BulkKey" { continue; }
-                                if self.show_colored_key == false && name.as_str() == "ColoredKey" { continue; }
+                                if self.show_colored_key == false && name.get(0..3).is_some_and(|v| v == "Key") { continue; }
                                 if self.show_terminal_uplink == false && name.as_str() == "TerminalUplink" { continue; }
                                 if self.show_retrieve_big_items == false && name.as_str() == "RetrieveBigItems" { continue; }
                                 if self.show_special_terminal_command == false && name.as_str() == "SpecialTerminalCommand" { continue; }

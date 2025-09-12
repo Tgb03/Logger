@@ -440,9 +440,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.36"
+version = "1.2.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5252b3d2648e5eedbc1a6f501e3c795e07025c1e93bbf8bbdd6eef7f447a6d54"
+checksum = "65193589c6404eb80b450d618eaf9a2cafaaafd57ecce47370519ef674a7bd44"
 dependencies = [
  "find-msvc-tools",
  "jobserver",
@@ -507,7 +507,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "3.0.9"
+version = "3.0.10"
 dependencies = [
  "bincode",
  "directories",
@@ -1156,7 +1156,7 @@ dependencies = [
 [[package]]
 name = "glr_core"
 version = "1.0.1"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#544c1f276512d50fa075a721d447084e2a7cc70e"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#dbe436ba6a7a354372d00e5c2b57624c936481ca"
 dependencies = [
  "num_enum",
  "serde",
@@ -1167,7 +1167,7 @@ dependencies = [
 [[package]]
 name = "glr_lib"
 version = "1.0.1"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#544c1f276512d50fa075a721d447084e2a7cc70e"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#dbe436ba6a7a354372d00e5c2b57624c936481ca"
 dependencies = [
  "bincode",
  "enum_dispatch",
@@ -1237,7 +1237,7 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "3.0.9"
+version = "3.0.10"
 dependencies = [
  "core",
  "directories",
