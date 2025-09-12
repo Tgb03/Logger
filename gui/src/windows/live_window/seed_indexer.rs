@@ -11,6 +11,17 @@ pub struct SeedIndexer {
     end_shown: IndexMap<(i32, String), Vec<i32>>,
     continous_parser: ContinousParser<OutputSeedIndexer>,
 
+    show_gather_small_items: bool,
+    show_fog_turbine: bool,
+    show_cell: bool,
+    show_colored_key: bool,
+    show_bulkhead_key: bool,
+    show_terminal_uplink: bool,
+    show_special_terminal_command: bool,
+    show_retrieve_big_items: bool,
+    show_hsu: bool,
+    show_power_cell_distribution: bool,
+
     show_resources: bool,
     show_consumables: bool,
     show_artifacts: bool,
@@ -25,6 +36,18 @@ impl SeedIndexer {
             end_shown: IndexMap::new(),
             data_found: Vec::new(),
             continous_parser: ContinousParser::new(SubscribeCode::SeedIndexer),
+            
+            show_gather_small_items: settings.get("seed_indexer_show_gather_small_items").unwrap_or(true),
+            show_fog_turbine: settings.get("seed_indexer_show_fog_turbine").unwrap_or(true),
+            show_cell: settings.get("seed_indexer_show_cell").unwrap_or(true),
+            show_colored_key: settings.get("seed_indexer_show_colored_key").unwrap_or(true),
+            show_bulkhead_key: settings.get("seed_indexer_show_bulkhead_key").unwrap_or(true),
+            show_terminal_uplink: settings.get("seed_indexer_show_terminal_uplink").unwrap_or(true),
+            show_retrieve_big_items: settings.get("seed_indexer_show_retrieve_big_items").unwrap_or(true),
+            show_special_terminal_command: settings.get("seed_indexer_show_special_terminal_command").unwrap_or(true), 
+            show_hsu: settings.get("seed_indexer_show_hsu").unwrap_or(true),
+            show_power_cell_distribution: settings.get("seed_indexer_show_power_cell_distribution").unwrap_or(true),
+
             show_resources: settings.get("seed_indexer_show_resources").unwrap_or(true),
             show_consumables: settings.get("seed_indexer_show_consumables").unwrap_or(true),
             show_artifacts: settings.get_def("seed_indexer_show_artifacts"),
@@ -51,11 +74,23 @@ impl Render for SeedIndexer {
                             OutputSeedIndexer::Key(name, zone, id) => {
                                 if self.show_artifacts == false && name.contains("rtifact") { continue; }
                                 if self.show_consumables == false && name.contains("onsumable") { continue; }
+                                if self.show_gather_small_items == false && name.as_str() == "GatherSmallItems" { continue; }
+                                if self.show_fog_turbine == false && name.as_str() == "FOG_TURBINE" { continue; }
+                                if self.show_cell == false && name.as_str() == "Cell" { continue; }
+                                if self.show_bulkhead_key == false && name.as_str() == "BulkKey" { continue; }
+                                if self.show_colored_key == false && name.as_str() == "ColoredKey" { continue; }
+                                if self.show_terminal_uplink == false && name.as_str() == "TerminalUplink" { continue; }
+                                if self.show_retrieve_big_items == false && name.as_str() == "RetrieveBigItems" { continue; }
+                                if self.show_special_terminal_command == false && name.as_str() == "SpecialTerminalCommand" { continue; }
+                                if self.show_hsu == false && name.as_str() == "HSU_FindTakeSample" { continue; }
+                                if self.show_power_cell_distribution == false && name.as_str() == "PowerCellDistribution" { continue; }
 
                                 self.end_shown
                                     .entry((*zone, name.clone()))
                                     .or_default()
                                     .push(*id);
+                                
+                                self.end_shown.sort_by_key(|(v, _), _| *v);
                             }
                             OutputSeedIndexer::ResourcePack(t, zone, id, _) => {
                                 if self.show_resources == false { continue; }
@@ -64,6 +99,8 @@ impl Render for SeedIndexer {
                                     .entry((*zone, format!("{:?}", t)))
                                     .or_default()
                                     .push(*id);
+
+                                self.end_shown.sort_by_key(|(v, _), _| *v);
                             }
                             _ => {}
                         }

@@ -231,6 +231,16 @@ impl SettingsWindow {
         self.add_to_foresight("seed_indexer_show_resources".into(), Field::new("Show resources in foresight".into(), FieldValue::Boolean(true)));
         self.add_to_foresight("seed_indexer_show_consumables".into(), Field::new("Show consumables in foresight".into(), FieldValue::Boolean(true)));
         self.add_to_foresight("seed_indexer_show_artifacts".into(), Field::new("Show artifacts in foresight".into(), FieldValue::Boolean(false)));
+        self.add_to_foresight("seed_indexer_show_gather_small_items".into(), Field::new("Show GatherSmallItem in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_fog_turbine".into(), Field::new("Show FogTurbine in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_cell".into(), Field::new("Show Cell in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_colored_key".into(), Field::new("Show ColoredKey in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_bulkhead_key".into(), Field::new("Show BulkKey in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_terminal_uplink".into(), Field::new("Show TerminalUplink in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_retrieve_big_items".into(), Field::new("Show RetrieveBigItems in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_special_terminal_command".into(), Field::new("Show SpecialTerminalCommand in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_hsu".into(), Field::new("Show HSU_FindTakeSample in foresight".into(), FieldValue::Boolean(true)));
+        self.add_to_foresight("seed_indexer_show_power_cell_distribution".into(), Field::new("Show PowerCellDistribution in foresight".into(), FieldValue::Boolean(true)));
         self.add_to_foresight("seed_indexer_length".into(), Field::new("Size of Foresight".into(), FieldValue::Integer(10, "10".into())));
 
         self
