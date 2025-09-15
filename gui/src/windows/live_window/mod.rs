@@ -8,3 +8,4 @@ mod seed_indexer;
 mod run_renderer;
 mod objective_reader;
 mod timer;
+mod code_guess;

@@ -2,7 +2,7 @@
 
 use core::save_manager::SaveManager;
 
-use crate::{render::Render, windows::{live_window::{mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer}, settings_window::SettingsWindow}};
+use crate::{render::Render, windows::{live_window::{code_guess::CodeGuess, mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer}, settings_window::SettingsWindow}};
 
 #[derive(Default)]
 pub struct LiveWindow {
@@ -11,6 +11,7 @@ pub struct LiveWindow {
     run_counter: Option<RunCounter>,
     mapper: Option<Mapper>,
     seed_indexer: Option<SeedIndexer>,
+    key_guesser: Option<CodeGuess>,
     
     objective_reader: Option<LevelObjectiveReader>,
     run_renderer: Option<LevelRunRenderer>,
@@ -55,6 +56,12 @@ impl LiveWindow {
         self
     }
 
+    pub fn with_code_guesser(mut self, code_guess: CodeGuess) -> Self {
+        self.key_guesser = Some(code_guess);
+
+        self
+    }
+
     pub fn new(settings: &SettingsWindow) -> Self {
         let mut result = Self::default();
 
@@ -75,6 +82,10 @@ impl LiveWindow {
             result = result.with_indexer(SeedIndexer::new(&settings));
         }
 
+        if settings.get_def("show_code_guess") {
+            result = result.with_code_guesser(CodeGuess::new(&settings));
+        }
+
         if settings.get_def("show_run_splitter") {
             result = result.with_run_renderer(LevelRunRenderer::new(settings))
                 .with_obj_reader(LevelObjectiveReader::default());
@@ -93,6 +104,7 @@ impl LiveWindow {
         result += self.run_counter.render(ui).unwrap_or_default();
         result += self.real_timer.render(ui).unwrap_or_default();
         result += self.seed_indexer.render(ui).unwrap_or_default();
+        result += self.key_guesser.render(ui).unwrap_or_default();
         result += self.mapper.as_mut()
             .map(|v| v.render(&self.objective_reader, ui))
             .unwrap_or_default();
