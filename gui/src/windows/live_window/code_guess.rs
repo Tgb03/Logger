@@ -101,6 +101,8 @@ impl Render for CodeGuess {
             in_line_counter = 0;
         }
 
+        ui.separator();
+
         27 + found.saturating_sub(1) / self.codes_per_line * 22
     }
 }
