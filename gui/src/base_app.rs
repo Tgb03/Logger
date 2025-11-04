@@ -1,12 +1,9 @@
-use core::{ 
-    run::timed_run::LevelRun, save_manager::SaveManager, version::{
-        get_latest_version, 
-        is_there_new_version
-    }
+use core::{
+    run::timed_run::LevelRun,
+    save_manager::SaveManager,
+    version::{get_latest_version, is_there_new_version},
 };
-use std::{
-    collections::BTreeMap, path::PathBuf, time::Duration
-};
+use std::{collections::BTreeMap, path::PathBuf, time::Duration};
 
 use might_sleep::prelude::CpuLimiter;
 
@@ -15,7 +12,12 @@ use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Frame, Vec2, 
 use opener::open;
 
 use crate::{
-    render::Render, windows::{await_parse_files::AwaitParseFiles, live_window::live_window::LiveWindow, log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow, settings_window::SettingsWindow, stats_window::StatsWindow},
+    render::Render,
+    windows::{
+        await_parse_files::AwaitParseFiles, live_window::live_window::LiveWindow,
+        log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow,
+        settings_window::SettingsWindow, stats_window::StatsWindow,
+    },
 };
 
 use crate::egui::TextStyle::{Body, Button, Heading, Monospace, Small};
@@ -101,8 +103,7 @@ impl BaseApp {
 
         let latest_version = get_latest_version();
         let new_version_warning = match &latest_version {
-            Some(ver) => is_there_new_version(ver)
-                .unwrap_or(false),
+            Some(ver) => is_there_new_version(ver).unwrap_or(false),
             None => false,
         };
 
@@ -122,7 +123,12 @@ impl BaseApp {
 impl eframe::App for BaseApp {
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         match self.app_state {
-            AppState::LiveWindow(_) => [0.0, 0.0, 0.0, self.settings_window.get_def("window_transparency")],
+            AppState::LiveWindow(_) => [
+                0.0,
+                0.0,
+                0.0,
+                self.settings_window.get_def("window_transparency"),
+            ],
             _ => [0.0, 0.0, 0.0, 1.0],
         }
     }
@@ -130,8 +136,7 @@ impl eframe::App for BaseApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint_after(Duration::from_millis(50));
 
-        let frame = Frame::none()
-            .fill(Color32::TRANSPARENT);
+        let frame = Frame::none().fill(Color32::TRANSPARENT);
 
         egui::TopBottomPanel::top("TopPanel")
             .frame(frame)
@@ -160,7 +165,9 @@ impl eframe::App for BaseApp {
                             self.app_state = AppState::None;
 
                             self.settings_window.save_settings();
-                            self.save_manager.set_automatic_saving(self.settings_window.get_def("automatic_saving"));
+                            self.save_manager.set_automatic_saving(
+                                self.settings_window.get_def("automatic_saving"),
+                            );
                         }
 
                         return;
@@ -172,30 +179,30 @@ impl eframe::App for BaseApp {
                         ));
                         let x = self.settings_window.get_def("x_position");
                         let y = self.settings_window.get_def("y_position");
-                        ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(
-                            egui::Pos2 { x, y }
-                        ));
-                        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(
-                            egui::Vec2 {
-                                x: self.settings_window.get_def("x_size"),
-                                y: 80f32,
-                            }
-                        ));
+                        ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(egui::Pos2 {
+                            x,
+                            y,
+                        }));
+                        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::Vec2 {
+                            x: self.settings_window.get_def("x_size"),
+                            y: 80f32,
+                        }));
                         self.live_window_size = Some(80);
-                        self.app_state = AppState::LiveWindow(LiveWindow::new(
-                            &self.settings_window,
-                        ));
+                        self.app_state =
+                            AppState::LiveWindow(LiveWindow::new(&self.settings_window));
                     }
 
                     if ui.button("Input Speedrun Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths)));
+                            self.app_state =
+                                AppState::AwaitParseLogWindow(Some(AwaitParseFiles::new(paths)));
                         }
                     }
 
                     if ui.button("Grab stats from Logs...").clicked() {
                         if let Some(paths) = rfd::FileDialog::new().pick_files() {
-                            self.app_state = AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths)));
+                            self.app_state =
+                                AppState::AwaitParseStatWindow(Some(AwaitParseFiles::new(paths)));
                         }
                     }
 
@@ -209,12 +216,14 @@ impl eframe::App for BaseApp {
 
                     if self.new_version_warning {
                         if let Some(version) = &self.latest_version {
-                            if ui.button(
-                                WidgetText::from("NEW VERSION DETECTED")
-                                    .color(Color32::ORANGE)
-                            ).clicked() {
-                                let mut path: PathBuf = "https://github.com/Tgb03/Logger/releases/tag/"
-                                    .into();
+                            if ui
+                                .button(
+                                    WidgetText::from("NEW VERSION DETECTED").color(Color32::ORANGE),
+                                )
+                                .clicked()
+                            {
+                                let mut path: PathBuf =
+                                    "https://github.com/Tgb03/Logger/releases/tag/".into();
                                 path.push(version);
                                 let _ = open(path);
                             }
@@ -237,7 +246,8 @@ impl eframe::App for BaseApp {
                 }
                 AppState::SettingsWindow => self.settings_window.render(ui),
                 AppState::LiveWindow(live_window) => {
-                    let size = live_window.render(ui, &mut self.save_manager, &self.settings_window);
+                    let size =
+                        live_window.render(ui, &mut self.save_manager, &self.settings_window);
 
                     if self.live_window_size.is_none_or(|v| v != size) {
                         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 {
@@ -253,7 +263,8 @@ impl eframe::App for BaseApp {
                 AppState::AwaitParseLogWindow(awaiter) => {
                     if awaiter.render(ui).is_some_and(|v| v == true) {
                         let awaiter = awaiter.take().unwrap();
-                        self.app_state = AppState::LogParserWindow(LogParserWindow::new(awaiter.into()));
+                        self.app_state =
+                            AppState::LogParserWindow(LogParserWindow::new(awaiter.into()));
                     }
                 }
                 AppState::AwaitParseStatWindow(awaiter) => {

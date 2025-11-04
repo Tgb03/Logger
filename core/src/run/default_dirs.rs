@@ -2,7 +2,6 @@ use std::path::PathBuf;
 
 use directories::ProjectDirs;
 
-
 pub fn get_directory() -> Option<PathBuf> {
     #[cfg(debug_assertions)]
     if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger Debug") {
@@ -13,7 +12,7 @@ pub fn get_directory() -> Option<PathBuf> {
     if let Some(proj_dirs) = ProjectDirs::from("com", "Tgb03", "GTFO Logger") {
         return Some(proj_dirs.data_dir().to_path_buf());
     }
-    
+
     None
 }
 

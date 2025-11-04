@@ -6,13 +6,10 @@ use glr_lib::dll_exports::enums::SubscribeCode;
 
 use crate::{dll::parse_continously::ContinousParser, render::Render};
 
-
 pub struct Timer {
-
     start: Instant,
     active: bool,
     continous_parser: ContinousParser<RunGeneratorResult>,
-
 }
 
 impl Default for Timer {
@@ -20,7 +17,7 @@ impl Default for Timer {
         Self {
             start: Instant::now(),
             active: false,
-            continous_parser: ContinousParser::new(SubscribeCode::RunInfo)
+            continous_parser: ContinousParser::new(SubscribeCode::RunInfo),
         }
     }
 }
@@ -34,10 +31,10 @@ impl Render for Timer {
                 RunGeneratorResult::GameStarted(_, _) => {
                     self.active = true;
                     self.start = Instant::now();
-                },
+                }
                 RunGeneratorResult::LevelRun(_) => {
                     self.active = false;
-                },
+                }
                 _ => {}
             }
         }
@@ -45,17 +42,18 @@ impl Render for Timer {
         if self.active == false {
             return 0;
         }
-        
+
         let total_secs = self.start.elapsed().as_secs();
-        
+
         ui.colored_label(
-            Color32::GREEN, Into::<RichText>::into(
-                format!(" {:02}:{:02}:{:02}", 
-                    total_secs / 3600, 
-                    (total_secs % 3600) / 60, 
-                    total_secs % 60
-                )
-            ).size(32.0)
+            Color32::GREEN,
+            Into::<RichText>::into(format!(
+                " {:02}:{:02}:{:02}",
+                total_secs / 3600,
+                (total_secs % 3600) / 60,
+                total_secs % 60
+            ))
+            .size(32.0),
         );
 
         ui.separator();

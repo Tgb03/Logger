@@ -1,7 +1,6 @@
-use core::run::objectives::{run_objective::RunObjective, Objective};
+use core::run::objectives::{Objective, run_objective::RunObjective};
 
 use crate::render::Render;
-
 
 pub trait ObjectiveReader {
     type Objective: Objective;
@@ -10,24 +9,23 @@ pub trait ObjectiveReader {
 }
 
 impl<T> ObjectiveReader for Option<T>
-where 
-    T: ObjectiveReader {
+where
+    T: ObjectiveReader,
+{
     type Objective = T::Objective;
-    
+
     fn override_obj(&self, objective: Self::Objective) -> Self::Objective {
         match self {
             Some(s) => s.override_obj(objective),
-            None => objective
+            None => objective,
         }
     }
 }
-
 
 pub trait UpdateObjective {
     type Objective: Objective;
 
     fn update(&mut self, reader: &impl ObjectiveReader<Objective = Self::Objective>);
-
 }
 
 impl<T: UpdateObjective> UpdateObjective for Option<T> {
@@ -36,17 +34,15 @@ impl<T: UpdateObjective> UpdateObjective for Option<T> {
     fn update(&mut self, reader: &impl ObjectiveReader<Objective = Self::Objective>) {
         match self {
             Some(s) => s.update(reader),
-            None => {},
+            None => {}
         }
     }
 }
-
 
 #[derive(Default)]
 pub struct LevelObjectiveReader {
     objective: RunObjective,
 }
-
 
 impl ObjectiveReader for LevelObjectiveReader {
     type Objective = RunObjective;
@@ -68,20 +64,26 @@ impl Render for LevelObjectiveReader {
         let mut changed = false;
 
         ui.horizontal(|ui| {
-            changed = changed.max(ui.checkbox(&mut self.objective.secondary, "Sec   ").changed());
+            changed = changed.max(
+                ui.checkbox(&mut self.objective.secondary, "Sec   ")
+                    .changed(),
+            );
             changed = changed.max(ui.checkbox(&mut self.objective.overload, "Ovrl").changed());
         });
 
         ui.horizontal(|ui| {
-            changed = changed.max(ui.checkbox(&mut self.objective.glitched, "Glitch").changed());
-            changed = changed.max(ui.checkbox(&mut self.objective.early_drop, "E-Drop").changed());
+            changed = changed.max(
+                ui.checkbox(&mut self.objective.glitched, "Glitch")
+                    .changed(),
+            );
+            changed = changed.max(
+                ui.checkbox(&mut self.objective.early_drop, "E-Drop")
+                    .changed(),
+            );
         });
 
         ui.separator();
 
-        (
-            50,
-            changed
-        )
+        (50, changed)
     }
 }

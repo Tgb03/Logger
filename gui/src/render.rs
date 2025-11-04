@@ -20,17 +20,16 @@ where
 pub trait BufferedRender {
     type Response;
     type Renderer: Render;
-    
+
     fn get_renderer(&mut self) -> &mut Self::Renderer;
     fn update(&mut self);
-
 }
 
 impl<BR, R, Resp> Render for BR
-where 
+where
     R: Render<Response = Resp>,
-    BR: BufferedRender<Response = Resp, Renderer = R> {
-    
+    BR: BufferedRender<Response = Resp, Renderer = R>,
+{
     type Response = Resp;
 
     fn render(&mut self, ui: &mut Ui) -> Self::Response {

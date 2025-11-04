@@ -1,41 +1,47 @@
-use std::{ffi::{c_char, c_void, CStr}, sync::{atomic::AtomicU32, mpsc::{self, Receiver, Sender}, Arc}};
+use std::{
+    ffi::{CStr, c_char, c_void},
+    sync::{
+        Arc,
+        atomic::AtomicU32,
+        mpsc::{self, Receiver, Sender},
+    },
+};
 
-use glr_lib::dll_exports::{enums::{SubscribeCode, SubscriptionType}, structs::CallbackInfo};
+use glr_lib::dll_exports::{
+    enums::{SubscribeCode, SubscriptionType},
+    structs::CallbackInfo,
+};
 use serde::Deserialize;
 
 static CHANNEL_ID_COUNT: AtomicU32 = AtomicU32::new(1);
 
-
 pub struct ContinousParser<T>
-where 
-    T: for<'a> Deserialize<'a> {
-
+where
+    T: for<'a> Deserialize<'a>,
+{
     recv: Receiver<T>,
 
     channel_id: u32,
     code: SubscribeCode,
-
 }
 
 impl<T> ContinousParser<T>
-where 
-    T: for<'a> Deserialize<'a> {
-
+where
+    T: for<'a> Deserialize<'a>,
+{
     pub fn new(code: SubscribeCode) -> Self {
         let (sender, recv) = mpsc::channel();
         let channel_id = CHANNEL_ID_COUNT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
         let arc_sender: Arc<Sender<T>> = Arc::new(sender.clone());
         let context = Arc::into_raw(arc_sender) as *const c_void;
 
-        glr_lib::dll_exports::functions::add_callback(
-            CallbackInfo::new(
-                code as SubscribeCode, 
-                SubscriptionType::JSON, 
-                channel_id, 
-                context.into(), 
-                Some(callback::<T>)
-            )
-        );
+        glr_lib::dll_exports::functions::add_callback(CallbackInfo::new(
+            code as SubscribeCode,
+            SubscriptionType::JSON,
+            channel_id,
+            context.into(),
+            Some(callback::<T>),
+        ));
 
         Self {
             recv,
@@ -47,13 +53,12 @@ where
     pub fn try_recv(&self) -> Option<T> {
         self.recv.try_recv().ok()
     }
-
 }
 
 impl<T> Drop for ContinousParser<T>
-where 
-    T: for<'a> Deserialize<'a> {
-    
+where
+    T: for<'a> Deserialize<'a>,
+{
     fn drop(&mut self) {
         glr_lib::dll_exports::functions::remove_callback(self.code, self.channel_id);
     }
@@ -61,7 +66,8 @@ where
 
 extern "C" fn callback<T>(context: *const c_void, message: *const c_char)
 where
-    T: for<'a> Deserialize<'a> {
+    T: for<'a> Deserialize<'a>,
+{
     if message.is_null() || context.is_null() {
         eprintln!("Null pointer in callback");
         return;

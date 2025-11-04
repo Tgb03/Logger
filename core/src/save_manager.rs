@@ -9,10 +9,9 @@ use glr_core::{split::Split, time::Time};
 
 use crate::{
     run::{
-        merge_splits::{
-            LevelsMergeSplits, 
-            MergeSplits
-        }, timed_run::RunEnum, traits::Run
+        merge_splits::{LevelsMergeSplits, MergeSplits},
+        timed_run::RunEnum,
+        traits::Run,
     },
     sort::Sortable,
 };
@@ -36,22 +35,20 @@ impl Default for SaveManager {
         let split_merges: LevelsMergeSplits = Self::get_directory()
             .map(|v| v.join("merge_data.bin"))
             .map(|path| {
-                    std::fs::read(&path).map(|data| {
-                        bincode::deserialize(&data)
-                            .ok()
-                })
-                .ok()
-                .flatten()
+                std::fs::read(&path)
+                    .map(|data| bincode::deserialize(&data).ok())
+                    .ok()
+                    .flatten()
             })
             .flatten()
             .unwrap_or_default();
 
-        Self { 
-            loaded_runs: Default::default(), 
-            best_splits: Default::default(), 
-            split_names: Default::default(), 
+        Self {
+            loaded_runs: Default::default(),
+            best_splits: Default::default(),
+            split_names: Default::default(),
             automatic_saving: false,
-            split_merges, 
+            split_merges,
         }
     }
 }
@@ -93,7 +90,8 @@ impl SaveManager {
     }
 
     pub fn get_split_merge(&self, objective: &String, split_name: &str) -> Option<&String> {
-        self.split_merges.get_level(objective)
+        self.split_merges
+            .get_level(objective)
             .map(|v| v.get_split(split_name))
             .flatten()
     }
@@ -169,21 +167,27 @@ impl SaveManager {
                     Some((time, count)) => {
                         *time += split.get_time();
                         *count += 1;
-                    },
-                    None => { times.insert(name, (split.get_time(), 1)); },
+                    }
+                    None => {
+                        times.insert(name, (split.get_time(), 1));
+                    }
                 };
             }
 
             for (name, (time, count)) in times {
                 match build_hash.get(name) {
                     Some((b_time, b_count)) => {
-                        if count < *b_count { continue; }
-
-                        if time < *b_time || count > *b_count { 
-                            build_hash.insert(name.to_owned(), (time, count)); 
+                        if count < *b_count {
+                            continue;
                         }
-                    },
-                    None => { build_hash.insert(name.to_owned(), (time, count)); },
+
+                        if time < *b_time || count > *b_count {
+                            build_hash.insert(name.to_owned(), (time, count));
+                        }
+                    }
+                    None => {
+                        build_hash.insert(name.to_owned(), (time, count));
+                    }
                 }
             }
         }
@@ -257,7 +261,9 @@ impl SaveManager {
     }
 
     pub fn get_best_split_with_merge(&self, objective: &String, name: &str) -> Option<&Time> {
-        let new_name = self.split_merges.get_level(&objective)
+        let new_name = self
+            .split_merges
+            .get_level(&objective)
             .map(|m| m.get_split(name))
             .flatten()
             .map(|v| v.as_str())
@@ -423,13 +429,12 @@ impl SaveManager {
             .get_req_splits(
                 self.get_split_merge(objective, split_name)
                     .map(|v| v.as_str())
-                    .unwrap_or(split_name)
+                    .unwrap_or(split_name),
             )
     }
 
     pub fn get_level_merge_split_str(&self, objective: &String) -> Option<String> {
-        self.split_merges.get_level(objective)
-            .map(|v| v.into())
+        self.split_merges.get_level(objective).map(|v| v.into())
     }
 
     pub fn get_level_merge(&self, objective: &str) -> Option<&MergeSplits> {
