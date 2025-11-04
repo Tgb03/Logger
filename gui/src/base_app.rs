@@ -52,7 +52,7 @@ impl BaseApp {
         fonts.font_data.insert(
             "jetbrains_mono".to_owned(),
             std::sync::Arc::new(FontData::from_static(include_bytes!(
-                "../../JetBrainsMono-Regular.ttf"
+                "../../resources/JetBrainsMono-Regular.ttf"
             ))),
         );
 
