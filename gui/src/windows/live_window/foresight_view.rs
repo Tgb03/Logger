@@ -13,12 +13,14 @@ pub struct ForesightView {
     data: InnerForesightView,
     default_color: MapperColor,
     ignore_zones: Vec<i32>,
+    #[serde(default)] ignore_pairs: Vec<(String, i32)>,
 }
 
 pub struct OptimizedForesightView {
     data: InnerOptimizedForesightView,
     default_color: Color32,
-    ignore_zones: Vec<i32>,
+    ignore_zones: HashSet<i32>,
+    ignore_pairs: HashMap<String, HashSet<i32>>,
 }
 
 impl Into<OptimizedForesightView> for ForesightView {
@@ -26,7 +28,12 @@ impl Into<OptimizedForesightView> for ForesightView {
         OptimizedForesightView {
             data: optimize_foresight_view(self.data),
             default_color: (&self.default_color).into(),
-            ignore_zones: self.ignore_zones,
+            ignore_zones: self.ignore_zones.into_iter().collect(),
+            ignore_pairs: self.ignore_pairs.into_iter()
+                .fold(HashMap::new(), |mut acc, (name, id)| {
+                    acc.entry(name).or_insert_with(HashSet::new).insert(id);
+                    acc
+                }),
         }
     }
 }
@@ -61,12 +68,13 @@ fn optimize_foresight_view(view: InnerForesightView) -> InnerOptimizedForesightV
 }
 
 pub trait LookUpForesight {
-    fn lookup(&self, name: &String, zone: i32, id: i32) -> Option<Color32>;
-    fn is_ignored(&self, zone: i32) -> bool;
+    fn lookup(&self, name: &String, zone: &i32, id: &i32) -> Option<Color32>;
+    fn is_ignored(&self, zone: &i32) -> bool;
+    fn is_name_ignored(&self, name: &String, zone: &i32) -> bool;
 }
 
 impl LookUpForesight for InnerOptimizedForesightView {
-    fn lookup(&self, name: &String, zone: i32, id: i32) -> Option<Color32> {
+    fn lookup(&self, name: &String, zone: &i32, id: &i32) -> Option<Color32> {
         self.get(name)?
             .get(&zone)?
             .iter()
@@ -74,20 +82,31 @@ impl LookUpForesight for InnerOptimizedForesightView {
             .map(|(c, _)| c.clone())
     }
     
-    fn is_ignored(&self, _: i32) -> bool {
+    fn is_ignored(&self, _: &i32) -> bool {
+        false
+    }
+    
+    fn is_name_ignored(&self, _: &String, _: &i32) -> bool {
         false
     }
 }
 
 impl LookUpForesight for OptimizedForesightView {
-    fn lookup(&self, name: &String, zone: i32, id: i32) -> Option<Color32> {
+    fn lookup(&self, name: &String, zone: &i32, id: &i32) -> Option<Color32> {
         self.data
             .lookup(name, zone, id)
             .or(Some(self.default_color))
     }
     
-    fn is_ignored(&self, zone: i32) -> bool {
+    fn is_ignored(&self, zone: &i32) -> bool {
         self.ignore_zones.contains(&zone)
+    }
+
+    fn is_name_ignored(&self, name: &String, zone: &i32) -> bool {
+        self.ignore_zones.contains(&zone) ||
+        self.ignore_pairs.get(name)
+            .map(|v| v.contains(zone))
+            .unwrap_or_default()
     }
 }
 
@@ -95,13 +114,19 @@ impl<T> LookUpForesight for Option<&T>
 where
     T: LookUpForesight,
 {
-    fn lookup(&self, name: &String, zone: i32, id: i32) -> Option<Color32> {
+    fn lookup(&self, name: &String, zone: &i32, id: &i32) -> Option<Color32> {
         self.as_ref()?.lookup(name, zone, id)
     }
     
-    fn is_ignored(&self, zone: i32) -> bool {
+    fn is_ignored(&self, zone: &i32) -> bool {
         self.as_ref()
             .map(|v| v.is_ignored(zone))
+            .unwrap_or(false)
+    }
+    
+    fn is_name_ignored(&self, name: &String, zone: &i32) -> bool {
+        self.as_ref()
+            .map(|v| v.is_name_ignored(name, zone))
             .unwrap_or(false)
     }
 }

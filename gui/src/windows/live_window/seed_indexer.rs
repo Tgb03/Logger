@@ -128,7 +128,7 @@ impl Render for SeedIndexer {
                     for data in &self.data_found {
                         match data {
                             OutputSeedIndexer::Key(name, zone, id) => {
-                                if self.views.get(&self.objective).is_ignored(*zone) { continue; }
+                                if self.views.get(&self.objective).is_name_ignored(name, zone) { continue; }
 
                                 if self.show_artifacts == false && name.contains("rtifact") {
                                     continue;
@@ -181,7 +181,7 @@ impl Render for SeedIndexer {
                                 }
 
                                 let color =
-                                    self.views.get(&self.objective).lookup(name, *zone, *id);
+                                    self.views.get(&self.objective).lookup(name, zone, id);
 
                                 self.end_shown
                                     .entry((*zone, name.clone()))
@@ -194,12 +194,12 @@ impl Render for SeedIndexer {
                                 if self.show_resources == false {
                                     continue;
                                 }
-                                if self.views.get(&self.objective).is_ignored(*zone) { continue; }
                                 
                                 let name = format!("{:?}", t);
+                                if self.views.get(&self.objective).is_name_ignored(&name, zone) { continue; }
                                 let color =
-                                    self.views.get(&self.objective).lookup(&name, *zone, *id);
-
+                                    self.views.get(&self.objective).lookup(&name, zone, id);
+                                
                                 self.end_shown
                                     .entry((*zone, name))
                                     .or_default()
