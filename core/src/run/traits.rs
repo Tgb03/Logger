@@ -1,13 +1,8 @@
+use crate::run::timed_run::{GameRun, LevelRun};
 use enum_dispatch::enum_dispatch;
 use glr_core::{split::Split, time::Time};
-use crate::run::timed_run::{LevelRun, GameRun};
 
-use crate::{
-    run::{
-        objectives::objective_enum::ObjectiveEnum, 
-        timed_run::RunEnum
-    }
-};
+use crate::run::{objectives::objective_enum::ObjectiveEnum, timed_run::RunEnum};
 
 #[enum_dispatch]
 pub trait Run: Split {
@@ -24,7 +19,6 @@ pub trait Run: Split {
     fn set_objective_str(&mut self, objective: &str);
 
     fn get_split_by_name<'a>(&'a self, split_name: &str) -> Option<&'a dyn Split> {
-        self.get_splits()
-            .find(|s| s.get_name() == split_name)
+        self.get_splits().find(|s| s.get_name() == split_name)
     }
 }

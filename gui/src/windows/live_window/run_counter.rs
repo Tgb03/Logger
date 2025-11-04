@@ -1,11 +1,9 @@
-
 use std::collections::HashSet;
 
 use glr_core::token::Token;
 use glr_lib::dll_exports::enums::SubscribeCode;
 
-use crate::{dll::{parse_continously::ContinousParser}, render::Render};
-
+use crate::{dll::parse_continously::ContinousParser, render::Render};
 
 pub struct RunCounter {
     run_counter: usize,
@@ -37,16 +35,18 @@ impl Render for RunCounter {
 
                     self.run_counter += 1;
                     self.seed_counter = self.seeds.len();
-                },
+                }
                 _ => {}
             }
         }
 
-        ui.label(format!("Run counter: {} Unique: {}", self.run_counter, self.seed_counter));
+        ui.label(format!(
+            "Run counter: {} Unique: {}",
+            self.run_counter, self.seed_counter
+        ));
 
         ui.separator();
 
         28
     }
 }
-

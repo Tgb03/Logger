@@ -1,0 +1,38 @@
+ForesightView(
+    data: {
+        "Cell": {
+            596: {
+                Blue: [ 1 ],
+                Green: [ 2, 3 ]
+            },
+            598: {
+                Blue: [ 0, 1 ],
+                Green: [ 2, 3, 4 ],
+                Yellow: [ 7 ]
+            },
+            599: {
+                Blue: [0, 1, 2, 3, 4],
+                Green: [11, 12],
+                Yellow: [5, 6]
+            },
+            602: {
+                Blue: [16, 21],
+                Green: [15, 8, 7, 6, 11, 14],
+            },
+            605: {
+                Green: [0, 1, 2]
+            },
+            606: {
+                Blue: [7, 8, 9],
+                Green: [5, 6, 4, 3, 1, 0, 2],
+            }
+        },
+        "CELL": {
+            600: {
+                Green: [0, 1, 2]
+            }
+        }
+    },
+    default_color: Red,
+    ignore_zones: [ 601, 603 ],
+)

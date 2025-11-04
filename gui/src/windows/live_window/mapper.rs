@@ -1,5 +1,8 @@
 use core::{run::objectives::run_objective::RunObjective, save_manager::SaveManager};
-use std::{collections::{HashMap, VecDeque}, fs, u64};
+use std::{
+    collections::{HashMap, VecDeque},
+    fs, u64,
+};
 
 use egui::{Color32, Ui};
 use glr_core::location::Location;
@@ -7,7 +10,12 @@ use glr_lib::dll_exports::enums::SubscribeCode;
 use ron::de::SpannedError;
 
 use crate::{
-    dll::{parse_continously::ContinousParser}, render::Render, windows::{live_window::objective_reader::{ObjectiveReader, UpdateObjective}, settings_window::SettingsWindow}
+    dll::parse_continously::ContinousParser,
+    render::Render,
+    windows::{
+        live_window::objective_reader::{ObjectiveReader, UpdateObjective},
+        settings_window::SettingsWindow,
+    },
 };
 
 use super::mapper_view::{LevelView, LookUpColor, OptimizedLevelView};
@@ -23,10 +31,8 @@ impl Render for MapperColorError {
 
     fn render(&mut self, ui: &mut Ui) -> Self::Response {
         match self {
-            MapperColorError::SpannedError(spanned_error) => {
-                spanned_error.render(ui)
-            },
-            MapperColorError::FileNotFound => {},
+            MapperColorError::SpannedError(spanned_error) => spanned_error.render(ui),
+            MapperColorError::FileNotFound => {}
         }
     }
 }
@@ -121,9 +127,15 @@ impl Ord for LocationRender {
             (LocationRender::Key(_), LocationRender::Key(_)) => std::cmp::Ordering::Equal,
             (LocationRender::Key(_), _) => std::cmp::Ordering::Greater,
             (LocationRender::Collectable(_), LocationRender::Key(_)) => std::cmp::Ordering::Less,
-            (LocationRender::Collectable(_), LocationRender::Collectable(_)) => std::cmp::Ordering::Equal,
-            (LocationRender::Collectable(_), LocationRender::Objective(_)) => std::cmp::Ordering::Greater,
-            (LocationRender::Objective(_), LocationRender::Objective(_)) => std::cmp::Ordering::Equal,
+            (LocationRender::Collectable(_), LocationRender::Collectable(_)) => {
+                std::cmp::Ordering::Equal
+            }
+            (LocationRender::Collectable(_), LocationRender::Objective(_)) => {
+                std::cmp::Ordering::Greater
+            }
+            (LocationRender::Objective(_), LocationRender::Objective(_)) => {
+                std::cmp::Ordering::Equal
+            }
             (LocationRender::Objective(_), _) => std::cmp::Ordering::Less,
         }
     }
@@ -147,10 +159,8 @@ impl Render for LocationRender {
 
 #[derive(Default)]
 pub struct LocationRenderVec {
-
     vec: Vec<LocationRender>,
     error_found: Option<MapperColorError>,
-
 }
 
 impl Render for LocationRenderVec {
@@ -185,10 +195,7 @@ pub struct Mapper {
 }
 
 impl Mapper {
-    pub fn new(
-        settings_window: &SettingsWindow,
-        objective: String,
-    ) -> Self {
+    pub fn new(settings_window: &SettingsWindow, objective: String) -> Self {
         Self {
             continous_parser: ContinousParser::new(SubscribeCode::Mapper),
             level_objective: objective,
@@ -258,10 +265,12 @@ impl Mapper {
 
         match location {
             Location::ColoredKey(_, _, _) | Location::BulkheadKey(_, _, _) => {
-                self.locations.vec.push(LocationRender::Key(KeyLocationRender {
-                    location_text: location.to_string(),
-                    color: level_view.lookup(self.key_len, location),
-                }));
+                self.locations
+                    .vec
+                    .push(LocationRender::Key(KeyLocationRender {
+                        location_text: location.to_string(),
+                        color: level_view.lookup(self.key_len, location),
+                    }));
 
                 self.locations.vec.sort_by(|a, b| b.cmp(a));
                 self.key_len += 1;
@@ -277,7 +286,7 @@ impl Mapper {
                         location_text: location.to_string(),
                         color: level_view.lookup(0, location),
                     }));
-                
+
                 self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
             Location::Gatherable(item_identifier, zone, id) => {
@@ -286,14 +295,15 @@ impl Mapper {
                 }
 
                 let name_text = format!("{}: ZONE {} at", item_identifier.to_string(), zone);
-                if let Some(LocationRender::Collectable(last_loc)) = self.locations.vec.iter_mut()
-                    .find(|v| {
+                if let Some(LocationRender::Collectable(last_loc)) =
+                    self.locations.vec.iter_mut().find(|v| {
                         if let LocationRender::Collectable(t) = v {
                             return t.name_text == name_text;
                         }
 
                         false
-                    }) {
+                    })
+                {
                     if last_loc.name_text == name_text {
                         last_loc.ids.push((
                             *id,
@@ -301,7 +311,7 @@ impl Mapper {
                                 .lookup(0, &Location::Gatherable(*item_identifier, *zone, *id)),
                         ));
 
-                        last_loc.ids.sort_by_key(|(a, _)| { *a });
+                        last_loc.ids.sort_by_key(|(a, _)| *a);
                         return;
                     }
                 }
@@ -320,11 +330,15 @@ impl Mapper {
 
                 self.locations.vec.sort_by(|a, b| b.cmp(a));
             }
-            Location::GenerationStarted(_) => {},
+            Location::GenerationStarted(_) => {}
         }
     }
 
-    pub fn render(&mut self, reader: &impl ObjectiveReader<Objective = RunObjective>, ui: &mut Ui) -> usize {
+    pub fn render(
+        &mut self,
+        reader: &impl ObjectiveReader<Objective = RunObjective>,
+        ui: &mut Ui,
+    ) -> usize {
         while let Some(location) = self.continous_parser.try_recv() {
             match location {
                 Location::GenerationStarted(level) => {
@@ -336,7 +350,7 @@ impl Mapper {
                         self.load_level_info(&level);
                         self.level_objective = level;
                     }
-                },
+                }
                 v => self.add_location(&v),
             }
         }
@@ -347,12 +361,12 @@ impl Mapper {
 
 impl UpdateObjective for Mapper {
     type Objective = RunObjective;
-    
+
     fn update(&mut self, reader: &impl ObjectiveReader<Objective = Self::Objective>) {
         if let Ok(obj) = TryInto::<RunObjective>::try_into(self.level_objective.as_str()) {
             let obj = reader.override_obj(obj);
             self.level_objective = obj.to_string();
-            
+
             self.key_len = 0;
             self.locations.vec.clear();
             self.load_level_info(&self.level_objective.clone());

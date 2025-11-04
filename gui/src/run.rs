@@ -1,8 +1,5 @@
 use core::{
-    run::{
-        objectives::Objective,
-        traits::Run,
-    },
+    run::{objectives::Objective, traits::Run},
     save_manager::SaveManager,
 };
 use std::ops::Range;
@@ -74,7 +71,8 @@ where
             let first = range.start.min(split_names.len());
 
             for id in range {
-                if let Some(time) = grab_time(self, &objective_str, &split_names[id], save_manager) {
+                if let Some(time) = grab_time(self, &objective_str, &split_names[id], save_manager)
+                {
                     if show_split_times {
                         let color = match save_manager
                             .get_best_split(&objective_str, &split_names[id])
@@ -119,23 +117,20 @@ fn grab_time<R: Run>(
     match splits_vec {
         Some(splits_vec) => {
             let mut result = Time::default();
-            for it in splits_vec
-                .iter()
-                .map(|v| run.get_time_for_split(v)) {
-                
+            for it in splits_vec.iter().map(|v| run.get_time_for_split(v)) {
                 if let Some(it) = it {
                     result += it;
                 } else {
                     return None;
                 }
             }
-            return Some(result)
-        },
+            return Some(result);
+        }
         None => {
             if let Some(time) = run.get_time_for_split(split_name) {
-                return Some(time)
+                return Some(time);
             }
-        },
+        }
     };
     None
 }

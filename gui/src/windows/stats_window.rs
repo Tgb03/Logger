@@ -8,27 +8,26 @@ use itertools::Itertools;
 use crate::render::Render;
 use glr_core::split::Split;
 
-
 pub struct LevelStat {
     run_count: usize,
     win_count: usize,
 
     fastest_time: Option<Time>,
-    slowest_time : Option<Time>,
-    
+    slowest_time: Option<Time>,
+
     total_time: Time,
     percent: f64,
 }
 
 impl Default for LevelStat {
     fn default() -> Self {
-        Self { 
-            run_count: Default::default(), 
-            win_count: Default::default(), 
-            fastest_time: None, 
-            slowest_time: None, 
-            total_time: Default::default(), 
-            percent: Default::default() 
+        Self {
+            run_count: Default::default(),
+            win_count: Default::default(),
+            fastest_time: None,
+            slowest_time: None,
+            total_time: Default::default(),
+            percent: Default::default(),
         }
     }
 }
@@ -67,13 +66,19 @@ impl From<&LevelRun> for LevelStat {
 
 impl Display for LevelStat {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "  {: >3}    {: >7.3}%    {: >13}    {: >7.3}%    {: >13}   {: >13}", 
-            self.run_count, 
-            self.win_count as f32 * 100.0 / self.run_count as f32, 
+        write!(
+            f,
+            "  {: >3}    {: >7.3}%    {: >13}    {: >7.3}%    {: >13}   {: >13}",
+            self.run_count,
+            self.win_count as f32 * 100.0 / self.run_count as f32,
             self.total_time.to_string(),
             self.percent,
-            self.fastest_time.map(|v| v.to_string()).unwrap_or("None".to_owned()),
-            self.slowest_time.map(|v| v.to_string()).unwrap_or("None".to_owned()),
+            self.fastest_time
+                .map(|v| v.to_string())
+                .unwrap_or("None".to_owned()),
+            self.slowest_time
+                .map(|v| v.to_string())
+                .unwrap_or("None".to_owned()),
         )
     }
 }
@@ -122,7 +127,10 @@ impl Stats {
 
         Self {
             text_total_time: format!("   Total time {}", time_total.to_string()),
-            text_winrate: format!("   Winrate: {:.3}%", win_counter as f32 * 100.0 / number_of_runs as f32),
+            text_winrate: format!(
+                "   Winrate: {:.3}%",
+                win_counter as f32 * 100.0 / number_of_runs as f32
+            ),
             text_number_of_runs: format!("   Number of runs: {number_of_runs}"),
             text_split_times: splits
                 .iter()
@@ -152,11 +160,11 @@ impl Render for Stats {
             ui.text_style_height(&egui::TextStyle::Body),
             self.text_split_times.len(),
             |ui, row_range| {
-            
-            for s in row_range {
-                ui.label(&self.text_split_times[s]);
-            }
-        });
+                for s in row_range {
+                    ui.label(&self.text_split_times[s]);
+                }
+            },
+        );
     }
 }
 
@@ -187,11 +195,9 @@ impl StatsWindow {
             .selected_text(format!("{:?}", bool))
             .height(300.0)
             .show_ui(ui, |ui| {
-
                 changed = changed || ui.selectable_value(bool, None, "None").clicked();
                 changed = changed || ui.selectable_value(bool, Some(false), "False").clicked();
                 changed = changed || ui.selectable_value(bool, Some(true), "True").clicked();
-            
             });
 
         changed
@@ -224,45 +230,46 @@ impl StatsWindow {
     }
 
     pub fn update(&mut self) {
-
         self.stats_shown = Stats::build(
             self.run_vec
                 .iter()
-                .filter(|r| 
+                .filter(|r| {
                     self.name_filter
                         .split('|')
-                        .any(|filter| 
-                            r
-                                .get_name()
-                                .contains(filter)
-                        )
-                )
-                .filter(|r|
-                    self.negative_name_filter
-                        .split('|')
-                        .all(|filter| {
-                            if filter == "" { return true }
+                        .any(|filter| r.get_name().contains(filter))
+                })
+                .filter(|r| {
+                    self.negative_name_filter.split('|').all(|filter| {
+                        if filter == "" {
+                            return true;
+                        }
 
-                            !r
-                                .get_name()
-                                .contains(filter)
-                        })
-                )
+                        !r.get_name().contains(filter)
+                    })
+                })
                 .filter(|r| {
                     self.min_time_filter <= r.get_time() && r.get_time() <= self.max_time_filter
                 })
                 .filter(|r| self.min_stamp_filter <= r.len() && r.len() <= self.max_stamp_filter)
                 .filter(|r| self.win_filter.is_none_or(|f| f == r.is_win()))
-                .filter(|r| self.secondary_filter.is_none_or(|f| 
-                    f == r.get_objective().as_level_run()
-                        .map(|v| v.secondary)
-                        .unwrap()
-                ))
-                .filter(|r| self.overload_filter.is_none_or(|f| 
-                    f == r.get_objective().as_level_run()
-                        .map(|v| v.overload)
-                        .unwrap()
-                ))
+                .filter(|r| {
+                    self.secondary_filter.is_none_or(|f| {
+                        f == r
+                            .get_objective()
+                            .as_level_run()
+                            .map(|v| v.secondary)
+                            .unwrap()
+                    })
+                })
+                .filter(|r| {
+                    self.overload_filter.is_none_or(|f| {
+                        f == r
+                            .get_objective()
+                            .as_level_run()
+                            .map(|v| v.overload)
+                            .unwrap()
+                    })
+                }),
         )
     }
 }

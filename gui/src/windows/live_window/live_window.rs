@@ -1,25 +1,34 @@
-
-
 use core::save_manager::SaveManager;
 
-use crate::{render::Render, windows::{live_window::{code_guess::CodeGuess, mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer}, settings_window::SettingsWindow}};
+use crate::{
+    render::Render,
+    windows::{
+        live_window::{
+            code_guess::CodeGuess,
+            mapper::Mapper,
+            objective_reader::{LevelObjectiveReader, UpdateObjective},
+            run_counter::RunCounter,
+            run_renderer::LevelRunRenderer,
+            seed_indexer::SeedIndexer,
+            timer::Timer,
+        },
+        settings_window::SettingsWindow,
+    },
+};
 
 #[derive(Default)]
 pub struct LiveWindow {
-
     real_timer: Option<Timer>,
     run_counter: Option<RunCounter>,
     mapper: Option<Mapper>,
     seed_indexer: Option<SeedIndexer>,
     key_guesser: Option<CodeGuess>,
-    
+
     objective_reader: Option<LevelObjectiveReader>,
     run_renderer: Option<LevelRunRenderer>,
-
 }
 
 impl LiveWindow {
-
     pub fn with_mapper(mut self, mapper: Mapper) -> Self {
         self.mapper = Some(mapper);
 
@@ -74,7 +83,8 @@ impl LiveWindow {
         }
 
         if settings.get_def("show_mapper") {
-            result = result.with_mapper(Mapper::new(&settings, "".to_string()))
+            result = result
+                .with_mapper(Mapper::new(&settings, "".to_string()))
                 .with_obj_reader(LevelObjectiveReader::default());
         };
 
@@ -87,25 +97,33 @@ impl LiveWindow {
         }
 
         if settings.get_def("show_run_splitter") {
-            result = result.with_run_renderer(LevelRunRenderer::new(settings))
+            result = result
+                .with_run_renderer(LevelRunRenderer::new(settings))
                 .with_obj_reader(LevelObjectiveReader::default());
         }
 
         let file_path = settings.get_path("logs_path").unwrap().clone();
-        
+
         glr_lib::dll_exports::functions::start_listener(file_path);
 
         result
     }
 
-    pub fn render(&mut self, ui: &mut egui::Ui, save_manager: &mut SaveManager, settings: &SettingsWindow) -> usize {
+    pub fn render(
+        &mut self,
+        ui: &mut egui::Ui,
+        save_manager: &mut SaveManager,
+        settings: &SettingsWindow,
+    ) -> usize {
         let mut result = 20;
 
         result += self.run_counter.render(ui).unwrap_or_default();
         result += self.real_timer.render(ui).unwrap_or_default();
         result += self.seed_indexer.render(ui).unwrap_or_default();
         result += self.key_guesser.render(ui).unwrap_or_default();
-        result += self.mapper.as_mut()
+        result += self
+            .mapper
+            .as_mut()
             .map(|v| v.render(&self.objective_reader, ui))
             .unwrap_or_default();
 
@@ -116,7 +134,9 @@ impl LiveWindow {
                 self.run_renderer.update(&self.objective_reader);
             }
         }
-        result += self.run_renderer.as_mut()
+        result += self
+            .run_renderer
+            .as_mut()
             .map(|v| v.render(save_manager, settings, &self.objective_reader, ui))
             .unwrap_or_default();
 

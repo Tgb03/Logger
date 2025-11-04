@@ -1,6 +1,13 @@
-
 use core::run::timed_run::LevelRun;
-use std::{path::PathBuf, sync::{atomic::AtomicUsize, mpsc::{self, Receiver}, Arc, Mutex}, thread::{self, JoinHandle}};
+use std::{
+    path::PathBuf,
+    sync::{
+        Arc, Mutex,
+        atomic::AtomicUsize,
+        mpsc::{self, Receiver},
+    },
+    thread::{self, JoinHandle},
+};
 
 use egui::ProgressBar;
 
@@ -9,7 +16,6 @@ use crate::{dll::parse_files::parse_runs, render::Render};
 const MAX_THREAD: usize = 8;
 
 pub struct AwaitParseFiles {
-
     runs_collected: Vec<LevelRun>,
     receiver: Receiver<LevelRun>,
 
@@ -21,7 +27,6 @@ pub struct AwaitParseFiles {
 }
 
 impl AwaitParseFiles {
-
     pub fn new(paths: Vec<PathBuf>) -> Self {
         let (sender, recv) = mpsc::channel();
         let len = paths.len();
@@ -40,7 +45,10 @@ impl AwaitParseFiles {
                     let mut files: Vec<PathBuf> = Vec::with_capacity(5);
                     let mut guard = match paths_clone.lock() {
                         Ok(g) => g,
-                        Err(_) => { paths_clone.clear_poison(); continue; },
+                        Err(_) => {
+                            paths_clone.clear_poison();
+                            continue;
+                        }
                     };
 
                     for _ in 0..5 {
@@ -53,15 +61,17 @@ impl AwaitParseFiles {
 
                     drop(guard);
 
-                    if files.is_empty() { return }
-                    
+                    if files.is_empty() {
+                        return;
+                    }
+
                     let len_parsed = files.len();
                     parse_runs(files, &sender_clone);
                     left_clone.fetch_sub(len_parsed, std::sync::atomic::Ordering::Relaxed);
                 }
             }));
         }
-        
+
         Self {
             receiver: recv,
             runs_collected: Vec::new(),
@@ -92,8 +102,7 @@ impl AwaitParseFiles {
         while let Ok(r) = self.receiver.try_recv() {
             self.runs_collected.push(r);
         }
-    } 
-
+    }
 }
 
 impl Render for AwaitParseFiles {
@@ -101,11 +110,23 @@ impl Render for AwaitParseFiles {
 
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
         ui.vertical_centered(|ui| {
-            ui.label(format!("Files left to parse: {} out of {}", self.get_left(), self.get_len()));
-            ui.label(format!("Files/frame: {:.2}", (self.get_len() - self.get_left()) as f64 / self.get_frames() as f64));
-            ui.label(format!("Percentage Done: {:.2}%", (self.get_len() - self.get_left()) as f64 * 100.0 / self.get_len() as f64));
+            ui.label(format!(
+                "Files left to parse: {} out of {}",
+                self.get_left(),
+                self.get_len()
+            ));
+            ui.label(format!(
+                "Files/frame: {:.2}",
+                (self.get_len() - self.get_left()) as f64 / self.get_frames() as f64
+            ));
+            ui.label(format!(
+                "Percentage Done: {:.2}%",
+                (self.get_len() - self.get_left()) as f64 * 100.0 / self.get_len() as f64
+            ));
 
-            ui.add(ProgressBar::new((self.get_len() - self.get_left()) as f32 / self.get_len() as f32));
+            ui.add(ProgressBar::new(
+                (self.get_len() - self.get_left()) as f32 / self.get_len() as f32,
+            ));
         });
 
         self.frames += 1;
@@ -116,7 +137,7 @@ impl Render for AwaitParseFiles {
             }
             self.collect();
 
-            return true
+            return true;
         }
 
         false

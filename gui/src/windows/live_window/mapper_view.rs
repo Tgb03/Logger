@@ -1,9 +1,15 @@
-
-use std::{collections::{HashMap, HashSet}, fmt, ops::RangeInclusive};
+use std::{
+    collections::{HashMap, HashSet},
+    fmt,
+    ops::RangeInclusive,
+};
 
 use egui::Color32;
 use glr_core::location::Location;
-use serde::{de::{self, SeqAccess, Visitor}, Deserialize, Deserializer, Serialize};
+use serde::{
+    Deserialize, Deserializer, Serialize,
+    de::{self, SeqAccess, Visitor},
+};
 
 pub trait LookUpColor {
     fn lookup(&self, location_vec_id: usize, location: &Location) -> Option<Color32>;
@@ -11,7 +17,7 @@ pub trait LookUpColor {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
-enum MapperColor {
+pub enum MapperColor {
     White,
     Blue,
     Green,
@@ -40,20 +46,35 @@ impl From<&MapperColor> for Color32 {
 }
 
 #[derive(Serialize, Debug)]
-enum KeyID {
+pub enum KeyID {
     VecID(u64),
-    RangeID(RangeInclusive<u64>)
+    RangeID(RangeInclusive<u64>),
 }
 
 impl KeyID {
     pub fn add_to_set(self, set: &mut HashSet<u64>) {
         match self {
-            KeyID::VecID(id) => { set.insert(id); },
+            KeyID::VecID(id) => {
+                set.insert(id);
+            }
             KeyID::RangeID(range) => {
                 for id in range {
                     set.insert(id);
                 }
-            },
+            }
+        };
+    }
+
+    pub fn add_to_set_i32(self, set: &mut HashSet<i32>) {
+        match self {
+            KeyID::VecID(id) => {
+                set.insert(id as i32);
+            }
+            KeyID::RangeID(range) => {
+                for id in range {
+                    set.insert(id as i32);
+                }
+            }
         };
     }
 }
@@ -119,15 +140,16 @@ impl Into<OptimizedLevelView> for LevelView {
                     .map(|(key, inner_map)| {
                         let transformed_vec: Vec<(Color32, HashSet<u64>)> = inner_map
                             .into_iter()
-                            .map(|(color, values)| (
-                                (&color).into(), 
-                                values.into_iter()
-                                    .fold(HashSet::new(), |mut set, id| {
+                            .map(|(color, values)| {
+                                (
+                                    (&color).into(),
+                                    values.into_iter().fold(HashSet::new(), |mut set, id| {
                                         id.add_to_set(&mut set);
 
                                         set
-                                    })
-                            ))
+                                    }),
+                                )
+                            })
                             .collect();
                         (key, transformed_vec)
                     })
@@ -146,12 +168,14 @@ impl Into<OptimizedLevelView> for LevelView {
                             let transformed_vec: Vec<(Color32, HashSet<u64>)> = map
                                 .into_iter()
                                 .map(|(color, values)| {
-                                    ((&color).into(), values.into_iter()
-                                    .fold(HashSet::new(), |mut set, id| {
-                                        id.add_to_set(&mut set);
+                                    (
+                                        (&color).into(),
+                                        values.into_iter().fold(HashSet::new(), |mut set, id| {
+                                            id.add_to_set(&mut set);
 
-                                        set
-                                    }))
+                                            set
+                                        }),
+                                    )
                                 })
                                 .collect();
                             (key, transformed_vec)

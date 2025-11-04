@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-pub mod windows;
 pub mod dll;
+pub mod windows;
 
 pub mod render;
 pub mod sorter_buttons;
@@ -28,7 +28,6 @@ fn main() -> eframe::Result {
         persist_window: true,
         ..Default::default()
     };
-    
 
     eframe::run_native(
         "GTFO Logger",

@@ -1,16 +1,12 @@
+use reqwest::blocking::get;
 use semver::Version;
-use reqwest::{blocking::get};
 
 pub fn get_latest_version() -> Option<String> {
     let response = get("https://raw.githubusercontent.com/Tgb03/Logger/master/Cargo.toml");
     // println!("{:?}", response);
-    let response = response
-        .ok()?
-        .text()
-        .ok()?;
+    let response = response.ok()?.text().ok()?;
 
-    let parsed: toml::Value = toml::from_str(&response)
-        .ok()?;
+    let parsed: toml::Value = toml::from_str(&response).ok()?;
 
     // println!("Parsed: {:?}", parsed);
 
@@ -25,12 +21,13 @@ pub fn get_latest_version() -> Option<String> {
 pub fn is_there_new_version(latest_version: &String) -> Option<bool> {
     let current = env!("CARGO_PKG_VERSION");
 
-    println!("Version camparison: latest: {} current: {}", latest_version, current);
+    println!(
+        "Version camparison: latest: {} current: {}",
+        latest_version, current
+    );
 
-    let current = Version::parse(current)
-        .ok()?;
-    let latest = Version::parse(latest_version.as_str())
-        .ok()?;
+    let current = Version::parse(current).ok()?;
+    let latest = Version::parse(latest_version.as_str()).ok()?;
 
     Some(latest > current)
 }

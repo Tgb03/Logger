@@ -12,8 +12,13 @@ where
     }
 
     fn sort_by_objective(&mut self, objective: &String) {
-        self.get_vec(objective)
-            .map(|v| v.sort_by(|d, e| d.get_objective().to_string().cmp(&e.get_objective().to_string())));
+        self.get_vec(objective).map(|v| {
+            v.sort_by(|d, e| {
+                d.get_objective()
+                    .to_string()
+                    .cmp(&e.get_objective().to_string())
+            })
+        });
     }
 
     fn sort_by_time(&mut self, objective: &String) {
