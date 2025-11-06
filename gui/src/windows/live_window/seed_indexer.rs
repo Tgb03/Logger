@@ -1,7 +1,7 @@
 use core::save_manager::SaveManager;
 use std::{collections::HashMap, fs};
 
-use egui::{Color32, Label};
+use egui::{Color32, Label, RichText};
 use glr_core::seed_indexer_result::OutputSeedIndexer;
 use glr_lib::dll_exports::enums::SubscribeCode;
 
@@ -10,7 +10,7 @@ use crate::{
     render::Render,
     windows::{
         live_window::foresight_view::{
-            ForesightView, LookUpForesight, OptimizedForesightView,
+            AddToConditions, ForesightView, LookUpForesight, OptimizedForesightView
         },
         settings_window::SettingsWindow,
     },
@@ -120,6 +120,8 @@ impl Render for SeedIndexer {
                     self.data_found.clear();
                     self.end_shown.clear();
                     self.objective = name;
+                    self.views.get_mut(&self.objective).reset();
+                    
                     self.update_view();
                 }
                 OutputSeedIndexer::GenerationEnd => {
@@ -128,7 +130,7 @@ impl Render for SeedIndexer {
                     for data in &self.data_found {
                         match data {
                             OutputSeedIndexer::Key(name, zone, id) => {
-                                if self.views.get(&self.objective).is_name_ignored(name, zone) { continue; }
+                                if self.views.get(&self.objective).is_ignored(name, zone, id) { continue; }
 
                                 if self.show_artifacts == false && name.contains("rtifact") {
                                     continue;
@@ -183,8 +185,12 @@ impl Render for SeedIndexer {
                                 let color =
                                     self.views.get(&self.objective).lookup(name, zone, id);
 
+                                let new_name = self.views.get(&self.objective)
+                                    .rename(&name)
+                                    .unwrap_or_else(|| name.clone());
+
                                 self.end_shown
-                                    .entry((*zone, name.clone()))
+                                    .entry((*zone, new_name))
                                     .or_default()
                                     .push((*id, color));
 
@@ -196,12 +202,17 @@ impl Render for SeedIndexer {
                                 }
                                 
                                 let name = format!("{:?}", t);
-                                if self.views.get(&self.objective).is_name_ignored(&name, zone) { continue; }
+
+                                let new_name = self.views.get(&self.objective)
+                                    .rename(&name)
+                                    .unwrap_or_else(|| name.clone());
+                                
+                                if self.views.get(&self.objective).is_ignored(&name, zone, id) { continue; }
                                 let color =
                                     self.views.get(&self.objective).lookup(&name, zone, id);
                                 
                                 self.end_shown
-                                    .entry((*zone, name))
+                                    .entry((*zone, new_name))
                                     .or_default()
                                     .push((*id, color));
 
@@ -213,20 +224,74 @@ impl Render for SeedIndexer {
                 }
                 OutputSeedIndexer::Seed(_) | OutputSeedIndexer::ZoneGenEnded(_) => {}
                 v => {
+                    match &v {
+                        OutputSeedIndexer::Key(name, zone, id) => {
+                            self.views.get_mut(&self.objective)
+                                .add_found(name, zone, id);
+                        },
+                        OutputSeedIndexer::ResourcePack(resource_type, zone, id, _) => {
+                            let name = format!("{resource_type:?}");
+                            self.views.get_mut(&self.objective)
+                                .add_found(&name, zone, id);
+                        },
+                        _ => {}
+                    }
                     self.data_found.push(v);
                 }
             }
         }
 
+        let mut count_separators = 0;
         let row_height = ui.spacing().interact_size.y;
         egui::ScrollArea::vertical()
             .max_height(row_height * self.number_of_items as f32)
             .show_rows(ui, row_height, self.end_shown.len(), |ui, row_range| {
+                let mut last_grouped = -1;
+                let mut spit_separator = false;
+
                 for row in row_range {
                     let ((zone, name), ids) = self.end_shown.get_index(row).unwrap();
 
+                    if last_grouped != *zone && spit_separator {
+                        if !self.views.get(&self.objective).is_grouped(zone) {
+                            let size = egui::vec2(150.0, 1.0);
+                            let (rect, _response) = ui.allocate_exact_size(size, egui::Sense::hover());
+                            count_separators += 1;
+
+                            let painter = ui.painter();
+                            let stroke = egui::Stroke::new(1.0, egui::Color32::WHITE);
+                            painter.line_segment([rect.left_center(), rect.right_center()], stroke);
+                        }
+                        
+                        spit_separator = false;
+                    }
+
+                    if last_grouped != *zone && self.views.get(&self.objective).is_grouped(zone) {
+                        last_grouped = *zone;
+                        
+                        let size = egui::vec2(150.0, 1.0);
+                        let (rect, _response) = ui.allocate_exact_size(size, egui::Sense::hover());
+
+                        let painter = ui.painter();
+                        let stroke = egui::Stroke::new(1.0, egui::Color32::WHITE);
+                        painter.line_segment([rect.left_center(), rect.right_center()], stroke);
+                            count_separators += 1;
+
+                        ui.add(
+                            Label::new(RichText::new(format!("   ZONE_{}   ", zone))
+                                //.underline()
+                                .strong()
+                                .heading()
+                        ));
+                        spit_separator = true;
+                    }
+
                     ui.horizontal(|ui| {
-                        ui.add(Label::new(format!("{} in ZONE_{}:", name, zone)));
+                        if last_grouped != *zone {
+                            ui.add(Label::new(format!("{} in ZONE_{}:", name, zone)));
+                        } else {
+                            ui.add(Label::new(format!("{}:", name)));
+                        }
 
                         for (id, color) in ids {
                             match color {
@@ -240,6 +305,6 @@ impl Render for SeedIndexer {
 
         ui.separator();
 
-        60 + (row_height * self.number_of_items.min(self.end_shown.len()) as f32) as usize
+        60 + (row_height * self.number_of_items.min(self.end_shown.len()) as f32) as usize + count_separators * (row_height as usize)
     }
 }

@@ -577,7 +577,7 @@ impl Render for SettingsWindow {
                     self.setting_hash.get_mut(id).map(|v| v.render(ui));
                 }
 
-                egui::ComboBox::from_label("Select loaded objective")
+                egui::ComboBox::from_label("Select font")
                 .selected_text(self.font_used.to_string())
                 .height(500.0)
                 .show_ui(ui, |ui| {
