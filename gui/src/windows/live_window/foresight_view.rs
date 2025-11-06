@@ -33,11 +33,11 @@ mod option_as_value {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ForesightView {
-    #[serde(alias = "data", alias = "color_data")]
+    #[serde(default, alias = "data", alias = "color_data")]
     data: InnerForesightView,
     #[serde(default, skip_serializing_if = "Option::is_none", with = "option_as_value")] 
     default_color: Option<MapperColor>,
-    ignore_zones: Vec<i32>,
+    #[serde(default)] ignore_zones: Vec<i32>,
     #[serde(default)] ignore_pairs: HashMap<String, HashSet<i32>>,
     #[serde(default)] conditional_ignores: Vec<ConditionalIgnore>,
     #[serde(default)] rename: HashMap<String, String>,

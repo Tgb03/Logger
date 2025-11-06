@@ -305,6 +305,6 @@ impl Render for SeedIndexer {
 
         ui.separator();
 
-        60 + (row_height * self.number_of_items.min(self.end_shown.len()) as f32) as usize + count_separators * (row_height as usize)
+        60 + (row_height * self.number_of_items.min(self.end_shown.len()) as f32) as usize + count_separators * (row_height as usize + 4)
     }
 }
