@@ -2,7 +2,7 @@ use egui::Color32;
 
 use crate::{render::Render, windows::settings_window::SettingsWindow};
 
-static ALL_CODES: &'static [u8] = include_bytes!("..\\..\\..\\..\\keys.txt");
+static ALL_CODES: &'static [u8] = include_bytes!("..\\..\\..\\..\\resources\\keys.txt");
 
 pub struct CodeGuess {
     selected: String,

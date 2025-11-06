@@ -1,7 +1,7 @@
 use core::run::default_dirs::{self, get_config_directory};
 use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
-use egui::{Color32, Label, RichText};
+use egui::{Color32, Label, RichText, WidgetText};
 use serde::{Deserialize, Serialize};
 
 use crate::render::Render;
@@ -13,6 +13,36 @@ enum FieldValue {
     Float(f32, String),   // second value: string is input field, not actually given out
     String(String),       // string here acts as both input field and value
     Path(PathBuf, String), // it is required to have a string as input as pathbuf cant be edited directly
+}
+
+#[derive(Default, Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[repr(u8)]
+enum LoggerFontEnum {
+    #[default] JetBrainsMono,
+    ShareTechMono,
+    Ubuntu
+}
+
+static LOGGER_FONT_ENUM_ITER: &'static [LoggerFontEnum] = &[
+    LoggerFontEnum::JetBrainsMono,
+    LoggerFontEnum::ShareTechMono,
+    LoggerFontEnum::Ubuntu,
+];
+
+impl ToString for LoggerFontEnum {
+    fn to_string(&self) -> String {
+        match self {
+            LoggerFontEnum::JetBrainsMono => "jetbrains_mono".to_owned(),
+            LoggerFontEnum::ShareTechMono => "share_tech_mono".to_owned(),
+            LoggerFontEnum::Ubuntu => "ubuntu".to_owned(),
+        }
+    }
+}
+
+impl Into<WidgetText> for LoggerFontEnum {
+    fn into(self) -> WidgetText {
+        WidgetText::RichText(RichText::from(self.to_string()))
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -167,6 +197,8 @@ pub struct SettingsWindow {
     splitter: Vec<String>,
     mapper: Vec<String>,
     foresight: Vec<String>,
+
+    font_used: LoggerFontEnum,
 }
 
 impl Default for SettingsWindow {
@@ -181,6 +213,8 @@ impl Default for SettingsWindow {
             splitter: Vec::new(),
             mapper: Vec::new(),
             foresight: Vec::new(),
+
+            font_used: Default::default(),
         };
 
         s.add_all()
@@ -217,6 +251,10 @@ impl SettingsWindow {
         self.add_to_general(
             "show_run_counter".into(),
             Field::new("Show run counter".into(), FieldValue::Boolean(true)),
+        );
+        self.add_to_general(
+            "text_size".into(), 
+            Field::new("Text size".into(), FieldValue::Float(12f32, "12.0".to_owned()))
         );
 
         self.add_to_splitter(
@@ -514,12 +552,18 @@ impl SettingsWindow {
             .map(|v| v.into())
             .flatten()
     }
+
+    pub fn get_font_name(&self) -> String {
+        self.font_used.to_string()
+    }
 }
 
 impl Render for SettingsWindow {
-    type Response = ();
+    type Response = bool;
 
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
+        let mut changed_font_data = false;
+
         egui::ScrollArea::vertical()
             .max_height(ui.available_height() - 60.0)
             .show(ui, |ui| {
@@ -532,6 +576,24 @@ impl Render for SettingsWindow {
                 for id in &self.general {
                     self.setting_hash.get_mut(id).map(|v| v.render(ui));
                 }
+
+                egui::ComboBox::from_label("Select font")
+                .selected_text(self.font_used.to_string())
+                .height(500.0)
+                .show_ui(ui, |ui| {
+                    for key in LOGGER_FONT_ENUM_ITER {
+                        if ui
+                            .selectable_value(
+                                &mut self.font_used, 
+                                key.clone(), 
+                                key.to_string()
+                            )
+                            .clicked()
+                        {
+                            changed_font_data = true;
+                        };
+                    }
+                });
 
                 ui.separator();
 
@@ -615,5 +677,7 @@ impl Render for SettingsWindow {
 
         ui.label(format!("App version: {}", env!("CARGO_PKG_VERSION")));
         ui.label(format!("Made by Tgb03"));
+
+        changed_font_data
     }
 }

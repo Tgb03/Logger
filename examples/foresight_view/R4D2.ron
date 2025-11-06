@@ -1,0 +1,25 @@
+// this file is used to color and hide data that you want
+ForesightView(
+    color_data: {},
+    // these are just zones that are straight up ignored no matter what is in them.
+    ignore_zones: [ 95, 97, 99, 346, 347, 348, 349, 350, 710 ],
+    // these are pairs of data that get ignored.
+    // it means both the name and the zone must match.
+    ignore_pairs: {},
+    // these are conditional ignores that only apply if the condition is triggered
+    conditional_ignores: [],
+    // this field renames everything from the default to something else.
+    // BEWARE THAT THIS IS ONLY VISUAL.
+    // IT IS APPLIED LAST SO EVERY OTHER FEATURE IN THESE FILES WORKS
+    // WITH THE ACTUAL NAMES USED BY DEFAULT BY FORESIGHT
+    // this field is also entirely optional and can be missing.
+    rename: {
+        "Healthpack": "ResMEDI",
+        "Ammopack": "ResAMMO",
+        "ToolRefillpack": "ResTOOL",
+    },
+    // this groups all the data found about the zone in a nice format
+    // so that it is more visible and easier to tell apart.
+    // my recommendation is using it on levels with collectables or resources
+    group_zones: [ 92, 94, 96, 98 ],
+)

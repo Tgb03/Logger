@@ -46,14 +46,56 @@ pub struct BaseApp {
 }
 
 impl BaseApp {
+    pub fn update_font_data(cc: &egui::Context, font_name: &str, font_size: f32) {
+        let mut style = (*cc.style()).clone();
+        style.text_styles = <BTreeMap<egui::TextStyle, FontId>>::from([
+            (
+                Heading,
+                FontId::new(font_size, FontFamily::Name(font_name.into())),
+            ),
+            (
+                Body,
+                FontId::new(font_size, FontFamily::Name(font_name.into())),
+            ),
+            (
+                Monospace,
+                FontId::new(font_size, FontFamily::Name(font_name.into())),
+            ),
+            (
+                Button,
+                FontId::new(font_size, FontFamily::Name(font_name.into())),
+            ),
+            (
+                Small,
+                FontId::new(font_size, FontFamily::Name(font_name.into())),
+            ),
+        ]);
+        cc.set_style(style);
+    }
+
     pub fn new(cc: &CreationContext) -> Self {
         let mut fonts = FontDefinitions::default();
+        let settings_window = SettingsWindow::default();
+        let mut save_manager = SaveManager::default();
+        save_manager.set_automatic_saving(settings_window.get_def("automatic_saving"));
 
         fonts.font_data.insert(
             "jetbrains_mono".to_owned(),
             std::sync::Arc::new(FontData::from_static(include_bytes!(
-                "../../JetBrainsMono-Regular.ttf"
+                "../../resources/JetBrainsMono-Regular.ttf"
             ))),
+        );
+        fonts.font_data.insert(
+            "share_tech_mono".to_owned(), 
+            std::sync::Arc::new(FontData::from_static(include_bytes!(
+                "../../resources/ShareTechMono-Regular.ttf"
+            )))
+        );
+        fonts.font_data.insert(
+            "ubuntu".to_owned(), 
+            std::sync::Arc::new(FontData::from_static(include_bytes!(
+                "../../resources/Ubuntu-Regular.ttf"
+            )))
         );
 
         let mut newfam = BTreeMap::new();
@@ -61,39 +103,22 @@ impl BaseApp {
             FontFamily::Name("jetbrains_mono".into()),
             vec!["jetbrains_mono".to_owned()],
         );
+        newfam.insert(
+            FontFamily::Name("share_tech_mono".into()), 
+            vec!["share_tech_mono".to_owned()]
+        );
+        newfam.insert(
+            FontFamily::Name("ubuntu".into()), 
+            vec!["ubuntu".to_owned()]
+        );
         fonts.families.append(&mut newfam);
 
         cc.egui_ctx.set_fonts(fonts);
         cc.egui_ctx.set_theme(egui::Theme::Dark);
 
-        let mut style = (*cc.egui_ctx.style()).clone();
-        style.text_styles = <BTreeMap<egui::TextStyle, FontId>>::from([
-            (
-                Heading,
-                FontId::new(12.0, FontFamily::Name("jetbrains_mono".into())),
-            ),
-            (
-                Body,
-                FontId::new(12.0, FontFamily::Name("jetbrains_mono".into())),
-            ),
-            (
-                Monospace,
-                FontId::new(12.0, FontFamily::Name("jetbrains_mono".into())),
-            ),
-            (
-                Button,
-                FontId::new(12.0, FontFamily::Name("jetbrains_mono".into())),
-            ),
-            (
-                Small,
-                FontId::new(12.0, FontFamily::Name("jetbrains_mono".into())),
-            ),
-        ]);
-        cc.egui_ctx.set_style(style);
-
-        let settings_window = SettingsWindow::default();
-        let mut save_manager = SaveManager::default();
-        save_manager.set_automatic_saving(settings_window.get_def("automatic_saving"));
+        let size = settings_window.get("text_size").unwrap_or(12f32);
+        let font_name = settings_window.get_font_name();
+        Self::update_font_data(&cc.egui_ctx, &font_name, size);
 
         if settings_window.get_def("automatic_loading") {
             save_manager.load_all_runs();
@@ -168,6 +193,11 @@ impl eframe::App for BaseApp {
                             self.save_manager.set_automatic_saving(
                                 self.settings_window.get_def("automatic_saving"),
                             );
+
+                            let font_name = self.settings_window.get_font_name();
+                            let font_size = self.settings_window.get("text_size")
+                                .unwrap_or(12f32);
+                            Self::update_font_data(ctx, &font_name, font_size);
                         }
 
                         return;
@@ -244,7 +274,14 @@ impl eframe::App for BaseApp {
                 AppState::ManagingRuns(run_manager_window) => {
                     run_manager_window.render(ui, &mut self.save_manager)
                 }
-                AppState::SettingsWindow => self.settings_window.render(ui),
+                AppState::SettingsWindow => {
+                    if self.settings_window.render(ui) {
+                        let font_name = self.settings_window.get_font_name();
+                        let font_size = self.settings_window.get("text_size")
+                            .unwrap_or(12f32);
+                        Self::update_font_data(ctx, &font_name, font_size);
+                    }
+                }
                 AppState::LiveWindow(live_window) => {
                     let size =
                         live_window.render(ui, &mut self.save_manager, &self.settings_window);
