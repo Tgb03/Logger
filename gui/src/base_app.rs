@@ -287,9 +287,10 @@ impl eframe::App for BaseApp {
                         live_window.render(ui, &mut self.save_manager, &self.settings_window);
 
                     if self.live_window_size.is_none_or(|v| v != size) {
+                        let multi = self.settings_window.get_def::<f32>("text_size") / 12f32;
                         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(Vec2 {
                             x: self.settings_window.get_def("x_size"),
-                            y: size as f32,
+                            y: size as f32 * multi,
                         }));
                         self.live_window_size = Some(size);
                     }

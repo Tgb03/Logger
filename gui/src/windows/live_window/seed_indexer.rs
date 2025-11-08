@@ -40,6 +40,8 @@ pub struct SeedIndexer {
     show_consumables: bool,
     show_artifacts: bool,
 
+    size_multi: f32,
+
     number_of_items: usize,
 }
 
@@ -51,6 +53,7 @@ impl SeedIndexer {
             continous_parser: ContinousParser::new(SubscribeCode::SeedIndexer),
             views: HashMap::new(),
             objective: Default::default(),
+            size_multi: settings.get_def::<f32>("text_size") / 12f32,
 
             show_gather_small_items: settings
                 .get("seed_indexer_show_gather_small_items")
@@ -253,7 +256,7 @@ impl Render for SeedIndexer {
         let mut count_separators = 0;
         let row_height = ui.spacing().interact_size.y;
         egui::ScrollArea::vertical()
-            .max_height(row_height * self.number_of_items as f32)
+            .max_height(row_height * self.number_of_items as f32 * self.size_multi)
             .show_rows(ui, row_height, self.end_shown.len(), |ui, row_range| {
                 let mut last_grouped = -1;
                 let mut spit_separator = false;

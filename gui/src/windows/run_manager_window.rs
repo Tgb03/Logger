@@ -9,6 +9,7 @@ use crate::{run::RenderRun, sorter_buttons::render_buttons};
 pub struct RunManagerWindow {
     objective: String,
     show_split_times: bool,
+    compare_all: bool,
 
     bottom_range: usize,
     merge_splits_string: String,
@@ -36,6 +37,7 @@ impl RunManagerWindow {
             merge_splits_string: "".to_owned(),
             compare_first: None,
             compare_second: Vec::new(),
+            compare_all: false,
         }
     }
 
@@ -85,6 +87,26 @@ impl RunManagerWindow {
             }
 
             ui.checkbox(&mut self.show_split_times, "Show Split Times");
+
+            if ui.checkbox(&mut self.compare_all, "Compare ALL").clicked() {
+                if self.compare_all {
+                    for it in &mut self.compare_second {
+                        *it = true;
+                    }
+                    self.compare_second.get_mut(0).map(|v| *v = false);
+                    self.compare_first = match save_manager.get_runs(&self.objective)
+                        .map(|v| v.len())
+                        .unwrap_or_default() > 0 {
+                        true => Some(0),
+                        false => None,
+                    };
+                } else {
+                    self.compare_first = None;
+                    for it in &mut self.compare_second {
+                        *it = false;
+                    }
+                }
+            }
         });
 
         ui.separator();
