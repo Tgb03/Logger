@@ -9,9 +9,13 @@ use crate::{run::RenderRun, sorter_buttons::render_buttons};
 pub struct RunManagerWindow {
     objective: String,
     show_split_times: bool,
+    compare_all: bool,
 
     bottom_range: usize,
     merge_splits_string: String,
+
+    compare_first: Option<usize>,
+    compare_second: Vec<bool>,
 }
 
 impl RunManagerWindow {
@@ -31,6 +35,9 @@ impl RunManagerWindow {
             show_split_times: false,
             bottom_range: 0,
             merge_splits_string: "".to_owned(),
+            compare_first: None,
+            compare_second: Vec::new(),
+            compare_all: false,
         }
     }
 
@@ -46,6 +53,13 @@ impl RunManagerWindow {
                             .clicked()
                         {
                             self.bottom_range = 0;
+                            self.compare_first = None;
+                            self.compare_second = vec![
+                                false; 
+                                save_manager.get_runs(&self.objective)
+                                    .map(|v| v.len())
+                                    .unwrap_or_default()
+                            ];
                             self.merge_splits_string = save_manager
                                 .get_level_merge_split_str(&self.objective)
                                 .unwrap_or_default();
@@ -73,6 +87,26 @@ impl RunManagerWindow {
             }
 
             ui.checkbox(&mut self.show_split_times, "Show Split Times");
+
+            if ui.checkbox(&mut self.compare_all, "Compare ALL").clicked() {
+                if self.compare_all {
+                    for it in &mut self.compare_second {
+                        *it = true;
+                    }
+                    self.compare_second.get_mut(0).map(|v| *v = false);
+                    self.compare_first = match save_manager.get_runs(&self.objective)
+                        .map(|v| v.len())
+                        .unwrap_or_default() > 0 {
+                        true => Some(0),
+                        false => None,
+                    };
+                } else {
+                    self.compare_first = None;
+                    for it in &mut self.compare_second {
+                        *it = false;
+                    }
+                }
+            }
         });
 
         ui.separator();
@@ -136,6 +170,10 @@ impl RunManagerWindow {
             if ui.button(" > ").clicked() {
                 self.bottom_range = (self.bottom_range + 1).min(split_names.len() - 1);
             }
+            if !self.show_split_times {
+                ui.label("  CMP ");
+            }
+
             for (id, name) in split_names.iter().skip(self.bottom_range).enumerate() {
                 ui.label(format!("{: ^12}", name));
 
@@ -145,6 +183,9 @@ impl RunManagerWindow {
 
         ui.horizontal(|ui| {
             ui.label("Best split for each part:           ");
+            if !self.show_split_times {
+                ui.label("SPLITS");
+            }
             for (id, name) in split_names.iter().skip(self.bottom_range).enumerate() {
                 ui.label(format!(
                     "{: ^fill$}",
@@ -179,11 +220,35 @@ impl RunManagerWindow {
                         &save_manager,
                         ui,
                         self.show_split_times,
+                        match self.compare_second.get(row).cloned().unwrap_or_default() {
+                            true => self.compare_first
+                                .map(|v| timed_runs.get(v))
+                                .flatten(),
+                            false => None
+                        },
+                        self.compare_first.is_some_and(|v| v == row),
+                        self.compare_second.get(row).cloned().unwrap_or_default(),
                     );
 
                     if result.delete {
                         for_deletion.push(row);
                         has_deleted = true;
+                    }
+
+                    if let Some(val) = result.compare_first {
+                        let copy = self.compare_first;
+                        self.compare_first = match val {
+                            true => Some(row),
+                            false => None,
+                        };
+                        if self.compare_second[row] {
+                            copy.map(|v| { self.compare_second[v] = true; });
+                        }
+                        self.compare_second[row] = false;
+                    }
+
+                    if let Some(val) = result.compare_second {
+                        self.compare_second[row] = val;
                     }
                 }
             },

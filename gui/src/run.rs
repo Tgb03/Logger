@@ -1,5 +1,5 @@
 use core::{
-    run::{objectives::Objective, traits::Run},
+    run::{objectives::Objective, timed_run::RunEnum, traits::Run},
     save_manager::SaveManager,
 };
 use std::ops::Range;
@@ -11,6 +11,8 @@ use glr_core::time::Time;
 pub struct RenderResult {
     pub delete: bool,
     pub save: bool,
+    pub compare_first: Option<bool>,
+    pub compare_second: Option<bool>,
 }
 
 pub trait RenderRun {
@@ -21,6 +23,9 @@ pub trait RenderRun {
         save_manager: &SaveManager,
         ui: &mut Ui,
         show_split_times: bool,
+        compare_run: Option<&RunEnum>,
+        compare_first: bool,
+        compare_second: bool,
     ) -> RenderResult;
 }
 
@@ -35,6 +40,9 @@ where
         save_manager: &SaveManager,
         ui: &mut egui::Ui,
         show_split_times: bool,
+        compare_run: Option<&RunEnum>,
+        mut compare_first: bool,
+        mut compare_second: bool,
     ) -> RenderResult {
         let mut result = RenderResult::default();
         let empty_vec = Vec::new();
@@ -62,10 +70,29 @@ where
             }
             ui.label(format!("{:03}", self.len()));
 
+            if !show_split_times {
+                if ui.checkbox(&mut compare_first, "")
+                    .clicked() {
+                    
+                    result.compare_first = Some(compare_first);
+                }
+
+                if ui.checkbox(&mut compare_second, "")
+                    .clicked() {
+                    
+                    result.compare_second = Some(compare_second);
+                }
+            }
+
             let mut running_total = Time::default();
+            let mut cmp_total = Time::new();
             for id in 0..range.start.min(split_names.len()) {
                 running_total += grab_time(self, &objective_str, &split_names[id], save_manager)
                     .unwrap_or_default();
+                if let Some(cmp_run) = compare_run {
+                    cmp_total += grab_time(cmp_run, &objective_str, &split_names[id], save_manager)
+                        .unwrap_or_default();
+                }
             }
 
             let first = range.start.min(split_names.len());
@@ -86,17 +113,43 @@ where
                             color,
                             format!("{: ^fill$}", time.to_string(), fill = min_sizes[id - first]),
                         );
-                    } else {
+
+                        continue
+                    } 
+
+                    if let Some(cmp_run) = compare_run {
                         running_total += time;
+                        cmp_total += grab_time(cmp_run, &objective_str, &split_names[id], save_manager)
+                            .unwrap_or_default();
+
+                        let (color, sign, t_show) = match running_total.cmp(&cmp_total) {
+                            std::cmp::Ordering::Less => (Color32::GREEN, '-', cmp_total - running_total),
+                            std::cmp::Ordering::Equal => (Color32::GRAY, ' ', Time::new()),
+                            std::cmp::Ordering::Greater => (Color32::RED, '+', running_total - cmp_total),
+                        };
+
                         ui.colored_label(
-                            Color32::GRAY,
+                            color, 
                             format!(
-                                "{: ^fill$}",
-                                running_total.to_string(),
+                                "{:^fill$}",
+                                format!("{}{}", sign, t_show.to_string_no_hours()),
                                 fill = min_sizes[id - first]
-                            ),
+                            )
                         );
-                    }
+
+                        continue
+                    }    
+                    
+                    running_total += time;
+                    ui.colored_label(
+                        Color32::GRAY,
+                        format!(
+                            "{: ^fill$}",
+                            running_total.to_string(),
+                            fill = min_sizes[id - first]
+                        ),
+                    );
+                    
                 } else {
                     ui.label("            ");
                 }

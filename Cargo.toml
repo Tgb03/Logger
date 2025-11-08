@@ -3,7 +3,7 @@ members = ["core", "gui"]
 resolver = "2"
 
 [workspace.package]
-version = "3.0.17"
+version = "3.0.18"
 edition = "2021"
 authors = ["Tgb03<tgb03.dev@gmail.com>"]
 
