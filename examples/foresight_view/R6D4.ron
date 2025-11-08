@@ -1,0 +1,77 @@
+// this file is used to color and hide data that you want
+ForesightView(
+    color_data: {
+        "Cell": {
+            414: {
+                Blue: [[0, 3]],
+                Green: [ 4, 5 ],
+            },
+            415: {
+            },
+        },
+        "GatherSmallItems": {
+            411: {
+                Green: [17, 19],
+                Blue: [[0, 11]],
+            },
+            413: {
+                Green: [0, 2, 3, 6, 7],
+                Yellow: [5],
+            },
+            414: {
+                Blue: [[0, 12]],
+                Green: [13, 14],
+                Yellow: [15, 16],
+            },
+            416: {
+                Blue: [[15, 20]],
+                Green: [[0, 8]],
+                Yellow: [[9, 14]],
+            },
+        },
+        "KeyZ412": {
+            410: {
+                Blue: [[0, 3]],
+                Green: [22, 20, 24, 23, 21, 18, 25],
+                Yellow: [[26, 29], 17, 19],
+            }
+        },
+        "KeyZ411": {
+            412: {
+                Blue: [[13, 22]],
+                Green: [[23, 26], 29, 27, 31, 30, 28, 32],
+            }
+        },
+        "KeyZ414": {
+            413: {
+                Blue: [0, 2, 3, 6, 7],
+                Yellow: [5, 14, 13, 15, 16, 11, 12, 9, 10],
+            }
+        }
+    },
+    // if the color is not specified then this color is used.
+    // this field can be ommited and the color will be default logger text color.
+    default_color: Red,
+    rename: {
+        "Healthpack": "ResMEDI",
+        "Ammopack": "ResAMMO",
+        "ToolRefillpack": "ResTOOL",
+        "CELL": "Cell",
+    },
+    // this is the order in which stuff is sorted,
+    // keep in mind it is pairs of (zone, item_name)
+    // elements not in this list will be sorted at the end by zone.
+    // sadly resource spawns, consumables in levels like r6d4 are beyond
+    // annoying to deal with as there is no separation between dimensions yet.
+    order: [
+        (410, "KeyZ412"),
+        (414, "Cell"),
+        (416, "GatherSmallItems"),
+        (413, "GatherSmallItems"),
+        (413, "KeyZ414"),
+        (414, "GatherSmallItems"),
+        (412, "KeyZ411"),
+        (411, "GatherSmallItems"),
+        (415, "Cell"),
+    ]
+)

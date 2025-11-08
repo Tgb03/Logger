@@ -39,9 +39,10 @@ pub struct ForesightView {
     default_color: Option<MapperColor>,
     #[serde(default)] ignore_zones: Vec<i32>,
     #[serde(default)] ignore_pairs: HashMap<String, HashSet<i32>>,
-    #[serde(default)] conditional_ignores: Vec<ConditionalIgnore>,
+    #[serde(default, alias = "conditional_ignores", alias = "conditional")] conditional_ignores: Vec<ConditionalIgnore<InnerForesightView>>,
     #[serde(default)] rename: HashMap<String, String>,
     #[serde(default)] group_zones: HashSet<i32>,
+    #[serde(default)] order: Vec<(i32, String)>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -51,7 +52,7 @@ pub struct ViewCondition {
     #[serde(default, skip_serializing_if = "Option::is_none", with = "option_as_value")]
     zone: Option<i32>,
     #[serde(default, skip_serializing_if = "Option::is_none", with = "option_as_value")]
-    id: Option<i32>,
+    id: Option<KeyID>,
 
 }
 
@@ -60,16 +61,28 @@ impl ViewCondition {
     pub fn matches(&self, name: &String, zone: &i32, id: &i32) -> bool {
         self.name == *name && 
         self.zone.as_ref().is_none_or(|v| v == zone) &&
-        self.id.as_ref().is_none_or(|v| v == id)
+        self.id.as_ref().is_none_or(|v| v.contains(id))
     }
 
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ConditionalIgnore {
+pub struct ConditionalIgnore<CD> {
     condition: ViewCondition,
     #[serde(default)] ignore_zones: HashSet<i32>,
     #[serde(default)] ignore_pairs: HashMap<String, HashSet<i32>>,
+    #[serde(default, alias = "data", alias = "color_data")] color_data: CD, 
+}
+
+impl Into<ConditionalIgnore<InnerOptimizedForesightView>> for ConditionalIgnore<InnerForesightView> {
+    fn into(self) -> ConditionalIgnore<InnerOptimizedForesightView> {
+        ConditionalIgnore { 
+            condition: self.condition, 
+            ignore_zones: self.ignore_zones, 
+            ignore_pairs: self.ignore_pairs, 
+            color_data: optimize_foresight_view(self.color_data) 
+        }
+    }
 }
 
 pub struct OptimizedForesightView {
@@ -77,10 +90,11 @@ pub struct OptimizedForesightView {
     default_color: Option<Color32>,
     ignore_zones: HashSet<i32>,
     ignore_pairs: HashMap<String, HashSet<i32>>,
-    conditional_ignores: Vec<ConditionalIgnore>,
+    conditional_ignores: Vec<ConditionalIgnore<InnerOptimizedForesightView>>,
     conditions_triggered: Vec<bool>,
     rename: HashMap<String, String>,
     group_zones: HashSet<i32>,
+    order: HashMap<i32, HashMap<String, usize>>,
 }
 
 pub trait AddToConditions {
@@ -124,10 +138,23 @@ impl Into<OptimizedForesightView> for ForesightView {
             default_color: self.default_color.map(|v| (&v).into()),
             ignore_zones: self.ignore_zones.into_iter().collect(),
             ignore_pairs: self.ignore_pairs,
-            conditional_ignores: self.conditional_ignores,
+            conditional_ignores: self.conditional_ignores.into_iter()
+                .map(|v| v.into())
+                .collect(),
             conditions_triggered: vec![false; conditional_size],
             rename: self.rename,
             group_zones: self.group_zones,
+            order: self.order.into_iter()
+                .enumerate()
+                .fold(HashMap::new(), |mut hmap, (key, (zone, name))| {
+                    if !hmap.contains_key(&zone) {
+                        hmap.insert(zone, HashMap::new());
+                    }
+
+                    hmap.get_mut(&zone).map(|h| h.insert(name, key));
+
+                    hmap
+                })
         }
     }
 }
@@ -167,6 +194,7 @@ pub trait LookUpForesight {
 
     fn rename(&self, name: &String) -> Option<String>;
     fn is_grouped(&self, zone: &i32) -> bool;
+    fn get_order(&self, name: &String, zone: &i32) -> Option<usize>;
 }
 
 impl LookUpForesight for InnerOptimizedForesightView {
@@ -189,12 +217,28 @@ impl LookUpForesight for InnerOptimizedForesightView {
     fn is_grouped(&self, _: &i32) -> bool {
         false
     }
+    
+    fn get_order(&self, _: &String, _: &i32) -> Option<usize> {
+        None
+    }
 }
 
 impl LookUpForesight for OptimizedForesightView {
     fn lookup(&self, name: &String, zone: &i32, id: &i32) -> Option<Color32> {
         self.data
             .lookup(name, zone, id)
+            .or_else(|| 
+                self.conditional_ignores.iter()
+                    .enumerate()
+                    .filter_map(|(vec_pos, v)| {
+                        if self.conditions_triggered[vec_pos] {
+                            v.color_data.lookup(name, zone, id)
+                        } else {
+                            None
+                        }
+                    })
+                    .next()
+            )
             .or(self.default_color)
     }
     
@@ -225,6 +269,12 @@ impl LookUpForesight for OptimizedForesightView {
     fn is_grouped(&self, zone: &i32) -> bool {
         self.group_zones.contains(zone)
     }
+    
+    fn get_order(&self, name: &String, zone: &i32) -> Option<usize> {
+        self.order.get(zone)?
+            .get(name)
+            .cloned()
+    }
 }
 
 impl<T> LookUpForesight for Option<&T>
@@ -250,6 +300,12 @@ where
     fn is_grouped(&self, zone: &i32) -> bool {
         self.as_ref()
             .map(|v| v.is_grouped(zone))
+            .unwrap_or_default()
+    }
+    
+    fn get_order(&self, name: &String, zone: &i32) -> Option<usize> {
+        self.as_ref()
+            .map(|v| v.get_order(name, zone))
             .unwrap_or_default()
     }
 }

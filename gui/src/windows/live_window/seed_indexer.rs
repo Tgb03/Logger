@@ -194,7 +194,16 @@ impl Render for SeedIndexer {
                                     .or_default()
                                     .push((*id, color));
 
-                                self.end_shown.sort_by_key(|(v, _), _| *v);
+                                self.end_shown.sort_by(|(zone1, name1), _, (zone2, name2), _| {
+                                    let zone_cmp1 = self.views.get(&self.objective)
+                                        .get_order(name1, zone1)
+                                        .unwrap_or_else(|| *zone1 as usize);
+                                    let zone_cmp2 = self.views.get(&self.objective)
+                                        .get_order(name2, zone2)
+                                        .unwrap_or_else(|| *zone2 as usize);
+
+                                    zone_cmp1.cmp(&zone_cmp2)
+                                });
                             }
                             OutputSeedIndexer::ResourcePack(t, zone, id, _) => {
                                 if self.show_resources == false {

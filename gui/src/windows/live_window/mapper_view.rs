@@ -77,6 +77,13 @@ impl KeyID {
             }
         };
     }
+
+    pub fn contains(&self, val: &i32) -> bool {
+        match self {
+            KeyID::VecID(id) => *id as i32 == *val,
+            KeyID::RangeID(range_inclusive) => range_inclusive.contains(&(*val as u64)),
+        }
+    }
 }
 
 impl<'de> Deserialize<'de> for KeyID {
