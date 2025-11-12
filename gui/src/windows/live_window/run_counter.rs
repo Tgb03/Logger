@@ -9,7 +9,7 @@ pub struct RunCounter {
     run_counter: usize,
     seed_counter: usize,
 
-    seeds: HashSet<u64>,
+    seeds: HashSet<i32>,
     continous_parser: ContinousParser<Token>,
 }
 
@@ -30,7 +30,7 @@ impl Render for RunCounter {
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
         while let Some(r) = self.continous_parser.try_recv() {
             match r {
-                Token::SessionSeed(seed) => {
+                Token::SelectExpedition(_, seed) => {
                     self.seeds.insert(seed);
 
                     self.run_counter += 1;
