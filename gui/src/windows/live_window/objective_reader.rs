@@ -39,7 +39,7 @@ impl<T: UpdateObjective> UpdateObjective for Option<T> {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct LevelObjectiveReader {
     objective: RunObjective,
 }

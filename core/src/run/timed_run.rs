@@ -103,6 +103,7 @@ where
     fn set_objective_str(&mut self, objective: &str) {
         if let Ok(obj) = objective.try_into() {
             self.set_objective(obj);
+            self.objective_cache = objective.to_owned();
         }
     }
 }

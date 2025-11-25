@@ -14,7 +14,7 @@ use opener::open;
 use crate::{
     render::Render,
     windows::{
-        await_parse_files::AwaitParseFiles, live_window::live_window::LiveWindow,
+        await_parse_files::AwaitParseFiles, live_window::{live_window::LiveWindow, objective_reader::LevelObjectiveReader},
         log_parser_window::LogParserWindow, run_manager_window::RunManagerWindow,
         settings_window::SettingsWindow, stats_window::StatsWindow,
     },
@@ -39,6 +39,7 @@ pub struct BaseApp {
 
     settings_window: SettingsWindow,
     save_manager: SaveManager,
+    obj_reader: Option<LevelObjectiveReader>,
     limiter: CpuLimiter,
 
     latest_version: Option<String>,
@@ -136,6 +137,7 @@ impl BaseApp {
             limiter,
             live_window_size: None,
             app_state: AppState::None,
+            obj_reader: Some(LevelObjectiveReader::default()),
 
             save_manager,
             settings_window,
@@ -167,9 +169,8 @@ impl eframe::App for BaseApp {
             .frame(frame)
             .show(ctx, |ui| {
                 ui.horizontal_top(|ui| {
-                    if let AppState::LiveWindow(_) = self.app_state {
+                    if let AppState::LiveWindow(lw) = &mut self.app_state {
                         if ui.button("Stop Splitter").clicked() {
-                            self.app_state = AppState::None;
 
                             ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(
                                 egui::WindowLevel::Normal,
@@ -180,6 +181,8 @@ impl eframe::App for BaseApp {
                                 y: 512.0,
                             }));
                             self.live_window_size = None;
+                            self.obj_reader = lw.get_obj_reader().cloned();
+                            self.app_state = AppState::None;
                         }
 
                         return;
@@ -219,7 +222,7 @@ impl eframe::App for BaseApp {
                         }));
                         self.live_window_size = Some(80);
                         self.app_state =
-                            AppState::LiveWindow(LiveWindow::new(&self.settings_window));
+                            AppState::LiveWindow(LiveWindow::new(self.obj_reader.take(), &self.settings_window));
                     }
 
                     if ui.button("Input Speedrun Logs...").clicked() {

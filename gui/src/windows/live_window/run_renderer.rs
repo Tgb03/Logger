@@ -255,16 +255,16 @@ impl LevelRunRenderer {
                         .to_string();
                 }
                 RunGeneratorResult::LevelRun(timed_run) => {
-                    let level_run: LevelRun = timed_run.into();
+                    let mut level_run: LevelRun = timed_run.into();
+                    level_run.set_objective_str(&self.run_render.objective_str);
 
                     if let Some(split) = level_run.get_split_by_name("WIN") {
                         let split = NamedSplit::new(split.get_time(), split.get_name().to_owned());
                         self.run_render.add_split(&split, save_manager);
-                        self.run_render.objective_str = level_run.get_objective().to_string();
                     }
 
                     if self.no_save_for_frames == 0 {
-                        save_manager.save(RunEnum::Level(level_run.clone()));
+                        save_manager.save(RunEnum::Level(level_run));
                     }
                 }
                 _ => {}

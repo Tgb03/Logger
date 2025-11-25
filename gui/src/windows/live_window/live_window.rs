@@ -71,7 +71,7 @@ impl LiveWindow {
         self
     }
 
-    pub fn new(settings: &SettingsWindow) -> Self {
+    pub fn new(mut obj_reader: Option<LevelObjectiveReader>, settings: &SettingsWindow) -> Self {
         let mut result = Self::default();
 
         if settings.get_def("show_real_timer") {
@@ -84,8 +84,12 @@ impl LiveWindow {
 
         if settings.get_def("show_mapper") {
             result = result
-                .with_mapper(Mapper::new(&settings, "".to_string()))
-                .with_obj_reader(LevelObjectiveReader::default());
+                .with_mapper(Mapper::new(&settings, "".to_string()));
+            if let Some(reader) = obj_reader.take() {
+                result = result.with_obj_reader(reader);
+            } else if result.objective_reader.is_none() {
+                result.objective_reader = Some(Default::default());
+            }
         };
 
         if settings.get_def("show_foresight") {
@@ -98,8 +102,12 @@ impl LiveWindow {
 
         if settings.get_def("show_run_splitter") {
             result = result
-                .with_run_renderer(LevelRunRenderer::new(settings))
-                .with_obj_reader(LevelObjectiveReader::default());
+                .with_run_renderer(LevelRunRenderer::new(settings));
+            if let Some(reader) = obj_reader.take() {
+                result = result.with_obj_reader(reader);
+            } else if result.objective_reader.is_none() {
+                result.objective_reader = Some(Default::default());
+            }
         }
 
         let file_path = settings.get_path("logs_path").unwrap().clone();
@@ -141,5 +149,9 @@ impl LiveWindow {
             .unwrap_or_default();
 
         result
+    }
+    
+    pub fn get_obj_reader(&self) -> Option<&LevelObjectiveReader> {
+        self.objective_reader.as_ref()
     }
 }
