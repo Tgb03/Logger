@@ -6,6 +6,55 @@ use serde::{Deserialize, Serialize};
 
 use crate::render::Render;
 
+const GENERAL_ARR: &[&str] = &[
+    "automatic_loading",
+    "automatic_saving",
+    "show_real_timer",
+    "show_game_splitter",
+    "show_run_splitter",
+    "show_run_counter",
+    "text_size",
+];
+
+const SPLITTER_ARR: &[&str] = &[
+    "window_transparency",
+    "logs_path",
+    "compare_record",
+    "compare_best_splits",
+    "show_split_name",
+    "run_splitter_length",
+    "game_splitter_length",
+    "x_position",
+    "y_position",
+    "x_size",
+];
+
+const MAPPER_ARR: &[&str] = &[
+    "show_mapper",
+    "show_objectives",
+    "show_code_guess",
+    "code_guess_line_count",
+    "code_guess_word_count",
+];
+
+const FORESIGHT_ARR: &[&str] = &[
+    "show_foresight",
+    "seed_indexer_show_resources",
+    "seed_indexer_show_consumables",
+    "seed_indexer_show_artifacts",
+    "seed_indexer_show_gather_small_items",
+    "seed_indexer_show_fog_turbine",
+    "seed_indexer_show_cell",
+    "seed_indexer_show_colored_key",
+    "seed_indexer_show_bulkhead_key",
+    "seed_indexer_show_terminal_uplink",
+    "seed_indexer_show_retrieve_big_items",
+    "seed_indexer_show_special_terminal_command",
+    "seed_indexer_show_hsu",
+    "seed_indexer_show_power_cell_distribution",
+    "seed_indexer_length",
+];
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 enum FieldValue {
     Boolean(bool),
@@ -193,11 +242,6 @@ impl Render for Field {
 pub struct SettingsWindow {
     setting_hash: HashMap<String, Field>,
 
-    general: Vec<String>,
-    splitter: Vec<String>,
-    mapper: Vec<String>,
-    foresight: Vec<String>,
-
     font_used: LoggerFontEnum,
 }
 
@@ -209,10 +253,6 @@ impl Default for SettingsWindow {
 
         let s = Self {
             setting_hash: HashMap::new(),
-            general: Vec::new(),
-            splitter: Vec::new(),
-            mapper: Vec::new(),
-            foresight: Vec::new(),
 
             font_used: Default::default(),
         };
@@ -239,7 +279,10 @@ impl SettingsWindow {
                 FieldValue::Boolean(false),
             ),
         );
-        self.add_to_general("show_real_timer".into(), Field::new("Show real timer   Warning: this timer may not be accurate. Use the in game timer for that.".into(), FieldValue::Boolean(false)));
+        self.add_to_general(
+            "show_real_timer".into(), 
+            Field::new("Show real timer   Warning: this timer may not be accurate. Use the in game timer for that.".into(), FieldValue::Boolean(false))
+        );
         self.add_to_general(
             "show_game_splitter".into(),
             Field::new("Show game splitter".into(), FieldValue::Boolean(false)),
@@ -261,7 +304,7 @@ impl SettingsWindow {
             "window_transparency".into(),
             Field::new(
                 "LiveWindow Transparency".into(),
-                FieldValue::Float(0.6f32, "0.6f".to_owned()),
+                FieldValue::Float(0.6f32, "0.6".to_owned()),
             ),
         );
         self.add_to_splitter(
@@ -282,6 +325,10 @@ impl SettingsWindow {
         self.add_to_splitter(
             "compare_best_splits".into(),
             Field::new("Compare to best splits".into(), FieldValue::Boolean(true)),
+        );
+        self.add_to_splitter(
+            "show_split_name".into(), 
+            Field::new("Show the split name".into(), FieldValue::Boolean(false)),
         );
         self.add_to_splitter(
             "run_splitter_length".into(),
@@ -454,7 +501,6 @@ impl SettingsWindow {
             return;
         }
 
-        self.general.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
@@ -463,7 +509,6 @@ impl SettingsWindow {
             return;
         }
 
-        self.splitter.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
@@ -472,7 +517,6 @@ impl SettingsWindow {
             return;
         }
 
-        self.mapper.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
@@ -481,7 +525,6 @@ impl SettingsWindow {
             return;
         }
 
-        self.foresight.push(id.clone());
         self.setting_hash.insert(id, field);
     }
 
@@ -573,8 +616,8 @@ impl Render for SettingsWindow {
 
                 ui.add_space(10.0);
 
-                for id in &self.general {
-                    self.setting_hash.get_mut(id).map(|v| v.render(ui));
+                for id in GENERAL_ARR {
+                    self.setting_hash.get_mut(*id).map(|v| v.render(ui));
                 }
 
                 egui::ComboBox::from_label("Select font")
@@ -603,8 +646,8 @@ impl Render for SettingsWindow {
 
                 ui.add_space(10.0);
 
-                for id in &self.splitter {
-                    self.setting_hash.get_mut(id).map(|v| v.render(ui));
+                for id in SPLITTER_ARR {
+                    self.setting_hash.get_mut(*id).map(|v| v.render(ui));
                 }
 
                 ui.separator();
@@ -615,8 +658,8 @@ impl Render for SettingsWindow {
 
                 ui.add_space(10.0);
 
-                for id in &self.mapper {
-                    self.setting_hash.get_mut(id).map(|v| v.render(ui));
+                for id in MAPPER_ARR {
+                    self.setting_hash.get_mut(*id).map(|v| v.render(ui));
                 }
 
                 ui.horizontal(|ui| {
@@ -647,8 +690,8 @@ impl Render for SettingsWindow {
 
                 ui.add_space(10.0);
 
-                for id in &self.foresight {
-                    self.setting_hash.get_mut(id).map(|v| v.render(ui));
+                for id in FORESIGHT_ARR {
+                    self.setting_hash.get_mut(*id).map(|v| v.render(ui));
                 }
 
                 ui.horizontal(|ui| {

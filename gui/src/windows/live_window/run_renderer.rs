@@ -15,6 +15,7 @@ use glr_core::{
     time::Time,
 };
 use glr_lib::dll_exports::enums::SubscribeCode;
+use serde::{Deserialize, Serialize};
 
 use crate::{
     dll::parse_continously::ContinousParser,
@@ -25,19 +26,22 @@ use crate::{
     },
 };
 
-struct RunRender {
-    split_labels: VecDeque<String>,
-    compared_wr: Option<VecDeque<(String, Color32)>>,
-    compared_best: Option<VecDeque<(String, Color32)>>,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RunRender<T: Split> {
+    pub split_labels: VecDeque<String>,
+    pub split_names: Option<VecDeque<String>>,
+    pub compared_wr: Option<VecDeque<(String, Color32)>>,
+    pub compared_best: Option<VecDeque<(String, Color32)>>,
+    pub longest_name: usize,
 
-    objective_str: String,
+    pub objective_str: String,
 
-    total_time: Time,
-    wr_compared_time: Time,
-    run_buffer: Vec<NamedSplit>,
+    pub total_time: Time,
+    pub wr_compared_time: Time,
+    pub run_buffer: Vec<T>,
 }
 
-impl Render for RunRender {
+impl<T: Split> Render for RunRender<T> {
     type Response = usize;
 
     fn render(&mut self, ui: &mut egui::Ui) -> Self::Response {
@@ -45,6 +49,13 @@ impl Render for RunRender {
 
         for it in 0..self.split_labels.len() {
             ui.horizontal(|ui| {
+                if let Some(names) = &self.split_names {
+                    match names.get(it) {
+                        Some(text) => { ui.label(format!("{: >fill$}", text, fill = self.longest_name)); },
+                        None => {},
+                    };
+                }
+                
                 ui.label(&self.split_labels[it]);
 
                 if let Some(compared_wr) = &self.compared_wr {
@@ -74,9 +85,14 @@ impl Render for RunRender {
     }
 }
 
-impl RunRender {
+impl<T: Split + Clone> RunRender<T> {
     pub fn new(objective_str: String, settings: &SettingsWindow) -> Self {
         Self {
+            longest_name: 0,
+            split_names: match settings.get_def::<bool>("show_split_name") {
+                true => Some(VecDeque::new()),
+                false => None,
+            },
             split_labels: VecDeque::new(),
             compared_wr: match settings.get_def("compare_record") {
                 true => Some(VecDeque::new()),
@@ -93,12 +109,20 @@ impl RunRender {
         }
     }
 
-    pub fn add_split<S: Split>(&mut self, split: &S, save_manager: &SaveManager) {
-        let total = self.get_time(split);
+    pub fn add_split(&mut self, split: &T, save_manager: &SaveManager) {
+        let total = self.get_time(split.clone());
         let wr_time = self.get_time_wr(split, save_manager);
         let split_time = self.get_time_split(split, save_manager);
         let split_compare = self.get_time_split_comparison(split, save_manager);
+        let name = save_manager.get_split_merge(&self.objective_str, split.get_name())
+            .map(|v| v.as_str())
+            .unwrap_or_else(|| split.get_name())
+            .to_owned();
+        self.longest_name = self.longest_name.max(name.len());
 
+        self.split_names
+            .as_mut()
+            .map(|v| v.push_back(name));
         self.split_labels.push_back(total.to_string());
         match (&mut self.compared_wr, wr_time) {
             (Some(vd), Some(c_time)) => {
@@ -136,9 +160,8 @@ impl RunRender {
         }
     }
 
-    fn get_time<S: Split>(&mut self, split: &S) -> Time {
+    fn get_time(&mut self, split: T) -> Time {
         self.total_time += split.get_time();
-        let split = NamedSplit::new(split.get_time(), split.get_name().to_owned());
         self.run_buffer.push(split);
 
         self.total_time
@@ -181,7 +204,7 @@ impl RunRender {
 }
 
 pub struct LevelRunRenderer {
-    run_render: RunRender,
+    run_render: RunRender<NamedSplit>,
     run_buffer: Option<Vec<NamedSplit>>,
 
     continous_parser: ContinousParser<RunGeneratorResult>,
@@ -225,17 +248,23 @@ impl LevelRunRenderer {
                 RunGeneratorResult::SplitAdded(named_split) => {
                     self.run_render.add_split(&named_split, save_manager);
                 }
+                RunGeneratorResult::PlayerCountUpdate(new_count) => {
+                    self.run_render.objective_str = RunObjective::try_from(self.run_render.objective_str.as_str())
+                        .unwrap()
+                        .with_player_count(new_count)
+                        .to_string();
+                }
                 RunGeneratorResult::LevelRun(timed_run) => {
-                    let level_run: LevelRun = timed_run.into();
+                    let mut level_run: LevelRun = timed_run.into();
+                    level_run.set_objective_str(&self.run_render.objective_str);
 
                     if let Some(split) = level_run.get_split_by_name("WIN") {
                         let split = NamedSplit::new(split.get_time(), split.get_name().to_owned());
                         self.run_render.add_split(&split, save_manager);
-                        self.run_render.objective_str = level_run.get_objective().to_string();
                     }
 
                     if self.no_save_for_frames == 0 {
-                        save_manager.save(RunEnum::Level(level_run.clone()));
+                        save_manager.save(RunEnum::Level(level_run));
                     }
                 }
                 _ => {}

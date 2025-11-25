@@ -223,10 +223,12 @@ impl Render for SeedIndexer {
                                 let color =
                                     self.views.get(&self.objective).lookup(&name, zone, id);
                                 
-                                self.end_shown
+                                let vec = self.end_shown
                                     .entry((*zone, new_name))
-                                    .or_default()
-                                    .push((*id, color));
+                                    .or_default();
+                                
+                                vec.push((*id, color));
+                                vec.sort_by_key(|v| v.0);
 
                                 self.end_shown.sort_by_key(|(v, _), _| *v);
                             }
