@@ -39,6 +39,7 @@ const MAPPER_ARR: &[&str] = &[
 
 const FORESIGHT_ARR: &[&str] = &[
     "show_foresight",
+    "seed_indexer_show_overflow",
     "seed_indexer_show_resources",
     "seed_indexer_show_consumables",
     "seed_indexer_show_artifacts",
@@ -394,6 +395,13 @@ impl SettingsWindow {
             "show_foresight".into(),
             Field::new(
                 "Show Foresight in live splitter".into(),
+                FieldValue::Boolean(true),
+            ),
+        );
+        self.add_to_foresight(
+            "seed_indexer_show_overflow".into(), 
+            Field::new(
+                "Show the Marker Set in Foresight".into(), 
                 FieldValue::Boolean(true),
             ),
         );

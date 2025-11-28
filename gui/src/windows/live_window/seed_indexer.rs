@@ -39,15 +39,19 @@ pub struct SeedIndexer {
     show_resources: bool,
     show_consumables: bool,
     show_artifacts: bool,
+    
+    show_overflow: bool,
 
     size_multi: f32,
 
     number_of_items: usize,
+    overflow_size_text: Option<String>,
 }
 
 impl SeedIndexer {
     pub fn new(settings: &SettingsWindow) -> Self {
         Self {
+            overflow_size_text: Default::default(),
             end_shown: IndexMap::new(),
             data_found: Vec::new(),
             continous_parser: ContinousParser::new(SubscribeCode::SeedIndexer),
@@ -88,6 +92,7 @@ impl SeedIndexer {
                 .unwrap_or(true),
             show_artifacts: settings.get_def("seed_indexer_show_artifacts"),
             number_of_items: settings.get("seed_indexer_length").unwrap_or(10) as usize,
+            show_overflow: settings.get("seed_indexer_show_overflow").unwrap_or(true),
         }
     }
 
@@ -123,6 +128,7 @@ impl Render for SeedIndexer {
                     self.data_found.clear();
                     self.end_shown.clear();
                     self.objective = name;
+                    self.overflow_size_text = None;
                     self.views.get_mut(&self.objective).reset();
                     
                     self.update_view();
@@ -236,6 +242,9 @@ impl Render for SeedIndexer {
                         }
                     }
                 }
+                OutputSeedIndexer::GenerationOverflow(count) => {
+                    self.overflow_size_text = Some(format!("  MARKER SET: {}", count));
+                }
                 OutputSeedIndexer::Seed(_) | OutputSeedIndexer::ZoneGenEnded(_) => {}
                 v => {
                     match &v {
@@ -254,7 +263,13 @@ impl Render for SeedIndexer {
                 }
             }
         }
-
+        
+        if self.show_overflow {
+            if let Some(text) = self.overflow_size_text.as_ref() {
+                ui.colored_label(Color32::GOLD, text);
+            }
+        }
+        
         let mut count_separators = 0;
         let row_height = ui.spacing().interact_size.y;
         egui::ScrollArea::vertical()
