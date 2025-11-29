@@ -87,7 +87,9 @@ impl LiveWindow {
                 .with_mapper(Mapper::new(&settings, "".to_string()));
             if let Some(reader) = obj_reader.take() {
                 result = result.with_obj_reader(reader);
-            } else if result.objective_reader.is_none() {
+            }
+            
+            if result.objective_reader.is_none() {
                 result.objective_reader = Some(Default::default());
             }
         };
@@ -105,7 +107,9 @@ impl LiveWindow {
                 .with_run_renderer(LevelRunRenderer::new(settings));
             if let Some(reader) = obj_reader.take() {
                 result = result.with_obj_reader(reader);
-            } else if result.objective_reader.is_none() {
+            }
+            
+            if result.objective_reader.is_none() {
                 result.objective_reader = Some(Default::default());
             }
         }

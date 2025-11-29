@@ -249,10 +249,11 @@ impl LevelRunRenderer {
                     self.run_render.add_split(&named_split, save_manager);
                 }
                 RunGeneratorResult::PlayerCountUpdate(new_count) => {
+                    println!("<{}>", &self.run_render.objective_str);
+                    let cloned_name = self.run_render.objective_str.clone();
                     self.run_render.objective_str = RunObjective::try_from(self.run_render.objective_str.as_str())
-                        .unwrap()
-                        .with_player_count(new_count)
-                        .to_string();
+                        .map(|v| v.with_player_count(new_count).to_string())
+                        .unwrap_or(cloned_name);
                 }
                 RunGeneratorResult::LevelRun(timed_run) => {
                     let mut level_run: LevelRun = timed_run.into();
