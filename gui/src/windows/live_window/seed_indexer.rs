@@ -41,16 +41,19 @@ pub struct SeedIndexer {
     show_artifacts: bool,
     
     show_overflow: bool,
+    show_overflow_hash_size: usize,
 
     size_multi: f32,
 
     number_of_items: usize,
     overflow_size_text: Option<String>,
+    overflow_hash_text: Option<String>,
 }
 
 impl SeedIndexer {
     pub fn new(settings: &SettingsWindow) -> Self {
         Self {
+            overflow_hash_text: Default::default(),
             overflow_size_text: Default::default(),
             end_shown: IndexMap::new(),
             data_found: Vec::new(),
@@ -93,6 +96,10 @@ impl SeedIndexer {
             show_artifacts: settings.get_def("seed_indexer_show_artifacts"),
             number_of_items: settings.get("seed_indexer_length").unwrap_or(10) as usize,
             show_overflow: settings.get("seed_indexer_show_overflow").unwrap_or(true),
+            show_overflow_hash_size: match settings.get_def("seed_indexer_show_overflow_hash") {
+                false => settings.get_def::<i32>("seed_indexer_overflow_hash_size") as usize,
+                true => 0,
+            }
         }
     }
 
@@ -129,6 +136,7 @@ impl Render for SeedIndexer {
                     self.end_shown.clear();
                     self.objective = name;
                     self.overflow_size_text = None;
+                    self.overflow_hash_text = None;
                     self.views.get_mut(&self.objective).reset();
                     
                     self.update_view();
@@ -245,6 +253,16 @@ impl Render for SeedIndexer {
                 OutputSeedIndexer::GenerationOverflow(count) => {
                     self.overflow_size_text = Some(format!("  MARKER SET: {}", count));
                 }
+                OutputSeedIndexer::GenerationOverflowHash(data) => {
+                    self.overflow_hash_text = data.iter()
+                        .skip(32 - self.show_overflow_hash_size)
+                        .map(|v| format!("{:02x}", v))
+                        .fold(String::default(), |mut r, v| {
+                            r.push_str(&v);
+                            r
+                        })
+                        .into();
+                }
                 OutputSeedIndexer::Seed(_) | OutputSeedIndexer::ZoneGenEnded(_) => {}
                 v => {
                     match &v {
@@ -262,6 +280,10 @@ impl Render for SeedIndexer {
                     self.data_found.push(v);
                 }
             }
+        }
+        
+        if let Some(text) = self.overflow_hash_text.as_ref() {
+            ui.colored_label(Color32::GOLD, text);
         }
         
         if self.show_overflow {

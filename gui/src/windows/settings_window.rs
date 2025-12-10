@@ -40,6 +40,8 @@ const MAPPER_ARR: &[&str] = &[
 const FORESIGHT_ARR: &[&str] = &[
     "show_foresight",
     "seed_indexer_show_overflow",
+    "seed_indexer_show_overflow_hash",
+    "seed_indexer_overflow_hash_size",
     "seed_indexer_show_resources",
     "seed_indexer_show_consumables",
     "seed_indexer_show_artifacts",
@@ -403,6 +405,20 @@ impl SettingsWindow {
             Field::new(
                 "Show the Marker Set in Foresight".into(), 
                 FieldValue::Boolean(true),
+            ),
+        );
+        self.add_to_foresight(
+            "seed_indexer_show_overflow_hash".into(), 
+            Field::new(
+                "Show the Marker Set Hash in Foresight. This is for specific zone spawns".into(),
+                FieldValue::Boolean(false),
+            ),
+        );
+        self.add_to_foresight(
+            "seed_indexer_overflow_hash_size".into(), 
+            Field::new(
+                "How many characters to show in the hash size".into(), 
+                FieldValue::Integer(8, "8".into()),
             ),
         );
         self.add_to_foresight(
