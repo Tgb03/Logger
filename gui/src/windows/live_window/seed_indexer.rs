@@ -97,8 +97,10 @@ impl SeedIndexer {
             number_of_items: settings.get("seed_indexer_length").unwrap_or(10) as usize,
             show_overflow: settings.get("seed_indexer_show_overflow").unwrap_or(true),
             show_overflow_hash_size: match settings.get_def("seed_indexer_show_overflow_hash") {
-                false => settings.get_def::<i32>("seed_indexer_overflow_hash_size") as usize,
-                true => 0,
+                true => settings.get::<i32>("seed_indexer_overflow_hash_size")
+                    .map(|v| v as usize)
+                    .unwrap_or(24),
+                false => 32,
             }
         }
     }
@@ -255,7 +257,7 @@ impl Render for SeedIndexer {
                 }
                 OutputSeedIndexer::GenerationOverflowHash(data) => {
                     self.overflow_hash_text = data.iter()
-                        .skip(32 - self.show_overflow_hash_size)
+                        .skip(32usize.saturating_sub(self.show_overflow_hash_size))
                         .map(|v| format!("{:02x}", v))
                         .fold(String::default(), |mut r, v| {
                             r.push_str(&v);
