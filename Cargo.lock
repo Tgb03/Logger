@@ -537,7 +537,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "3.1.1"
+version = "3.2.0"
 dependencies = [
  "bincode",
  "directories",
@@ -648,9 +648,9 @@ checksum = "f27ae1dd37df86211c42e150270f82743308803d90a6f6e6651cd730d5e1732f"
 
 [[package]]
 name = "dbus"
-version = "0.9.9"
+version = "0.9.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "190b6255e8ab55a7b568df5a883e9497edc3e4821c06396612048b430e5ad1e9"
+checksum = "21b3aa68d7e7abee336255bd7248ea965cc393f3e70411135a6f6a4b651345d4"
 dependencies = [
  "libc",
  "libdbus-sys",
@@ -1218,8 +1218,8 @@ dependencies = [
 
 [[package]]
 name = "glr_core"
-version = "1.1.2"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#25db489edba969bd37db4bd683f2b1d605ed99b8"
+version = "1.1.3"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#88b71b462d4e1fa5ca49ed320df8d8417f0ebd71"
 dependencies = [
  "chrono",
  "num_enum",
@@ -1231,8 +1231,8 @@ dependencies = [
 
 [[package]]
 name = "glr_lib"
-version = "1.1.2"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#25db489edba969bd37db4bd683f2b1d605ed99b8"
+version = "1.1.3"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#88b71b462d4e1fa5ca49ed320df8d8417f0ebd71"
 dependencies = [
  "bincode",
  "chrono",
@@ -1305,7 +1305,7 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "3.1.1"
+version = "3.2.0"
 dependencies = [
  "core",
  "directories",
@@ -1727,9 +1727,9 @@ checksum = "37c93d8daa9d8a012fd8ab92f088405fb202ea0b6ab73ee2482ae66af4f42091"
 
 [[package]]
 name = "libdbus-sys"
-version = "0.2.6"
+version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cbe856efeb50e4681f010e9aaa2bf0a644e10139e54cde10fc83a307c23bd9f"
+checksum = "328c4789d42200f1eeec05bd86c9c13c7f091d2ba9a6ea35acdf51f31bc0f043"
 dependencies = [
  "cc",
  "pkg-config",
