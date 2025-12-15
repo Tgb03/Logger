@@ -99,8 +99,8 @@ impl SeedIndexer {
             show_overflow_hash_size: match settings.get_def("seed_indexer_show_overflow_hash") {
                 true => settings.get::<i32>("seed_indexer_overflow_hash_size")
                     .map(|v| v as usize)
-                    .unwrap_or(24),
-                false => 32,
+                    .unwrap_or(8),
+                false => 0,
             }
         }
     }
@@ -285,7 +285,9 @@ impl Render for SeedIndexer {
         }
         
         if let Some(text) = self.overflow_hash_text.as_ref() {
-            ui.colored_label(Color32::GOLD, text);
+            if text.len() > 0 {
+                ui.colored_label(Color32::GOLD, text);
+            }
         }
         
         if self.show_overflow {
