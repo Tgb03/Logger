@@ -58,6 +58,10 @@ const FORESIGHT_ARR: &[&str] = &[
     "seed_indexer_length",
 ];
 
+const SAVE_ARR: &[&str] = &[
+    "saves_type",
+];
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 enum FieldValue {
     Boolean(bool),
@@ -81,6 +85,18 @@ static LOGGER_FONT_ENUM_ITER: &'static [LoggerFontEnum] = &[
     LoggerFontEnum::Ubuntu,
 ];
 
+#[derive(Default, Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[repr(u8)]
+enum LoggerSaveTypeEnum {
+    #[default] Binary,
+    Json,
+}
+
+static LOGGER_SAVE_TYPE_ENUM_ITER: &'static [LoggerSaveTypeEnum] = &[
+    LoggerSaveTypeEnum::Binary,
+    LoggerSaveTypeEnum::Json,
+];
+
 impl ToString for LoggerFontEnum {
     fn to_string(&self) -> String {
         match self {
@@ -91,7 +107,22 @@ impl ToString for LoggerFontEnum {
     }
 }
 
+impl ToString for LoggerSaveTypeEnum {
+    fn to_string(&self) -> String {
+        match self {
+            LoggerSaveTypeEnum::Binary => "binary".to_owned(),
+            LoggerSaveTypeEnum::Json => "json".to_owned(),
+        }
+    }
+}
+
 impl Into<WidgetText> for LoggerFontEnum {
+    fn into(self) -> WidgetText {
+        WidgetText::RichText(RichText::from(self.to_string()))
+    }
+}
+
+impl Into<WidgetText> for LoggerSaveTypeEnum {
     fn into(self) -> WidgetText {
         WidgetText::RichText(RichText::from(self.to_string()))
     }
@@ -246,6 +277,7 @@ pub struct SettingsWindow {
     setting_hash: HashMap<String, Field>,
 
     font_used: LoggerFontEnum,
+    save_type: LoggerSaveTypeEnum,
 }
 
 impl Default for SettingsWindow {
@@ -258,6 +290,7 @@ impl Default for SettingsWindow {
             setting_hash: HashMap::new(),
 
             font_used: Default::default(),
+            save_type: Default::default(),
         };
 
         s.add_all()
