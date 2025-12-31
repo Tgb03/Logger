@@ -124,10 +124,22 @@ impl RunManagerWindow {
 
             if ui.button("Load runs for this objective").clicked() {
                 save_manager.load_advanced(&self.objective);
+                self.compare_second = vec![
+                    false; 
+                    save_manager.get_runs(&self.objective)
+                        .map(|v| v.len())
+                        .unwrap_or_default()
+                ];
             }
 
             if ui.button("Load ALL runs").clicked() {
                 save_manager.load_all_runs();
+                self.compare_second = vec![
+                    false; 
+                    save_manager.get_runs(&self.objective)
+                        .map(|v| v.len())
+                        .unwrap_or_default()
+                ];
             }
         });
 
