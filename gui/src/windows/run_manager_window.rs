@@ -1,10 +1,10 @@
-use core::save_manager::SaveManager;
+use core::save_manager::{SaveManager, SaveType};
 use std::collections::HashMap;
 
 use egui::Color32;
 use glr_core::time::Time;
 
-use crate::{run::RenderRun, sorter_buttons::render_buttons};
+use crate::{run::RenderRun, sorter_buttons::render_buttons, windows::settings_window::SettingsWindow};
 
 pub struct RunManagerWindow {
     objective: String,
@@ -16,6 +16,7 @@ pub struct RunManagerWindow {
 
     compare_first: Option<usize>,
     compare_second: Vec<bool>,
+    save_type: SaveType,
 }
 
 impl RunManagerWindow {
@@ -29,7 +30,7 @@ impl RunManagerWindow {
         result
     }
 
-    pub fn new() -> Self {
+    pub fn new(settings: &SettingsWindow) -> Self {
         Self {
             objective: "".to_owned(),
             show_split_times: false,
@@ -38,6 +39,7 @@ impl RunManagerWindow {
             compare_first: None,
             compare_second: Vec::new(),
             compare_all: false,
+            save_type: settings.get_save_type(),
         }
     }
 
@@ -113,7 +115,7 @@ impl RunManagerWindow {
 
         ui.horizontal(|ui| {
             if ui.button("Save run to PC").clicked() {
-                save_manager.save_to_file(&self.objective);
+                save_manager.save_to_file(self.save_type, &self.objective);
             }
 
             if ui.button("Save ALL runs to PC").clicked() {
@@ -121,7 +123,7 @@ impl RunManagerWindow {
             }
 
             if ui.button("Load runs for this objective").clicked() {
-                save_manager.load(&self.objective);
+                save_manager.load_advanced(&self.objective);
             }
 
             if ui.button("Load ALL runs").clicked() {

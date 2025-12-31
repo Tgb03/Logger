@@ -240,7 +240,7 @@ impl eframe::App for BaseApp {
                     }
 
                     if ui.button("Check Saved Runs").clicked() {
-                        self.app_state = AppState::ManagingRuns(RunManagerWindow::new());
+                        self.app_state = AppState::ManagingRuns(RunManagerWindow::new(&self.settings_window));
                     }
 
                     if ui.button("Settings").clicked() {

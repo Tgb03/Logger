@@ -6,6 +6,7 @@ use std::{
 
 use directories::ProjectDirs;
 use glr_core::{split::Split, time::Time};
+use serde::{Deserialize, Serialize};
 
 use crate::{
     run::{
@@ -15,6 +16,22 @@ use crate::{
     },
     sort::Sortable,
 };
+
+#[derive(Debug, Serialize, Deserialize, Default, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum SaveType {
+    #[default] Binary,
+    Json,
+}
+
+impl ToString for SaveType {
+    fn to_string(&self) -> String {
+        match self {
+            SaveType::Binary => "Binary".to_owned(),
+            SaveType::Json => "Json".to_owned(),
+        }
+    }
+}
 
 /// Save manager struct
 ///
@@ -294,16 +311,32 @@ impl SaveManager {
         if let Some(paths) = paths {
             for path in paths {
                 if let Ok(entry) = path {
-                    if entry.file_name().into_string().unwrap().contains(".save") {
-                        self.load(&entry.file_name().into_string().unwrap());
-                    }
-
-                    if entry.file_name().into_string().unwrap().contains(".rsave") {
-                        self.load(&entry.file_name().into_string().unwrap());
+                    if entry.file_name().into_string().unwrap().contains(".save") ||
+                        entry.file_name().into_string().unwrap().contains(".rsave") {
+                        
+                        self.load_advanced(&entry.file_name().into_string().unwrap());
                     }
                 }
             }
         }
+    }
+    
+    pub fn load_advanced(&mut self, objective: &String) {
+        if let Ok(_) = self.load(
+            objective, 
+            |e| bincode::deserialize(e).map_err(|e| e.to_string())
+        ) {
+            return;
+        }
+        
+        if let Ok(_) = self.load(
+            objective,
+            |e| serde_json::from_slice(e).map_err(|e| e.to_string())
+        ) {
+            return;
+        }
+        
+        eprintln!("Failed to load objective: {objective}");
     }
 
     /// optimize these runs by removing all that do not hold
@@ -347,15 +380,20 @@ impl SaveManager {
     }
 
     /// load from file the objective data.
-    pub fn load(&mut self, objective_data: &String) {
+    pub fn load<F>(&mut self, objective_data: &String, func: F) -> Result<(), String>
+    where
+        F: Fn(&[u8]) -> Result<Vec<RunEnum>, String>, {
+        
         let file_path = Self::get_directory().map(|path| path.join(objective_data.clone()));
 
         if let Some(file_path) = file_path {
-            match std::fs::read(file_path) {
+            return match std::fs::read(file_path) {
                 Ok(binary_data) => {
-                    let mut vec: Vec<RunEnum> = match bincode::deserialize(&binary_data) {
+                    let mut vec: Vec<RunEnum> = match func(&binary_data) {
                         Ok(vec) => vec,
-                        Err(_) => Vec::new(),
+                        Err(e) => {
+                            return Err(e)
+                        },
                     };
 
                     for it in &mut vec {
@@ -364,15 +402,19 @@ impl SaveManager {
 
                     //println!("Added vec with size for obj: {}, {}, {}", vec.len(), binary_data.len(), objective_data);
                     self.save_multiple(vec);
+                    
+                    Ok(())
                 }
                 Err(e) => {
-                    eprintln!("{:?}", e);
+                    Err(e.to_string())
                 }
-            }
+            };
         }
+        
+        return Err("File not found".to_owned())
     }
 
-    pub fn save_to_file(&self, objective_data: &String) {
+    pub fn save_to_file(&self, save_type: SaveType, objective_data: &String) {
         let file_path = Self::get_directory();
 
         if let Some(file_path) = file_path.as_ref() {
@@ -385,8 +427,12 @@ impl SaveManager {
             file_path.map(|path| path.join(Into::<String>::into(objective_data.to_string())));
 
         let empty = Vec::new();
+        let to_save_vec = self.loaded_runs.get(objective_data).unwrap_or(&empty);
         if let Ok(bin_data) =
-            bincode::serialize(self.loaded_runs.get(objective_data).unwrap_or(&empty))
+            match save_type {
+                SaveType::Binary => bincode::serialize(to_save_vec).map_err(|_| {}),
+                SaveType::Json => serde_json::to_string(to_save_vec).map(|v| v.into_bytes()).map_err(|_| {}),
+            }
         {
             if let Some(file_path) = file_path {
                 let _ = std::fs::write(file_path, &bin_data);
@@ -400,7 +446,7 @@ impl SaveManager {
             let file_path =
                 Self::get_directory().map(|path| path.join(Into::<String>::into(key.to_string())));
 
-            if let Ok(bin_data) = bincode::serialize(&vec) {
+            if let Ok(bin_data) = serde_json::to_string(&vec) {
                 //println!("Saved vec with size: {}: {}", vec.len(), bin_data.len());
                 if let Some(file_path) = file_path {
                     let _ = std::fs::write(file_path, &bin_data);

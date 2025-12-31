@@ -1,4 +1,4 @@
-use core::run::default_dirs::{self, get_config_directory};
+use core::{run::default_dirs::{self, get_config_directory}, save_manager::SaveType};
 use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
 
 use egui::{Color32, Label, RichText, WidgetText};
@@ -58,10 +58,6 @@ const FORESIGHT_ARR: &[&str] = &[
     "seed_indexer_length",
 ];
 
-const SAVE_ARR: &[&str] = &[
-    "saves_type",
-];
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 enum FieldValue {
     Boolean(bool),
@@ -85,16 +81,9 @@ static LOGGER_FONT_ENUM_ITER: &'static [LoggerFontEnum] = &[
     LoggerFontEnum::Ubuntu,
 ];
 
-#[derive(Default, Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[repr(u8)]
-enum LoggerSaveTypeEnum {
-    #[default] Binary,
-    Json,
-}
-
-static LOGGER_SAVE_TYPE_ENUM_ITER: &'static [LoggerSaveTypeEnum] = &[
-    LoggerSaveTypeEnum::Binary,
-    LoggerSaveTypeEnum::Json,
+static LOGGER_SAVE_TYPE_ENUM_ITER: &'static [SaveType] = &[
+    SaveType::Binary,
+    SaveType::Json,
 ];
 
 impl ToString for LoggerFontEnum {
@@ -107,22 +96,7 @@ impl ToString for LoggerFontEnum {
     }
 }
 
-impl ToString for LoggerSaveTypeEnum {
-    fn to_string(&self) -> String {
-        match self {
-            LoggerSaveTypeEnum::Binary => "binary".to_owned(),
-            LoggerSaveTypeEnum::Json => "json".to_owned(),
-        }
-    }
-}
-
 impl Into<WidgetText> for LoggerFontEnum {
-    fn into(self) -> WidgetText {
-        WidgetText::RichText(RichText::from(self.to_string()))
-    }
-}
-
-impl Into<WidgetText> for LoggerSaveTypeEnum {
     fn into(self) -> WidgetText {
         WidgetText::RichText(RichText::from(self.to_string()))
     }
@@ -277,7 +251,7 @@ pub struct SettingsWindow {
     setting_hash: HashMap<String, Field>,
 
     font_used: LoggerFontEnum,
-    save_type: LoggerSaveTypeEnum,
+    save_type: SaveType,
 }
 
 impl Default for SettingsWindow {
@@ -298,6 +272,10 @@ impl Default for SettingsWindow {
 }
 
 impl SettingsWindow {
+    pub fn get_save_type(&self) -> SaveType {
+        self.save_type
+    }
+    
     fn add_all(mut self) -> Self {
         let log_path = Self::logs_path().unwrap_or_default();
 
@@ -694,6 +672,19 @@ impl Render for SettingsWindow {
                         };
                     }
                 });
+                
+                egui::ComboBox::from_label("Select SaveType")
+                    .selected_text(self.save_type.to_string())
+                    .height(500.0)
+                    .show_ui(ui, |ui| {
+                        for key in LOGGER_SAVE_TYPE_ENUM_ITER {
+                            ui.selectable_value(
+                                &mut self.save_type, 
+                                key.clone(),
+                                key.to_string(),
+                            );
+                        }
+                    });
 
                 ui.separator();
 
