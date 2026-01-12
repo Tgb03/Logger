@@ -1,4 +1,5 @@
 use core::run::objectives::{Objective, run_objective::RunObjective};
+use std::ops::DerefMut;
 
 use crate::render::Render;
 
@@ -36,6 +37,14 @@ impl<T: UpdateObjective> UpdateObjective for Option<T> {
             Some(s) => s.update(reader),
             None => {}
         }
+    }
+}
+
+impl<T: UpdateObjective> UpdateObjective for Box<T> {
+    type Objective = T::Objective;
+
+    fn update(&mut self, reader: &impl ObjectiveReader<Objective = Self::Objective>) {
+        self.deref_mut().update(reader);
     }
 }
 

@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use egui::Ui;
 
 pub trait Render {
@@ -6,33 +8,41 @@ pub trait Render {
     fn render(&mut self, ui: &mut Ui) -> Self::Response;
 }
 
-impl<R, Resp> Render for Option<R>
+impl<R> Render for Box<R>
 where
-    R: Render<Response = Resp>,
+    R: Render,
 {
-    type Response = Option<Resp>;
+    type Response = R::Response;
+
+    fn render(&mut self, ui: &mut Ui) -> Self::Response {
+        self.deref_mut().render(ui)
+    }
+}
+
+impl<R> Render for Option<R>
+where
+    R: Render,
+{
+    type Response = Option<R::Response>;
 
     fn render(&mut self, ui: &mut Ui) -> Self::Response {
         self.as_mut().map(|v| v.render(ui))
     }
 }
 
-pub trait BufferedRender {
+pub trait BufferedRender: Render {
     type Response;
-    type Renderer: Render;
 
-    fn get_renderer(&mut self) -> &mut Self::Renderer;
     fn update(&mut self);
 }
 
-impl<BR, R, Resp> Render for BR
+impl<R> BufferedRender for Box<R>
 where
-    R: Render<Response = Resp>,
-    BR: BufferedRender<Response = Resp, Renderer = R>,
+    R: BufferedRender,
 {
-    type Response = Resp;
+    type Response = <R as Render>::Response;
 
-    fn render(&mut self, ui: &mut Ui) -> Self::Response {
-        self.get_renderer().render(ui)
+    fn update(&mut self) {
+        self.deref_mut().update();
     }
 }

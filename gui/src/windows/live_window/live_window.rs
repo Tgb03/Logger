@@ -18,11 +18,11 @@ use crate::{
 
 #[derive(Default)]
 pub struct LiveWindow {
-    real_timer: Option<Timer>,
-    run_counter: Option<RunCounter>,
-    mapper: Option<Mapper>,
-    seed_indexer: Option<SeedIndexer>,
-    key_guesser: Option<CodeGuess>,
+    real_timer: Option<Box<Timer>>,
+    run_counter: Option<Box<RunCounter>>,
+    mapper: Option<Box<Mapper>>,
+    seed_indexer: Option<Box<SeedIndexer>>,
+    key_guesser: Option<Box<CodeGuess>>,
 
     objective_reader: Option<LevelObjectiveReader>,
     run_renderer: Option<LevelRunRenderer>,
@@ -30,19 +30,19 @@ pub struct LiveWindow {
 
 impl LiveWindow {
     pub fn with_mapper(mut self, mapper: Mapper) -> Self {
-        self.mapper = Some(mapper);
+        self.mapper = Some(Box::new(mapper));
 
         self
     }
 
     pub fn with_indexer(mut self, indexer: SeedIndexer) -> Self {
-        self.seed_indexer = Some(indexer);
+        self.seed_indexer = Some(Box::new(indexer));
 
         self
     }
 
     pub fn with_run_counter(mut self, run_counter: RunCounter) -> Self {
-        self.run_counter = Some(run_counter);
+        self.run_counter = Some(Box::new(run_counter));
 
         self
     }
@@ -60,13 +60,13 @@ impl LiveWindow {
     }
 
     pub fn with_real_timer(mut self, timer: Timer) -> Self {
-        self.real_timer = Some(timer);
+        self.real_timer = Some(Box::new(timer));
 
         self
     }
 
     pub fn with_code_guesser(mut self, code_guess: CodeGuess) -> Self {
-        self.key_guesser = Some(code_guess);
+        self.key_guesser = Some(Box::new(code_guess));
 
         self
     }

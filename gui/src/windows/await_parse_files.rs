@@ -6,7 +6,7 @@ use std::{
         atomic::AtomicUsize,
         mpsc::{self, Receiver},
     },
-    thread::{self, JoinHandle},
+    thread::{self, JoinHandle}, time::{Duration, Instant},
 };
 
 use egui::ProgressBar;
@@ -21,7 +21,7 @@ pub struct AwaitParseFiles {
 
     left: Arc<AtomicUsize>,
     len: usize,
-    frames: usize,
+    started_instance: Instant,
 
     join_handle: Vec<JoinHandle<()>>,
 }
@@ -77,7 +77,7 @@ impl AwaitParseFiles {
             runs_collected: Vec::new(),
             left,
             len,
-            frames: 0,
+            started_instance: Instant::now(),
             join_handle: threads,
         }
     }
@@ -90,8 +90,8 @@ impl AwaitParseFiles {
         self.len
     }
 
-    pub fn get_frames(&self) -> usize {
-        self.frames
+    pub fn get_duration(&self) -> Duration {
+        Instant::now().duration_since(self.started_instance)
     }
 
     pub fn is_done(&self) -> bool {
@@ -116,8 +116,8 @@ impl Render for AwaitParseFiles {
                 self.get_len()
             ));
             ui.label(format!(
-                "Files/frame: {:.2}",
-                (self.get_len() - self.get_left()) as f64 / self.get_frames() as f64
+                "Files/second: {}",
+                ((self.get_len() - self.get_left()) as f64 / self.get_duration().as_secs_f64()) as i32
             ));
             ui.label(format!(
                 "Percentage Done: {:.2}%",
@@ -129,7 +129,6 @@ impl Render for AwaitParseFiles {
             ));
         });
 
-        self.frames += 1;
         self.collect();
         if self.is_done() {
             for jh in self.join_handle.drain(0..self.join_handle.len()) {
