@@ -48,6 +48,7 @@ pub struct SeedIndexer {
     number_of_items: usize,
     overflow_size_text: Option<String>,
     overflow_hash_text: Option<String>,
+    hash_data: [u8; 32],
 }
 
 impl SeedIndexer {
@@ -101,7 +102,8 @@ impl SeedIndexer {
                     .map(|v| v as usize)
                     .unwrap_or(8),
                 false => 0,
-            }
+            },
+            hash_data: [0; 32],
         }
     }
 
@@ -140,6 +142,7 @@ impl Render for SeedIndexer {
                     self.overflow_size_text = None;
                     self.overflow_hash_text = None;
                     self.views.get_mut(&self.objective).reset();
+                    self.hash_data = [0; 32];
                     
                     self.update_view();
                 }
@@ -264,18 +267,19 @@ impl Render for SeedIndexer {
                             r
                         })
                         .into();
+                    self.hash_data = data;
                 }
                 OutputSeedIndexer::Seed(_) | OutputSeedIndexer::ZoneGenEnded(_) => {}
                 v => {
                     match &v {
                         OutputSeedIndexer::Key(name, zone, id) => {
                             self.views.get_mut(&self.objective)
-                                .add_found(name, zone, id);
+                                .add_found(name, zone, id, &self.hash_data);
                         },
                         OutputSeedIndexer::ResourcePack(resource_type, zone, id, _) => {
                             let name = format!("{resource_type:?}");
                             self.views.get_mut(&self.objective)
-                                .add_found(&name, zone, id);
+                                .add_found(&name, zone, id, &self.hash_data);
                         },
                         _ => {}
                     }

@@ -53,15 +53,18 @@ pub struct ViewCondition {
     zone: Option<i32>,
     #[serde(default, skip_serializing_if = "Option::is_none", with = "option_as_value")]
     id: Option<KeyID>,
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "option_as_value")]
+    marker_hash: Option<[u8; 32]>,
 
 }
 
 impl ViewCondition {
 
-    pub fn matches(&self, name: &String, zone: &i32, id: &i32) -> bool {
+    pub fn matches(&self, name: &String, zone: &i32, id: &i32, marker_hash: [u8; 32]) -> bool {
         self.name == *name && 
         self.zone.as_ref().is_none_or(|v| v == zone) &&
-        self.id.as_ref().is_none_or(|v| v.contains(id))
+        self.id.as_ref().is_none_or(|v| v.contains(id)) &&
+        self.marker_hash.is_none_or(|v| v == marker_hash)
     }
 
 }
@@ -99,15 +102,15 @@ pub struct OptimizedForesightView {
 
 pub trait AddToConditions {
 
-    fn add_found(&mut self, name: &String, zone: &i32, id: &i32);
+    fn add_found(&mut self, name: &String, zone: &i32, id: &i32, marker_hash: &[u8; 32]);
     fn reset(&mut self);
 
 }
 
 impl AddToConditions for OptimizedForesightView {
-    fn add_found(&mut self, name: &String, zone: &i32, id: &i32) {
+    fn add_found(&mut self, name: &String, zone: &i32, id: &i32, marker_hash: &[u8; 32]) {
         for (pos_vec, condition) in self.conditional_ignores.iter().enumerate() {
-            if condition.condition.matches(name, zone, id) {
+            if condition.condition.matches(name, zone, id, marker_hash) {
                 self.conditions_triggered[pos_vec] = true;
             }
         }
@@ -121,8 +124,8 @@ impl AddToConditions for OptimizedForesightView {
 
 impl<T> AddToConditions for Option<&mut T> 
 where T: AddToConditions {
-    fn add_found(&mut self, name: &String, zone: &i32, id: &i32) {
-        self.as_mut().map(|v| v.add_found(name, zone, id));
+    fn add_found(&mut self, name: &String, zone: &i32, id: &i32, marker_hash: &[u8; 32]) {
+        self.as_mut().map(|v| v.add_found(name, zone, id, marker_hash));
     }
 
     fn reset(&mut self) {
