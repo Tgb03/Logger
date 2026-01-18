@@ -60,11 +60,11 @@ pub struct ViewCondition {
 
 impl ViewCondition {
 
-    pub fn matches(&self, name: &String, zone: &i32, id: &i32, marker_hash: [u8; 32]) -> bool {
+    pub fn matches(&self, name: &String, zone: &i32, id: &i32, marker_hash: &[u8; 32]) -> bool {
         self.name == *name && 
         self.zone.as_ref().is_none_or(|v| v == zone) &&
         self.id.as_ref().is_none_or(|v| v.contains(id)) &&
-        self.marker_hash.is_none_or(|v| v == marker_hash)
+        self.marker_hash.as_ref().is_none_or(|v| v == marker_hash)
     }
 
 }
