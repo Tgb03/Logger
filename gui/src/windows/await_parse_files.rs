@@ -27,22 +27,25 @@ pub struct AwaitParseFiles {
 }
 
 impl AwaitParseFiles {
-    pub fn new(paths: Vec<PathBuf>) -> Self {
+    pub fn new(mut paths: Vec<PathBuf>) -> Self {
         let (sender, recv) = mpsc::channel();
+        paths.retain(|path| 
+            path.extension().is_some_and(|e| e == "txt")
+        );
+        
         let len = paths.len();
         let left = Arc::new(AtomicUsize::new(len));
 
-        let paths = Arc::new(Mutex::new(paths.into_iter()));
+        let paths_arc = Arc::new(Mutex::new(paths.into_iter()));
         let mut threads = Vec::with_capacity(MAX_THREAD);
 
         for _ in 0..MAX_THREAD {
-            let paths_clone = paths.clone();
+            let paths_clone = paths_arc.clone();
             let sender_clone = sender.clone();
             let left_clone = left.clone();
 
             threads.push(thread::spawn(move || {
                 loop {
-                    let mut files: Vec<PathBuf> = Vec::with_capacity(5);
                     let mut guard = match paths_clone.lock() {
                         Ok(g) => g,
                         Err(_) => {
@@ -51,13 +54,11 @@ impl AwaitParseFiles {
                         }
                     };
 
-                    for _ in 0..5 {
-                        if let Some(path) = guard.next() {
-                            files.push(path);
-                        } else {
-                            break;
-                        }
-                    }
+                    let files: Vec<PathBuf> = (0..5).into_iter()
+                        .filter_map(|_| {
+                            guard.next()
+                        })
+                        .collect();
 
                     drop(guard);
 
