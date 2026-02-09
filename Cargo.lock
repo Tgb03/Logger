@@ -537,7 +537,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "3.2.8"
+version = "3.2.9"
 dependencies = [
  "bincode",
  "directories",
@@ -1218,8 +1218,8 @@ dependencies = [
 
 [[package]]
 name = "glr_core"
-version = "1.1.6"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#662f97f768ea98d581947db055ca55455b6674cb"
+version = "1.1.7"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#ad30d0975fe9181126131f8b2d4a74ea1335e2ed"
 dependencies = [
  "chrono",
  "num_enum",
@@ -1231,8 +1231,8 @@ dependencies = [
 
 [[package]]
 name = "glr_lib"
-version = "1.1.6"
-source = "git+https://github.com/Tgb03/GTFO_LogReader#662f97f768ea98d581947db055ca55455b6674cb"
+version = "1.1.7"
+source = "git+https://github.com/Tgb03/GTFO_LogReader#ad30d0975fe9181126131f8b2d4a74ea1335e2ed"
 dependencies = [
  "bincode",
  "chrono",
@@ -1305,7 +1305,7 @@ dependencies = [
 
 [[package]]
 name = "gui"
-version = "3.2.8"
+version = "3.2.9"
 dependencies = [
  "core",
  "directories",
