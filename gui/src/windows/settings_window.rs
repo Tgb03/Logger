@@ -589,11 +589,12 @@ impl SettingsWindow {
     }
 
     pub fn save_settings(&self) -> Option<()> {
-        let path = default_dirs::get_config_directory()?.join("app.properties");
+        let path = default_dirs::get_config_directory()?;
         if !path.exists() {
             let _ = std::fs::create_dir_all(&path);
         }
-
+        let path = path.join("app.properties");
+        
         let text = serde_yaml::to_string(self).ok()?;
         let _ = std::fs::write(path, text).ok()?;
 
