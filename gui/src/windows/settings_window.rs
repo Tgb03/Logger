@@ -10,6 +10,7 @@ const GENERAL_ARR: &[&str] = &[
     "automatic_loading",
     "automatic_saving",
     "show_real_timer",
+    "show_timer_milliseconds",
     "show_game_splitter",
     "show_run_splitter",
     "show_run_counter",
@@ -296,6 +297,10 @@ impl SettingsWindow {
         self.add_to_general(
             "show_real_timer".into(), 
             Field::new("Show real timer   Warning: this timer may not be accurate. Use the in game timer for that.".into(), FieldValue::Boolean(false))
+        );
+        self.add_to_general(
+            "show_timer_milliseconds".into(), 
+            Field::new("Show milliseconds for the real timer   Warning: may be distracting".into(), FieldValue::Boolean(false)),
         );
         self.add_to_general(
             "show_game_splitter".into(),

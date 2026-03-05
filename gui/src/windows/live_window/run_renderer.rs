@@ -239,7 +239,7 @@ impl LevelRunRenderer {
 
         while let Some(r) = self.continous_parser.try_recv() {
             match r {
-                RunGeneratorResult::GameStarted(level_descriptor, player_count) => {
+                RunGeneratorResult::GameStarted(level_descriptor, player_count, _) => {
                     let obj = RunObjective::from_name(level_descriptor.to_string())
                         .with_player_count(player_count);
                     self.run_render =

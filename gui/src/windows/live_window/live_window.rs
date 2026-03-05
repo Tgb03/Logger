@@ -75,7 +75,7 @@ impl LiveWindow {
         let mut result = Self::default();
 
         if settings.get_def("show_real_timer") {
-            result = result.with_real_timer(Timer::default());
+            result = result.with_real_timer(Timer::new(settings));
         }
 
         if settings.get_def("show_run_counter") {

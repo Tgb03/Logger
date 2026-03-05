@@ -151,7 +151,7 @@ impl Render for SeedIndexer {
 
                     for data in &self.data_found {
                         match data {
-                            OutputSeedIndexer::Key(name, zone, id) => {
+                            OutputSeedIndexer::Key(name, _, zone, id) => {
                                 if self.views.get(&self.objective).is_ignored(name, zone, id) { continue; }
 
                                 if self.show_artifacts == false && name.contains("rtifact") {
@@ -227,7 +227,7 @@ impl Render for SeedIndexer {
                                     zone_cmp1.cmp(&zone_cmp2)
                                 });
                             }
-                            OutputSeedIndexer::ResourcePack(t, zone, id, _) => {
+                            OutputSeedIndexer::ResourcePack(t, _, zone, id, _) => {
                                 if self.show_resources == false {
                                     continue;
                                 }
@@ -272,11 +272,11 @@ impl Render for SeedIndexer {
                 OutputSeedIndexer::Seed(_) | OutputSeedIndexer::ZoneGenEnded(_) => {}
                 v => {
                     match &v {
-                        OutputSeedIndexer::Key(name, zone, id) => {
+                        OutputSeedIndexer::Key(name, _, zone, id) => {
                             self.views.get_mut(&self.objective)
                                 .add_found(name, zone, id, &self.hash_data);
                         },
-                        OutputSeedIndexer::ResourcePack(resource_type, zone, id, _) => {
+                        OutputSeedIndexer::ResourcePack(resource_type, _, zone, id, _) => {
                             let name = format!("{resource_type:?}");
                             self.views.get_mut(&self.objective)
                                 .add_found(&name, zone, id, &self.hash_data);
