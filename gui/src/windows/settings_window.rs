@@ -14,7 +14,9 @@ const GENERAL_ARR: &[&str] = &[
     "show_game_splitter",
     "show_run_splitter",
     "show_run_counter",
+    "app_fps",
     "text_size",
+    "vsync",
 ];
 
 const SPLITTER_ARR: &[&str] = &[
@@ -318,6 +320,14 @@ impl SettingsWindow {
             "text_size".into(), 
             Field::new("Text size".into(), FieldValue::Float(12f32, "12.0".to_owned()))
         );
+        self.add_to_general(
+            "app_fps".into(), 
+            Field::new("App FPS".into(), FieldValue::Integer(30i32, "30".to_owned()))
+        );
+        self.add_to_general(
+            "vsync".into(), 
+            Field::new("Vsync. REQUIRES RESTART".into(), FieldValue::Boolean(true)),
+        );
 
         self.add_to_splitter(
             "window_transparency".into(),
@@ -537,7 +547,8 @@ impl SettingsWindow {
     }
 
     fn add_to_general(&mut self, id: String, field: Field) {
-        if self.setting_hash.contains_key(&id) {
+        if let Some(inner_field) = self.setting_hash.get_mut(&id) {
+            inner_field.description = field.description;
             return;
         }
 
@@ -545,7 +556,8 @@ impl SettingsWindow {
     }
 
     fn add_to_splitter(&mut self, id: String, field: Field) {
-        if self.setting_hash.contains_key(&id) {
+        if let Some(inner_field) = self.setting_hash.get_mut(&id) {
+            inner_field.description = field.description;
             return;
         }
 
@@ -553,7 +565,8 @@ impl SettingsWindow {
     }
 
     fn add_to_mapper(&mut self, id: String, field: Field) {
-        if self.setting_hash.contains_key(&id) {
+        if let Some(inner_field) = self.setting_hash.get_mut(&id) {
+            inner_field.description = field.description;
             return;
         }
 
@@ -561,7 +574,8 @@ impl SettingsWindow {
     }
 
     fn add_to_foresight(&mut self, id: String, field: Field) {
-        if self.setting_hash.contains_key(&id) {
+        if let Some(inner_field) = self.setting_hash.get_mut(&id) {
+            inner_field.description = field.description;
             return;
         }
 

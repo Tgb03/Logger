@@ -44,6 +44,7 @@ pub struct BaseApp {
 
     latest_version: Option<String>,
     new_version_warning: bool,
+    current_time_in_between_frames: Duration,
 }
 
 impl BaseApp {
@@ -74,9 +75,8 @@ impl BaseApp {
         cc.set_style(style);
     }
 
-    pub fn new(cc: &CreationContext) -> Self {
+    pub fn new(cc: &CreationContext, settings_window: SettingsWindow) -> Self {
         let mut fonts = FontDefinitions::default();
-        let settings_window = SettingsWindow::default();
         let mut save_manager = SaveManager::default();
         save_manager.set_automatic_saving(settings_window.get_def("automatic_saving"));
 
@@ -132,6 +132,9 @@ impl BaseApp {
             Some(ver) => is_there_new_version(ver).unwrap_or(false),
             None => false,
         };
+        let current_time_in_between_frames = Duration::from_secs_f32(
+            1f32 / settings_window.get("app_fps").unwrap_or(30i32) as f32
+        );
 
         Self {
             limiter,
@@ -143,6 +146,7 @@ impl BaseApp {
             settings_window,
             latest_version,
             new_version_warning,
+            current_time_in_between_frames,
         }
     }
 }
@@ -161,7 +165,7 @@ impl eframe::App for BaseApp {
     }
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        ctx.request_repaint_after(Duration::from_millis(50));
+        ctx.request_repaint_after(self.current_time_in_between_frames);
 
         let frame = Frame::none().fill(Color32::TRANSPARENT);
 
@@ -195,6 +199,9 @@ impl eframe::App for BaseApp {
                             self.settings_window.save_settings();
                             self.save_manager.set_automatic_saving(
                                 self.settings_window.get_def("automatic_saving"),
+                            );
+                            self.current_time_in_between_frames = Duration::from_secs_f32(
+                                1f32 / self.settings_window.get("app_fps").unwrap_or(30i32) as f32
                             );
 
                             let font_name = self.settings_window.get_font_name();

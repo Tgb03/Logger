@@ -13,22 +13,26 @@ use base_app::BaseApp;
 use eframe::egui;
 use egui::{Color32, Visuals};
 
+use crate::windows::settings_window::SettingsWindow;
+
 fn main() -> eframe::Result {
     // for (id, val) in std::env::vars() {
     //   println!("{}: {}", id, val);
     // }
+    
+    let settings_window = SettingsWindow::default();
 
     let options_base_app = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([932.0, 512.0])
             .with_transparent(true),
         hardware_acceleration: eframe::HardwareAcceleration::Preferred,
-        vsync: true,
+        vsync: settings_window.get("vsync").unwrap_or(true),
         renderer: eframe::Renderer::Glow,
         persist_window: true,
         ..Default::default()
     };
-
+    
     eframe::run_native(
         "GTFO Logger",
         options_base_app,
@@ -36,7 +40,7 @@ fn main() -> eframe::Result {
             let mut visuals = Visuals::dark();
             visuals.override_text_color = Some(Color32::from_rgb(225, 225, 225));
             cc.egui_ctx.set_visuals(visuals);
-            Ok(Box::new(BaseApp::new(cc)))
+            Ok(Box::new(BaseApp::new(cc, settings_window)))
         }),
     )
 }
