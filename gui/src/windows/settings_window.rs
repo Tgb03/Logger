@@ -589,15 +589,30 @@ impl SettingsWindow {
     }
 
     pub fn save_settings(&self) -> Option<()> {
-        let path = default_dirs::get_config_directory()?;
-        if !path.exists() {
-            let _ = std::fs::create_dir_all(&path);
+        let config_dir = default_dirs::get_config_directory()?;
+    
+        // Ensure config directory exists
+        if !config_dir.exists() {
+            std::fs::create_dir_all(&config_dir).ok()?;
         }
-        let path = path.join("app.properties");
-        
+    
+        let file_path = config_dir.join("app.properties");
+    
+        // Failsafe: if something exists at file_path but it's NOT a file,
+        // remove it so we can create the file properly.
+        if file_path.exists() {
+            let metadata = std::fs::metadata(&file_path).ok()?;
+    
+            if metadata.is_dir() {
+                // Remove the directory recursively
+                std::fs::remove_dir_all(&file_path).ok()?;
+            }
+        }
+    
         let text = serde_yaml::to_string(self).ok()?;
-        let _ = std::fs::write(path, text).ok()?;
-
+    
+        std::fs::write(&file_path, text).ok()?;
+    
         Some(())
     }
 
