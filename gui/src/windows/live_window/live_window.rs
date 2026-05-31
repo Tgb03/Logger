@@ -4,13 +4,7 @@ use crate::{
     render::Render,
     windows::{
         live_window::{
-            code_guess::CodeGuess,
-            mapper::Mapper,
-            objective_reader::{LevelObjectiveReader, UpdateObjective},
-            run_counter::RunCounter,
-            run_renderer::LevelRunRenderer,
-            seed_indexer::SeedIndexer,
-            timer::Timer,
+            code_guess::CodeGuess, mapper::Mapper, objective_reader::{LevelObjectiveReader, UpdateObjective}, player_loading::PlayerLoading, run_counter::RunCounter, run_renderer::LevelRunRenderer, seed_indexer::SeedIndexer, timer::Timer
         },
         settings_window::SettingsWindow,
     },
@@ -23,6 +17,7 @@ pub struct LiveWindow {
     mapper: Option<Box<Mapper>>,
     seed_indexer: Option<Box<SeedIndexer>>,
     key_guesser: Option<Box<CodeGuess>>,
+    player_loading: Option<Box<PlayerLoading>>,
 
     objective_reader: Option<LevelObjectiveReader>,
     run_renderer: Option<LevelRunRenderer>,
@@ -71,6 +66,12 @@ impl LiveWindow {
         self
     }
 
+    pub fn with_player_loading(mut self, player_loading: PlayerLoading) -> Self {
+        self.player_loading = Some(Box::new(player_loading));
+
+        self
+    }
+
     pub fn new(mut obj_reader: Option<LevelObjectiveReader>, settings: &SettingsWindow) -> Self {
         let mut result = Self::default();
 
@@ -114,6 +115,10 @@ impl LiveWindow {
             }
         }
 
+        if settings.get_def("show_player_loading") {
+            result = result.with_player_loading(PlayerLoading::default());
+        }
+
         let file_path = settings.get_path("logs_path").unwrap().clone();
 
         glr_lib::dll_exports::functions::start_listener(file_path);
@@ -133,6 +138,7 @@ impl LiveWindow {
         result += self.real_timer.render(ui).unwrap_or_default();
         result += self.seed_indexer.render(ui).unwrap_or_default();
         result += self.key_guesser.render(ui).unwrap_or_default();
+        result += self.player_loading.render(ui).unwrap_or_default();
         result += self
             .mapper
             .as_mut()

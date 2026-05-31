@@ -14,6 +14,7 @@ const GENERAL_ARR: &[&str] = &[
     "show_game_splitter",
     "show_run_splitter",
     "show_run_counter",
+    "show_player_loading",
     "app_fps",
     "text_size",
     "vsync",
@@ -315,6 +316,10 @@ impl SettingsWindow {
         self.add_to_general(
             "show_run_counter".into(),
             Field::new("Show run counter".into(), FieldValue::Boolean(true)),
+        );
+        self.add_to_general(
+            "show_player_loading".into(), 
+            Field::new("Show players loading".into(), FieldValue::Boolean(false)),
         );
         self.add_to_general(
             "text_size".into(), 

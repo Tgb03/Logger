@@ -10,3 +10,4 @@ mod run_renderer;
 // mod game_run_renderer;
 mod seed_indexer;
 mod timer;
+mod player_loading;
